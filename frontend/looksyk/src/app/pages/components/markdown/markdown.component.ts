@@ -1,5 +1,6 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -112,7 +113,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   autoUpdate_ = combineLatest({
     enabled: this.autoUpdate$,
-    change: this.pageService.somethigHasChanged$
+    change: this.pageService.somethingHasChanged$
   }).pipe(filter(x => x.enabled))
     .pipe(filter(x => x.change.blockId != this.markdown.indentification))
     .subscribe(event => {
@@ -153,7 +154,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
           range.deleteContents();
           range.insertNode(document.createTextNode(insertText.inlineMarkdown));
         }
-      } else  {
+      } else {
         this.textareaRef.nativeElement.createRange().text = insertText.inlineMarkdown;
       }
       this.changeDetector.markForCheck();
@@ -195,6 +196,12 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
         this.updateContent(newBlockInfo);
       }
     )
+    this.userInteraction.savePage.next({
+      target: {
+        blockTarget: this.markdown.indentification,
+        fileTarget: this.pageid
+      }
+    });
   }
 
   updateSilent() {

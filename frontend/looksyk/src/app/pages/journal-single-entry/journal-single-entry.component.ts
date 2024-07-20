@@ -59,7 +59,7 @@ export class JournalSingleEntryComponent implements OnInit{
           value => this.pageState.next(value)
         );
         this.pageName.next(pageName);
-        this.pageSerivce.loadJournalPageAsUserPage(
+        this.pageSerivce.loadJournalPage(
           pageName
         )
       });

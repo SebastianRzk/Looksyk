@@ -221,15 +221,6 @@ export class UseractionService {
     return currentIndentation + -1;
   }
 
-  _savingPageByExitEditMode = this.openMarkdown$.pipe(bufferCount(2)).subscribe(
-    event => {
-      let lastEvent = event[0];
-      console.log("events by exit", event);
-      this.savePage.next({
-        target: lastEvent.target
-      })
-    }
-  )
 
   _savePage = this.savePage$.subscribe(event => {
     console.log("save event", event)

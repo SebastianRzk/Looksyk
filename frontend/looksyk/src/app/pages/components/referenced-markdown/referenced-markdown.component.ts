@@ -106,6 +106,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
               content: value
             }
           );
+          this.pageService.updateReferenceIfLoaded(this.markdown.reference);
         }
       )
     })
