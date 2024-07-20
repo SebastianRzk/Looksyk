@@ -1,0 +1,5 @@
+<h1>Journal</h1>
+
+<cdk-virtual-scroll-viewport autosize class="example-viewport">
+  <app-journal-entry *cdkVirtualFor="let item of items; templateCacheSize: 0" [page]="item"></app-journal-entry>
+</cdk-virtual-scroll-viewport>

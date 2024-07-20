@@ -1,0 +1,7 @@
+<div class="top">
+  <app-user-page-title [title]="pageName$ | async"></app-user-page-title>
+  <app-fav-star *ngIf="data | async as d" [isFavInitial]="d.page.isFavourite" [pageName]="d.pageName"></app-fav-star>
+</div>
+<app-show-page *ngIf="page$ | async as p" [page]="p" [scrollIntoView]="true"></app-show-page>
+<mat-divider></mat-divider>
+<app-referenced-by *ngIf="pageName$ | async as p" [pageName]="p"></app-referenced-by>

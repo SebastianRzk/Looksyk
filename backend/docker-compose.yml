@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  server:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - 9090:80
+    volumes:
+      - ../../example_data_2/:/srv
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf

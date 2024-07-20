@@ -1,0 +1,16 @@
+<div class="markdown-block">
+  <ng-container *ngIf="todo$ | async as t">
+    <div *ngIf="t.isTodo" class="checkbox-container">
+      <mat-checkbox [checked]="t.isChecked" (change)="clickCheckbox()">
+
+      </mat-checkbox>
+    </div>
+  </ng-container>
+  <div class="flex-row">
+    <div [innerHTML]="renderedMarkdown$ | async" #markdownComponent>
+      class="markdown">
+    </div>
+    <a class="sourceref" [routerLink]="'/page/'+markdown.reference.fileName">Source: {{ markdown.reference.fileName }}:{{ markdown.reference.blockNumber }}</a>
+  </div>
+</div>
+

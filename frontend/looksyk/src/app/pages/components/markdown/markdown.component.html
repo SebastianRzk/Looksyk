@@ -1,0 +1,61 @@
+<div class="markdown-block">
+  <div>
+    <button #other mat-raised-button [matMenuTriggerFor]="menu" class="dot-button" [disabled]="!editable">o</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>visibility_off</mat-icon>
+        <span>Hide (todo)</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>note_add</mat-icon>
+        <span>Convert into page (todo)</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>highlight_alt</mat-icon>
+        <span>Open (todo)</span>
+      </button>
+      <button mat-menu-item (click)="onClickRefresh()">
+        <mat-icon>refresh</mat-icon>
+        <span>Refresh</span>
+      </button>
+      <button mat-menu-item (click)="clickDelete()">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </div>
+  <ng-container *ngIf="todo$ | async as t">
+    <div *ngIf="t.isTodo" class="checkbox-container">
+      <mat-checkbox [checked]="t.isChecked" (click)="clickCheckbox()">
+      </mat-checkbox>
+    </div>
+  </ng-container>
+  <div>
+    <div class="auto-update" *ngIf="autoUpdate$| async">autoupdate</div>
+    <div [innerHTML]="renderedMarkdown$ | async"
+         [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"
+         class="markdown" #markdownComponent></div>
+    <div (focusout)="onFocusOutEditor()"
+         [className]="(editMode$ | async) ?'active' : 'inactive' "
+         [innerText]="editText$ | async"
+         #textarea contenteditable></div>
+    <div *ngIf="editMode$ | async">
+    </div>
+    <div *ngIf="loadingMode$ | async">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+
+</div>
+<div class="flex-col">
+  <ng-container *ngIf="referencedMarkdown$ | async as refs">
+    <ng-container *ngFor="let reference of refs">
+      <div class="flex-row">
+        <div class="indentation"></div>
+        <app-referenced-markdown [markdown]="reference" [parentId]="markdown.indentification"
+        ></app-referenced-markdown>
+      </div>
+
+    </ng-container>
+  </ng-container>
+</div>

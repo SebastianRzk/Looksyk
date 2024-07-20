@@ -1,0 +1,13 @@
+.top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+app-fav-star {
+  margin-left: 3ex;
+}
+
+mat-divider {
+  margin: 5ex 1ex;
+}

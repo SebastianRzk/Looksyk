@@ -1,0 +1,16 @@
+<div class="title">
+  <h1>Looksyk</h1>
+</div>
+<mat-divider></mat-divider>
+
+<div class="menu-button-list">
+  <button mat-button routerLink="/journal"><mat-icon>today</mat-icon>Journal</button>
+  <button mat-button routerLink="/special-page/user-page-overview"><mat-icon>local_library</mat-icon>Wiki</button>
+</div>
+
+<mat-divider></mat-divider>
+
+
+<div class="fav-button-list" *ngIf="favs$ | async as favs">
+  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+fav">{{fav}}</button>
+</div>

@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  scroll-behavior: smooth;
+
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: rgb(20, 20, 20);
+  color: white;
+}
+
+app-root{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a {
+  color: #0c884c;
+  cursor: pointer;
+}
+
+
+table, tr, td, th {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.25ex;
+  padding: 1ex;
+}
+
+tr:hover, th:hover, td:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

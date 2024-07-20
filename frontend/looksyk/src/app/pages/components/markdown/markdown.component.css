@@ -1,0 +1,91 @@
+div[contenteditable] {
+  width: 80%;
+  min-width: 150ex;
+}
+
+.markdown {
+  min-height: 3ex;
+}
+
+
+.active {
+  height: 100%;
+  min-height: 10ex;
+  overflow: auto;
+  padding: 0.5ex;
+  margin: 1ex;
+  outline: 0;
+}
+
+.inactive {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.active-markdown {
+  min-height: 3ex;
+}
+
+.loading {
+  min-height: 28ex;
+}
+
+.inactive {
+  border: 0;
+  background: rgb(20, 20, 20);
+  color: rgb(20, 20, 20);
+  height: 0;
+  min-height: 0;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.indentation {
+  width: 3ex;
+  min-width: 3ex;
+  min-height: 3ex;
+  border-right: 1px solid grey;
+}
+
+.inactive:hover {
+  background: rgb(20, 20, 20);;
+  color: rgb(20, 20, 20);
+}
+
+
+.markdown-block {
+  display: flex;
+  flex-direction: row;
+}
+
+.dot-button {
+  width: 2ex !important;
+  min-width: unset !important;
+
+  height: 100%;
+  min-height: 5ex;
+  margin-right: 3ex;
+  background: rgba(1, 1, 1, 0.07);
+}
+
+.checkbox-container {
+  align-items: center;
+  height: 100%;
+  display: flex;
+  min-height: 3ex;
+}
+
+
+.auto-update {
+  font-size: small;
+  color: grey;
+}

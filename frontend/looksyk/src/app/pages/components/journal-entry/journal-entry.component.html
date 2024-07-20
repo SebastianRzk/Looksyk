@@ -1,0 +1,4 @@
+<ng-container *ngIf="page | async as p">
+  <h2 class="headline" [routerLink]="'/journal/' + p.name">{{ p.name }}</h2>
+  <app-show-page [editable]="true" [page]="p" [scrollIntoView]="false"></app-show-page>
+</ng-container>

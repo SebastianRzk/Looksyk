@@ -1,0 +1,4 @@
+<ng-container *ngIf="isFav$ | async as f">
+  <ng-container *ngIf="f.isFav"><mat-icon class="star" (click)="onUnStar()">star</mat-icon></ng-container>
+  <ng-container *ngIf="!f.isFav"><mat-icon class="star" (click)="onStar()">star_outline</mat-icon></ng-container>
+</ng-container>

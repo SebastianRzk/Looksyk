@@ -1,0 +1,21 @@
+.menu-button-list, .fav-button-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-button-list > button , .fav-button-list > button {
+  width: 100%;
+  justify-content: start;
+  padding: 0.5ex 0.5ex 0.5ex 4ex;
+}
+
+mat-divider {
+  margin-top: 3ex;
+  margin-bottom: 3ex;
+}
+
+.title {
+  font-size: large;
+  display: flex;
+  justify-content: center;
+}

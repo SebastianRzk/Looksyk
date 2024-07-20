@@ -1,0 +1,37 @@
+.markdown {
+  width: 100%;
+  min-height: 3ex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.sourceref {
+  font-size: smaller;
+  color: grey;
+  align-self: end;
+}
+
+
+.markdown-block {
+  display: flex;
+  flex-direction: row;
+}
+
+button:first-child {
+  height: 100%;
+  margin-right: 3ex;
+}
+
+.checkbox-container {
+  align-items: center;
+  height: 100%;
+  display: flex;
+  min-height: 3ex;
+}
+
+mat-checkbox {
+  padding: 0.75ex;
+}
