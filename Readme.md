@@ -2,7 +2,7 @@
 
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
-I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the many control characters in Markdown, the query language that is difficult to learn, or the general performance.
+I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the many control characters in the markdown files, the query language that is difficult to learn, or the general performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my own client: Looksyk (name may need to be changed).
 
 ## Current status of the project
