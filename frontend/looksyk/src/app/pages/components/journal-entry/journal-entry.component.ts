@@ -5,11 +5,12 @@ import { MarkdownPage } from "../../model";
 import { ShowPageComponent } from "../../show-page/show-page.component";
 import { MatListModule } from "@angular/material/list";
 import { RouterLink } from "@angular/router";
+import { TitleComponent } from "../journal-page-title/title.component";
 
 @Component({
   selector: 'app-journal-entry',
   standalone: true,
-  imports: [CommonModule, ShowPageComponent, MatListModule, RouterLink],
+  imports: [CommonModule, ShowPageComponent, MatListModule, RouterLink, TitleComponent],
   templateUrl: './journal-entry.component.html',
   styleUrls: ['./journal-entry.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

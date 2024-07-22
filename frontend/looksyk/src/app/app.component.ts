@@ -50,10 +50,10 @@ export class AppComponent {
 
   @HostListener('paste', ['$event'])
   pasteEvent(event: ClipboardEvent) {
-    event.preventDefault();
     if (!event.clipboardData?.files.length) {
       return;
     }
+    event.preventDefault();
     Array.from(event.clipboardData.files).forEach(async (file) => {
       if (file.type.startsWith('text/')) {
         let openBlockId = await firstValueFrom(this.userAction.openMarkdown$);

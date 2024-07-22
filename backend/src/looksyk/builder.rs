@@ -1,4 +1,9 @@
-use crate::looksyk::model::{BlockToken, BlockTokenType, PageId, SimplePageName};
+use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
+
+#[cfg(test)]
+use crate::looksyk::model::PageId;
+
+#[cfg(test)]
 use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
 
 pub fn text_token(text: &str) -> BlockToken {

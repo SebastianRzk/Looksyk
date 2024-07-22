@@ -4,7 +4,7 @@ import { PageService } from "../page.service";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, combineLatestAll, Observable, Subject, Subscription } from "rxjs";
 import { MarkdownPage } from "../model";
-import { TitleComponent } from "../components/title/title.component";
+import { TitleComponent } from "../components/user-page-title/title.component";
 import { ShowPageComponent } from "../show-page/show-page.component";
 import { FavStarComponent } from "../components/fav-star/fav-star.component";
 import { combineLatest } from "rxjs";

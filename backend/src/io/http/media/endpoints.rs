@@ -69,7 +69,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 #[get("/assets/{filename:.*}")]
 async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile, Error> {
     let path: std::path::PathBuf = req.match_info().query("filename").parse().unwrap();
-    let complete_path = Path::new(&data.data_path.path).join(path);
+    let complete_path = Path::new(&data.data_path.path).join("assets").join(path);
     let file = NamedFile::open(complete_path)?;
     Ok(file
         .use_last_modified(true)

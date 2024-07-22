@@ -3,7 +3,7 @@ mat-drawer-container {
 }
 
 mat-drawer-content {
-  padding: 12px;
+  padding: 5ex;
   display: flex;
 }
 

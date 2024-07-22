@@ -8,7 +8,7 @@ import { FavStarComponent } from "../components/fav-star/fav-star.component";
 import { MatDivider } from "@angular/material/divider";
 import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
 import { ShowPageComponent } from "../show-page/show-page.component";
-import { TitleComponent } from "../components/title/title.component";
+import { TitleComponent } from "../components/journal-page-title/title.component";
 
 @Component({
   selector: 'app-journal-single-entry',
@@ -20,6 +20,7 @@ import { TitleComponent } from "../components/title/title.component";
     NgIf,
     ReferencedByComponent,
     ShowPageComponent,
+    TitleComponent,
     TitleComponent
   ],
   templateUrl: './journal-single-entry.component.html',

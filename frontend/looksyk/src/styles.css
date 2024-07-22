@@ -2,12 +2,12 @@
 
 html, body {
   scroll-behavior: smooth;
-
+  font-family: 'EB Garamond';
+  font-size: large;
 }
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   background: rgb(20, 20, 20);
   color: white;
 }
@@ -15,7 +15,8 @@ body {
 app-root{
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
 }
 
 a {

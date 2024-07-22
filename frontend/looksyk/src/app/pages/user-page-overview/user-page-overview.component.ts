@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowPageComponent } from "../show-page/show-page.component";
-import { TitleComponent } from "../components/title/title.component";
+import { TitleComponent } from "../components/user-page-title/title.component";
 import { PageService } from "../page.service";
 import { Observable } from "rxjs";
 import { MarkdownPage } from "../model";

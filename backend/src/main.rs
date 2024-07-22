@@ -69,6 +69,7 @@ async fn main() -> std::io::Result<()> {
             .service(favourites::endpoints::delete_favourite)
             .service(favourites::endpoints::get_favourites)
             .service(media::endpoints::post_file)
+            .service(media::endpoints::assets)
     })
         .bind(("127.0.0.1", 8989))?
         .run()

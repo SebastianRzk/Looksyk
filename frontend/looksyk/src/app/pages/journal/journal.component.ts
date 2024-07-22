@@ -24,9 +24,9 @@ export class JournalComponent {
 
 export const todayDate = new Date().getDate();
 export const mapToDay: (x: number) => Date = (index: number) => {
-  console.log("loading date: ", index)
+  console.log("loading date: ", index, todayDate, todayDate-index)
   let date = new Date();
-  date.setDate(todayDate - index);
+  date.setDate(todayDate - index + 1);
   return date;
 }
 
@@ -98,7 +98,7 @@ function padWithZero(numberAsString: string) {
 const mapDateToJournalPageName = (date: Date): string => {
   let month = `${date.getMonth() + 1}`;
   month = padWithZero(month);
-  let day = `${date.getDate() + 1}`;
+  let day = `${date.getDate()}`;
   day = padWithZero(day);
   return `${date.getFullYear()}_${month}_${day}`;
 }
