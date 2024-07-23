@@ -32,27 +32,28 @@ The frontend still has some challenges. Performance can be improved and sometime
 
 ### MVP
 
-* ☑ Done: Pages
+* :white_check_mark: Done: Pages
   * Links `[[a link]]`
   * Code highlighting
   * File upload (and automatic de-duplication on insert)
   * Special page: wiki overview
-* ☑ Done: Journal
+* :white_check_mark: Done: Journal
   * Infinite scroll (not optimized)
-* ☑ Done: Todos
+* :white_check_mark: Done: Todos
   * With `[ ] -> todo, [x] -> done`
-* ☑ Done: Queries
+* :white_check_mark: Done: Queries
   * Query type: `page-hierarchy`
   * Query type: `todos`
   * Query type: `references-to`
   * Display-type: `count`, `inplace-list`, `referenced-list`
-* ☑ Done: Favourites
+* :white_check_mark: Done: Favourites
 
 
 ### Next steps
 
 * Todo: fix encoding when tags contain special characters
 * Todo: Page
+  * :white_check_mark: Emoji support 
   * Rename pages / tags
   * Page properites
   * Page icons
@@ -64,11 +65,14 @@ The frontend still has some challenges. Performance can be improved and sometime
   * Improve query error messages
 * Todo: Deployment
   * Native build
-* Todo: Favourites
-  * Reorder list in sidebar
+* :white_check_mark: Done: Favourites
+  * :white_check_mark: Reorder list in sidebar
 * Todo: Design
-  * Extract variables in CSS for key elements (for easy theming)
-  * Change and embed fonts
+  * :white_check_mark: Extract variables in CSS for key elements (for easy theming) (edit config.json and restart server)
+  * :white_check_mark: ~Change and~ embed fonts
+* Todo: Config page
+  * Configure design (create a light and a dark theme)
+  * Configure favourites
 
 
 ### Vision
@@ -128,7 +132,7 @@ TODO
 * `[ ]` creates a todo
 * `[x]` marks a todo as done
 * Ctrl+Enter creates a new block
-* 
+* Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
 
 ## Queries
 

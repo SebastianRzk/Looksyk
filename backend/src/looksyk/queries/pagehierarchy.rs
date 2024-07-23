@@ -5,7 +5,7 @@ use crate::looksyk::queries::args::{parse_display_type, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::render_user_link;
-use crate::state::UserPageIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str.strip_prefix("page-hierarchy").ok_or(Error::new(ErrorKind::Other, "Decode error"))?.trim();

@@ -1,0 +1,16 @@
+<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <g id="color">
+    <polygon fill="#f4aa41" points="50.846 56 41.046 45.443 41.398 43.464 43.821 40.572 46.119 39.39 50.363 34.326 57.431 56 50.846 56"/>
+    <polygon fill="#e27022" points="51.957 55 25.968 26.963 35.078 56 40.384 56 51.957 55"/>
+    <polygon fill="#f4aa41" points="33.477 35.064 25.968 26.963 28.61 35.064 30.225 35.064 33.477 35.064"/>
+    <polygon fill="#f4aa41" points="2.473 55 25.968 26.963 35.111 55 2.473 55"/>
+    <polygon fill="#fcea2b" points="19.18 35.064 25.968 26.963 28.61 35.064 19.18 35.064"/>
+    <polygon fill="#e27022" points="69.527 55 50.363 34.326 57.105 55 59.945 55 61.61 55 69.527 55"/>
+  </g>
+  <g id="line">
+    <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="44.586 41.219 50.363 34.326 57.105 55"/>
+    <polygon fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="69.527 55 50.363 34.326 57.105 55 59.945 55 61.61 55 69.527 55"/>
+    <polygon fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="2.473 55 25.968 26.963 35.111 55 2.473 55"/>
+    <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="39.449 55 51.957 55 25.968 26.963"/>
+  </g>
+</svg>

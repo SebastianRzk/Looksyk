@@ -4,7 +4,7 @@ use crate::io::fs::basic_file::{read_binary_file, read_file};
 use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
 use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
-use crate::state::DataRootLocation;
+use crate::state::state::DataRootLocation;
 
 pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
     let config_file_content_as_str = read_file(media_config_path(data_root_location));

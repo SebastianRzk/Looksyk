@@ -2,7 +2,10 @@ use crate::looksyk::index::tag::{create_tag_index_file, remove_file_from_tag_ind
 use crate::looksyk::index::todo::{create_todo_index_file, remove_file_from_todo_index};
 use crate::looksyk::index::userpage::{remove_file_from_journal_index, remove_file_from_page_index};
 use crate::looksyk::model::{PageId, PageType, ParsedMarkdownFile, SimplePageName};
-use crate::state::{JournalPageIndex, TagIndex, TodoIndex, UserPageIndex};
+use crate::state::journal::JournalPageIndex;
+use crate::state::tag::TagIndex;
+use crate::state::todo::TodoIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn update_index_for_file(file_id: PageId,
                              simple_page_name: &SimplePageName,
@@ -19,9 +22,8 @@ pub fn update_index_for_file(file_id: PageId,
     let mut new_journal_index = remove_file_from_journal_index(&journal_page_index, &simple_page_name);
 
 
-
     let mut todo_index_entries = new_todo_index.entries;
-    create_todo_index_file(&mut todo_index_entries, &file_id, &simple_page_name, update);
+    create_todo_index_file(&mut todo_index_entries, &file_id, page_type, &simple_page_name, update);
 
     let mut tag_index_entries = new_tag_index.entries;
     create_tag_index_file(&mut tag_index_entries, &file_id, &update);

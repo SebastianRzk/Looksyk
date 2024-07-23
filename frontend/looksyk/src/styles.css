@@ -8,8 +8,14 @@ html, body {
 
 body {
   margin: 0;
-  background: rgb(20, 20, 20);
-  color: white;
+  background: var(--background-color);
+  color: var(--foreground-color)!important;
+}
+
+:root {
+  --mat-sidenav-content-text-color: var(--foreground-color);
+  --mdc-text-button-label-text-color: var(--foreground-color);
+  --mat-sidenav-container-text-color: var(--foreground-color);
 }
 
 app-root{
@@ -19,18 +25,28 @@ app-root{
   width: 100vw;
 }
 
+.emoji {
+  width: 3ex;
+  height: 3ex;
+  margin-bottom: -0.75ex;
+}
+
+.active-markdown > p {
+  margin-top: 1ex;
+}
+
 a {
-  color: #0c884c;
+  color: var(--primary-color);
   cursor: pointer;
 }
 
 
 table, tr, td, th {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--primary-shading);
   border-radius: 0.25ex;
   padding: 1ex;
 }
 
 tr:hover, th:hover, td:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--primary-shading);
 }

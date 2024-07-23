@@ -7,7 +7,7 @@ use crate::looksyk::queries::args::{parse_display_type, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::{render_link_by_id, render_user_link};
-use crate::state::TagIndex;
+use crate::state::tag::TagIndex;
 
 pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str.strip_prefix("references-to").ok_or(Error::new(ErrorKind::Other, "Decode error"))?.trim();

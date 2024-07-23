@@ -1,6 +1,7 @@
 .markdown {
   width: 100%;
   min-height: 3ex;
+  align-items: center;
 }
 
 .flex-row {

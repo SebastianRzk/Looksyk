@@ -6,6 +6,9 @@ use crate::looksyk::model::PageId;
 #[cfg(test)]
 use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
 
+#[cfg(test)]
+use crate::state::journal::JournalPageIndex;
+
 pub fn text_token(text: &str) -> BlockToken {
     BlockToken {
         block_token_type: BlockTokenType::TEXT,
@@ -92,4 +95,11 @@ pub fn any_page_name() -> SimplePageName {
 #[cfg(test)]
 pub fn any_page_id()  -> PageId {
     page_id("")
+}
+
+#[cfg(test)]
+pub fn empty_journal_index()  -> JournalPageIndex {
+    JournalPageIndex {
+        entries: std::collections::HashMap::new(),
+    }
 }

@@ -239,22 +239,16 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
       let newState = computeNewTodoState(x, this.markdown.content.originalText);
       this.markdown.content.originalText = newState;
       this.editText.next(newState);
-      this.userInteraction.openMarkdown.next({
+      this.userInteraction.savePage.next({
         target: {
-          blockTarget: '',
-          fileTarget: this.pageid
-        },
-      });
-      this.userInteraction.openMarkdown.next({
-        target: {
-          blockTarget: '',
+          blockTarget: this.markdown.indentification,
           fileTarget: this.pageid
         }
       });
       this.todo.next({
         isChecked: !x.isChecked,
         isTodo: x.isTodo
-      })
+      });
     })
   }
 

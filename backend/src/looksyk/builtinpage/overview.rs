@@ -2,7 +2,8 @@ use std::collections::HashSet;
 
 use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::page_index::{append_user_page_prefix, get_page_type, strip_user_page_prefix};
-use crate::state::{TagIndex, UserPageIndex};
+use crate::state::tag::TagIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn generate_overview_page(all_tags: &TagIndex, all_pages: &UserPageIndex) -> ParsedMarkdownFile {
     let mut result = vec![];
@@ -99,7 +100,8 @@ mod tests {
     use crate::looksyk::builder::{page_name_str, user_page_id};
     use crate::looksyk::builtinpage::overview::generate_overview_page;
     use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile};
-    use crate::state::{TagIndex, UserPageIndex};
+    use crate::state::tag::TagIndex;
+    use crate::state::userpage::UserPageIndex;
 
     #[test]
     fn should_render_with_empty_state_and_say_no_page_created() {

@@ -5,11 +5,13 @@ import { RouterLink } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { FavouriteService } from "../../../favourite.service";
 import { MatIconModule } from "@angular/material/icon";
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
+import { firstValueFrom } from "rxjs";
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -21,4 +23,9 @@ export class SidebarComponent implements OnInit{
     this.favoriteService.updateFavourites();
   }
 
+  async drop(event: CdkDragDrop<string[]>) {
+    let fav_list = await firstValueFrom(this.favs$);
+    moveItemInArray(fav_list, event.previousIndex, event.currentIndex);
+    this.favoriteService.updateFavList(fav_list);
+  }
 }

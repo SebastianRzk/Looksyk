@@ -15,7 +15,7 @@ use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::render_file;
 use crate::looksyk::serializer::serialize_page;
-use crate::state::AppState;
+use crate::state::state::AppState;
 
 #[post("/api/pages/{page_name}")]
 async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>, data: Data<AppState>) -> actix_web::Result<impl Responder> {

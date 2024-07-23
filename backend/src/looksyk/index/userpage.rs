@@ -5,7 +5,8 @@ use crate::looksyk::builder::page_name;
 use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::parser::parse_markdown_file;
 use crate::looksyk::reader::read_file_contents;
-use crate::state::{JournalPageIndex, UserPageIndex};
+use crate::state::journal::JournalPageIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn create_user_page_index(all_files: Vec<PageOnDisk>) -> UserPageIndex {
     UserPageIndex {

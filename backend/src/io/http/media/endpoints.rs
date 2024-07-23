@@ -11,7 +11,7 @@ use crate::io::fs::basic_file::read_binary_file;
 use crate::io::fs::media::{destination_path, LoadedMedia, write_media_config};
 use crate::io::hash::hash_file_content;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
-use crate::state::AppState;
+use crate::state::state::AppState;
 
 #[derive(Debug, Deserialize)]
 struct Metadata {

@@ -1,0 +1,17 @@
+<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <g id="color">
+    <rect x="44.0696" y="25" width="3" height="26" fill="#9b9b9a"/>
+    <path fill="#9b9b9a" d="m47.1249,46.3066v12.8577c0,.4616-.3741.8357-.8357.8357h-27.5784c-.4616,0-.8357-.3741-.8357-.8357V12.3645c0-.4616.3741-.8357.8357-.8357h27.5784c.4616,0,.8357.3741.8357.8357v14.0542"/>
+    <rect x="41.23" y="25" width="3" height="26" fill="#d0cfce"/>
+    <path fill="#d0cfce" d="m43.3642,46.3066v4.7258c0,.4459-.3614.8074-.8074.8074h-20.1137c-.4459,0-.8074-.3614-.8074-.8074V17.5473c0-.4459.3614-.8074.8074-.8074h20.1137c.4459,0,.8074.3614.8074.8074v8.8714"/>
+  </g>
+  <g id="line">
+    <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m47.1249,46.3066v12.8577c0,.4616-.3741.8357-.8357.8357h-27.5784c-.4616,0-.8357-.3741-.8357-.8357V12.3645c0-.4616.3741-.8357.8357-.8357h27.5784c.4616,0,.8357.3741.8357.8357v14.0542"/>
+    <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m43.3642,46.3066v4.7258c0,.4459-.3614.8074-.8074.8074h-20.1137c-.4459,0-.8074-.3614-.8074-.8074V17.5473c0-.4459.3614-.8074.8074-.8074h20.1137c.4459,0,.8074.3614.8074.8074v8.8714"/>
+    <circle cx="32.5" cy="56.0183" r="1.6714"/>
+    <polygon fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="28.3214 14.2328 36.6786 14.2328 36.6786 14.2328 28.3214 14.2328"/>
+    <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="43.8296 36.4699 40.8296 36.4699 40.8296 39.9699 40.8296 32.9699 44.8296 32.9699"/>
+    <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="51.8296 36.4699 48.8296 36.4699 48.8296 39.9699 48.8296 32.9699 52.8296 32.9699"/>
+    <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m33.5,39.9699h0c-1.3807,0-2.5-1.1193-2.5-2.5v-2c0-1.3807,1.1193-2.5,2.5-2.5h0c1.3807,0,2.5,1.1193,2.5,2.5v2c0,1.3807-1.1193,2.5-2.5,2.5Z"/>
+  </g>
+</svg>

@@ -17,7 +17,7 @@ use crate::looksyk::parser::{parse_block, parse_markdown_file, parse_markdown_up
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_block, render_file};
 use crate::looksyk::serializer::{serialize_page, update_and_serialize_page};
-use crate::state::AppState;
+use crate::state::state::AppState;
 
 #[post("/api/parse")]
 async fn parse(content: web::Json<ToValidate>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -138,6 +138,7 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         }
         PageType::UserPage => {
             let page_guard = data.user_pages.lock().unwrap();
+            println!("Simple page {}", simple_page_name.name);
             selected_page = page_guard.entries.get(&simple_page_name).unwrap().clone();
             drop(page_guard);
         }

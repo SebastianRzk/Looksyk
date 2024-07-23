@@ -6,7 +6,9 @@ use crate::looksyk::model::{BlockToken, QueryRenderResult};
 use crate::looksyk::queries::pagehierarchy::{parse_query_page_hierarchy, render_page_hierarchy};
 use crate::looksyk::queries::references_to::{parse_query_references_to, render_references_of_query};
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query};
-use crate::state::{TagIndex, TodoIndex, UserPageIndex};
+use crate::state::tag::TagIndex;
+use crate::state::todo::TodoIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn render_query(block: &BlockToken, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> QueryRenderResult {
     let query = parse_query(&block.payload);
@@ -42,13 +44,14 @@ pub fn parse_query(payload: &String) -> Result<Query, Error> {
 pub fn render_parsed_query(query: Query, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> QueryRenderResult {
     match query.query_type {
         QueryType::PageHierarchy => {
-                render_page_hierarchy(query, &data)
+            render_page_hierarchy(query, &data)
         }
         QueryType::Todo => {
             render_todo_query(query, todo_index)
         }
         QueryType::ReferencesTo => {
-            render_references_of_query(query, tag_index)        }
+            render_references_of_query(query, tag_index)
+        }
         QueryType::Unknown => {
             QueryRenderResult {
                 inplace_markdown: "Query type unknown".to_string(),
@@ -97,9 +100,11 @@ mod tests {
     use std::collections::{HashMap, HashSet};
 
     use crate::looksyk::builder::{page_id, page_name_str, text_token, user_page_id};
-    use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
     use crate::looksyk::query::{parse_query, QueryDisplayType, QueryType, render_query};
-    use crate::state::{TagIndex, TodoIndex, TodoIndexEntry, TodoSourceReference, TodoState, UserPageIndex};
+    use crate::state::tag::TagIndex;
+    use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoSourceReference, TodoState};
+    use crate::state::userpage::UserPageIndex;
 
     #[test]
     pub fn should_render_unknown_query_on_unknown_query() {
@@ -246,6 +251,7 @@ mod tests {
                     page_id: page_id("%%user/testfile"),
                     page_name: page_name_str("testfile"),
                     blocknumber: 0,
+                    page_type: PageType::UserPage,
                 },
             }]
         };
@@ -267,8 +273,8 @@ mod tests {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("todo not done")],
-                            as_text: "todo not done".to_string(),
+                            as_tokens: vec![text_token("[ ] todo not done")],
+                            as_text: "[ ] todo not done".to_string(),
                         }],
                     },
                     tags: vec![page_name_str("parent")],
@@ -277,13 +283,14 @@ mod tests {
                         page_id: page_id("%%user/testfile"),
                         page_name: page_name_str("testfile"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
                     block: ParsedBlock {
                         content: vec![BlockContent {
-                            as_tokens: vec![],
-                            as_text: "todo done".to_string(),
+                            as_tokens: vec![text_token("[x] todo done")],
+                            as_text: "[x] todo done".to_string(),
                         }],
                         indentation: 0,
                     },
@@ -293,16 +300,22 @@ mod tests {
                         page_id: page_id("%%user/testfile"),
                         page_name: page_name_str("testfile2"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 }]
+        };
+        let mut entries = HashMap::new();
+        entries.insert(page_name_str("testfile"), empty_file());
+        let page_index = UserPageIndex {
+            entries
         };
 
         let result = render_query(&BlockToken {
             payload: "todos tag:\"parent\" state:\"todo\" display:\"inplace-list\" ".to_string(),
             block_token_type: BlockTokenType::QUERY,
-        }, &empty_page_index(), &todo_index, &empty_tag_index());
+        }, &page_index, &todo_index, &empty_tag_index());
 
-        assert_eq!(result.inplace_markdown, "*🔲 ☐ [testfile](page/testfile): todo not done\n".to_string());
+        assert_eq!(result.inplace_markdown, "\n\n* :white large square: [testfile](page/testfile): todo not done\n\n".to_string());
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -314,8 +327,8 @@ mod tests {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![],
-                            as_text: "todo not done".to_string(),
+                            as_tokens: vec![text_token("[ ] todo not done")],
+                            as_text: "[ ] todo not done".to_string(),
                         }],
                     },
                     tags: vec![page_name_str("parent")],
@@ -324,14 +337,15 @@ mod tests {
                         page_id: page_id("%%user/testfile"),
                         page_name: page_name_str("testfile"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("todo done")],
-                            as_text: "todo done".to_string(),
+                            as_tokens: vec![text_token("[x] todo done")],
+                            as_text: "[x] todo done".to_string(),
                         }],
                     },
                     tags: vec![page_name_str("parent")],
@@ -340,16 +354,22 @@ mod tests {
                         page_id: page_id("%%user/testfile2"),
                         page_name: page_name_str("testfile2"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 }]
+        };
+        let mut entries = HashMap::new();
+        entries.insert(page_name_str("testfile"), empty_file());
+        let page_index = UserPageIndex {
+            entries
         };
 
         let result = render_query(&BlockToken {
             payload: "todos tag:\"parent\" state:\"done\" display:\"inplace-list\" ".to_string(),
             block_token_type: BlockTokenType::QUERY,
-        }, &empty_page_index(), &todo_index, &empty_tag_index());
+        }, &page_index, &todo_index, &empty_tag_index());
 
-        assert_eq!(result.inplace_markdown, "* ☑ [testfile2](page/testfile2): todo done\n".to_string());
+        assert_eq!(result.inplace_markdown, "\n\n* :check mark: [testfile2](page/testfile2): todo done\n\n".to_string());
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -378,6 +398,7 @@ mod tests {
                         page_name: page_name_str("testfile"),
                         page_id: page_id("%%user/testfile"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
@@ -394,6 +415,7 @@ mod tests {
                         page_name: page_name_str("testfile2"),
                         page_id: page_id("%%user/testfile2"),
                         blocknumber: 0,
+                        page_type: PageType::UserPage,
                     },
                 }]
         };

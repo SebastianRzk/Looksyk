@@ -3,7 +3,9 @@ use std::collections::{HashMap, HashSet};
 use crate::looksyk::builder::page_name;
 use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
 use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix, get_page_type, strip_journal_page_prefix, strip_user_page_prefix};
-use crate::state::{JournalPageIndex, TagIndex, UserPageIndex};
+use crate::state::journal::JournalPageIndex;
+use crate::state::tag::TagIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn create_tag_index(data_state: &UserPageIndex, journal_page_index: &JournalPageIndex) -> TagIndex {
     let mut result: HashMap<PageId, HashSet<PageId>> = HashMap::new();
@@ -167,7 +169,8 @@ mod tests {
     use crate::looksyk::index::tag::create_tag_index;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile};
-    use crate::state::{JournalPageIndex, UserPageIndex};
+    use crate::state::journal::JournalPageIndex;
+    use crate::state::userpage::UserPageIndex;
 
     #[test]
     pub fn should_create_tag_index_with_empty_state() {
@@ -273,7 +276,7 @@ mod tests {
 
         let result = create_todo_index(&UserPageIndex {
             entries: data_state,
-        });
+        }, &empty_journal_index());
 
         assert_eq!(result.entries.len(), 1);
         let entry = result.entries.get(0).unwrap();

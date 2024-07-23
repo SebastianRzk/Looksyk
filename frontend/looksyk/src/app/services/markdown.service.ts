@@ -3,6 +3,7 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js'
 import { Router } from "@angular/router";
+import { emojiExtension } from "../internal/emoji";
 
 
 @Injectable({
@@ -20,7 +21,8 @@ export class MarkdownService {
           const language = hljs.getLanguage(lang) ? lang : 'plaintext';
           return hljs.highlight(code, {language}).value;
         }
-      })
+      }),
+      emojiExtension()
     );
   }
 

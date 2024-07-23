@@ -1,0 +1,28 @@
+<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <g id="color">
+    <path fill="#9b9b9a" d="M17.5083,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,17.5083,48.7969Z"/>
+    <path fill="#9b9b9a" d="M25.5083,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,25.5083,48.7969Z"/>
+    <path fill="#9b9b9a" d="M33.5088,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,33.5088,48.7969Z"/>
+    <path fill="#9b9b9a" d="M41.5088,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,41.5088,48.7969Z"/>
+    <path fill="#9b9b9a" d="M49.5088,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,49.5088,48.7969Z"/>
+    <path fill="#9b9b9a" d="M57.5088,48.7969a1,1,0,0,1-1-1V32.0479a1,1,0,0,1,2,0v15.749A1,1,0,0,1,57.5088,48.7969Z"/>
+    <rect x="12.9457" y="28.0704" width="46.1086" height="3.9777" fill="#d0cfce"/>
+    <rect x="11.9458" y="46.7969" rx="1" width="48.1089" height="5.582" fill="#d0cfce"/>
+    <rect x="8.1631" y="50.3789" rx="1" width="55.6738" height="5.5811" fill="#d0cfce"/>
+    <polygon fill="#d0cfce" points="59.054 28.07 12.946 28.07 36 20.705 59.054 28.07"/>
+  </g>
+  <g id="line">
+    <line x1="59.0543" x2="12.9457" y1="47.7972" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="62.8369" x2="9.1631" y1="51.3786" y2="51.3786" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="66.2898" x2="5.7102" y1="55" y2="55" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="16" x2="16" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="24" x2="24" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="32" x2="32" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="40" x2="40" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="48" x2="48" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line x1="56" x2="56" y1="32.0481" y2="47.7972" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <polygon fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="59.054 28.07 12.946 28.07 36 20.705 59.054 28.07"/>
+    <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="59.054 25.155 59.054 32.048 12.946 32.048 12.946 25.155"/>
+    <line x1="36" x2="36" y1="20.7051" y2="18.3864" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>

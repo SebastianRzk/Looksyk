@@ -110,7 +110,7 @@ pub struct PreparedReferencedMarkdown {
 }
 
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq, Debug, Clone)]
 pub enum PageType {
     UserPage,
     JournalPage,

@@ -5,7 +5,9 @@ use urlencoding::encode;
 use crate::looksyk::model::{BlockToken, BlockTokenType, MarkdownReference, PageId, PageType, ParsedBlock, ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile, PreparedReferencedMarkdown, ReferencedMarkdown, SimplePageName};
 use crate::looksyk::page_index::{get_page_type, strip_journal_page_prefix, strip_user_page_prefix};
 use crate::looksyk::query::render_query;
-use crate::state::{TagIndex, TodoIndex, UserPageIndex};
+use crate::state::tag::TagIndex;
+use crate::state::todo::TodoIndex;
+use crate::state::userpage::UserPageIndex;
 
 pub fn render_file(markdown_file: &ParsedMarkdownFile, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
@@ -146,6 +148,13 @@ pub struct RenderResult {
     has_dynamic_content: bool,
 }
 
+pub fn render_link(destination: &SimplePageName, page_type: &PageType) -> String {
+    match page_type {
+        PageType::UserPage => render_user_link_str(&destination.name),
+        PageType::JournalPage => render_journal_link_str(&destination.name)
+    }
+}
+
 
 pub fn render_user_link(destination: &SimplePageName) -> String {
     render_user_link_str(&destination.name)
@@ -182,7 +191,9 @@ mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token};
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::renderer::render_block;
-    use crate::state::{TagIndex, TodoIndex, UserPageIndex};
+    use crate::state::tag::TagIndex;
+    use crate::state::todo::TodoIndex;
+    use crate::state::userpage::UserPageIndex;
 
     fn empty_todo_index() -> TodoIndex {
         TodoIndex {

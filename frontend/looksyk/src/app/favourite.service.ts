@@ -15,22 +15,34 @@ export class FavouriteService {
   favourites$ = this.favourites.asObservable();
 
   updateFavourites(){
-    this.httpClient.get<string[]>("/api/favourites").subscribe(
-      value => this.favourites.next(value)
+    this.httpClient.get<FavListDto>("/api/favourites").subscribe(
+      value => this.favourites.next(value.list)
     )
   }
 
 
   star(pageName: string) {
-    this.httpClient.post<string[]>("/api/favourites/" + pageName, {}).subscribe(
-      favs => this.favourites.next(favs)
+    this.httpClient.post<FavListDto>("/api/favourites/" + pageName, {}).subscribe(
+      favs => this.favourites.next(favs.list)
     );
   }
 
   unstar(pageName: string) {
-    this.httpClient.delete<string[]>("/api/favourites/" + pageName).subscribe(
-      favs => this.favourites.next(favs)
+    this.httpClient.delete<FavListDto>("/api/favourites/" + pageName).subscribe(
+      favs => this.favourites.next(favs.list)
     );
   }
 
+  updateFavList(new_fav_list: string[]){
+    console.log("save new favlist:", new_fav_list)
+    this.httpClient.post<FavListDto>("/api/favourites/", { list: new_fav_list} ).subscribe(
+      favs => this.favourites.next(favs.list)
+    );
+  }
+
+}
+
+
+interface FavListDto {
+  list: string[]
 }

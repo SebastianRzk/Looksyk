@@ -6,8 +6,8 @@ use crate::looksyk::model::{MarkdownReference, QueryRenderResult, ReferencedMark
 use crate::looksyk::queries::args::{parse_display_type, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::{render_block_flat, render_user_link};
-use crate::state::{TodoIndex, TodoIndexEntry, TodoState};
+use crate::looksyk::renderer::{render_block_flat, render_link};
+use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
 pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str.strip_prefix("todos").ok_or(Error::new(ErrorKind::Other, "Decode error"))?.trim();
@@ -87,17 +87,21 @@ fn render_as_count(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
 }
 
 fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
-    let mut result = "".to_string();
+    let mut result = "\n\n".to_string();
     for todo in selected_selected_todos {
         if todo.state == TodoState::Done {
-            result.push_str("* ☑ ");
+            result.push_str("* :check mark: ");
+            result.push_str(render_link(&todo.source.page_name, &todo.source.page_type).as_str());
+            result.push_str(": ");
+            result.push_str(render_block_flat(&todo.block).strip_prefix("[x] ").unwrap());
+            result.push_str("\n\n")
         } else {
-            result.push_str("*🔲 ☐ ");
+            result.push_str("* :white large square: ");
+            result.push_str(render_link(&todo.source.page_name, &todo.source.page_type).as_str());
+            result.push_str(": ");
+            result.push_str(render_block_flat(&todo.block).strip_prefix("[ ] ").unwrap());
+            result.push_str("\n\n")
         }
-        result.push_str(render_user_link(&todo.source.page_name).as_str());
-        result.push_str(": ");
-        result.push_str(render_block_flat(&todo.block).as_str());
-        result.push_str("\n")
     }
     QueryRenderResult {
         referenced_markdown: vec![],
