@@ -1,0 +1,20 @@
+
+.popuptext {
+  background: red;
+  border: 3px solid blue;
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  height: 30%;
+  overflow: scroll;
+  padding: 3ex;
+}
+
+
+.suggestion-item {
+  padding: 1ex;
+}
+
+.active {
+  border: 3px solid green;
+}

@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
+import { ContentAssistPopupComponent } from "./pages/components/content-assist-popup/content-assist-popup.component";
 
 @NgModule({ declarations: [
         AppComponent
@@ -15,5 +16,5 @@ import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
         AppRoutingModule,
         BrowserAnimationsModule,
         MatSidenavModule,
-        SidebarComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        SidebarComponent, ContentAssistPopupComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

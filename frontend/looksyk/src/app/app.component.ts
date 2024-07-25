@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { UseractionService } from "./services/useraction.service";
 import { firstValueFrom } from "rxjs";
+import { ContentAssistService, KeypressResult } from "./services/content-assist.service";
 
 @Component({
   selector: 'app-root',
@@ -10,12 +11,27 @@ import { firstValueFrom } from "rxjs";
 export class AppComponent {
 
   userAction = inject(UseractionService);
+  contentAssist = inject(ContentAssistService);
 
   @ViewChild('content')
   content!: ElementRef;
 
-  @HostListener('window:keyup', ['$event'])
+  @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {
+    if(this.contentAssist.isOpenRaw){
+      this.stopProagation(event);
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyUpEvent(event: KeyboardEvent) {
+    let result = this.contentAssist.registerKeyPress(event);
+    if (result == KeypressResult.StopAndStopPropagation) {
+      this.stopProagation(event);
+      return;
+    }
+
+
     if (event.key == 'Escape') {
       event.stopImmediatePropagation();
       this.userAction.openMarkdown.next({
@@ -46,6 +62,12 @@ export class AppComponent {
       return;
     }
 
+  }
+
+  private stopProagation(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation()
+    event.stopImmediatePropagation();
   }
 
   @HostListener('paste', ['$event'])

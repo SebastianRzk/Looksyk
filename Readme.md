@@ -73,6 +73,9 @@ The frontend still has some challenges. Performance can be improved and sometime
 * Todo: Config page
   * Configure design (create a light and a dark theme)
   * Configure favourites
+* Todo: Content assist
+  * Insert tags
+  * Insert queries
 
 
 ### Vision
