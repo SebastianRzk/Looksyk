@@ -22,7 +22,6 @@ export class UseractionService {
 
   openMarkdown: Subject<OpenMarkdownEvent> = new Subject<OpenMarkdownEvent>();
   openMarkdown$: Observable<OpenMarkdownEvent> = this.openMarkdown.asObservable();
-  __debugOpenMarkdown = this.openMarkdown$.subscribe(event => console.log("openMarkdown", event));
   currentOpenMarkdown: Subject<OpenMarkdownEvent> = new BehaviorSubject({
     target: {
       blockTarget: "",

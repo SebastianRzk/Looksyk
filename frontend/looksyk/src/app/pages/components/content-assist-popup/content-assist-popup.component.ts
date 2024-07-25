@@ -8,6 +8,8 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption } from "@angular/material/autocomplete";
 import { MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
+import { Router } from "@angular/router";
+import { OpenMarkdownEvent, UseractionService } from "../../../services/useraction.service";
 
 @Component({
   selector: 'app-content-assist-popup',
@@ -39,12 +41,12 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   contentAssist = inject(ContentAssistService);
   metaInfoFromBackend = inject(MetaInfoService);
+  useraction = inject(UseractionService);
+  router = inject(Router);
 
   text$ = this.contentAssist.textInContentAssist$
 
-  open$ = this.contentAssist.isOpen$;
-
-  mode$ = this.contentAssist.contentAssistMode$;
+  state$ = this.contentAssist.state$;
 
   enter_ = this.contentAssist.enter$.subscribe(async () => {
     let currentFilterState = await firstValueFrom(this.stateGroupOptions);
@@ -52,6 +54,24 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       for (let item of group.items) {
         if (item.highlight) {
           console.log("selected item: ", item.name);
+
+          let state = await firstValueFrom(this.state$);
+          if (state == ContentAssistMode.Navigate) {
+            await this.router.navigate(["/page", item.name]);
+          } else if (state == ContentAssistMode.InsertTag) {
+            let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+            this.useraction.insertText.next({
+              target: target.target,
+              inlineMarkdown: `${item.name}]] `
+            })
+          } else {
+            let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+            this.useraction.insertText.next({
+              target: target.target,
+              inlineMarkdown: `something ${item.name} something `
+            })
+          }
+
           this.contentAssist.registerKeyPress(new KeyboardEvent("keydown", {key: "Escape"}))
           return;
         }
@@ -75,7 +95,6 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }
 
   private _highlightItem(cursor: number, items: ContentAssistSection[]): ContentAssistSection[] {
-    console.log(items)
     let currentCursor = 0;
     let highlighted = false;
     for (let group of items) {
@@ -113,13 +132,15 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   metaInfoFromServive_ = combineLatest({
     info: this.metaInfoFromBackend.currentmetaInfo$,
-    mode: this.mode$
+    mode: this.state$
   }).subscribe(data => {
       let nextState;
       if (data.mode === ContentAssistMode.Insert) {
         nextState = this.creteInsertState(data);
-      } else {
+      } else if (data.mode === ContentAssistMode.Navigate) {
         nextState = this.createNavigationState(data)
+      } else {
+        nextState = this.createLinkState(data);
       }
       this.contentAssistContent = nextState;
     }
@@ -166,7 +187,33 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     ];
   }
 
-  allContentAssistModes = ContentAssistMode;
+  private createLinkState(data: {
+    mode: ContentAssistMode,
+    info: MetaInformation
+  }): ContentAssistSection[] {
+    return [{
+      title: "Insert Reference",
+      items: data.info.tags.map(tag => {
+        return {
+          name: tag.name,
+          highlight: false
+        }
+      })
+    }
+    ];
+  }
+
+  isClosed(contentAssistMode: ContentAssistMode) {
+    return contentAssistMode === ContentAssistMode.Closed;
+  }
+
+  isInsert(contentAssistMode: ContentAssistMode) {
+    return contentAssistMode === ContentAssistMode.Insert;
+  }
+
+  isNavigate(contentAssistMode: ContentAssistMode) {
+    return contentAssistMode === ContentAssistMode.Navigate;
+  }
 }
 
 function CONTENT_ASSIST_ACTIONS_EDIT(): ContentAssistSection {

@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { UseractionService } from "./services/useraction.service";
 import { firstValueFrom } from "rxjs";
-import { ContentAssistService, KeypressResult } from "./services/content-assist.service";
+import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent {
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {
-    if(this.contentAssist.isOpenRaw){
+    if(this.contentAssist.stateRaw != ContentAssistMode.Closed){
       this.stopProagation(event);
     }
   }

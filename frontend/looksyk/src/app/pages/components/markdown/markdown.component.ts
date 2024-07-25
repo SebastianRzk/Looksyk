@@ -153,9 +153,10 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
           range = sel.getRangeAt(0);
           range.deleteContents();
           range.insertNode(document.createTextNode(insertText.inlineMarkdown));
+          sel.setPosition(sel.focusNode,sel.getRangeAt(0).endOffset);
         }
       } else {
-        this.textareaRef.nativeElement.createRange().text = insertText.inlineMarkdown;
+       this.textareaRef.nativeElement.createRange().text = insertText.inlineMarkdown;
       }
       this.changeDetector.markForCheck();
       this.changeDetector.detectChanges();

@@ -9,12 +9,13 @@ export class ContentAssistService {
 
   useraction = inject(UseractionService);
 
-  public isOpenRaw: boolean = false;
-  private isOpen = new BehaviorSubject<boolean>(false);
-  public isOpen$ = this.isOpen.asObservable();
+  public stateRaw: ContentAssistMode = ContentAssistMode.Closed;
+  private state = new BehaviorSubject<ContentAssistMode>(ContentAssistMode.Closed);
+  public state$ = this.state.asObservable();
 
-  private contentAssistMode = new BehaviorSubject<ContentAssistMode>(ContentAssistMode.Navigate);
-  public contentAssistMode$ = this.contentAssistMode.asObservable();
+  private lastChar: string = "";
+
+  private contentAssistModeRaw: ContentAssistMode = ContentAssistMode.Navigate;
 
   private textInContentAssistRaw = "";
   private textInContentAssist = new BehaviorSubject<string>("");
@@ -22,29 +23,32 @@ export class ContentAssistService {
   private cursorInContentAssist = new BehaviorSubject<number>(0);
   public cursorInContentAssist$ = this.cursorInContentAssist.asObservable();
   private enter = new Subject<void>()
-  public enter$ = this.enter.asObservable().pipe(filter(e => this.isOpenRaw));
+  public enter$ = this.enter.asObservable().pipe(filter(e => this.stateRaw != ContentAssistMode.Closed));
 
   constructor() {
     this.useraction.openMarkdown$.subscribe((data) => {
         if (!!data.target.fileTarget) {
-          this.contentAssistMode.next(ContentAssistMode.Insert);
+          this.contentAssistModeRaw = ContentAssistMode.Insert;
         } else {
-          this.contentAssistMode.next(ContentAssistMode.Navigate);
+          this.contentAssistModeRaw = ContentAssistMode.Navigate;
         }
       }
     );
-    this.textInContentAssist$.subscribe((data) => {
-      console.log("content assist text: ", data);
-    });
   }
 
   public registerKeyPress(keyDownEvent: KeyboardEvent): KeypressResult {
     if (this.isOpenContentAssist(keyDownEvent)) {
-      this.open();
+      this.open(this.contentAssistModeRaw);
       return KeypressResult.StopAndStopPropagation;
     }
 
-    if (!this.isOpenRaw) {
+    if (keyDownEvent.key == "[" && this.lastChar == "[" && this.contentAssistModeRaw == ContentAssistMode.Insert) {
+      this.open(ContentAssistMode.InsertTag);
+      return KeypressResult.StopAndStopPropagation;
+    }
+    this.lastChar = keyDownEvent.key;
+
+    if (!this.stateRaw) {
       return KeypressResult.Nothing;
     }
 
@@ -58,13 +62,13 @@ export class ContentAssistService {
   }
 
   private close() {
-    this.isOpenRaw = false;
-    this.isOpen.next(false);
+    this.stateRaw = ContentAssistMode.Closed;
+    this.state.next(ContentAssistMode.Closed);
   }
 
-  private open() {
-    this.isOpenRaw = true;
-    this.isOpen.next(true);
+  private open(mode: ContentAssistMode) {
+    this.stateRaw = mode;
+    this.state.next(mode);
   }
 
   private feedContent(keyDownEvent: KeyboardEvent) {
@@ -80,7 +84,6 @@ export class ContentAssistService {
           return;
         }
       }
-      console.log("key", keyDownEvent.key)
       if (keyDownEvent.key == 'ArrowDown') {
         this.cursorInContentAssist.next(this.cursorInContentAssist.value + 1);
         return;
@@ -111,7 +114,7 @@ export class ContentAssistService {
   }
 
   private isCloseContentAssist(event: KeyboardEvent) {
-    return event.key == 'Escape' && this.isOpenRaw;
+    return event.key == 'Escape' && this.stateRaw;
   }
 
 
@@ -122,5 +125,5 @@ export enum KeypressResult {
 }
 
 export enum ContentAssistMode {
-  Insert, Navigate
+  Closed, Insert, Navigate, InsertTag
 }

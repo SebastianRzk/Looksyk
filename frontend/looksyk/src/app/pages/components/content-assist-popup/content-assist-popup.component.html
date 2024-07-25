@@ -1,23 +1,24 @@
-<span *ngIf="open$ | async" class="popuptext">
-  @if (mode$ | async; as mode) {
-    @if (mode == allContentAssistModes.Navigate) {
+@if (state$ | async; as state) {
+  <span *ngIf="!isClosed(state)" class="popuptext">
+    @if (isNavigate(state) ) {
       <h2>content assist navigate</h2>
-    } @else {
+    } @else if(isInsert(state)) {
       <h2>content assist insert</h2>
+    }@else {
+      <h2>content assist link</h2>
     }
-  }
 
-  {{ text$ | async }}
+    {{ text$ | async }}
 
-  <div class="suggestions">
-  @for (group of stateGroupOptions | async; track group) {
-    <div class="suggestion-group"> {{ group.title }}
-      @for (name of group.items; track name.name) {
-        <div class="suggestion-item" [classList]="name.highlight? 'active': 'inactive' ">{{ name.name }}</div>
+    <div class="suggestions">
+      @for (group of stateGroupOptions | async; track group) {
+        <div class="suggestion-group"> {{ group.title }}
+          @for (name of group.items; track name.name) {
+            <div class="suggestion-item" [classList]="name.highlight? 'active': 'inactive' ">{{ name.name }}</div>
+          }
+              </div>
+        <mat-divider></mat-divider>
       }
-          </div>
-    <mat-divider></mat-divider>
-  }
-</div>
-
-</span>
+    </div>
+  </span>
+}
