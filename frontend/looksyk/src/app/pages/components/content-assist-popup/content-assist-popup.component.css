@@ -1,20 +1,30 @@
 
 .popuptext {
-  background: red;
-  border: 3px solid blue;
+  background: var(--background-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 0.5ex;
   position: absolute;
   z-index: 2;
   width: 80%;
-  height: 30%;
+  height: 80%;
   overflow: scroll;
-  padding: 3ex;
+  padding: 1ex 2ex 2ex 1ex;
 }
 
 
-.suggestion-item {
-  padding: 1ex;
-}
 
 .active {
-  border: 3px solid green;
+  border: 3px solid var(--primary-color);
+  border-radius: 0.5ex;
+  padding-left: 2ex;
+  font-size: large;
+}
+
+.inactive {
+  padding-left: 2ex;
+}
+
+.insert-value-input {
+  width: 100%;
+  font-size: x-large;
 }

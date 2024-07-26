@@ -11,6 +11,7 @@ use crate::io::http::favourites;
 use crate::io::http::media;
 use crate::io::http::design;
 use crate::io::http::userpage;
+use crate::io::http::metainfo;
 use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
@@ -71,6 +72,7 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::post_file)
             .service(media::endpoints::assets)
             .service(design::endpoints::css_theme)
+            .service(metainfo::endpoints::get_metainfo)
     })
         .bind(("127.0.0.1", 8989))?
         .run()

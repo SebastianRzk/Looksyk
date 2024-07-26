@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -8,42 +9,23 @@ export class MetaInfoService {
 
 
   private currentMetaInfo = new BehaviorSubject<MetaInformation>({
-    tags: [
-      {
-        name: "tag 1"
-      },
-      {
-        name: "project 2"
-      }
-    ],
-    media: [
-      {
-        name: "myfile123.png"
-      },
-      {
-        name: "mygile1234.jpeg"
-      }
-    ]
+    tags: [],
+    media: []
   });
 
   public currentmetaInfo$ = this.currentMetaInfo.asObservable();
 
+  private http = inject(HttpClient);
+
   public update() {
-    //TODO
+    this.http.get<MetaInformation>("/api/metainfo/").subscribe((data: MetaInformation) => {
+      this.currentMetaInfo.next(data);
+    });
   }
 
 }
 
 export interface MetaInformation {
-  tags: Tag[],
-  media: Media[]
-}
-
-
-export interface Tag {
-  name: string
-}
-
-export interface Media {
-  name: string
+  tags: string[],
+  media: string[]
 }

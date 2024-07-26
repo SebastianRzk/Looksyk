@@ -67,15 +67,18 @@ The frontend still has some challenges. Performance can be improved and sometime
   * Native build
 * :white_check_mark: Done: Favourites
   * :white_check_mark: Reorder list in sidebar
-* Todo: Design
+* :white_check_mark: Done: Design
   * :white_check_mark: Extract variables in CSS for key elements (for easy theming) (edit config.json and restart server)
   * :white_check_mark: ~Change and~ embed fonts
 * Todo: Config page
   * Configure design (create a light and a dark theme)
   * Configure favourites
-* Todo: Content assist
-  * Insert tags
-  * Insert queries
+* :white_check_mark: Done: Content assist
+  * :white_check_mark: Done: Insert tags
+  * :white_check_mark: Done: Insert queries
+  * :white_check_mark: Done: Insert mode
+  * :white_check_mark: Done: Auto trigger by insert link (insert link mode)
+  * :white_check_mark: Done: Navigation mode
 
 
 ### Vision
@@ -131,11 +134,14 @@ TODO
 
 ## Basic commands
 
-* `[[a link]]` creates a link to a page
+* `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
 * `[ ]` creates a todo
 * `[x]` marks a todo as done
 * Ctrl+Enter creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
+* Ctrl+Space opens the content assist
+  * With open markdown block -> "insert mode"
+  * With no open markdown block -> "navigation mode"
 
 ## Queries
 

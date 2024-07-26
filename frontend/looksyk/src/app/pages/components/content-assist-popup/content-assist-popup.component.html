@@ -1,23 +1,22 @@
 @if (state$ | async; as state) {
   <span *ngIf="!isClosed(state)" class="popuptext">
     @if (isNavigate(state) ) {
-      <h2>content assist navigate</h2>
+      <h3>content assist navigate</h3>
     } @else if(isInsert(state)) {
-      <h2>content assist insert</h2>
+      <h3>content assist insert</h3>
     }@else {
-      <h2>content assist link</h2>
+      <h3>content assist link</h3>
     }
 
-    {{ text$ | async }}
+   <input class="insert-value-input" value="{{ text$ | async }}"  placeholder="start typing"/>
 
     <div class="suggestions">
       @for (group of stateGroupOptions | async; track group) {
-        <div class="suggestion-group"> {{ group.title }}
+        <div class="suggestion-group"> <h4>{{ group.title }}</h4>
           @for (name of group.items; track name.name) {
-            <div class="suggestion-item" [classList]="name.highlight? 'active': 'inactive' ">{{ name.name }}</div>
+            <div [classList]="name.highlight? 'active': 'inactive' ">{{ name.name }}</div>
           }
               </div>
-        <mat-divider></mat-divider>
       }
     </div>
   </span>
