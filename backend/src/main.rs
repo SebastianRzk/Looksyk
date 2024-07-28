@@ -16,6 +16,7 @@ use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
 use crate::state::state::{AppState, DataRootLocation};
+use crate::io::http::r#static;
 
 mod looksyk;
 mod state;
@@ -70,9 +71,18 @@ async fn main() -> std::io::Result<()> {
             .service(favourites::endpoints::get_favourites)
             .service(favourites::endpoints::update_favourites)
             .service(media::endpoints::post_file)
-            .service(media::endpoints::assets)
             .service(design::endpoints::css_theme)
             .service(metainfo::endpoints::get_metainfo)
+            .service(r#static::endpoints::index_html)
+            .service(r#static::endpoints::css)
+            .service(r#static::endpoints::js)
+            .service(r#static::endpoints::font_css)
+            .service(r#static::endpoints::font_garamond)
+            .service(r#static::endpoints::font_material)
+            .service(r#static::endpoints::emoji)
+            .service(r#static::endpoints::asset_js)
+            .service(media::endpoints::assets)
+
     })
         .bind(("127.0.0.1", 8989))?
         .run()

@@ -55,7 +55,7 @@ The frontend still has some challenges. Performance can be improved and sometime
 * Todo: Page
   * :white_check_mark: Emoji support 
   * Rename pages / tags
-  * Page properites
+  * Page properties
   * Page icons
   * Delete page
   * Custom page properties
@@ -63,8 +63,10 @@ The frontend still has some challenges. Performance can be improved and sometime
   * Query type: `page-by-property` (list pages with a certain property)
   * Query type: `insert-content-from-file` (insert content from a asset file)
   * Improve query error messages
-* Todo: Deployment
-  * Native build
+* Todo: Deployment / native build
+  * :white_check_mark: Serve all statics with the backend
+  * Basic graph configuration in user home directory
+  * Create configs and folders on initial start
 * :white_check_mark: Done: Favourites
   * :white_check_mark: Reorder list in sidebar
 * :white_check_mark: Done: Design
