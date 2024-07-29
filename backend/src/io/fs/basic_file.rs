@@ -12,3 +12,16 @@ pub fn read_binary_file(path: PathBuf) -> Vec<u8> {
     fs::read::<PathBuf>(path).unwrap()
 }
 
+
+pub fn exists_folder(path: PathBuf) -> bool {
+    fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_dir()
+}
+
+
+pub fn exists_file(path: PathBuf) -> bool {
+    fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_dir()
+}
+
+pub fn create_folder(path: PathBuf) {
+    fs::create_dir_all(path).unwrap();
+}

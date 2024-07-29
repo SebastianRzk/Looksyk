@@ -7,7 +7,8 @@ use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
 use crate::state::state::DataRootLocation;
 
 pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
-    let config_file_content_as_str = read_file(media_config_path(data_root_location));
+    let media_config_path = media_config_path(data_root_location);
+    let config_file_content_as_str = read_file(media_config_path);
     let json: Vec<IndexedMedia> = serde_json::from_str(config_file_content_as_str.as_str()).unwrap();
     return MediaIndex {
         media: json

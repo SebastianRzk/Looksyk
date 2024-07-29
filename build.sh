@@ -2,7 +2,8 @@
 
 
 pushd frontend/looksyk
-ng build --configuration=production
+npm install
+npm run build --configuration=production
 popd
 
 pushd backend
