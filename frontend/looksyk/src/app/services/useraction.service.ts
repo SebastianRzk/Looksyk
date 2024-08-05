@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {
   BehaviorSubject,
-  bufferCount,
   combineLatest,
   debounce,
   distinct,
@@ -135,14 +134,7 @@ export class UseractionService {
           pageid: currentPage.pageid,
           isFavourite: currentPage.isFavourite
         });
-        this.openMarkdown.next(
-          {
-            target: {
-              fileTarget: "",
-              blockTarget: ""
-            }
-          }
-        )
+        this.closeCurrentMarkdownBlock();
         setTimeout(() => {
           this.openMarkdown.next({
             target: {
@@ -222,7 +214,6 @@ export class UseractionService {
 
 
   _savePage = this.savePage$.subscribe(event => {
-    console.log("save event", event)
     firstValueFrom(this.pageService.getPage(event.target.fileTarget)).then(
       page => {
         this.convertToBasicContent(page.blocks).then(
@@ -234,10 +225,7 @@ export class UseractionService {
       })
   })
 
-  async convertToBasicContent(content
-                                :
-                                Block[]
-  ):
+  async convertToBasicContent(content: Block[]):
     Promise<BasicPageContent[]> {
     let result
       :
@@ -252,6 +240,10 @@ export class UseractionService {
     return result;
   }
 
+  closeCurrentMarkdownBlock(){
+    this.openMarkdown.next(NO_OPEN_MARKDOWN)
+
+  }
 }
 
 export interface Target {
@@ -282,6 +274,13 @@ export interface InsertTextEvent {
 
 export interface FileUploadEvent {
   file: File
+}
+
+export const NO_OPEN_MARKDOWN: OpenMarkdownEvent = {
+  target: {
+    blockTarget: "",
+    fileTarget: ""
+  }
 }
 
 

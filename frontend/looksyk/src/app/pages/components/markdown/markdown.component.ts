@@ -203,6 +203,12 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
         fileTarget: this.pageid
       }
     });
+    this.userInteraction.openMarkdown.next({
+      target: {
+        blockTarget: "",
+        fileTarget: ""
+      }
+    });
   }
 
   updateSilent() {

@@ -44,6 +44,3 @@ pub fn get_page_type(page_id: &PageId) -> PageType {
     }
 }
 
-
-
-

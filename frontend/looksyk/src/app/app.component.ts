@@ -34,12 +34,7 @@ export class AppComponent {
 
     if (event.key == 'Escape') {
       event.stopImmediatePropagation();
-      this.userAction.openMarkdown.next({
-        target: {
-          blockTarget: "",
-          fileTarget: ""
-        }
-      });
+      this.userAction.closeCurrentMarkdownBlock();
       return;
     }
     if (event.key == 'Enter') {

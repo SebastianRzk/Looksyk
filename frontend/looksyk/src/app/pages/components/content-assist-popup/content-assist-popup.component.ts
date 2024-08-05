@@ -62,6 +62,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     console.log("selected item: ", item.name);
     let state = await firstValueFrom(this.state$);
     if (state == ContentAssistMode.Navigate) {
+      this.useraction.closeCurrentMarkdownBlock();
       if (group.title == this.NAVIGATE_TO_NEW_PAGE) {
         let target: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
         await this.router.navigate(["/page", target]);
@@ -90,6 +91,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       } else if (group.title === this.INSERT_MEDIA_TITLE) {
         text_to_insert = `![${item.name}][${item.name}]] `
       } else if (group.title === "Actions") {
+        this.useraction.closeCurrentMarkdownBlock();
         if (item.name === "Delete block") {
           this.useraction.deleteBlock.next({
             target: target.target
@@ -199,7 +201,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         .filter(group => group.items.length > 0);
     }
 
-    return this.contentAssistContent;
+    return this.contentAssistContent
+      .map(group => ({title: group.title, items: this._filter(group.items, value)}));
   }
 
   _filter = (opt: Item[], value: string): Item[] => {

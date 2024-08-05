@@ -27,6 +27,7 @@ export class ContentAssistService {
 
   constructor() {
     this.useraction.openMarkdown$.subscribe((data) => {
+      console.log("open markdown in assist", data)
         if (!!data.target.fileTarget) {
           this.contentAssistModeRaw = ContentAssistMode.Insert;
         } else {
