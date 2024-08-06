@@ -70,6 +70,7 @@ issues.
 * Todo: Queries
 	* Query type: `page-by-property` (list pages with a certain property)
 	* Query type: `insert-content-from-file` (insert content from a asset file)
+	* Query type: `insert-code-from-file` (insert content from a asset file as a multiline code block with code highlighting)
 	* Improve query error messages
 * Todo: Deployment / native build
 	* :white_check_mark: Serve all statics with the backend
