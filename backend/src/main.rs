@@ -41,6 +41,9 @@ async fn main() -> std::io::Result<()> {
 
     let app_state = create_app_state(data_root_location);
 
+    let port = 8989;
+
+    println!("Starting Looksyk on Port {}", port);
 
     HttpServer::new(move || {
         App::new()
@@ -70,7 +73,7 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
     })
-        .bind(("127.0.0.1", 8989))?
+        .bind(("127.0.0.1", port))?
         .run()
         .await
 }
