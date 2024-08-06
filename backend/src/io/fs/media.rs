@@ -1,5 +1,8 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+
+use actix_files::NamedFile;
 use chrono::Utc;
+
 use crate::io::fs::basic_file::{read_binary_file, read_file};
 use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
@@ -21,7 +24,7 @@ pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &M
 }
 
 fn media_config_path(data_path: &DataRootLocation) -> PathBuf {
-    Path::new(data_path.path.as_str()).join(REL_MEDIA_CONFIG_PATH)
+    data_path.path.clone().join(REL_MEDIA_CONFIG_PATH)
 }
 
 pub fn init_media(data_root_location: &DataRootLocation, current_media_index: &MediaIndex) -> MediaIndex {
@@ -29,15 +32,14 @@ pub fn init_media(data_root_location: &DataRootLocation, current_media_index: &M
     let mut result_index: Vec<IndexedMedia> = vec![];
 
     for file in all_files_in_folder {
-        let media_name = create_media_name(&file);
-        let file_in_index = find_file(&media_name, current_media_index);
+        let file_in_index = find_file(&file.name, current_media_index);
         if file_in_index.is_some() {
             result_index.push(file_in_index.clone().unwrap().clone());
         } else {
-            println!("Add media object to index: {}", media_name.as_str());
+            println!("Add media object to index: {}", &file.name.as_str());
             result_index.push(IndexedMedia {
-                relative_path: media_name,
-                sha3: create_hash(file),
+                file_name: file.name.clone(),
+                sha3: create_hash(file, data_root_location),
             });
         }
     }
@@ -47,9 +49,6 @@ pub fn init_media(data_root_location: &DataRootLocation, current_media_index: &M
     }
 }
 
-fn create_media_name(file: &MediaOnDisk) -> String {
-    file.location.to_str().unwrap().to_string()
-}
 
 pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -> PathBuf {
     let timestamp = Utc::now().format("%Y_%m_%d_%H_%M_%S").to_string();
@@ -57,7 +56,9 @@ pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -
     let (filestem, file_ending) = parse_name(filename);
 
     let filename = format!("{}_{}.{}", filestem, timestamp, file_ending);
-    Path::new(data_root_location.path.as_str()).join(REL_MEDIA_LOCATION).join(filename)
+    create_absolute_media_path(MediaOnDisk {
+        name: filename
+    }, data_root_location)
 }
 
 fn parse_name(filename: &str) -> (String, String) {
@@ -74,21 +75,31 @@ fn parse_name(filename: &str) -> (String, String) {
     (filestem.clone(), file_ending.to_string())
 }
 
-pub fn create_hash(file: MediaOnDisk) -> String {
-    let file_conent = read_binary_file(file.location);
+pub fn create_absolute_media_path(file: MediaOnDisk, data_root_location: &DataRootLocation) -> PathBuf {
+    data_root_location.path.clone().join(REL_MEDIA_LOCATION).join(file.name)
+}
+
+pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> String {
+    let file_conent = read_binary_file(create_absolute_media_path(file, data_root_location));
     hash_file_content(LoadedMedia {
         content: file_conent,
     })
 }
 
+pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::Result<NamedFile> {
+    return NamedFile::open(create_absolute_media_path(MediaOnDisk {
+        name: name.clone()
+    }, location));
+}
+
 
 pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaOnDisk> {
-    let media_path = Path::new(data_root_location.path.as_str()).join(REL_MEDIA_LOCATION);
+    let media_path = data_root_location.path.clone().join(REL_MEDIA_LOCATION);
     let mut result = vec![];
     for file in media_path.read_dir().unwrap() {
-        let location = file.unwrap().path();
+        let location = file.unwrap().file_name().to_str().unwrap().to_string();
         result.push(MediaOnDisk {
-            location
+            name: location
         });
     }
     return result;
@@ -96,7 +107,7 @@ pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaO
 
 
 pub struct MediaOnDisk {
-    pub location: PathBuf,
+    pub name: String,
 }
 
 

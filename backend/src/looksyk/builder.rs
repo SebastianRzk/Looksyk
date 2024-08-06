@@ -35,7 +35,7 @@ pub fn link_token(link: &str) -> BlockToken {
 pub fn journal_link_token(link: &str) -> BlockToken {
     BlockToken {
         payload: link.to_string(),
-        block_token_type: BlockTokenType::JOURNAL_LINK,
+        block_token_type: BlockTokenType::JOURNALLINK,
     }
 }
 

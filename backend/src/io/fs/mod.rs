@@ -5,3 +5,4 @@ mod paths;
 pub mod media;
 pub mod root_path;
 pub mod env;
+pub mod basic_folder;

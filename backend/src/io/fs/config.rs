@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use crate::io::fs::basic_file::read_file;
 use crate::io::fs::paths::REL_CONFIG_PATH;
@@ -17,5 +17,5 @@ pub fn save_config_to_file(data_path: &DataRootLocation, config: &Config) {
 }
 
 fn config_path(data_path: &DataRootLocation) -> PathBuf {
-    Path::new(data_path.path.as_str()).join(REL_CONFIG_PATH)
+    data_path.path.clone().join(REL_CONFIG_PATH)
 }

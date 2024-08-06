@@ -1,6 +1,7 @@
 use actix_web::{get, Responder, web};
 use actix_web::web::Data;
 use serde::Serialize;
+use crate::io::http::media::config::pad_url_media_location;
 use crate::looksyk::model::{PageId, PageType};
 use crate::looksyk::page_index::{get_page_type, strip_prefix};
 use crate::state::state::AppState;
@@ -17,7 +18,7 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
     tags.sort_by(|a, b| b.to_lowercase().cmp(&a.to_lowercase()));
     tags.dedup();
 
-    let mut media: Vec<String> = media_guard.media.iter().map(|x| x.relative_path.clone()).collect();
+    let mut media: Vec<String> = media_guard.media.iter().map(|x| pad_url_media_location(&x.file_name)).collect();
     media.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
 
     Ok(web::Json(MetaInfoDto {

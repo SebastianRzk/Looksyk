@@ -8,10 +8,12 @@ use actix_web::web::{Data, Json};
 use serde::{Deserialize, Serialize};
 
 use crate::io::fs::basic_file::read_binary_file;
-use crate::io::fs::media::{destination_path, LoadedMedia, write_media_config};
+use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config};
 use crate::io::hash::hash_file_content;
+use crate::io::http::media::config::pad_url_media_location;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::state::state::AppState;
+
 
 #[derive(Debug, Deserialize)]
 struct Metadata {
@@ -46,7 +48,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
         let name = destination_path.to_str().unwrap().to_string();
         println!("Add media object to index: {} , {}", filename.as_str(), name);
         let new_entry = IndexedMedia {
-            relative_path: name,
+            file_name: pad_url_media_location(&name),
             sha3: hash.clone(),
         };
         media_guard.media.push(new_entry.clone());
@@ -56,11 +58,8 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
         new_entry
     });
 
-    let filename = Path::new(&index_element.relative_path).file_name().unwrap().to_str().unwrap().to_string();
-
-
     Ok(Json(FileUploadResult {
-        inline_markdown: format!("![{}](/assets/{})", filename, filename)
+        inline_markdown: format!("![{}]({})", filename, pad_url_media_location(&index_element.file_name))
     }))
 }
 
@@ -68,9 +67,8 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 
 #[get("/assets/{filename:.*}")]
 async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile, Error> {
-    let path: std::path::PathBuf = req.match_info().query("filename").parse().unwrap();
-    let complete_path = Path::new(&data.data_path.path).join("assets").join(path);
-    let file = NamedFile::open(complete_path)?;
+    let path: String = req.match_info().query("filename").parse().unwrap();
+    let file = read_media_file(&path, &data.data_path)?;
     Ok(file
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {

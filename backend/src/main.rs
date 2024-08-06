@@ -1,10 +1,10 @@
-use std::path::Path;
 use std::sync::Mutex;
 
 use actix_web::{App, HttpServer};
 use actix_web::web::Data;
 
 use crate::io::fs::basic_file::{create_folder, exists_folder};
+use crate::io::fs::basic_folder::home_directory;
 use crate::io::fs::config::{read_config_from_file, save_config_to_file};
 use crate::io::fs::env;
 use crate::io::fs::media::{init_media, read_media_config, write_media_config};
@@ -30,13 +30,13 @@ mod io;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let initial_config_path = env::get_or_default("LOOKSYK_CONFIG_PATH", home_directory().join(".local").join("share").join("looksyk").to_str().unwrap());
     let data_root_location = get_current_active_data_root_location(&InitialConfigLocation {
-        path: env::get_or_default("LOOKSYK_CONFIG_PATH", "~/.local/share/looksyk")
+        path: initial_config_path
     });
 
-    let root = Path::new(&data_root_location.path);
-    if !exists_folder(root.to_path_buf()) {
-        init_empty_graph(&data_root_location, root);
+    if !exists_folder(data_root_location.path.to_path_buf()) {
+        init_empty_graph(&data_root_location);
     }
 
     let app_state = create_app_state(data_root_location);
@@ -75,9 +75,9 @@ async fn main() -> std::io::Result<()> {
         .await
 }
 
-fn init_empty_graph(data_root_location: &DataRootLocation, root: &Path) {
-    create_folder(root.join("assets"));
-    create_folder(root.join("config"));
+fn init_empty_graph(data_root_location: &DataRootLocation) {
+    create_folder(data_root_location.path.join("assets"));
+    create_folder(data_root_location.path.join("config"));
     write_media_config(&data_root_location, &MediaIndex {
         media: vec![]
     });
@@ -91,8 +91,8 @@ fn init_empty_graph(data_root_location: &DataRootLocation, root: &Path) {
         },
     });
 
-    create_folder(root.join("journals"));
-    create_folder(root.join("pages"));
+    create_folder(data_root_location.path.join("journals"));
+    create_folder(data_root_location.path.join("pages"));
 }
 
 fn create_app_state(data_root_location: DataRootLocation) -> Data<AppState> {

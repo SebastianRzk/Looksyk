@@ -83,7 +83,7 @@ fn serialize_block_token(block_token: &BlockToken) -> String {
         BlockTokenType::LINK => {
             format!("[[{}]]", block_token.payload.clone())
         }
-        BlockTokenType::JOURNAL_LINK => {
+        BlockTokenType::JOURNALLINK => {
             format!("[[journal::{}]]", block_token.payload.clone())
         }
         BlockTokenType::QUERY => {

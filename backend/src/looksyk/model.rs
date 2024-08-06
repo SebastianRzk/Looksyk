@@ -40,7 +40,7 @@ pub struct BlockContent {
 pub enum BlockTokenType {
     TEXT,
     LINK,
-    JOURNAL_LINK,
+    JOURNALLINK,
     QUERY,
     TODO,
 }

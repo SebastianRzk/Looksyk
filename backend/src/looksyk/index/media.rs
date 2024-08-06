@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 pub fn find_file(file_name: &String, media_index: &MediaIndex)-> Option<IndexedMedia> {
     for media in &media_index.media {
-        if &media.relative_path == file_name {
+        if &media.file_name == file_name {
             return Some(media.clone());
         }
     }
@@ -19,15 +19,12 @@ pub fn find_file_by_hash(file_hash: &String, media_index: &MediaIndex)-> Option<
 }
 
 
-
-
-
-
 #[derive(Deserialize, Serialize, Clone)]
 pub struct IndexedMedia {
-    pub relative_path: String,
+    pub file_name: String,
     pub sha3: String,
 }
+
 
 pub struct MediaIndex {
     pub media: Vec<IndexedMedia>,

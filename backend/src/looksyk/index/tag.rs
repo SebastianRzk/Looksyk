@@ -118,7 +118,7 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
                 content: vec![BlockContent {
                     as_tokens: vec![BlockToken {
                         payload: strip_journal_page_prefix(tag).name.clone(),
-                        block_token_type: BlockTokenType::JOURNAL_LINK,
+                        block_token_type: BlockTokenType::JOURNALLINK,
                     }],
                     as_text: strip_user_page_prefix(tag).name.clone(),
                 }],

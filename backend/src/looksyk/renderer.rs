@@ -93,7 +93,7 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
             BlockTokenType::LINK => {
                 inline_markdown_result_list.push(render_user_link_str(&token.payload));
             }
-            BlockTokenType::JOURNAL_LINK => {
+            BlockTokenType::JOURNALLINK => {
                 inline_markdown_result_list.push(render_journal_link_str(&token.payload));
             }
             BlockTokenType::QUERY => {
@@ -119,7 +119,7 @@ pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_i
             BlockTokenType::LINK => {
                 inline_markdown_result_list.push(render_user_link_str(&token.payload));
             }
-            BlockTokenType::JOURNAL_LINK => {
+            BlockTokenType::JOURNALLINK => {
                 inline_markdown_result_list.push(render_journal_link_str(&token.payload));
             }
             BlockTokenType::QUERY => {

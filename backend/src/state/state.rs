@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::sync::Mutex;
 
 use crate::looksyk::config::config::Config;
@@ -18,7 +19,8 @@ pub struct AppState {
 }
 
 pub struct DataRootLocation{
-    pub path: String,
+    pub path: PathBuf,
+    pub name: String
 }
 
 
