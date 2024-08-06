@@ -25,7 +25,7 @@ With Looksyk I want to create a local platform to collect information.
 
 Currently the backend renders all content in Markdown, which is displayed with [Marked](https://marked.js.org/) in the
 frontend. This makes Looksyk relatively close to the Markdown standard. Code highlighting is done
-with [highlightjs](https://highlightjs.org/).
+with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/).
 
 Even if the project is currently a pure web project, I would not deploy it publicly because the project in its current
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
