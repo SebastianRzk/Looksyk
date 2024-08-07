@@ -39,6 +39,7 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
     let mut todo_guard = data.todo_index.lock().unwrap();
     let mut tag_guard = data.tag_index.lock().unwrap();
     let mut journal_guard = data.journal_pages.lock().unwrap();
+    let mut asset_cache = data.asset_cache.lock().unwrap();
 
     let page_id = append_user_page_prefix(&page_name);
     let (todo, tag, page, journal) = update_index_for_file(page_id, &page_name, &PageType::UserPage, &updated_page, &todo_guard, &tag_guard, &page_guard, &journal_guard);
@@ -49,7 +50,7 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
     *journal_guard = journal;
 
     let is_fav = is_favourite(&page_name, &data.config.lock().unwrap());
-    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard);
+    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);
@@ -68,15 +69,17 @@ async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_
     let todo_index_guard = data.todo_index.lock().unwrap();
     let tag_guard = data.tag_index.lock().unwrap();
     let page = page_guard.entries.get(&simple_page_name);
+    let mut asset_cache = data.asset_cache.lock().unwrap();
     let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
+    let data_root_location = &data.data_path;
     if page.is_some() {
         let parsed_page = page.unwrap();
-        let prepared_page = render_file(parsed_page, &page_guard, &todo_index_guard, &tag_guard);
+        let prepared_page = render_file(parsed_page, &page_guard, &todo_index_guard, &tag_guard, &mut asset_cache, data_root_location);
         return Ok(web::Json(map_markdown_file_to_dto(prepared_page, is_fav)));
     }
     Ok(web::Json(map_markdown_file_to_dto(render_file(
         &generate_page_not_found(), &page_guard, &todo_index_guard,
-        &tag_guard), is_fav)))
+        &tag_guard, &mut asset_cache, data_root_location), is_fav)))
 }
 
 
@@ -87,11 +90,13 @@ async fn get_backlinks(input_page_name: Path<String>, data: Data<AppState>) -> a
     let tag_guard = data.tag_index.lock().unwrap();
     let page_guard = data.user_pages.lock().unwrap();
     let todo_index_guard = data.todo_index.lock().unwrap();
+    let mut asset_cache_guard = data.asset_cache.lock().unwrap();
+    let data_root_location = &data.data_path;
 
     let result = render_tag_index_for_page(append_user_page_prefix(&simple_page_name), &tag_guard);
 
 
     Ok(web::Json(map_markdown_file_to_dto(render_file(
-        &result, &page_guard, &todo_index_guard, &tag_guard,
+        &result, &page_guard, &todo_index_guard, &tag_guard, &mut asset_cache_guard, data_root_location,
     ), false)))
 }

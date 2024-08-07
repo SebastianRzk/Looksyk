@@ -5,21 +5,23 @@ use urlencoding::encode;
 use crate::looksyk::model::{BlockToken, BlockTokenType, MarkdownReference, PageId, PageType, ParsedBlock, ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile, PreparedReferencedMarkdown, ReferencedMarkdown, SimplePageName};
 use crate::looksyk::page_index::{get_page_type, strip_journal_page_prefix, strip_user_page_prefix};
 use crate::looksyk::query::render_query;
+use crate::state::asset_cache::AssetCache;
+use crate::state::state::DataRootLocation;
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
 
-pub fn render_file(markdown_file: &ParsedMarkdownFile, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> PreparedMarkdownFile {
+pub fn render_file(markdown_file: &ParsedMarkdownFile, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
-        result_blocks.push(render_block(original_block, data, todo_index, tag_index));
+        result_blocks.push(render_block(original_block, data, todo_index, tag_index, asset_cache, data_root_location));
     }
     PreparedMarkdownFile {
         blocks: result_blocks
     }
 }
 
-pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> PreparedBlock {
+pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
     let mut references = vec![];
@@ -27,7 +29,7 @@ pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &Todo
 
     for content_element in &block.content {
         block_content_original_list.push(content_element.as_text.to_string());
-        let render_result = render_tokens_deep(&content_element.as_tokens, data, todo_index, tag_index);
+        let render_result = render_tokens_deep(&content_element.as_tokens, data, todo_index, tag_index, asset_cache, data_root_location);
         if render_result.has_dynamic_content {
             has_dynamic_content = true;
         }
@@ -107,7 +109,7 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
     return inline_markdown_result_list.join(" ");
 }
 
-pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex) -> RenderResult {
+pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];
     let mut has_dynamic_content = false;
@@ -124,7 +126,7 @@ pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_i
             }
             BlockTokenType::QUERY => {
                 has_dynamic_content = true;
-                let render_result = render_query(token, data, todo_index, tag_index);
+                let render_result = render_query(token, data, todo_index, tag_index, asset_cache, data_root_location);
                 for reference in render_result.referenced_markdown {
                     references.push(reference);
                 }
@@ -187,10 +189,12 @@ fn render_journal_link_str(destination: &String) -> String {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-
+    use std::path::PathBuf;
     use crate::looksyk::builder::{journal_link_token, link_token, text_token};
+    use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::renderer::render_block;
+    use crate::state::state::DataRootLocation;
     use crate::state::tag::TagIndex;
     use crate::state::todo::TodoIndex;
     use crate::state::userpage::UserPageIndex;
@@ -224,12 +228,18 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "text");
         assert_eq!(result.content.prepared_markdown, "text")
     }
 
+    fn empty_location() -> DataRootLocation {
+        DataRootLocation {
+            path: PathBuf::new(),
+            name: "".to_string()
+        }
+    }
 
     #[test]
     fn should_serialize_links() {
@@ -247,7 +257,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
         assert_eq!(result.content.prepared_markdown, "before [MyPage](page/MyPage) after")
@@ -269,7 +279,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
         assert_eq!(result.content.prepared_markdown, "before [MyPage](journal/MyPage) after")
@@ -290,7 +300,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "[[My Page]]");
         assert_eq!(result.content.prepared_markdown, "[My Page](page/My%20Page)");
@@ -312,7 +322,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "[[link1]] asdf [[link2]]");
         assert_eq!(result.content.prepared_markdown, "[link1](page/link1) asdf [link2](page/link2)");
@@ -344,7 +354,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.has_dynamic_content, false);
     }
@@ -367,7 +377,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.has_dynamic_content, true);
     }
@@ -396,7 +406,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "[ ] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[ ] Mein Todo");
@@ -429,7 +439,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index());
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
 
         assert_eq!(result.content.original_text, "[x] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[x] Mein Todo");

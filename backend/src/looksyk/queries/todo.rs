@@ -3,21 +3,23 @@ use std::io::{Error, ErrorKind};
 
 use crate::looksyk::builder::page_name;
 use crate::looksyk::model::{MarkdownReference, QueryRenderResult, ReferencedMarkdown};
-use crate::looksyk::queries::args::{parse_display_type, parse_property};
+use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_STATE, PARAM_TAG, parse_display_type_for_lists, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::{render_block_flat, render_link};
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
+pub const QUERY_NAME_TODOS: &str = "todos";
+
 pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
-    let query_content = query_str.strip_prefix("todos").ok_or(Error::new(ErrorKind::Other, "Decode error"))?.trim();
-    let query_root_opt = parse_property(query_content, "tag")?;
-    let query_state_opt = parse_property(query_root_opt.remaining_text.as_str(), "state")?;
-    let display_type1 = parse_display_type(query_state_opt.remaining_text.clone())?;
+    let query_content = query_str.strip_prefix(QUERY_NAME_TODOS).ok_or(Error::new(ErrorKind::Other, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?.trim();
+    let query_root_opt = parse_property(query_content, PARAM_TAG)?;
+    let query_state_opt = parse_property(query_root_opt.remaining_text.as_str(), PARAM_STATE)?;
+    let display_type1 = parse_display_type_for_lists(query_state_opt.remaining_text.clone())?;
 
     let mut args1 = HashMap::new();
-    args1.insert("tag".to_string(), query_root_opt.value);
-    args1.insert("state".to_string(), query_state_opt.value);
+    args1.insert(PARAM_TAG.to_string(), query_root_opt.value);
+    args1.insert(PARAM_STATE.to_string(), query_state_opt.value);
     let (display_type, args) = (display_type1, args1);
     return Ok(Query {
         query_type: QueryType::Todo,
@@ -28,9 +30,9 @@ pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
 
 
 pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
-    let expected_tag = query.args.get("tag").unwrap();
+    let expected_tag = query.args.get(PARAM_TAG).unwrap();
     let expected_tag_page = page_name(expected_tag.clone());
-    let expected_state = state_from_string(query.args.get("state").unwrap());
+    let expected_state = state_from_string(query.args.get(PARAM_STATE).unwrap());
 
 
     let mut result = vec![];

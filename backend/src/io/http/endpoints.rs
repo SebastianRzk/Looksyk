@@ -20,14 +20,20 @@ use crate::looksyk::serializer::{serialize_page, update_and_serialize_page};
 use crate::state::state::AppState;
 
 #[post("/api/parse")]
-async fn parse(content: web::Json<ToValidate>, data: web::Data<AppState>) -> Result<impl Responder> {
+async fn parse(content: web::Json<ToValidate>, data: Data<AppState>) -> Result<impl Responder> {
     println!("on demand render block");
     let raw_block = RawBlock {
         indentation: 0,
         text_content: vec![content.block.clone()],
     };
     let parsed_block = parse_block(&raw_block);
-    let serialized_block = render_block(&parsed_block, &data.user_pages.lock().unwrap(), &data.todo_index.lock().unwrap(), &data.tag_index.lock().unwrap());
+    let serialized_block = render_block(
+        &parsed_block,
+        &data.user_pages.lock().unwrap(),
+        &data.todo_index.lock().unwrap(),
+        &data.tag_index.lock().unwrap(),
+        &mut data.asset_cache.lock().unwrap(),
+        &data.data_path);
     Ok(web::Json(map_to_block_dto(&serialized_block)))
 }
 
@@ -38,6 +44,7 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> Result<impl Re
     let page_guard = data.user_pages.lock().unwrap();
     let todo_index_guard = data.todo_index.lock().unwrap();
     let page = journal_guard.entries.get(&simple_page_name);
+    let mut asset_cache = data.asset_cache.lock().unwrap();
 
 
     let fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
@@ -48,13 +55,16 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> Result<impl Re
             parsed_page,
             &page_guard,
             &todo_index_guard,
-            &data.tag_index.lock().unwrap());
+            &data.tag_index.lock().unwrap(),
+            &mut asset_cache,
+            &data.data_path,
+        );
         return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
     }
 
     Ok(web::Json(map_markdown_file_to_dto(render_file(
         &generate_page_not_found(), &page_guard, &todo_index_guard,
-        &data.tag_index.lock().unwrap()), fav)))
+        &data.tag_index.lock().unwrap(), &mut asset_cache, &data.data_path), fav)))
 }
 
 
@@ -64,7 +74,8 @@ async fn get_overview_page(data: Data<AppState>) -> Result<impl Responder> {
     let guard = data.user_pages.lock().unwrap();
     let overview_page = generate_overview_page(&tag_index_guard, &guard);
     let todo_guard = data.todo_index.lock().unwrap();
-    let rendered_file = render_file(&overview_page, &guard, &todo_guard, &tag_index_guard);
+    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let rendered_file = render_file(&overview_page, &guard, &todo_guard, &tag_index_guard, &mut asset_cache, &data.data_path);
     Ok(web::Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 
@@ -91,6 +102,7 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     let mut todo_guard = data.todo_index.lock().unwrap();
     let mut tag_guard = data.tag_index.lock().unwrap();
     let mut journal_guard = data.journal_pages.lock().unwrap();
+    let mut asset_cache = data.asset_cache.lock().unwrap();
 
     let page_id = append_journal_page_prefix(&simple_page_name);
     let (todo, tag, page, journal) = update_index_for_file(page_id, &simple_page_name, &PageType::JournalPage, &updated_page, &todo_guard, &tag_guard, &page_guard, &journal_guard);
@@ -101,12 +113,13 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     *journal_guard = journal;
 
     let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
-    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard);
+    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+    drop(asset_cache);
 
     return Ok(web::Json(map_markdown_file_to_dto(rendered_file, is_fav)));
 }
@@ -162,10 +175,9 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
 
     let mut todo_guard = data.todo_index.lock().unwrap();
     let mut tag_guard = data.tag_index.lock().unwrap();
-
     let mut page_guard = data.user_pages.lock().unwrap();
-
     let mut journal_guard = data.journal_pages.lock().unwrap();
+    let mut asset_cache = data.asset_cache.lock().unwrap();
 
     let (todo, tag, page, journal) = update_index_for_file(page_id, &simple_page_name, &page_type, &updated_page, &todo_guard, &tag_guard, &page_guard, &journal_guard);
 
@@ -179,12 +191,13 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         text_content: vec![entity.markdown],
     });
 
-    let rendered_block = render_block(&parsed_block, &page_guard, &todo_guard, &tag_guard);
+    let rendered_block = render_block(&parsed_block, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+    drop(asset_cache);
 
     return Ok(web::Json(map_to_block_dto(&rendered_block)));
 }

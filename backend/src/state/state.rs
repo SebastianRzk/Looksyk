@@ -3,6 +3,7 @@ use std::sync::Mutex;
 
 use crate::looksyk::config::config::Config;
 use crate::looksyk::index::media::MediaIndex;
+use crate::state::asset_cache::AssetCache;
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
@@ -16,6 +17,7 @@ pub struct AppState {
     pub todo_index: Mutex<TodoIndex>,
     pub tag_index: Mutex<TagIndex>,
     pub config: Mutex<Config>,
+    pub asset_cache: Mutex<AssetCache>
 }
 
 pub struct DataRootLocation{

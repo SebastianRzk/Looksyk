@@ -3,21 +3,12 @@
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
 I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the
-many control characters in the markdown files, the query language that is difficult to learn, or the general
+many control characters in the markdown files, the query language that is difficult to learn and limited in its capability, or the general
 performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
 
 ## Current status of the project
-
-**Project work and future**
-
-The project is a little hobby of mine, and I program a few lines sometimes when I feel like it and have the time.
-
-You can definitely try Looksyk out now, and once a deployment is ready, you can use it.
-
-If you have any changes or suggestions, please send me a pull request.
-For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
 **Technical concept**
 
@@ -36,6 +27,15 @@ enough.
 
 The frontend still has some challenges. Performance can be improved and sometimes scrolling on the journal page has
 issues.
+
+**Project work and future**
+
+The project is a little hobby of mine, and I program a few lines sometimes when I feel like it and have the time.
+
+You can definitely try Looksyk out now, and once a deployment is ready, you can use it.
+
+If you have any changes or suggestions, please send me a pull request.
+For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
 ## Roadmap
 
@@ -69,9 +69,10 @@ issues.
 	* Custom page properties
 * Todo: Queries
 	* Query type: `page-by-property` (list pages with a certain property)
-	* Query type: `insert-content-from-file` (insert content from a asset file)
-	* Query type: `insert-code-from-file` (insert content from a asset file as a multiline code block with code highlighting)
-	* Improve query error messages
+	* :white_check_mark: Query type: `insert-content-from-file` (insert content from a asset file)
+	* :white_check_mark: ~Query type: `insert-code-from-file`~ display-type `code-block` (insert content from a asset file as a multiline code block with code highlighting)
+	* :white_check_mark: Improve query error messages
+    * Insert `insert-content-from-file` with display type `code-block` on default, when code file is copy paste into Looksyk (instead of link)
 * Todo: Deployment / native build
 	* :white_check_mark: Serve all statics with the backend
 	* :white_check_mark: Basic graph configuration in user home directory
@@ -126,6 +127,13 @@ issues.
 
 ## Try it out
 
+
+### Production Build
+
+1. Run the script `bash build.sh` (this will build the frontend and backend, and requires `npm` and `cargo`)
+2. The application is now in the `target` folder
+
+
 ### Development Build
 
 1. Clone the repository
@@ -138,11 +146,6 @@ issues.
 2. Copy your pages into the pages folder (`~/graph/pages`)
 3. Copy your assets into the assets folder (`~/graph/assets`)
 4. Start / Restart the backend
-
-### Production Build
-
-1. Run the scrupt `bash build.sh` (this will build the frontend and backend, and requires `npm` and `cargo`)
-2. The application is now in the `target` folder
 
 ## Configuration
 
@@ -200,4 +203,16 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  
  Show the count
  {query: references-to tag:"myTag" display:"count"}
+```
+
+
+### Insert content from file
+
+```
+ Insert the content of a file as text block
+ {query: insert-file-content target-file:"myFile.asdf" display:"inline-text"}
+ 
+ 
+ Insert the content of a file as code block, and highlight the code
+ {query: insert-file-content target-file:"myFile.asdf" display:"code-block"}
 ```

@@ -109,6 +109,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
           text_to_insert = "{query: todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\"}"
         } else if (item.name == ADD_QUERY_TODOS) {
           text_to_insert = "{query: references-to tag:\"myTag\" display:\"referenced-list\"}"
+        }else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
+          text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\"}"
         }
       }
       this.useraction.insertText.next({
@@ -330,6 +332,8 @@ const ADD_QUERY_REFERENCES = "query references";
 
 const ADD_QUERY_TODOS = "query todos";
 
+const ADD_QUERY_INLINE_FILE_CONTENT = "query inline file content";
+
 function CONTENT_ASSIST_QUERIES(): ContentAssistSection {
   return {
     title: ADD_QUERY,
@@ -344,6 +348,10 @@ function CONTENT_ASSIST_QUERIES(): ContentAssistSection {
       },
       {
         name: ADD_QUERY_TODOS,
+        highlight: false
+      },
+      {
+        name: ADD_QUERY_INLINE_FILE_CONTENT,
         highlight: false
       }
     ]

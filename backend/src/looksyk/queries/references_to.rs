@@ -3,20 +3,22 @@ use std::io::{Error, ErrorKind};
 
 use crate::looksyk::model::{PageId, QueryRenderResult, SimplePageName};
 use crate::looksyk::page_index::append_user_page_prefix;
-use crate::looksyk::queries::args::{parse_display_type, parse_property};
+use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET, parse_display_type_for_lists, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::{render_link_by_id, render_user_link};
 use crate::state::tag::TagIndex;
 
-pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
-    let query_content = query_str.strip_prefix("references-to").ok_or(Error::new(ErrorKind::Other, "Decode error"))?.trim();
-    let query_target_opt = parse_property(query_content, "target")?;
+pub const QUERY_NAME_REFERENCES_TO: &str = "references-to";
 
-    let display_type = parse_display_type(query_target_opt.remaining_text.clone())?;
+pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
+    let query_content = query_str.strip_prefix(QUERY_NAME_REFERENCES_TO).ok_or(Error::new(ErrorKind::Other, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?.trim();
+    let query_target_opt = parse_property(query_content, PARAM_TARGET)?;
+
+    let display_type = parse_display_type_for_lists(query_target_opt.remaining_text.clone())?;
 
     let mut args1 = HashMap::new();
-    args1.insert("target".to_string(), query_target_opt.value);
+    args1.insert(PARAM_TARGET.to_string(), query_target_opt.value);
     let (display_type, args) = (display_type, args1);
     return Ok(Query {
         query_type: QueryType::ReferencesTo,
@@ -28,7 +30,7 @@ pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
 
 pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderResult {
     let target = SimplePageName {
-        name: query.args.get("target").unwrap().clone()
+        name: query.args.get(PARAM_TARGET).unwrap().clone()
     };
 
     let empty_set: HashSet<PageId> = HashSet::new();

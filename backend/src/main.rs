@@ -1,8 +1,11 @@
+use std::net::{IpAddr, SocketAddr};
+use std::str::FromStr;
 use std::sync::Mutex;
 
 use actix_web::{App, HttpServer};
 use actix_web::web::Data;
 
+use crate::configuration::{APPLICATION_HOST, APPLICATION_PORT};
 use crate::io::fs::basic_file::{create_folder, exists_folder};
 use crate::io::fs::basic_folder::home_directory;
 use crate::io::fs::config::{read_config_from_file, save_config_to_file};
@@ -18,6 +21,7 @@ use crate::io::http::metainfo;
 use crate::io::http::r#static;
 use crate::io::http::userpage;
 use crate::looksyk::config::config::{Config, Design};
+use crate::looksyk::index::asset::create_empty_asset_cache;
 use crate::looksyk::index::media::MediaIndex;
 use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
@@ -27,6 +31,7 @@ use crate::state::state::{AppState, DataRootLocation};
 mod looksyk;
 mod state;
 mod io;
+mod configuration;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -41,9 +46,8 @@ async fn main() -> std::io::Result<()> {
 
     let app_state = create_app_state(data_root_location);
 
-    let port = 8989;
 
-    println!("Starting Looksyk on Port {}", port);
+    println!("Starting Looksyk on  {} {}", APPLICATION_HOST, APPLICATION_PORT);
 
     HttpServer::new(move || {
         App::new()
@@ -73,7 +77,7 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
     })
-        .bind(("127.0.0.1", port))?
+        .bind(SocketAddr::new(IpAddr::from_str(APPLICATION_HOST).unwrap(), APPLICATION_PORT))?
         .run()
         .await
 }
@@ -111,6 +115,7 @@ fn create_app_state(data_root_location: DataRootLocation) -> Data<AppState> {
     let journal_index = create_journal_page_index(all_journals);
     let todo_index = create_todo_index(&user_page_index, &journal_index);
     let tag_index = create_tag_index(&user_page_index, &journal_index);
+    let asset_cache = create_empty_asset_cache();
 
     println!("all data refreshed");
 
@@ -122,6 +127,7 @@ fn create_app_state(data_root_location: DataRootLocation) -> Data<AppState> {
         todo_index: Mutex::new(todo_index.clone()),
         tag_index: Mutex::new(tag_index.clone()),
         journal_pages: Mutex::new(journal_index.clone()),
+        asset_cache: Mutex::new(asset_cache),
     });
     app_state
 }

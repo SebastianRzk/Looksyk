@@ -19,9 +19,28 @@ pub fn exists_folder(path: PathBuf) -> bool {
 
 
 pub fn exists_file(path: PathBuf) -> bool {
-    fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_dir()
+    fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_file()
 }
 
 pub fn create_folder(path: PathBuf) {
     fs::create_dir_all(path).unwrap();
+}
+
+
+pub fn get_file_size(path: PathBuf) -> u64 {
+    fs::metadata(path).unwrap().len()
+}
+
+
+pub fn is_text_file(path: PathBuf)-> bool {
+    let file_content = read_binary_file(path);
+    let mut is_text = true;
+    for byte in file_content {
+        if byte > 127 && (byte < 161 || byte > 191) && byte != 195 {
+            println!("Found non text byte: {}", byte);
+            is_text = false;
+            break;
+        }
+    }
+    return is_text;
 }

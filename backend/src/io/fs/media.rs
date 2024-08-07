@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use actix_files::NamedFile;
 use chrono::Utc;
 
-use crate::io::fs::basic_file::{read_binary_file, read_file};
+use crate::io::fs::basic_file::{exists_file, get_file_size, read_binary_file, read_file};
 use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
 use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
@@ -56,7 +56,7 @@ pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -
     let (filestem, file_ending) = parse_name(filename);
 
     let filename = format!("{}_{}.{}", filestem, timestamp, file_ending);
-    create_absolute_media_path(MediaOnDisk {
+    create_absolute_media_path(&MediaOnDisk {
         name: filename
     }, data_root_location)
 }
@@ -75,21 +75,34 @@ fn parse_name(filename: &str) -> (String, String) {
     (filestem.clone(), file_ending.to_string())
 }
 
-pub fn create_absolute_media_path(file: MediaOnDisk, data_root_location: &DataRootLocation) -> PathBuf {
-    data_root_location.path.clone().join(REL_MEDIA_LOCATION).join(file.name)
+pub fn create_absolute_media_path(file: &MediaOnDisk, data_root_location: &DataRootLocation) -> PathBuf {
+    data_root_location.path.clone().join(REL_MEDIA_LOCATION).join(file.name.clone())
 }
 
 pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> String {
-    let file_conent = read_binary_file(create_absolute_media_path(file, data_root_location));
+    let file_conent = read_binary_file(create_absolute_media_path(&file, data_root_location));
     hash_file_content(LoadedMedia {
         content: file_conent,
     })
 }
 
 pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::Result<NamedFile> {
-    return NamedFile::open(create_absolute_media_path(MediaOnDisk {
+    return NamedFile::open(create_absolute_media_path(&MediaOnDisk {
         name: name.clone()
     }, location));
+}
+
+pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation) -> MediaState {
+    let media_path = create_absolute_media_path(media_on_disk, location);
+    println!("Checking media path: {}", media_path.to_str().unwrap());
+    if ! exists_file(media_path.clone()) {
+        return MediaState::NotFound;
+    }
+
+    let size = get_file_size(media_path);
+    return MediaState::Found(MediaSize {
+        size
+    });
 }
 
 
@@ -113,4 +126,14 @@ pub struct MediaOnDisk {
 
 pub struct LoadedMedia {
     pub content: Vec<u8>,
+}
+
+
+pub enum MediaState {
+    Found(MediaSize),
+    NotFound
+}
+
+pub struct MediaSize{
+    pub size: u64
 }
