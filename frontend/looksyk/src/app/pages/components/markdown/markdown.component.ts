@@ -153,10 +153,10 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
           range = sel.getRangeAt(0);
           range.deleteContents();
           range.insertNode(document.createTextNode(insertText.inlineMarkdown));
-          sel.setPosition(sel.focusNode,sel.getRangeAt(0).endOffset);
+          sel.setPosition(sel.focusNode, sel.getRangeAt(0).endOffset);
         }
       } else {
-       this.textareaRef.nativeElement.createRange().text = insertText.inlineMarkdown;
+        this.textareaRef.nativeElement.createRange().text = insertText.inlineMarkdown;
       }
       this.changeDetector.markForCheck();
       this.changeDetector.detectChanges();
@@ -186,6 +186,15 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   onClickRefresh() {
     this.onFocusOutEditor();
+  }
+
+  clickOnMergeWithPrevPage() {
+    this.userInteraction.mergeWithPrevBlock.next({
+      target: {
+        blockTarget: this.markdown.indentification,
+        fileTarget: this.pageid
+      }
+    })
   }
 
 
@@ -228,15 +237,16 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   }
 
   private updateContentSilent(newBlockInfo: Block) {
+    let markdownToRender = newBlockInfo.content.preparedMarkdown;
     if (isTodoTodoBlock(newBlockInfo.content.preparedMarkdown)) {
       this.todo.next(TODO_TODO);
-      newBlockInfo.content.preparedMarkdown = chopTodo(newBlockInfo.content.preparedMarkdown);
+      markdownToRender = chopTodo(newBlockInfo.content.preparedMarkdown);
     } else if (isTodoDoneBlock(newBlockInfo.content.preparedMarkdown)) {
       this.todo.next(TODO_DONE)
-      newBlockInfo.content.preparedMarkdown = chopTodo(newBlockInfo.content.preparedMarkdown);
+      markdownToRender = chopTodo(newBlockInfo.content.preparedMarkdown);
     }
 
-    this.renderedMarkdown.next(this.markdownService.renderMarkdown(newBlockInfo.content.preparedMarkdown));
+    this.renderedMarkdown.next(this.markdownService.renderMarkdown(markdownToRender));
     this.editText.next(newBlockInfo.content.originalText);
     this.referencedMarkdown.next(newBlockInfo.referencedContent);
   }

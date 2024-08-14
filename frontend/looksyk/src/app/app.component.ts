@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { UseractionService } from "./services/useraction.service";
 import { firstValueFrom } from "rxjs";
-import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
+import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
 
 @Component({
   selector: 'app-root',
@@ -18,8 +18,13 @@ export class AppComponent {
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {
-    if(this.contentAssist.stateRaw != ContentAssistMode.Closed){
+    if (this.contentAssist.stateRaw != ContentAssistMode.Closed) {
       this.stopProagation(event);
+    } else {
+      if (event.key == 'Tab') {
+        this.stopProagation(event);
+        return;
+      }
     }
   }
 
@@ -31,9 +36,8 @@ export class AppComponent {
       return;
     }
 
-
     if (event.key == 'Escape') {
-      event.stopImmediatePropagation();
+      this.stopProagation(event);
       this.userAction.closeCurrentMarkdownBlock();
       return;
     }
@@ -54,6 +58,7 @@ export class AppComponent {
           id: Math.random() + ""
         });
       }
+      this.stopProagation(event);
       return;
     }
 

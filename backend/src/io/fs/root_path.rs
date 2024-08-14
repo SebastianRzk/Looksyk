@@ -22,6 +22,7 @@ pub fn get_current_active_data_root_location(config_location: &InitialConfigLoca
     let file = path.clone().join(CONFIG_FILE_NAME);
 
     if !exists_file(file.clone()) {
+        eprintln!("No config file found. Creating new one.");
         let config_file_content_as_str = serde_json::to_string(&RootPathConfig {
             current_active: RootPath {
                 name: INITIAL_GRAPH_NAME.to_string(),

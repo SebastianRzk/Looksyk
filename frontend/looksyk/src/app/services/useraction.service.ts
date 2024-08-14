@@ -37,6 +37,9 @@ export class UseractionService {
   deleteBlock: Subject<DeleteBlockEvent> = new Subject<DeleteBlockEvent>();
   deleteBlock$: Observable<DeleteBlockEvent> = this.deleteBlock.asObservable();
 
+  mergeWithPrevBlock: Subject<MergeBlockEvent> = new Subject<MergeBlockEvent>();
+  mergeWithPrevBlock$: Observable<MergeBlockEvent> = this.mergeWithPrevBlock.asObservable();
+
   increaseIndentation: Subject<UniqueEvent> = new Subject<UniqueEvent>();
   increaseIndentation$: Observable<UniqueEvent> = this.increaseIndentation.asObservable();
 
@@ -69,6 +72,39 @@ export class UseractionService {
       }
     )
   })
+
+  mergeBlock_ = this.mergeWithPrevBlock$.subscribe(event => {
+    firstValueFrom(this.pageService.getPage(event.target.fileTarget)).then(currentPage => {
+      let newBlocks = currentPage.blocks;
+      let index = newBlocks.findIndex(block => block.indentification == event.target.blockTarget);
+      console.log("index", index);
+      if (index > 0) {
+        //newBlocks[index - 1].content.originalText += "\n\n" + newBlocks[index].content.originalText;
+        //newBlocks[index - 1].content.preparedMarkdown += "\n\n" + newBlocks[index].content.preparedMarkdown;
+        let newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
+        let newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
+        newBlocks = newBlocks.filter(block => block.indentification != event.target.blockTarget);
+        newBlocks[index - 1] = {
+          ...newBlocks[index - 1],
+          content: {
+            ...newBlocks[index - 1].content,
+            originalText: newOriginalText,
+            preparedMarkdown: newPreparedMarkdown
+          }
+        }
+        this.pageService.onNextPageById(currentPage.pageid, {
+          name: currentPage.name,
+          blocks: newBlocks,
+          pageid: currentPage.pageid,
+          isFavourite: currentPage.isFavourite
+        });
+        this.savePage.next({
+          target: event.target
+        });
+        console.log("currentpage", currentPage);
+      }
+    })
+  });
 
 
   deleteBlock_ = this.deleteBlock$.subscribe(event => {
@@ -240,7 +276,7 @@ export class UseractionService {
     return result;
   }
 
-  closeCurrentMarkdownBlock(){
+  closeCurrentMarkdownBlock() {
     this.openMarkdown.next(NO_OPEN_MARKDOWN)
 
   }
@@ -256,6 +292,10 @@ export interface OpenMarkdownEvent {
 }
 
 export interface DeleteBlockEvent {
+  target: Target,
+}
+
+export interface MergeBlockEvent {
   target: Target,
 }
 
