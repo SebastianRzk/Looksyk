@@ -104,13 +104,13 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         text_to_insert = `[[${target_text}]] `
       } else if (group.title == ADD_QUERY) {
         if (item.name == ADD_QUERY_PAGE_HIERARCHY) {
-          text_to_insert = "{query: page-hierarchy root:\"myRootTag\" display:\"inplace-list\"}"
+          text_to_insert = "{query: page-hierarchy root:\"myRootTag\" display:\"inplace-list\" }"
         } else if (item.name == ADD_QUERY_REFERENCES) {
-          text_to_insert = "{query: todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\"}"
+          text_to_insert = "{query: todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\" }"
         } else if (item.name == ADD_QUERY_TODOS) {
-          text_to_insert = "{query: references-to tag:\"myTag\" display:\"referenced-list\"}"
+          text_to_insert = "{query: references-to tag:\"myTag\" display:\"referenced-list\" }"
         }else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
-          text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\"}"
+          text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
         }
       }
       this.useraction.insertText.next({
