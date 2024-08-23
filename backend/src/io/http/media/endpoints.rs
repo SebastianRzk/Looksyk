@@ -45,8 +45,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 
     let index_element = find_file_by_hash(&hash, &media_guard).unwrap_or_else(|| {
         let absolute_destination_path = destination_path(filename.as_str(), &app_state.data_path);
-        let name = absolute_destination_path.file_name().to_str().unwrap().to_string();
-        println!("Add media object to index: {} , {}", absolute_destination_path.as_str(), name);
+        let name = absolute_destination_path.file_name().unwrap().to_os_string().to_str().unwrap().to_string();
         let new_entry = IndexedMedia {
             file_name: pad_url_media_location(&name),
             sha3: hash.clone(),
