@@ -47,7 +47,7 @@ async fn main() -> std::io::Result<()> {
     let app_state = create_app_state(data_root_location);
 
 
-    println!("Starting Looksyk on  {} {}", APPLICATION_HOST, APPLICATION_PORT);
+    println!("Starting Looksyk on  http://{}:{}", APPLICATION_HOST, APPLICATION_PORT);
 
     HttpServer::new(move || {
         App::new()

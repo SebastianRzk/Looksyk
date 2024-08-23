@@ -44,22 +44,22 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
     let mut media_guard = app_state.media_index.lock().unwrap();
 
     let index_element = find_file_by_hash(&hash, &media_guard).unwrap_or_else(|| {
-        let destination_path = destination_path(filename.as_str(), &app_state.data_path);
-        let name = destination_path.to_str().unwrap().to_string();
-        println!("Add media object to index: {} , {}", filename.as_str(), name);
+        let absolute_destination_path = destination_path(filename.as_str(), &app_state.data_path);
+        let name = absolute_destination_path.file_name().to_str().unwrap().to_string();
+        println!("Add media object to index: {} , {}", absolute_destination_path.as_str(), name);
         let new_entry = IndexedMedia {
             file_name: pad_url_media_location(&name),
             sha3: hash.clone(),
         };
         media_guard.media.push(new_entry.clone());
         write_media_config(&app_state.data_path, &media_guard);
-        fs::write(Path::new(&destination_path), &file).unwrap();
+        fs::write(Path::new(&absolute_destination_path), &file).unwrap();
         write_media_config(&app_state.data_path, &media_guard);
         new_entry
     });
 
     Ok(Json(FileUploadResult {
-        inline_markdown: format!("![{}]({})", filename, pad_url_media_location(&index_element.file_name))
+        inline_markdown: format!("![{}]({})", index_element.file_name, &index_element.file_name)
     }))
 }
 
