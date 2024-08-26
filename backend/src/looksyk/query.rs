@@ -28,6 +28,7 @@ pub fn render_query(
         return QueryRenderResult {
             inplace_markdown: format!("\n\nError on parsing query: {}\n\n", error.to_string()),
             referenced_markdown: vec![],
+            has_dynamic_content: false,
         };
     }
     render_parsed_query(query.unwrap(), data, todo_index, tag_index, asset_cache, data_root_location)
@@ -71,6 +72,7 @@ pub fn render_parsed_query(query: Query, data: &UserPageIndex, todo_index: &Todo
             QueryRenderResult {
                 inplace_markdown: "Query type unknown".to_string(),
                 referenced_markdown: vec![],
+                has_dynamic_content: false,
             }
         }
     }
@@ -98,6 +100,9 @@ pub enum QueryDisplayType {
     InplaceList,
     CodeBlock,
     InlineText,
+    Video,
+    Link,
+    Audio,
     Count,
     Unknown,
 }
@@ -106,11 +111,14 @@ impl Display for QueryDisplayType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             QueryDisplayType::ReferencedList => write!(f, "referenced-list"),
+            QueryDisplayType::Link => write!(f, "link"),
             QueryDisplayType::InplaceList => write!(f, "inplace-list"),
             QueryDisplayType::Count => write!(f, "count"),
             QueryDisplayType::Unknown => write!(f, "unknown"),
             QueryDisplayType::CodeBlock => write!(f, "code-block"),
             QueryDisplayType::InlineText => write!(f, "inline-text"),
+            QueryDisplayType::Video => write!(f, "video"),
+            QueryDisplayType::Audio => write!(f, "audio"),
         }
     }
 }
@@ -604,7 +612,7 @@ mod tests {
             }, &empty_page_index(), &empty_todo_index(), &empty_tag_index(),
             &mut asset_cache, &empty_root_location());
 
-        assert_eq!(result.inplace_markdown, "File is too large. Max size is 512. File size is 1025");
+        assert_eq!(result.inplace_markdown, "File is too large. Max size is 512. File size is 1025. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -625,7 +633,7 @@ mod tests {
             }, &empty_page_index(), &empty_todo_index(), &empty_tag_index(),
             &mut asset_cache, &empty_root_location());
 
-        assert_eq!(result.inplace_markdown, "File is not a text file. Can not inline a binary file");
+        assert_eq!(result.inplace_markdown, "File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 

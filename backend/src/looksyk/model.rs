@@ -88,6 +88,7 @@ pub struct UpdateMarkdownFile {
 pub struct QueryRenderResult {
     pub inplace_markdown: String,
     pub referenced_markdown: Vec<ReferencedMarkdown>,
+    pub has_dynamic_content: bool,
 }
 
 #[derive(Clone)]

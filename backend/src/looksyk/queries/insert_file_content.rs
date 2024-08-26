@@ -3,6 +3,8 @@ use std::io::{Error, ErrorKind};
 
 use crate::io::fs::asset_cache_loader::load_cachable_asset;
 use crate::io::fs::media::MediaOnDisk;
+use crate::io::http::media::config::pad_url_media_location;
+use crate::looksyk::markdown::{render_as_audio, render_as_code_block, render_as_link, render_as_video};
 use crate::looksyk::model::QueryRenderResult;
 use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET_FILE, parse_display_type_for_inplace, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;
@@ -11,6 +13,23 @@ use crate::state::asset_cache::{AssetCache, AssetState};
 use crate::state::state::DataRootLocation;
 
 pub const QUERY_NAME_INSERT_FILE_CONTENT: &str = "insert-file-content";
+
+pub fn query_insert_file_content_as_text(file_path: &String) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"inline-text\" }}", file_path)
+}
+
+pub fn query_insert_file_content_as_code(file_path: &String) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"code-block\" }}", file_path)
+}
+
+pub fn query_insert_file_content_as_video(file_path: &String) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"video\" }}", file_path)
+}
+
+pub fn query_insert_file_content_as_audio(file_path: &String) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"audio\" }}", file_path)
+}
+
 
 pub fn parse_query_insert_file_content(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str.strip_prefix(QUERY_NAME_INSERT_FILE_CONTENT).ok_or(Error::new(ErrorKind::Other, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?.trim();
@@ -35,7 +54,22 @@ pub fn render_query_insert_file_content(query: Query, data: &mut AssetCache, dat
     };
     match query.display {
         QueryDisplayType::InlineText => render_inline(&media_on_disk, data, data_root_location),
+        QueryDisplayType::Link => QueryRenderResult {
+            has_dynamic_content: false,
+            inplace_markdown: render_as_link(&media_on_disk.name, &pad_url_media_location(&media_on_disk.name)),
+            referenced_markdown: vec![],
+        },
         QueryDisplayType::CodeBlock => render_code_block(&media_on_disk, data, data_root_location),
+        QueryDisplayType::Video => QueryRenderResult {
+            has_dynamic_content: false,
+            inplace_markdown: render_as_video(&media_on_disk.name),
+            referenced_markdown: vec![],
+        },
+        QueryDisplayType::Audio => QueryRenderResult {
+            has_dynamic_content: false,
+            inplace_markdown: render_as_audio(&media_on_disk.name),
+            referenced_markdown: vec![],
+        },
         _ => render_display_unknown(query.display)
     }
 }
@@ -50,23 +84,28 @@ fn render_code_block(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_
     match cache_item {
         AssetState::Found(content) => {
             QueryRenderResult {
-                inplace_markdown: format!("```{}\n{}\n```", infer_language(&file_name), content.content),
+                has_dynamic_content: false,
+                inplace_markdown: render_as_code_block(infer_language(&file_name), &content.content),
                 referenced_markdown: vec![],
             }
         }
         AssetState::NotFound => QueryRenderResult {
+            has_dynamic_content: false,
             inplace_markdown: "File not found".to_string(),
             referenced_markdown: vec![],
         },
         AssetState::NotText => QueryRenderResult {
-            inplace_markdown: "File is not a text file. Can not inline a binary file".to_string(),
+            has_dynamic_content: false,
+            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         AssetState::TooLarge(violation) => QueryRenderResult {
-            inplace_markdown: format!("File is too large. Max size is {}. File size is {}", violation.max_size, violation.file_size),
+            has_dynamic_content: false,
+            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         _ => QueryRenderResult {
+            has_dynamic_content: false,
             inplace_markdown: "Unknown error".to_string(),
             referenced_markdown: vec![],
         }
@@ -107,25 +146,69 @@ fn render_inline(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_loca
     }
     match cache_item {
         AssetState::Found(content) => QueryRenderResult {
+            has_dynamic_content: false,
             inplace_markdown: content.content,
             referenced_markdown: vec![],
         },
         AssetState::NotFound => QueryRenderResult {
+            has_dynamic_content: false,
             inplace_markdown: "File not found".to_string(),
             referenced_markdown: vec![],
         },
         AssetState::NotText => QueryRenderResult {
-            inplace_markdown: "File is not a text file. Can not inline a binary file".to_string(),
+            has_dynamic_content: false,
+            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         AssetState::TooLarge(violation) => QueryRenderResult {
-            inplace_markdown: format!("File is too large. Max size is {}. File size is {}", violation.max_size, violation.file_size),
+            has_dynamic_content: false,
+            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         _ => QueryRenderResult {
+            has_dynamic_content: false,
             inplace_markdown: "Unknown error".to_string(),
             referenced_markdown: vec![],
         }
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_query_insert_file_content_as_text_with_file_path_should_return_query_string() {
+        let file_path = String::from("file_path");
+
+        let result = query_insert_file_content_as_text(&file_path);
+
+        assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"inline-text\" }");
+    }
+    #[test]
+    pub fn test_query_insert_file_content_as_code_with_file_path_should_return_query_string() {
+        let file_path = String::from("file_path");
+
+        let result = query_insert_file_content_as_code(&file_path);
+
+        assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"code-block\" }");
+    }
+
+    #[test]
+    pub fn test_query_insert_file_content_as_video_with_file_path_should_return_query_string() {
+        let file_path = String::from("file_path");
+
+        let result = query_insert_file_content_as_video(&file_path);
+
+        assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"video\" }");
+    }
+
+    #[test]
+    pub fn test_query_insert_file_content_as_audio_with_file_path_should_return_query_string() {
+        let file_path = String::from("file_path");
+
+        let result = query_insert_file_content_as_audio(&file_path);
+
+        assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"audio\" }");
+    }
+}

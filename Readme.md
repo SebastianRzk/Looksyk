@@ -72,7 +72,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 	* :white_check_mark: Query type: `insert-content-from-file` (insert content from a asset file)
 	* :white_check_mark: ~Query type: `insert-code-from-file`~ display-type `code-block` (insert content from a asset file as a multiline code block with code highlighting)
 	* :white_check_mark: Improve query error messages
-    * Insert `insert-content-from-file` with display type `code-block` on default, when code file is copy paste into Looksyk (instead of link)
+    * :white_check_mark: Insert `insert-content-from-file` with display type `code-block`, `image`, `text-file`, `video` or `audio` on default, when code file is copy paste into Looksyk (instead of link)
 * Todo: Deployment / native build
 	* :white_check_mark: Serve all statics with the backend
 	* :white_check_mark: Basic graph configuration in user home directory
@@ -173,46 +173,54 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
 
 ```
  Show a list of links
- {query: page-hierarchy root:"myRootTag" display:"inplace-list"}
+ {query: page-hierarchy root:"myRootTag" display:"inplace-list" }
  
  Show the count
- {query: page-hierarchy root:"myRootTag" display:"count"}
+ {query: page-hierarchy root:"myRootTag" display:"count" }
 ```
 
 ### Todos
 
 ```
  Show a list of todos with a checkbox and a link to the source file. The list is appended to the end of the current block
- {query: todos tag:"myTag" state:"todo" display:"referenced-list"}
+ {query: todos tag:"myTag" state:"todo" display:"referenced-list" }
  
  Show a list of todos (not modifiable, but renders in place)
- {query: todos tag:"myTag" state:"todo" display:"inplace-list"}
+ {query: todos tag:"myTag" state:"todo" display:"inplace-list"} 
  
  Show the count of todos
- {query: todos tag:"myTag" state:"todo" display:"count"}
+ {query: todos tag:"myTag" state:"todo" display:"count" }
  
  Show done todos
- {query: todos tag:"myTag" state:"done" display:"referenced-list"}
+ {query: todos tag:"myTag" state:"done" display:"referenced-list" }
 ```
 
 ### Backlinks
 
 ```
  Show a list of backlinks
- {query: references-to tag:"myTag" display:"referenced-list"}
+ {query: references-to tag:"myTag" display:"referenced-list" }
  
  Show the count
- {query: references-to tag:"myTag" display:"count"}
+ {query: references-to tag:"myTag" display:"count" }
 ```
 
 
-### Insert content from file
+### Render assets ("insert-content-from-file")
 
 ```
  Insert the content of a file as text block
- {query: insert-file-content target-file:"myFile.asdf" display:"inline-text"}
+ {query: insert-file-content target-file:"myFile.asdf" display:"inline-text" }
  
  
  Insert the content of a file as code block, and highlight the code
- {query: insert-file-content target-file:"myFile.asdf" display:"code-block"}
+ {query: insert-file-content target-file:"myFile.asdf" display:"code-block" }
+ 
+ 
+ Insert a video
+ {query: insert-file-content target-file:"myFile.mp4" display:"video" }
+ 
+ 
+ Insert an audio file
+ {query: insert-file-content target-file:"myFile.ogg" display:"audio" }
 ```

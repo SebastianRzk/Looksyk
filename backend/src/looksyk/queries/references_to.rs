@@ -49,6 +49,7 @@ pub fn render_as_count(refs: &HashSet<PageId>) -> QueryRenderResult {
     return QueryRenderResult {
         inplace_markdown: refs.len().to_string(),
         referenced_markdown: vec![],
+        has_dynamic_content: false,
     };
 }
 
@@ -64,5 +65,6 @@ fn render_as_list(page_name: &SimplePageName, refs: &HashSet<PageId>) -> QueryRe
     QueryRenderResult {
         referenced_markdown: vec![],
         inplace_markdown: result,
+        has_dynamic_content: false,
     }
 }

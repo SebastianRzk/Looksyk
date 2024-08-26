@@ -12,6 +12,7 @@ use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write
 use crate::io::hash::hash_file_content;
 use crate::io::http::media::config::pad_url_media_location;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
+use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::state::state::AppState;
 
 
@@ -58,7 +59,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
     });
 
     Ok(Json(FileUploadResult {
-        inline_markdown: format!("![{}]({})", index_element.file_name, &index_element.file_name)
+        inline_markdown: inver_markdown_media_link(&index_element.file_name, &pad_url_media_location(&index_element.file_name))
     }))
 }
 

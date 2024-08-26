@@ -15,6 +15,7 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
 
     let mut tags: Vec<String> = page_guard.entries.keys().into_iter().map(|x| x.name.clone()).collect();
     tags.extend(tag_guard.entries.keys().into_iter().map(|x| to_meta(x)).filter(|x| x.page_type == PageType::UserPage).map(|x| x.simple_name));
+    tags = tags.iter().map(|s| s.replace("%2F", "/") ).collect::<Vec<String>>();
     tags.sort_by(|a, b| b.to_lowercase().cmp(&a.to_lowercase()));
     tags.dedup();
 

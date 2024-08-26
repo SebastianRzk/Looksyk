@@ -4,7 +4,7 @@ use std::string::ToString;
 use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, RawBlock, RawMarkdownFile, UpdateMarkdownFile};
 use crate::looksyk::model::BlockTokenType::TEXT;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct BlockTokenPattern {
     start_sequence: String,
     stop_sequence: String,
@@ -205,10 +205,19 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
             }
         }
     }
-    parsed_tokens.push(BlockToken {
-        payload: current_text.into_iter().collect(),
-        block_token_type: TEXT,
-    });
+    if let Some(m) = current_matcher {
+        let state = matcher_state.get(&m.block_token_type).unwrap();
+        let inner_text: String = state.inner_text.clone().into_iter().collect();
+        parsed_tokens.push(BlockToken {
+            payload: format!("{}{}", m.start_sequence, inner_text),
+            block_token_type: TEXT,
+        });
+    } else {
+        parsed_tokens.push(BlockToken {
+            payload: current_text.into_iter().collect(),
+            block_token_type: TEXT,
+        });
+    }
     parsed_tokens
 }
 
@@ -216,6 +225,16 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
 mod tests {
     use crate::looksyk::model::BlockTokenType;
     use crate::looksyk::parser::parse_text_content;
+
+    #[test]
+    fn should_create_text_node_on_unclosed_pattern() {
+        let input_text = "davor [[link".to_string();
+        let result = parse_text_content(&input_text);
+        assert_eq!(result.len(), 2);
+        let element = result.get(1).unwrap();
+        assert_eq!(element.payload, "[[link");
+        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+    }
 
     #[test]
     fn should_create_only_text_node() {

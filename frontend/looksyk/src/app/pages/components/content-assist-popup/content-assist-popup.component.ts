@@ -89,7 +89,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       if (group.title === this.INSERT_REFERENCE_TITLE) {
         text_to_insert = `[[${item.name}]] `
       } else if (group.title === this.INSERT_MEDIA_TITLE) {
-        text_to_insert = `![${item.name}][${item.name}]] `
+        text_to_insert = `![${item.name}](${item.name}) `
       } else if (group.title === "Actions") {
         this.useraction.closeCurrentMarkdownBlock();
         if (item.name === "Delete block") {

@@ -50,6 +50,7 @@ pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResul
     QueryRenderResult {
         referenced_markdown: vec![],
         inplace_markdown: selected_pages.len().to_string(),
+        has_dynamic_content: false,
     }
 }
 
@@ -64,5 +65,6 @@ pub fn render_as_list(root_name: &String, selected_pages: Vec<&SimplePageName>) 
     QueryRenderResult {
         referenced_markdown: vec![],
         inplace_markdown: result,
+        has_dynamic_content: false,
     }
 }

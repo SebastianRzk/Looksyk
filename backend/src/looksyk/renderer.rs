@@ -125,8 +125,8 @@ pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_i
                 inline_markdown_result_list.push(render_journal_link_str(&token.payload));
             }
             BlockTokenType::QUERY => {
-                has_dynamic_content = true;
                 let render_result = render_query(token, data, todo_index, tag_index, asset_cache, data_root_location);
+                has_dynamic_content = render_result.has_dynamic_content;
                 for reference in render_result.referenced_markdown {
                     references.push(reference);
                 }
@@ -361,7 +361,7 @@ mod tests {
 
 
     #[test]
-    fn should_render_query_as_dynamic() {
+    fn should_render_unwknown_query_as_non_dynamic() {
         let input = ParsedBlock {
             indentation: 0,
             content: vec![
@@ -369,6 +369,29 @@ mod tests {
                     as_tokens: vec![
                         BlockToken {
                             payload: does_not_matter(),
+                            block_token_type: BlockTokenType::QUERY,
+                        },
+                    ],
+                    as_text: does_not_matter(),
+                }
+            ],
+        };
+
+        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+
+        assert_eq!(result.has_dynamic_content, false);
+    }
+
+
+    #[test]
+    fn should_render_todo_query_as_dynamic() {
+        let input = ParsedBlock {
+            indentation: 0,
+            content: vec![
+                BlockContent {
+                    as_tokens: vec![
+                        BlockToken {
+                            payload: "todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\"}".to_string(),
                             block_token_type: BlockTokenType::QUERY,
                         },
                     ],

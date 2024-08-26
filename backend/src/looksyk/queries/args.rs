@@ -9,6 +9,9 @@ pub const PARAM_DISPLAY_REFERENCED_LIST: &str = "referenced-list";
 pub const PARAM_DISPLAY_COUNT: &str = "count";
 pub const PARAM_DISPLAY_CODE_BLOCK: &str = "code-block";
 pub const PARAM_DISPLAY_INLINE_TEXT: &str = "inline-text";
+pub const PARAM_DISPLAY_VIDEO: &str = "video";
+pub const PARAM_DISPLAY_AUDIO: &str = "audio";
+pub const PARAM_DISPLAY_LINK: &str = "link";
 
 
 pub const PARAM_TARGET_FILE: &str = "target-file";
@@ -50,6 +53,9 @@ pub fn parse_display_type_for_inplace(input_string: String) -> Result<QueryDispl
     match opt?.value.as_str() {
         PARAM_DISPLAY_CODE_BLOCK => Ok(QueryDisplayType::CodeBlock),
         PARAM_DISPLAY_INLINE_TEXT => Ok(QueryDisplayType::InlineText),
+        PARAM_DISPLAY_VIDEO => Ok(QueryDisplayType::Video),
+        PARAM_DISPLAY_AUDIO => Ok(QueryDisplayType::Audio),
+        PARAM_DISPLAY_LINK => Ok(QueryDisplayType::Link),
         _ => Ok(QueryDisplayType::Unknown)
     }
 }

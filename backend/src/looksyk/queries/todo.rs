@@ -66,6 +66,7 @@ fn state_from_string(state: &String) -> TodoState {
 
 fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
     QueryRenderResult {
+        has_dynamic_content: true,
         inplace_markdown: "".to_string(),
         referenced_markdown: selected_todos.iter().map(|x| {
             ReferencedMarkdown {
@@ -83,6 +84,7 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
 
 fn render_as_count(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
     return QueryRenderResult {
+        has_dynamic_content: true,
         inplace_markdown: selected_todos.len().to_string(),
         referenced_markdown: vec![],
     };
@@ -106,6 +108,7 @@ fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderR
         }
     }
     QueryRenderResult {
+        has_dynamic_content: true,
         referenced_markdown: vec![],
         inplace_markdown: result,
     }
