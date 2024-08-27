@@ -44,6 +44,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   text$ = this.contentAssist.textInContentAssist$
 
+  textDebounced$ = this.text$.pipe(debounce(() => timer(120)));
+
   state$ = this.contentAssist.state$;
 
   enter_ = this.contentAssist.enter$.subscribe(async () => {
@@ -131,7 +133,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.metaInfoFromBackend.update();
     this.stateGroupOptions = combineLatest({
-      filter: this.contentAssist.textInContentAssist$,
+      filter: this.textDebounced$,
       cursor: this.contentAssist.cursorInContentAssist$
     }).pipe(debounce(() => timer(30)),
       map(value => this._highlightItem(value.cursor, this._addAddLinkGroup(this._filterGroup(value.filter), value.filter, this.contentAssist.stateRaw))
