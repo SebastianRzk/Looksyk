@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { PageService } from "../pages/page.service";
 
@@ -26,9 +26,23 @@ export class MetaInfoService {
     });
   }
 
+  public getSuggestionsForFile(file_name: string): Observable<Suggestions> {
+    return this.http.get<Suggestions>("/api/assets/suggestion/" + file_name);
+  }
+
 }
 
 export interface MetaInformation {
   tags: string[],
   media: string[]
+}
+
+
+export interface Suggestions {
+  suggestions: Suggestion[]
+}
+
+export interface Suggestion {
+  explanation: string,
+  inplaceMarkdown: string,
 }

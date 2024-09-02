@@ -67,6 +67,10 @@ export class ContentAssistService {
     this.state.next(ContentAssistMode.Closed);
   }
 
+  public openSubmenu(){
+    this.open(ContentAssistMode.Submenu);
+  }
+
   private open(mode: ContentAssistMode) {
     this.stateRaw = mode;
     this.state.next(mode);
@@ -108,6 +112,12 @@ export class ContentAssistService {
   private emptyContent() {
     this.textInContentAssistRaw = "";
     this.textInContentAssist.next("");
+    this.resetCursor();
+  }
+
+
+  public resetCursor(){
+    this.cursorInContentAssist.next(0);
   }
 
   private isOpenContentAssist(event: KeyboardEvent): boolean {
@@ -126,5 +136,5 @@ export enum KeypressResult {
 }
 
 export enum ContentAssistMode {
-  Closed, Insert, Navigate, InsertTag
+  Closed, Insert, Navigate, InsertTag, Submenu
 }

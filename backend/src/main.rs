@@ -65,6 +65,7 @@ async fn main() -> std::io::Result<()> {
             .service(favourites::endpoints::get_favourites)
             .service(favourites::endpoints::update_favourites)
             .service(media::endpoints::post_file)
+            .service(media::endpoints::asset_suggestion)
             .service(design::endpoints::css_theme)
             .service(metainfo::endpoints::get_metainfo)
             .service(r#static::endpoints::index_html)

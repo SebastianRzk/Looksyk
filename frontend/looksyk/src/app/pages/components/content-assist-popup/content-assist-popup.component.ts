@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { combineLatest, debounce, firstValueFrom, map, Observable, timer } from "rxjs";
-import { MetaInformation, MetaInfoService } from "../../../services/meta-info.service";
+import { BehaviorSubject, combineLatest, debounce, firstValueFrom, map, Observable, timer } from "rxjs";
+import { MetaInformation, MetaInfoService, Suggestions } from "../../../services/meta-info.service";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption } from "@angular/material/autocomplete";
@@ -42,6 +42,23 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   useraction = inject(UseractionService);
   router = inject(Router);
 
+  subMenuState = new BehaviorSubject<Suggestions>({
+    suggestions: []
+  });
+  subMenuState$: Observable<ContentAssistSection> = this.subMenuState.asObservable().pipe(map(s => s.suggestions.map(s => {
+      let e: Item = {
+        name: s.explanation,
+        highlight: false
+      };
+      return e;
+    }
+  ))).pipe(map(s => {
+    return {
+      title: ADD_SUGGESTED_MEDIA,
+      items: s
+    }
+  }));
+
   text$ = this.contentAssist.textInContentAssist$
 
   textDebounced$ = this.text$.pipe(debounce(() => timer(120)));
@@ -62,67 +79,97 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   private async handleAction(item: Item, group: ContentAssistSection) {
     console.log("selected item: ", item.name);
+    let result = Result.Close;
     let state = await firstValueFrom(this.state$);
     if (state == ContentAssistMode.Navigate) {
-      this.useraction.closeCurrentMarkdownBlock();
-      if (group.title == this.NAVIGATE_TO_NEW_PAGE) {
-        let target: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
-        await this.router.navigate(["/page", target]);
-      } else {
-        await this.router.navigate(["/page", item.name]);
-      }
+      await this.handleNavigation(group, item);
     } else if (state == ContentAssistMode.InsertTag) {
-      let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
-      if (group.title == this.INSERT_NEW_TAG) {
-        let targetText: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
-        this.useraction.insertText.next({
-          target: target.target,
-          inlineMarkdown: `${targetText}]] `
-        })
-      } else {
-        this.useraction.insertText.next({
-          target: target.target,
-          inlineMarkdown: `${item.name}]] `
-        })
-      }
+      await this.handleInsertTag(group, item);
     } else {
-      let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
-      let text_to_insert = "unknown";
-      if (group.title === this.INSERT_REFERENCE_TITLE) {
-        text_to_insert = `[[${item.name}]] `
-      } else if (group.title === this.INSERT_MEDIA_TITLE) {
-        text_to_insert = `![${item.name}](${item.name}) `
-      } else if (group.title === "Actions") {
-        this.useraction.closeCurrentMarkdownBlock();
-        if (item.name === "Delete block") {
-          this.useraction.deleteBlock.next({
-            target: target.target
-          })
-        } else if (item.name === "Delete page") {
-          text_to_insert = "not yet implemented";
+      result = await this.handleElseActions(group, item);
+    }
+    if (result == Result.Close) {
+      this.contentAssist.registerKeyPress(new KeyboardEvent("keydown", {key: "Escape"}))
+    }
+    return;
+  }
+
+  private async handleElseActions(group: ContentAssistSection, item: Item) {
+    let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+    let text_to_insert = "unknown";
+    if (group.title === this.INSERT_REFERENCE_TITLE) {
+      text_to_insert = `[[${item.name}]] `
+    } else if (group.title === this.INSERT_MEDIA_TITLE) {
+      this.metaInfoFromBackend.getSuggestionsForFile(item.name).subscribe(
+        (data) => {
+          this.subMenuState.next(data);
         }
-      } else if (group.title == this.ADD_LINK) {
-        let target_text = await firstValueFrom(this.contentAssist.textInContentAssist$);
-        text_to_insert = `[[${target_text}]] `
-      } else if (group.title == ADD_QUERY) {
-        if (item.name == ADD_QUERY_PAGE_HIERARCHY) {
-          text_to_insert = "{query: page-hierarchy root:\"myRootTag\" display:\"inplace-list\" }"
-        } else if (item.name == ADD_QUERY_REFERENCES) {
-          text_to_insert = "{query: references-to tag:\"myTag\" state:\"todo\" display:\"referenced-list\" }"
-        } else if (item.name == ADD_QUERY_TODOS) {
-          text_to_insert = "{query: todos tag:\"myTag\" display:\"referenced-list\" }"
-        }else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
-          text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
+      )
+      this.contentAssist.openSubmenu();
+      this.contentAssist.resetCursor();
+      return Result.StayOpened;
+    } else if (group.title === "Actions") {
+      this.useraction.closeCurrentMarkdownBlock();
+      if (item.name === "Delete block") {
+        this.useraction.deleteBlock.next({
+          target: target.target
+        })
+      } else if (item.name === "Delete page") {
+        text_to_insert = "not yet implemented";
+      }
+    } else if (group.title == this.ADD_LINK) {
+      let target_text = await firstValueFrom(this.contentAssist.textInContentAssist$);
+      text_to_insert = `[[${target_text}]] `
+    } else if (group.title == ADD_QUERY) {
+      if (item.name == ADD_QUERY_PAGE_HIERARCHY) {
+        text_to_insert = "{query: page-hierarchy root:\"myRootTag\" display:\"inplace-list\" }"
+      } else if (item.name == ADD_QUERY_REFERENCES) {
+        text_to_insert = "{query: references-to tag:\"myTag\" state:\"todo\" display:\"referenced-list\" }"
+      } else if (item.name == ADD_QUERY_TODOS) {
+        text_to_insert = "{query: todos tag:\"myTag\" display:\"referenced-list\" }"
+      } else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
+        text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
+      }
+    } else if( group.title == ADD_SUGGESTED_MEDIA){
+      let allValues = await firstValueFrom(this.subMenuState);
+      for (let value of allValues.suggestions) {
+        if (value.explanation == item.name) {
+          text_to_insert = value.inplaceMarkdown
+          break;
         }
       }
+    }
+    this.useraction.insertText.next({
+      target: target.target,
+      inlineMarkdown: text_to_insert
+    })
+    return Result.Close;
+  }
+
+  private async handleInsertTag(group: ContentAssistSection, item: Item) {
+    let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+    if (group.title == this.INSERT_NEW_TAG) {
+      let targetText: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
       this.useraction.insertText.next({
         target: target.target,
-        inlineMarkdown: text_to_insert
+        inlineMarkdown: `${targetText}]] `
+      })
+    } else {
+      this.useraction.insertText.next({
+        target: target.target,
+        inlineMarkdown: `${item.name}]] `
       })
     }
+  }
 
-    this.contentAssist.registerKeyPress(new KeyboardEvent("keydown", {key: "Escape"}))
-    return;
+  private async handleNavigation(group: ContentAssistSection, item: Item) {
+    this.useraction.closeCurrentMarkdownBlock();
+    if (group.title == this.NAVIGATE_TO_NEW_PAGE) {
+      let target: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
+      await this.router.navigate(["/page", target]);
+    } else {
+      await this.router.navigate(["/page", item.name]);
+    }
   }
 
   contentAssistContent: ContentAssistSection[] = []
@@ -134,9 +181,10 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     this.metaInfoFromBackend.update();
     this.stateGroupOptions = combineLatest({
       filter: this.textDebounced$,
-      cursor: this.contentAssist.cursorInContentAssist$
+      cursor: this.contentAssist.cursorInContentAssist$,
+      subMenu: this.subMenuState$
     }).pipe(debounce(() => timer(30)),
-      map(value => this._highlightItem(value.cursor, this._addAddLinkGroup(this._filterGroup(value.filter), value.filter, this.contentAssist.stateRaw))
+      map(value => this._highlightItem(value.cursor, this._addAddLinkGroup(this._filterGroup(value.filter), value.filter, this.contentAssist.stateRaw, value.subMenu))
       ));
   }
 
@@ -146,7 +194,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   private readonly INSERT_NEW_TAG = "Insert new tag";
 
-  private _addAddLinkGroup(groups: ContentAssistSection[], value: string, filter: ContentAssistMode): ContentAssistSection[] {
+  private _addAddLinkGroup(groups: ContentAssistSection[], value: string, filter: ContentAssistMode, subMenu: ContentAssistSection): ContentAssistSection[] {
+    console.log("filter", filter, "submenu", subMenu);
     if (filter == ContentAssistMode.Insert) {
       groups.push({
         title: this.ADD_LINK,
@@ -174,11 +223,15 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         }]
       });
       return groups
+    } else if (filter == ContentAssistMode.Submenu) {
+      console.log("submenu opened:", subMenu)
+      return [subMenu]
     }
     return groups
   }
 
-  private _highlightItem(cursor: number, items: ContentAssistSection[]): ContentAssistSection[] {
+  private _highlightItem(cursor: number, items: ContentAssistSection[]):
+    ContentAssistSection[] {
     let currentCursor = 0;
     let highlighted = false;
     for (let group of items) {
@@ -326,6 +379,8 @@ function CONTENT_ASSIST_ACTIONS_EDIT(): ContentAssistSection {
   }
 }
 
+const ADD_SUGGESTED_MEDIA = "Submenu: Insert media";
+
 const ADD_QUERY = "Queries";
 
 const ADD_QUERY_PAGE_HIERARCHY = "query page hierarchy";
@@ -369,4 +424,9 @@ interface ContentAssistSection {
 interface Item {
   name: string,
   highlight: boolean
+}
+
+enum Result {
+  Close,
+  StayOpened
 }

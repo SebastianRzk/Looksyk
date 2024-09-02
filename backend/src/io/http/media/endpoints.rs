@@ -1,8 +1,9 @@
 use std::fs;
 use std::path::Path;
+
 use actix_files::NamedFile;
 use actix_multipart::form::{json::Json as MPJson, MultipartForm, tempfile::TempFile};
-use actix_web::{Error, get, HttpRequest, post, Responder};
+use actix_web::{Error, error, get, HttpRequest, post, Responder};
 use actix_web::http::header::{ContentDisposition, DispositionType};
 use actix_web::web::{Data, Json};
 use serde::{Deserialize, Serialize};
@@ -11,10 +12,11 @@ use crate::io::fs::basic_file::read_binary_file;
 use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config};
 use crate::io::hash::hash_file_content;
 use crate::io::http::media::config::pad_url_media_location;
+use crate::io::http::media::mapper::map_to_dto;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
+use crate::looksyk::media::suggestion::get_suggestion_for_file;
 use crate::state::state::AppState;
-
 
 #[derive(Debug, Deserialize)]
 struct Metadata {
@@ -64,9 +66,17 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 }
 
 
+#[get("/api/assets/suggestion/{filename:.*}")]
+pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder> {
+    let file_name: String = req.match_info().query("filename").parse().unwrap();
+    let result = get_suggestion_for_file(&file_name);
+    let dto = map_to_dto(result);
+    Ok(Json(dto))
+}
+
 
 #[get("/assets/{filename:.*}")]
-async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile, Error> {
     let path: String = req.match_info().query("filename").parse().unwrap();
     let file = read_media_file(&path, &data.data_path)?;
     Ok(file
