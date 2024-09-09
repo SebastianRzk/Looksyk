@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use actix_web::{get, Responder, web};
 use actix_web::web::Data;
 use serde::Serialize;
@@ -15,6 +16,8 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
     let mut tags: Vec<String> = page_guard.entries.keys().into_iter().map(|x| x.name.clone()).collect();
     tags.extend(tag_guard.entries.keys().into_iter().map(|x| to_meta(x)).filter(|x| x.page_type == PageType::UserPage).map(|x| x.simple_name));
     tags = tags.iter().map(|s| s.replace("%2F", "/") ).collect::<Vec<String>>();
+    let tags_set: HashSet<String> = HashSet::from_iter(tags.into_iter());
+    tags = Vec::from_iter(tags_set.into_iter());
     tags.sort_by(|a, b| a.len().cmp(&b.len()));
     tags.dedup();
 
