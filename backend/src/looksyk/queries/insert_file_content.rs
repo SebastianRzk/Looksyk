@@ -3,7 +3,7 @@ use std::io::{Error, ErrorKind};
 
 use crate::io::fs::asset_cache_loader::load_cachable_asset;
 use crate::io::fs::media::MediaOnDisk;
-use crate::io::http::media::config::pad_url_media_location;
+use crate::io::http::media::config::create_media_location;
 use crate::looksyk::markdown::{render_as_audio, render_as_code_block, render_as_link, render_as_video};
 use crate::looksyk::model::QueryRenderResult;
 use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET_FILE, parse_display_type_for_inplace, parse_property};
@@ -56,7 +56,7 @@ pub fn render_query_insert_file_content(query: Query, data: &mut AssetCache, dat
         QueryDisplayType::InlineText => render_inline(&media_on_disk, data, data_root_location),
         QueryDisplayType::Link => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: render_as_link(&media_on_disk.name, &pad_url_media_location(&media_on_disk.name)),
+            inplace_markdown: render_as_link(&media_on_disk.name, &create_media_location(&media_on_disk.name)),
             referenced_markdown: vec![],
         },
         QueryDisplayType::CodeBlock => render_code_block(&media_on_disk, data, data_root_location),
@@ -96,12 +96,12 @@ fn render_code_block(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_
         },
         AssetState::NotText => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
+            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &create_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         AssetState::TooLarge(violation) => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
+            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &create_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         _ => QueryRenderResult {
@@ -157,12 +157,12 @@ fn render_inline(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_loca
         },
         AssetState::NotText => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
+            inplace_markdown: format!("File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: {}", render_as_link(&file_name.name, &create_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         AssetState::TooLarge(violation) => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &pad_url_media_location(&file_name.name))),
+            inplace_markdown: format!("File is too large. Max size is {}. File size is {}. Try display type \"link\" to render a link: {}", violation.max_size, violation.file_size, render_as_link(&file_name.name, &create_media_location(&file_name.name))),
             referenced_markdown: vec![],
         },
         _ => QueryRenderResult {

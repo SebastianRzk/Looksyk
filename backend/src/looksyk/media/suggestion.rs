@@ -1,4 +1,4 @@
-use crate::io::http::media::config::pad_url_media_location;
+use crate::io::http::media::config::create_media_location;
 use crate::looksyk::markdown::{render_as_audio, render_as_image, render_as_link, render_as_video};
 use crate::looksyk::media::media_type::{get_media_type_from_extension, MediaType};
 use crate::looksyk::queries::insert_file_content::{query_insert_file_content_as_audio, query_insert_file_content_as_code, query_insert_file_content_as_text, query_insert_file_content_as_video};
@@ -85,21 +85,21 @@ const INSERT_QUERY_CODE: &str = "Query: Insert text as code block with code high
 fn suggest_as_link(file_name: &String) -> Suggestion {
     Suggestion {
         explanation: INSERT_LINK_TEXT.to_string(),
-        inplace_markdown: render_as_link(file_name, &pad_url_media_location(file_name)),
+        inplace_markdown: render_as_link(file_name, &create_media_location(file_name)),
     }
 }
 
 fn suggest_as_markdown_preview_supported(file_name: &String) -> Suggestion {
     Suggestion {
         explanation: INSERT_MARKDOWN_PREVIEW.to_string(),
-        inplace_markdown: render_as_image(file_name, &pad_url_media_location(file_name)),
+        inplace_markdown: render_as_image(file_name, &create_media_location(file_name)),
     }
 }
 
 fn suggest_as_markdown_preview_not_supported(file_name: &String) -> Suggestion {
     Suggestion {
         explanation: INSERT_MARKDOWN_PREVIEW_NOT_SUPPORTED.to_string(),
-        inplace_markdown: render_as_image(file_name, &pad_url_media_location(file_name)),
+        inplace_markdown: render_as_image(file_name, &create_media_location(file_name)),
     }
 }
 

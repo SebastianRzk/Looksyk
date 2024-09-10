@@ -9,13 +9,13 @@ pub fn render_as_image(filename: &String, path: &String) -> String {
 pub fn render_as_video(filename_path: &String) -> String {
     format!("<video width=\"720\" controls>
 <source src=\"/assets/{}\" type=\"video/{}\">
-</video>", filename_path, get_extension(&filename_path, "mp4"))
+</video>", encode_uri_component(filename_path), get_extension(&filename_path, "mp4"))
 }
 
 pub fn render_as_audio(filename_path: &String) -> String {
     format!("<audio controls>
 <source src=\"/assets/{}\" type=\"audio/{}\">
-</audio>", filename_path, get_extension(&filename_path, "mp3"))
+</audio>", encode_uri_component(filename_path), get_extension(&filename_path, "mp3"))
 }
 
 fn get_extension(filename: &String, default: &str) -> String {
@@ -31,6 +31,10 @@ pub fn render_as_code_block(language: String, content: &String) -> String {
 ```{}
 {}
 ```", language, content)
+}
+
+pub fn encode_uri_component(file_name: &String) -> String {
+    file_name.replace(" ", "%20").replace("#", "%23")
 }
 
 #[cfg(test)]

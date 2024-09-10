@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use crate::io::fs::basic_file::read_binary_file;
 use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config};
 use crate::io::hash::hash_file_content;
-use crate::io::http::media::config::pad_url_media_location;
+use crate::io::http::media::config::create_media_location;
 use crate::io::http::media::mapper::map_to_dto;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
@@ -50,7 +50,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
         let absolute_destination_path = destination_path(filename.as_str(), &app_state.data_path);
         let name = absolute_destination_path.file_name().unwrap().to_os_string().to_str().unwrap().to_string();
         let new_entry = IndexedMedia {
-            file_name: pad_url_media_location(&name),
+            file_name: create_media_location(&name),
             sha3: hash.clone(),
         };
         media_guard.media.push(new_entry.clone());
@@ -61,7 +61,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
     });
 
     Ok(Json(FileUploadResult {
-        inline_markdown: inver_markdown_media_link(&index_element.file_name, &pad_url_media_location(&index_element.file_name))
+        inline_markdown: inver_markdown_media_link(&index_element.file_name, &create_media_location(&index_element.file_name))
     }))
 }
 

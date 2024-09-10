@@ -12,4 +12,4 @@ pub mod page_index;
 pub mod config;
 pub mod favourite;
 pub mod media;
-mod markdown;
+pub mod markdown;

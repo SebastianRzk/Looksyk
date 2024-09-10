@@ -27,7 +27,7 @@ export class MetaInfoService {
   }
 
   public getSuggestionsForFile(file_name: string): Observable<Suggestions> {
-    return this.http.get<Suggestions>("/api/assets/suggestion/" + file_name);
+    return this.http.get<Suggestions>("/api/assets/suggestion/" + encodeURIComponent(file_name));
   }
 
 }
