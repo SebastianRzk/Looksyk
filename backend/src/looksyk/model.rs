@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use serde::{Deserialize, Serialize};
+use crate::looksyk::builder::page_name;
 
 #[derive(Clone, Debug)]
 pub struct RawBlock {
@@ -157,4 +158,9 @@ impl Eq for PageId {}
 #[derive(Clone, Debug)]
 pub struct PageId {
     pub id: String,
+}
+
+pub fn decode_page_name(page_name_from_input: String) -> SimplePageName {
+    let decoded_pagename = page_name_from_input.replace('/', "%2F");
+    page_name(decoded_pagename)
 }

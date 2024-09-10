@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BehaviorSubject, Subject } from "rxjs";
-import { RouterLink } from "@angular/router";
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BehaviorSubject, Subject} from "rxjs";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-user-page-title',
@@ -18,7 +18,7 @@ export class TitleComponent implements OnChanges {
   rootPath: string = "/page/";
 
   parsedTitle: Subject<TitleSegment[]> = new BehaviorSubject([{
-    name: "", link: ""
+    name: "", link: "", viewName: ""
   }]);
   parsedTitle$ = this.parsedTitle.asObservable();
 
@@ -30,7 +30,8 @@ export class TitleComponent implements OnChanges {
     if (!this.title.includes("/")) {
       this.parsedTitle.next([{
         name: this.title,
-        link: this.title
+        link: this.title,
+        viewName: this.title
       }])
     }
     let result = [];
@@ -41,6 +42,7 @@ export class TitleComponent implements OnChanges {
       console.log(cummulatedSegments)
       result.push({
         name: segment,
+        viewName: segment.trim(),
         link: cummulatedSegments.join("%2F").trimEnd()
       });
     }
@@ -50,5 +52,6 @@ export class TitleComponent implements OnChanges {
 
 interface TitleSegment {
   name: string,
-  link: string
+  link: string,
+  viewName: string,
 }

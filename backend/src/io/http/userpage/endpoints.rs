@@ -9,7 +9,7 @@ use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
 use crate::looksyk::favourite::is_favourite;
 use crate::looksyk::index::index::update_index_for_file;
 use crate::looksyk::index::tag::render_tag_index_for_page;
-use crate::looksyk::model::{PageType, RawMarkdownFile};
+use crate::looksyk::model::{decode_page_name, PageType, RawMarkdownFile};
 use crate::looksyk::page_index::append_user_page_prefix;
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
@@ -20,7 +20,7 @@ use crate::state::state::AppState;
 #[post("/api/pages/{page_name}")]
 async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
-    let page_name = page_name(path.into_inner());
+    let page_name = decode_page_name(path.into_inner());
 
     let parsed_page = parse_markdown_update_file(map_from_update_markdown_dto(request_body));
     let serialized_page = serialize_page(&parsed_page);
@@ -63,7 +63,7 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
 
 #[get("/api/pages/{page_name}")]
 async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    let simple_page_name = page_name(input_page_name.into_inner().replace('/', "%2F"));
+    let simple_page_name = decode_page_name(input_page_name.into_inner());
 
     let page_guard = data.user_pages.lock().unwrap();
     let todo_index_guard = data.todo_index.lock().unwrap();

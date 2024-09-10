@@ -3,7 +3,7 @@
   background: var(--background-color);
   border: 2px solid var(--primary-color);
   border-radius: 0.5ex;
-  position: absolute;
+  position: fixed;
   z-index: 2;
   width: 80%;
   height: 80%;
