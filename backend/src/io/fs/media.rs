@@ -6,6 +6,7 @@ use chrono::Utc;
 use crate::io::fs::basic_file::{exists_file, get_file_size, read_binary_file, read_file};
 use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
+use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
 use crate::state::state::DataRootLocation;
 
@@ -121,6 +122,12 @@ pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaO
 
 pub struct MediaOnDisk {
     pub name: String,
+}
+
+impl MediaOnDisk {
+    pub fn as_asset_descriptor(&self) -> AssetDescriptor {
+        AssetDescriptor::new(self.name.clone())
+    }
 }
 
 

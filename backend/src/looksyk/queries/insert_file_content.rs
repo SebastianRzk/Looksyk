@@ -4,6 +4,7 @@ use std::io::{Error, ErrorKind};
 use crate::io::fs::asset_cache_loader::load_cachable_asset;
 use crate::io::fs::media::MediaOnDisk;
 use crate::io::http::media::config::create_media_location;
+use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::markdown::{render_as_audio, render_as_code_block, render_as_link, render_as_video};
 use crate::looksyk::model::QueryRenderResult;
 use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET_FILE, parse_display_type_for_inplace, parse_property};
@@ -14,20 +15,20 @@ use crate::state::state::DataRootLocation;
 
 pub const QUERY_NAME_INSERT_FILE_CONTENT: &str = "insert-file-content";
 
-pub fn query_insert_file_content_as_text(file_path: &String) -> String {
-    format!("{{query: insert-file-content target-file:\"{}\" display:\"inline-text\" }}", file_path)
+pub fn query_insert_file_content_as_text(asset_descriptor: &AssetDescriptor) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"inline-text\" }}", asset_descriptor.get_display_name())
 }
 
-pub fn query_insert_file_content_as_code(file_path: &String) -> String {
-    format!("{{query: insert-file-content target-file:\"{}\" display:\"code-block\" }}", file_path)
+pub fn query_insert_file_content_as_code(asset_descriptor: &AssetDescriptor) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"code-block\" }}", asset_descriptor.get_display_name())
 }
 
-pub fn query_insert_file_content_as_video(file_path: &String) -> String {
-    format!("{{query: insert-file-content target-file:\"{}\" display:\"video\" }}", file_path)
+pub fn query_insert_file_content_as_video(asset_descriptor: &AssetDescriptor) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"video\" }}", asset_descriptor.get_display_name())
 }
 
-pub fn query_insert_file_content_as_audio(file_path: &String) -> String {
-    format!("{{query: insert-file-content target-file:\"{}\" display:\"audio\" }}", file_path)
+pub fn query_insert_file_content_as_audio(asset_descriptor: &AssetDescriptor) -> String {
+    format!("{{query: insert-file-content target-file:\"{}\" display:\"audio\" }}", asset_descriptor.get_display_name())
 }
 
 
@@ -62,12 +63,12 @@ pub fn render_query_insert_file_content(query: Query, data: &mut AssetCache, dat
         QueryDisplayType::CodeBlock => render_code_block(&media_on_disk, data, data_root_location),
         QueryDisplayType::Video => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: render_as_video(&media_on_disk.name),
+            inplace_markdown: render_as_video(&media_on_disk.as_asset_descriptor()),
             referenced_markdown: vec![],
         },
         QueryDisplayType::Audio => QueryRenderResult {
             has_dynamic_content: false,
-            inplace_markdown: render_as_audio(&media_on_disk.name),
+            inplace_markdown: render_as_audio(&media_on_disk.as_asset_descriptor()),
             referenced_markdown: vec![],
         },
         _ => render_display_unknown(query.display)
@@ -175,39 +176,32 @@ fn render_inline(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_loca
 
 #[cfg(test)]
 mod tests {
+    use crate::looksyk::builder::test_builder::asset_descriptor;
     use super::*;
 
     #[test]
     pub fn test_query_insert_file_content_as_text_with_file_path_should_return_query_string() {
-        let file_path = String::from("file_path");
-
-        let result = query_insert_file_content_as_text(&file_path);
+        let result = query_insert_file_content_as_text(&asset_descriptor("file_path"));
 
         assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"inline-text\" }");
     }
     #[test]
     pub fn test_query_insert_file_content_as_code_with_file_path_should_return_query_string() {
-        let file_path = String::from("file_path");
-
-        let result = query_insert_file_content_as_code(&file_path);
+        let result = query_insert_file_content_as_code(&asset_descriptor("file_path"));
 
         assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"code-block\" }");
     }
 
     #[test]
     pub fn test_query_insert_file_content_as_video_with_file_path_should_return_query_string() {
-        let file_path = String::from("file_path");
-
-        let result = query_insert_file_content_as_video(&file_path);
+        let result = query_insert_file_content_as_video(&asset_descriptor("file_path"));
 
         assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"video\" }");
     }
 
     #[test]
     pub fn test_query_insert_file_content_as_audio_with_file_path_should_return_query_string() {
-        let file_path = String::from("file_path");
-
-        let result = query_insert_file_content_as_audio(&file_path);
+        let result = query_insert_file_content_as_audio(&asset_descriptor("file_path"));
 
         assert_eq!(result, "{query: insert-file-content target-file:\"file_path\" display:\"audio\" }");
     }

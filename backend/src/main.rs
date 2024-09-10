@@ -4,9 +4,9 @@ use std::sync::Mutex;
 
 use actix_web::{App, HttpServer};
 use actix_web::web::Data;
-use clap::Parser;
 
-use crate::configuration::{APPLICATION_HOST, DEFAULT_APPLICATION_PORT};
+use crate::configuration::APPLICATION_HOST;
+use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder};
 use crate::io::fs::basic_folder::home_directory;
 use crate::io::fs::config::{read_config_from_file, save_config_to_file};
@@ -34,22 +34,14 @@ mod state;
 mod io;
 mod configuration;
 
-#[derive(Parser)]
-struct CliArgs {
-    #[arg(long, value_name = "graph-location")]
-    graph_location: Option<String>,
-    #[arg(long, value_name = "port")]
-    port: Option<u16>,
-}
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let args = CliArgs::parse();
-    let data_root_location = args.graph_location.map(|s| DataRootLocation {
-        path: s.into(),
-        name: "default".to_string(),
-    }).unwrap_or_else(
+    let default_config = configuration::get_default_configuration();
+    let config = default_config.overwrite(get_cli_args());
+
+
+    let data_root_location = config.overwrite_graph_location.unwrap_or_else(
         || {
             let initial_config_path = env::get_or_default("LOOKSYK_CONFIG_PATH", home_directory().join(".local").join("share").join("looksyk").to_str().unwrap());
             get_current_active_data_root_location(&InitialConfigLocation {
@@ -57,8 +49,6 @@ async fn main() -> std::io::Result<()> {
             })
         }
     );
-    let application_port = args.port.unwrap_or(DEFAULT_APPLICATION_PORT);
-
 
     if !exists_folder(data_root_location.path.to_path_buf()) {
         init_empty_graph(&data_root_location);
@@ -67,7 +57,7 @@ async fn main() -> std::io::Result<()> {
     let app_state = create_app_state(data_root_location);
 
 
-    println!("Starting Looksyk on  http://{}:{}", APPLICATION_HOST, application_port);
+    println!("Starting Looksyk on  http://{}:{}", APPLICATION_HOST, config.application_port);
 
     HttpServer::new(move || {
         App::new()
@@ -98,7 +88,7 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
     })
-        .bind(SocketAddr::new(IpAddr::from_str(APPLICATION_HOST).unwrap(), application_port))?
+        .bind(SocketAddr::new(IpAddr::from_str(config.application_host.as_str()).unwrap(), config.application_port))?
         .run()
         .await
 }

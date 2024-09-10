@@ -13,6 +13,7 @@ use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write
 use crate::io::hash::hash_file_content;
 use crate::io::http::media::config::create_media_location;
 use crate::io::http::media::mapper::map_to_dto;
+use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
@@ -61,7 +62,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
     });
 
     Ok(Json(FileUploadResult {
-        inline_markdown: inver_markdown_media_link(&index_element.file_name, &create_media_location(&index_element.file_name))
+        inline_markdown: inver_markdown_media_link(&index_element.file_name)
     }))
 }
 
@@ -69,7 +70,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 #[get("/api/assets/suggestion/{filename:.*}")]
 pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder> {
     let file_name: String = req.match_info().query("filename").parse().unwrap();
-    let result = get_suggestion_for_file(&file_name);
+    let result = get_suggestion_for_file(&AssetDescriptor::new(file_name));
     let dto = map_to_dto(result);
     Ok(Json(dto))
 }

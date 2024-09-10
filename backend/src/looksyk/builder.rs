@@ -1,5 +1,16 @@
 use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 
+
+
+#[cfg(test)]
+pub mod test_builder {
+    use crate::looksyk::datatypes::AssetDescriptor;
+
+    pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
+        AssetDescriptor::new(file_name.to_string())
+    }
+}
+
 #[cfg(test)]
 use crate::looksyk::model::PageId;
 

@@ -1,30 +1,29 @@
+use crate::looksyk::datatypes::AssetDescriptor;
+
 pub fn render_as_link(filename: &String, path: &String) -> String {
     format!("[{}]({})", filename, path)
 }
 
-pub fn render_as_image(filename: &String, path: &String) -> String {
-    format!("![{}]({})", filename, path)
+pub fn render_asset_as_link(asset_descriptor: &AssetDescriptor) -> String {
+    render_as_link(&asset_descriptor.get_display_name(), &asset_descriptor.get_qualified_path())
 }
 
-pub fn render_as_video(filename_path: &String) -> String {
+pub fn render_as_image(asset_descriptor: &AssetDescriptor) -> String {
+    format!("![{}]({})", asset_descriptor.get_display_name(), asset_descriptor.get_qualified_path())
+}
+
+pub fn render_as_video(asset_descriptor: &AssetDescriptor) -> String {
     format!("<video width=\"720\" controls>
-<source src=\"/assets/{}\" type=\"video/{}\">
-</video>", encode_uri_component(filename_path), get_extension(&filename_path, "mp4"))
+<source src=\"{}\" type=\"video/{}\">
+</video>", asset_descriptor.get_qualified_path(), asset_descriptor.get_extension("mp4"))
 }
 
-pub fn render_as_audio(filename_path: &String) -> String {
+pub fn render_as_audio(asset_descriptor: &AssetDescriptor) -> String {
     format!("<audio controls>
-<source src=\"/assets/{}\" type=\"audio/{}\">
-</audio>", encode_uri_component(filename_path), get_extension(&filename_path, "mp3"))
+<source src=\"{}\" type=\"audio/{}\">
+</audio>", asset_descriptor.get_qualified_path(), asset_descriptor.get_extension("mp3"))
 }
 
-fn get_extension(filename: &String, default: &str) -> String {
-    let result = filename.split('.').last().unwrap();
-    if result.eq(filename) {
-        return default.to_string();
-    }
-    return result.to_string();
-}
 
 pub fn render_as_code_block(language: String, content: &String) -> String {
     format!("\
@@ -39,6 +38,7 @@ pub fn encode_uri_component(file_name: &String) -> String {
 
 #[cfg(test)]
 mod tests {
+    use crate::looksyk::builder::test_builder::asset_descriptor;
     use super::*;
 
     #[test]
@@ -53,9 +53,7 @@ mod tests {
 
     #[test]
     fn test_render_as_video_with_filename_and_path_should_render_video() {
-        let filename = String::from("filename.mp4");
-
-        let result = render_as_video(&filename);
+        let result = render_as_video(&asset_descriptor("filename.mp4"));
 
         assert_eq!(result, "<video width=\"720\" controls>\n<source src=\"/assets/filename.mp4\" type=\"video/mp4\">\n</video>");
     }
@@ -71,30 +69,8 @@ mod tests {
     }
 
     #[test]
-    fn test_get_extension_with_filename_and_extension_should_return_extension() {
-        let filename = String::from("filename.mp4");
-        let default = String::from("default");
-
-        let result = get_extension(&filename, &default);
-
-        assert_eq!(result, "mp4");
-    }
-
-    #[test]
-    fn test_get_extension_with_filename_and_no_extension_should_return_default() {
-        let filename = String::from("filename");
-        let default = String::from("default");
-
-        let result = get_extension(&filename, &default);
-
-        assert_eq!(result, "default");
-    }
-
-    #[test]
     fn test_render_as_audio_with_filename_and_path_should_render_audio() {
-        let filename = String::from("filename.ogg");
-
-        let result = render_as_audio(&filename);
+        let result = render_as_audio(&asset_descriptor("filename.ogg"));
 
         assert_eq!(result, "<audio controls>\n<source src=\"/assets/filename.ogg\" type=\"audio/ogg\">\n</audio>");
     }
