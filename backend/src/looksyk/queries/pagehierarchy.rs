@@ -17,11 +17,11 @@ pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
 
     let mut args = HashMap::new();
     args.insert("root".to_string(), query_root_opt.value);
-    return Ok(Query {
+    Ok(Query {
         query_type: QueryType::PageHierarchy,
         display: display_type,
         args,
-    });
+    })
 }
 
 
@@ -30,13 +30,7 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
     let mut keys: Vec<&SimplePageName> = data.entries.keys().into_iter().collect();
     keys.sort_unstable_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
 
-    let mut result = vec![];
-
-    for page in keys {
-        if page.name.starts_with(root) {
-            result.push(page);
-        }
-    }
+    let result = filter_pages_by_root(root, &mut keys);
 
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(root, result),
@@ -45,8 +39,18 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
     }
 }
 
+fn filter_pages_by_root(root: &String, keys: &mut Vec<&SimplePageName>) -> Vec<SimplePageName> {
+    let mut result = vec![];
 
-pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
+    for page in keys {
+        if page.name.starts_with(root) {
+            result.push(page.clone());
+        }
+    }
+    result
+}
+
+pub fn render_as_count(selected_pages: Vec<SimplePageName>) -> QueryRenderResult {
     QueryRenderResult {
         referenced_markdown: vec![],
         inplace_markdown: selected_pages.len().to_string(),
@@ -54,11 +58,11 @@ pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResul
     }
 }
 
-pub fn render_as_list(root_name: &String, selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
+pub fn render_as_list(root_name: &String, selected_pages: Vec<SimplePageName>) -> QueryRenderResult {
     let mut result = format!("{}:\n", root_name);
     for page in selected_pages {
         result.push_str("- ");
-        result.push_str(render_user_link(page).as_str());
+        result.push_str(render_user_link(&page).as_str());
         result.push_str("\n")
     }
 
@@ -66,5 +70,44 @@ pub fn render_as_list(root_name: &String, selected_pages: Vec<&SimplePageName>) 
         referenced_markdown: vec![],
         inplace_markdown: result,
         has_dynamic_content: false,
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::looksyk::model::SimplePageName;
+    use crate::looksyk::query::{QueryDisplayType, QueryType};
+
+    #[test]
+    fn test_parse_query_page_hierarchy() {
+        let query = "page-hierarchy root:\"foo\" display:\"inplace-list\"";
+        let result = super::parse_query_page_hierarchy(query).unwrap();
+        assert_eq!(result.query_type, QueryType::PageHierarchy);
+        assert_eq!(result.display, QueryDisplayType::InplaceList);
+        assert_eq!(result.args.get("root").unwrap(), "foo");
+    }
+
+    #[test]
+    fn test_filter_pages(){
+        let root = "foo".to_string();
+
+        let page_foo = SimplePageName { name: "foo".to_string() };
+        let page_foo_bar = SimplePageName { name: "foo/bar".to_string() };
+        let page_foo_bar_baz = SimplePageName { name: "foo/bar/baz".to_string() };
+        let page_bar = SimplePageName { name: "bar".to_string() };
+        let page_bar_baz = SimplePageName { name: "bar/foo".to_string() };
+
+        let mut keys = vec![
+            &page_foo,
+            &page_foo_bar,
+            &page_foo_bar_baz,
+            &page_bar,
+            &page_bar_baz,
+        ];
+        let result = super::filter_pages_by_root(&root, &mut keys);
+        assert_eq!(result.len(), 3);
+        assert_eq!(result[0].name, "foo");
+        assert_eq!(result[1].name, "foo/bar");
+        assert_eq!(result[2].name, "foo/bar/baz");
     }
 }

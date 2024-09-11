@@ -6,7 +6,7 @@ import { CollectionViewer, DataSource } from "@angular/cdk/collections";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MarkdownPage } from "../model";
-import { PageService } from "../page.service";
+import { PageService } from "../../services/page.service";
 
 @Component({
   selector: 'app-journal',

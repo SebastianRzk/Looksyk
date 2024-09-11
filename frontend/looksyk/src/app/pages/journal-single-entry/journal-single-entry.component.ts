@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PageService } from "../page.service";
+import { PageService } from "../../services/page.service";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
 import { MarkdownPage } from "../model";

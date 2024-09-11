@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleCha
 import { BehaviorSubject, Subject } from "rxjs";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
-import { FavouriteService } from "../../../favourite.service";
+import { FavouriteService } from "../../../services/favourite.service";
 
 @Component({
   selector: 'app-fav-star',

@@ -12,5 +12,5 @@
 
 
 <div class="fav-button-list" *ngIf="favs$ | async as favs" cdkDropList (cdkDropListDropped)="drop($event)">
-  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+fav" cdkDrag>{{fav}}</button>
+  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" cdkDrag>{{fav}}</button>
 </div>

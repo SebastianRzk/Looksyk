@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
-import { fromDto, MarkdownPage, MarkdownPageDto } from "./pages/model";
+import { fromDto, MarkdownPage, MarkdownPageDto } from "../pages/model";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageService } from "../page.service";
+import { PageService } from "../../services/page.service";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, combineLatestAll, Observable, Subject, Subscription } from "rxjs";
 import { MarkdownPage } from "../model";
@@ -46,7 +46,7 @@ export class UserPageComponent implements OnInit {
     this.route.params.subscribe(
       params => {
         let pageNameUnencoded = params["name"];
-        let pageName = pageNameUnencoded.replaceAll("%2F", "/");
+        let pageName = decodeURIComponent(pageNameUnencoded);
         if (this.page_){
           this.page_.unsubscribe();
         }

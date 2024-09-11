@@ -24,7 +24,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ReferencedMarkdownComponent } from "../referenced-markdown/referenced-markdown.component";
 import { MarkdownService } from "../../../services/markdown.service";
 import { Router } from "@angular/router";
-import { PageService } from "../../page.service";
+import { PageService } from "../../../services/page.service";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 
 @Component({

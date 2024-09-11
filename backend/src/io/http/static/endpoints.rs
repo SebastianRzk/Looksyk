@@ -7,8 +7,30 @@ use actix_web::web;
 
 const STATIC_PATH: &str = "./static";
 
+
+
 #[get("/")]
 async fn index_html() -> Result<NamedFile, Error> {
+    index_html_response()
+}
+
+#[get("page/{p}")]
+async fn catch_all_pages() -> Result<NamedFile, Error> {
+    index_html_response()
+}
+
+#[get("journal/{j}")]
+async fn catch_all_journals() -> Result<NamedFile, Error> {
+    index_html_response()
+}
+
+#[get("journal")]
+async fn catch_all_journal() -> Result<NamedFile, Error> {
+    index_html_response()
+}
+
+
+fn index_html_response() -> Result<NamedFile, Error> {
     let static_file_name = "index.html";
     let complete_path = to_static_path(static_file_name);
     println!("serving {}", complete_path.display());

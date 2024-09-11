@@ -22,13 +22,13 @@ export class FavouriteService {
 
 
   star(pageName: string) {
-    this.httpClient.post<FavListDto>("/api/favourites/" + pageName, {}).subscribe(
+    this.httpClient.post<FavListDto>("/api/favourites/" + encodeURIComponent(pageName), {}).subscribe(
       favs => this.favourites.next(favs.list)
     );
   }
 
   unstar(pageName: string) {
-    this.httpClient.delete<FavListDto>("/api/favourites/" + pageName).subscribe(
+    this.httpClient.delete<FavListDto>("/api/favourites/" + encodeURIComponent(pageName)).subscribe(
       favs => this.favourites.next(favs.list)
     );
   }

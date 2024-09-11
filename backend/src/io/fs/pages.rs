@@ -8,12 +8,12 @@ use crate::state::state::DataRootLocation;
 
 pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
     let page_path = data_root_location.path.clone().join(path_for_page_type(&PageType::UserPage));
-    return read_all_files(page_path.to_str().unwrap());
+    read_all_files(page_path.to_str().unwrap())
 }
 
 pub fn read_all_journal_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
     let journal_path = data_root_location.path.clone().join(path_for_page_type(&PageType::JournalPage));
-    return read_all_files(journal_path.to_str().unwrap());
+    read_all_files(journal_path.to_str().unwrap())
 }
 
 
@@ -28,7 +28,7 @@ fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
         let file_content = read_file(path.clone());
         let file_stem = Path::file_stem(path.as_path()).unwrap().to_str().unwrap();
         all_files.push(PageOnDisk {
-            name: file_stem.to_string(),
+            name: unescape_page_name(file_stem.to_string().as_str()),
             content: file_content,
         });
     }
@@ -39,11 +39,19 @@ fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
 
 pub fn write_page(page: PageOnDisk, data_path: &DataRootLocation, page_type: &PageType) {
     let page_name = page.name;
-    let encoded_page_name = page_name.replace("/", "%2F");
+    let encoded_page_name = escape_page_name(&page_name);
     let destination = data_path.path.clone().join(path_for_page_type(page_type)).join(encoded_page_name + ".md");
     println!("writing to {}", destination.to_str().unwrap());
     let content_with_newline = format!("{}\n", page.content);
     fs::write(destination, content_with_newline).unwrap();
+}
+
+fn escape_page_name(page_name: &str) -> String {
+    page_name.replace("/", "%2F")
+}
+
+fn unescape_page_name(page_name: &str) -> String {
+    page_name.replace("%2F", "/")
 }
 
 pub struct PageOnDisk {

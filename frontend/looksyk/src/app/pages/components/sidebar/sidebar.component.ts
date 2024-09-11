@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
-import { FavouriteService } from "../../../favourite.service";
+import { FavouriteService } from "../../../services/favourite.service";
 import { MatIconModule } from "@angular/material/icon";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { firstValueFrom } from "rxjs";
@@ -28,4 +28,6 @@ export class SidebarComponent implements OnInit{
     moveItemInArray(fav_list, event.previousIndex, event.currentIndex);
     this.favoriteService.updateFavList(fav_list);
   }
+
+  protected readonly encodeURIComponent = encodeURIComponent;
 }

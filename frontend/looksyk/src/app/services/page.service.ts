@@ -9,7 +9,7 @@ import {
   MarkdownPage,
   MarkdownPageDto,
   Reference
-} from "./model";
+} from "../pages/model";
 
 const USER_ID_PREFIX = "%%user-page/";
 

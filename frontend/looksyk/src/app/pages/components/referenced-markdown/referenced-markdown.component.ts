@@ -19,7 +19,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { PageService } from "../../page.service";
+import { PageService } from "../../../services/page.service";
 import { Router, RouterLink } from "@angular/router";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 import { MarkdownService } from "../../../services/markdown.service";

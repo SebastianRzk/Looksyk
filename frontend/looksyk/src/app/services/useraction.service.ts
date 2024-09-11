@@ -10,7 +10,7 @@ import {
   Subject,
   timer
 } from "rxjs";
-import { BasicPageContent, PageService } from "../pages/page.service";
+import { BasicPageContent, PageService } from "./page.service";
 import { Block } from "../pages/model";
 import { MediaServiceService } from "./media-service.service";
 

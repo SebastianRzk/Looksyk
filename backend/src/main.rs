@@ -2,8 +2,8 @@ use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::Mutex;
 
-use actix_web::{App, HttpServer};
 use actix_web::web::Data;
+use actix_web::{App, HttpServer};
 
 use crate::configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
@@ -87,6 +87,9 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::emoji)
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
+            .service(r#static::endpoints::catch_all_journal)
+            .service(r#static::endpoints::catch_all_journals)
+            .service(r#static::endpoints::catch_all_pages)
     })
         .bind(SocketAddr::new(IpAddr::from_str(config.application_host.as_str()).unwrap(), config.application_port))?
         .run()
