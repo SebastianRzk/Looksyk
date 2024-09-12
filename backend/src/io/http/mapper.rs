@@ -1,4 +1,5 @@
 use crate::io::http::dtos::{MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto};
+use crate::io::http::link_encoding::encode_link_component;
 use crate::looksyk::model::{MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock, UpdateBlock, UpdateMarkdownFile};
 use crate::looksyk::page_index::get_page_type;
 
@@ -33,7 +34,7 @@ fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -> St
     let page_type = get_page_type(&markdown_reference.page_id);
     match page_type {
         PageType::UserPage => {
-            format!("/page/{}", markdown_reference.page_name.name)
+            format!("/page/{}", encode_link_component(&markdown_reference.page_name.name))
         }
         PageType::JournalPage => {
             format!("/journal/{}", markdown_reference.page_name.name)
