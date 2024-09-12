@@ -10,7 +10,7 @@
     <div [innerHTML]="renderedMarkdown$ | async" #markdownComponent>
       class="markdown">
     </div>
-    <a class="sourceref" [routerLink]="'/page/'+markdown.reference.fileName">Source: {{ markdown.reference.fileName }}:{{ markdown.reference.blockNumber }}</a>
+    <a class="sourceref" [routerLink]="markdown.reference.link">Source: {{ markdown.reference.fileName }}:{{ markdown.reference.blockNumber }}</a>
   </div>
 </div>
 

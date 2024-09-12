@@ -3,20 +3,12 @@
     <button #other mat-raised-button [matMenuTriggerFor]="menu" class="dot-button" [disabled]="!editable">o</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item>
-        <mat-icon>visibility_off</mat-icon>
-        <span>Hide (todo)</span>
-      </button>
-      <button mat-menu-item>
         <mat-icon>note_add</mat-icon>
         <span>Convert into page (todo)</span>
       </button>
       <button mat-menu-item (click)="clickOnMergeWithPrevPage()">
         <mat-icon>call_merge</mat-icon>
         <span>Merge with previous block</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>highlight_alt</mat-icon>
-        <span>Open (todo)</span>
       </button>
       <button mat-menu-item (click)="onClickRefresh()">
         <mat-icon>refresh</mat-icon>
@@ -34,7 +26,7 @@
       </mat-checkbox>
     </div>
   </ng-container>
-  <div>
+  <div class="full-width">
     <div class="auto-update" *ngIf="autoUpdate$| async">autoupdate</div>
     <div [innerHTML]="renderedMarkdown$ | async"
          [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"

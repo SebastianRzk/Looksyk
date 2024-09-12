@@ -24,6 +24,7 @@ pub struct MarkdownReferenceDto {
     pub file_id: String,
     pub file_name: String,
     pub block_number: usize,
+    pub link: String,
 }
 
 

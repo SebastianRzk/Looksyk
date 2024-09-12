@@ -9,7 +9,7 @@ html, body {
 body {
   margin: 0;
   background: var(--background-color);
-  color: var(--foreground-color)!important;
+  color: var(--foreground-color) !important;
 }
 
 :root {
@@ -18,7 +18,7 @@ body {
   --mat-sidenav-container-text-color: var(--foreground-color);
 }
 
-app-root{
+app-root {
   display: flex;
   flex-direction: column;
   height: 100vh;

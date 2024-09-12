@@ -8,6 +8,7 @@ export interface BlockContent {
 export interface Reference {
   fileId: string,
   fileName: string,
+  link: string,
   blockNumber: number
 }
 

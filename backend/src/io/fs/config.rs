@@ -7,8 +7,7 @@ use crate::state::state::DataRootLocation;
 
 pub fn read_config_from_file(data_path: &DataRootLocation) -> Config {
     let config_file_content_as_str = read_file(config_path(data_path));
-    let json: Config = serde_json::from_str(config_file_content_as_str.as_str()).unwrap();
-    return json;
+    serde_json::from_str(config_file_content_as_str.as_str()).unwrap()
 }
 
 pub fn save_config_to_file(data_path: &DataRootLocation, config: &Config) {

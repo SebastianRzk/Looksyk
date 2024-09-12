@@ -10,3 +10,10 @@ mat-drawer-content {
 mat-drawer {
   width: 30ex;
 }
+
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

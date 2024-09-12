@@ -13,8 +13,9 @@
 .line {
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
 app-markdown {
-  width: 80%;
+  width: 100%;
 }

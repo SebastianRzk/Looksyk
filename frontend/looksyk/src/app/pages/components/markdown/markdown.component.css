@@ -1,5 +1,5 @@
 div[contenteditable] {
-  width: 80%;
+  width: 100%;
   min-width: 150ex;
 }
 
@@ -12,8 +12,7 @@ div[contenteditable] {
   height: 100%;
   min-height: 10ex;
   overflow: auto;
-  padding: 0.5ex;
-  margin: 1ex;
+  padding: 1ex;
   outline: 0;
 }
 
@@ -24,8 +23,10 @@ div[contenteditable] {
 }
 
 .active-markdown {
+  padding-left: 1ex;
   min-height: 3ex;
 }
+
 
 .loading {
   min-height: 28ex;
@@ -70,11 +71,11 @@ div[contenteditable] {
 .dot-button {
   width: 2ex !important;
   min-width: unset !important;
-
   height: 100%;
   min-height: 5ex;
   margin-right: 3ex;
   background: rgba(1, 1, 1, 0.07);
+  color: var(--primary-shading);
 }
 
 .checkbox-container {
@@ -88,4 +89,8 @@ div[contenteditable] {
 .auto-update {
   font-size: small;
   color: grey;
+}
+
+.full-width {
+  width: 100%;
 }
