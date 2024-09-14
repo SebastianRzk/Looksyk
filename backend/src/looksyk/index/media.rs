@@ -29,3 +29,15 @@ pub struct IndexedMedia {
 pub struct MediaIndex {
     pub media: Vec<IndexedMedia>,
 }
+
+#[cfg(test)]
+pub mod test_builder {
+    use crate::looksyk::index::media::IndexedMedia;
+
+    pub fn indexed_media(file_name: &str, sha3: &str) -> IndexedMedia {
+        IndexedMedia {
+            file_name: file_name.to_string(),
+            sha3: sha3.to_string(),
+        }
+    }
+}

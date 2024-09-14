@@ -41,11 +41,11 @@ pub fn parse_query_insert_file_content(query_str: &str) -> Result<Query, Error> 
     let mut args1 = HashMap::new();
     args1.insert(PARAM_TARGET_FILE.to_string(), query_target_opt.value);
     let (display_type, args) = (display_type, args1);
-    return Ok(Query {
+    Ok(Query {
         query_type: QueryType::InsertFileContent,
         display: display_type,
         args,
-    });
+    })
 }
 
 

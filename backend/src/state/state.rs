@@ -22,7 +22,6 @@ pub struct AppState {
 
 pub struct DataRootLocation{
     pub path: PathBuf,
-    pub name: String
 }
 
 

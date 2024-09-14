@@ -28,7 +28,6 @@ impl Configuration {
             application_port: cli_args.port.unwrap_or(self.application_port),
             overwrite_graph_location: cli_args.graph_location.map(|s| DataRootLocation {
                 path: s.into(),
-                name: "default".to_string(),
             }),
             application_host: self.application_host.clone(),
             max_inline_filesize: self.max_inline_filesize,

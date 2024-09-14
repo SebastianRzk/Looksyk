@@ -237,7 +237,6 @@ mod tests {
     fn empty_location() -> DataRootLocation {
         DataRootLocation {
             path: PathBuf::new(),
-            name: "".to_string()
         }
     }
 

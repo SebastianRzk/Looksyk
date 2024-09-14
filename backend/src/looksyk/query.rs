@@ -190,7 +190,6 @@ mod tests {
 
     fn empty_root_location() -> DataRootLocation {
         DataRootLocation {
-            name: "".to_string(),
             path: Path::new("").to_path_buf(),
         }
     }

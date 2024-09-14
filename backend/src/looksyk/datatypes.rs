@@ -42,6 +42,7 @@ fn encode_uri_component(file_name: &String) -> String {
     file_name.replace(" ", "%20").replace("#", "%23")
 }
 
+
 #[cfg(test)]
 mod tests {
     use super::*;

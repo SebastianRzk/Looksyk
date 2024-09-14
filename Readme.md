@@ -215,7 +215,8 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
 	* Calendar view
 	* Week view
 * Media index page
-	* Show all media
+	* :white_check_mark: Show all media
+    * Create details page (for file links) with custom preview for all media types
 	* Scale down images
 * Queries
 	* Query type: `toc`

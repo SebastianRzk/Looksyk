@@ -7,7 +7,9 @@ pub enum MediaType {
     Audio,
     Other,
     Code,
-    Text
+    Text,
+    Html,
+    Pdf
 }
 
 pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> MediaType {
@@ -22,6 +24,8 @@ pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> Medi
         "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
         "txt"  => MediaType::Text,
         "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php"=> MediaType::Code,
+        "html" | "htm" => MediaType::Html,
+        "pdf" => MediaType::Pdf,
         _ => MediaType::Other
     }
 }

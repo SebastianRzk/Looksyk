@@ -43,17 +43,16 @@ export class MarkdownService {
             clickEvent.stopPropagation();
             router.navigateByUrl(originalDestination);
           }
-        } else if (originalDestination.startsWith("journal/"))
-        {
+        } else if (originalDestination.startsWith("journal/")) {
           link.removeAttribute("href");
           link.onclick = (clickEvent) => {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
             router.navigateByUrl(originalDestination);
+          }
         }
-      }
 
+      }
     }
   }
-}
 }

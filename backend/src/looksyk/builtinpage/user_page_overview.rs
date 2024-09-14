@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-
+use crate::looksyk::builtinpage::generating_page_util::create_textblock;
 use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::page_index::{append_user_page_prefix, get_page_type, strip_user_page_prefix};
 use crate::state::tag::TagIndex;
@@ -78,19 +78,6 @@ fn get_display_text_page_created(simple_page_name: &SimplePageName, all_data: &U
     return "not yet".to_string();
 }
 
-fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
-    ParsedBlock {
-        indentation,
-        content: vec![BlockContent {
-            as_tokens: vec![BlockToken {
-                payload: text.to_string(),
-                block_token_type: BlockTokenType::TEXT,
-            }],
-            as_text: "".to_string(),
-        }
-        ],
-    }
-}
 
 
 #[cfg(test)]
@@ -98,7 +85,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::looksyk::builder::{page_name_str, user_page_id};
-    use crate::looksyk::builtinpage::overview::generate_overview_page;
+    use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
     use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile};
     use crate::state::tag::TagIndex;
     use crate::state::userpage::UserPageIndex;

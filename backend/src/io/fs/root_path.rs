@@ -37,7 +37,6 @@ pub fn get_current_active_data_root_location(config_location: &InitialConfigLoca
     let root_path_config: RootPathConfig = serde_json::from_str(&config_content).unwrap();
     DataRootLocation {
         path: root_path_config.current_active.path,
-        name: root_path_config.current_active.name,
     }
 }
 

@@ -7,7 +7,7 @@ use crate::io::fs::pages::{PageOnDisk, write_page};
 use crate::io::http::dtos::{ToValidate, UpdateBlockContentDto, UpdateMarkdownFileDto};
 use crate::io::http::mapper::{map_from_update_markdown_dto, map_markdown_block_dto, map_markdown_file_to_dto, map_to_block_dto};
 use crate::looksyk::builder::page_name;
-use crate::looksyk::builtinpage::overview::generate_overview_page;
+use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
 use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
 use crate::looksyk::favourite::is_favourite;
 use crate::looksyk::index::index::update_index_for_file;

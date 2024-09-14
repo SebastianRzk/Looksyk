@@ -45,7 +45,7 @@ pub fn get_suggestion_for_file(asset_descriptor: &AssetDescriptor) -> Suggestion
                 ]
             }
         }
-        MediaType::Other => {
+        MediaType::Other | MediaType::Html | MediaType::Pdf => {
             Suggestions {
                 suggestions: vec![
                     suggest_as_link(&asset_descriptor),

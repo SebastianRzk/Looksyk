@@ -16,3 +16,5 @@ mime = "0.3.17"
 # Cli Parser
 clap = { version = "4.5.17", features = ["derive"] }
 heck = "0.5.0"
+# format large numbers in human-readable format
+humansize = "2.1.3"

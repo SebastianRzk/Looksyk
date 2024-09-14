@@ -10,8 +10,8 @@ pub fn inver_markdown_media_link(index_filename: &String) -> String {
     let asset_descriptor = AssetDescriptor::new(filename.to_string());
     let media_type = get_media_type_from_extension(&asset_descriptor);
 
-    return match media_type {
-        MediaType::Other => {
+    match media_type {
+        MediaType::Other | MediaType::Pdf | MediaType::Html => {
             render_asset_as_link(&asset_descriptor)
         }
         MediaType::Video => {

@@ -9,14 +9,17 @@ use actix_web::web::{Data, Json};
 use serde::{Deserialize, Serialize};
 
 use crate::io::fs::basic_file::read_binary_file;
-use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config};
+use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config, read_file_sizes};
 use crate::io::hash::hash_file_content;
+use crate::io::http::mapper::map_markdown_file_to_dto;
 use crate::io::http::media::config::create_media_location;
 use crate::io::http::media::mapper::map_to_dto;
+use crate::looksyk::builtinpage::assets_overview::generate_assets_overview_page;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
+use crate::looksyk::renderer::render_file;
 use crate::state::state::AppState;
 
 #[derive(Debug, Deserialize)]
@@ -73,6 +76,22 @@ pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder>
     let result = get_suggestion_for_file(&AssetDescriptor::new(file_name));
     let dto = map_to_dto(result);
     Ok(Json(dto))
+}
+
+
+#[get("/api/builtin-pages/assets-overview")]
+pub async fn assets_overview(data: Data<AppState>) -> error::Result<impl Responder> {
+    let file_sizes = read_file_sizes(&data.data_path);
+    let media_index = data.media_index.lock().unwrap();
+
+    let assets_overview = generate_assets_overview_page(&media_index, file_sizes);
+
+    let tag_index_guard = data.tag_index.lock().unwrap();
+    let guard = data.user_pages.lock().unwrap();
+    let todo_guard = data.todo_index.lock().unwrap();
+    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let rendered_file = render_file(&assets_overview, &guard, &todo_guard, &tag_index_guard, &mut asset_cache, &data.data_path);
+    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 
 

@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::path::PathBuf;
 
 use actix_files::NamedFile;
@@ -14,9 +15,9 @@ pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
     let media_config_path = media_config_path(data_root_location);
     let config_file_content_as_str = read_file(media_config_path);
     let json: Vec<IndexedMedia> = serde_json::from_str(config_file_content_as_str.as_str()).unwrap();
-    return MediaIndex {
+    MediaIndex {
         media: json
-    };
+    }
 }
 
 pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &MediaIndex) {
@@ -48,6 +49,20 @@ pub fn init_media(data_root_location: &DataRootLocation, current_media_index: &M
     MediaIndex {
         media: result_index,
     }
+}
+
+pub fn read_file_sizes(data_root_location: &DataRootLocation) -> HashMap<String, u64> {
+    let all_files_in_folder = read_all_media_files(data_root_location);
+
+    let mut result: HashMap<String, u64> = HashMap::new();
+
+    for file in all_files_in_folder {
+        let file_path = create_absolute_media_path(&file, data_root_location);
+        let size = get_file_size(file_path);
+        result.insert(file.name.clone(), size);
+    }
+
+    result
 }
 
 
@@ -88,9 +103,9 @@ pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> 
 }
 
 pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::Result<NamedFile> {
-    return NamedFile::open(create_absolute_media_path(&MediaOnDisk {
+    NamedFile::open(create_absolute_media_path(&MediaOnDisk {
         name: name.clone()
-    }, location));
+    }, location))
 }
 
 pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation) -> MediaState {
@@ -101,9 +116,9 @@ pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation
     }
 
     let size = get_file_size(media_path);
-    return MediaState::Found(MediaSize {
+    MediaState::Found(MediaSize {
         size
-    });
+    })
 }
 
 
