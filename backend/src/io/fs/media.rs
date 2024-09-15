@@ -131,7 +131,7 @@ pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaO
             name: location
         });
     }
-    return result;
+    result
 }
 
 
@@ -142,6 +142,12 @@ pub struct MediaOnDisk {
 impl MediaOnDisk {
     pub fn as_asset_descriptor(&self) -> AssetDescriptor {
         AssetDescriptor::new(self.name.clone())
+    }
+
+    pub fn new(asset_descriptor: &AssetDescriptor) -> MediaOnDisk {
+        MediaOnDisk {
+            name: asset_descriptor.get_display_name()
+        }
     }
 }
 

@@ -50,8 +50,16 @@ export class MarkdownService {
             clickEvent.stopPropagation();
             router.navigateByUrl(originalDestination);
           }
+        } else if (originalDestination.startsWith("assets/") || originalDestination.startsWith("/assets/")) {
+          link.removeAttribute("href");
+          link.onclick = (clickEvent) => {
+            clickEvent.stopImmediatePropagation();
+            clickEvent.stopPropagation();
+            let escapedDestination = originalDestination?.replaceAll("(", "%28").replaceAll(")", "%29");
+            console.log(escapedDestination);
+            router.navigateByUrl(escapedDestination);
+          }
         }
-
       }
     }
   }

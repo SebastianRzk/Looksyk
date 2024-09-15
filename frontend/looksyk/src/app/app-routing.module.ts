@@ -5,6 +5,7 @@ import { UserPageOverviewComponent } from "./pages/user-page-overview/user-page-
 import { JournalComponent } from "./pages/journal/journal.component";
 import { JournalSingleEntryComponent } from "./pages/journal-single-entry/journal-single-entry.component";
 import { MediaOverviewComponent } from "./pages/media-overview/media-overview.component";
+import { DetailsComponent } from "./pages/media-details/details.component";
 
 const routes: Routes = [
   {path: "page/:name", component: UserPageComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path: "special-page/media-overview", component: MediaOverviewComponent},
   {path: "journal", component: JournalComponent},
   {path: "journal/:name", component: JournalSingleEntryComponent},
+  {path: "assets/:name", component: DetailsComponent},
   {path: "", component: JournalComponent},
 ];
 

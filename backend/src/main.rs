@@ -88,6 +88,7 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
             .service(media::endpoints::assets_overview)
+            .service(media::endpoints::asset_preview)
             .service(r#static::endpoints::catch_all_journal)
             .service(r#static::endpoints::catch_all_journals)
             .service(r#static::endpoints::catch_all_pages)

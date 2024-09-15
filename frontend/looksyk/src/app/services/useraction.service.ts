@@ -12,7 +12,7 @@ import {
 } from "rxjs";
 import { BasicPageContent, PageService } from "./page.service";
 import { Block } from "../pages/model";
-import { MediaServiceService } from "./media-service.service";
+import { MediaService } from "./media.service";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +59,7 @@ export class UseractionService {
   fileUpload$: Observable<FileUploadEvent> = this.fileUpload.asObservable();
 
 
-  mediaService = inject(MediaServiceService);
+  mediaService = inject(MediaService);
 
   fileUpload_ = this.fileUpload.subscribe(event => {
     this.mediaService.uploadFile(event.file).subscribe(

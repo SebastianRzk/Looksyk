@@ -25,7 +25,7 @@ impl AssetDescriptor {
         if result.eq(&self.display_name) {
             return default.to_string();
         }
-        return result.to_string();
+        result.to_string()
     }
 
     pub fn find_extension(&self) -> Option<String> {
@@ -33,7 +33,7 @@ impl AssetDescriptor {
         if result.eq(&self.display_name) {
             return None;
         }
-        return Some(result.to_string());
+        Some(result.to_string())
     }
 }
 

@@ -76,7 +76,7 @@ pub fn render_query_insert_file_content(query: Query, data: &mut AssetCache, dat
 }
 
 
-fn render_code_block(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_location: &DataRootLocation) -> QueryRenderResult {
+pub fn render_code_block(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_location: &DataRootLocation) -> QueryRenderResult {
     let mut cache_item = cache.get(&file_name);
     if AssetState::Miss == cache_item {
         cache_item = load_cachable_asset(file_name, data_root_location);
@@ -136,7 +136,7 @@ fn infer_language(file_name: &MediaOnDisk) -> String {
     if file_name_str.ends_with(".hpp") {
         return "cpp".to_string();
     }
-    return file_name_str.split('.').last().unwrap().to_string();
+    file_name_str.split('.').last().unwrap().to_string()
 }
 
 fn render_inline(file_name: &MediaOnDisk, cache: &mut AssetCache, data_root_location: &DataRootLocation) -> QueryRenderResult {

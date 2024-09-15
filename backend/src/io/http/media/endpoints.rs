@@ -1,38 +1,28 @@
 use std::fs;
 use std::path::Path;
-
+use std::str::FromStr;
 use actix_files::NamedFile;
-use actix_multipart::form::{json::Json as MPJson, MultipartForm, tempfile::TempFile};
-use actix_web::{Error, error, get, HttpRequest, post, Responder};
+use actix_multipart::form::MultipartForm;
 use actix_web::http::header::{ContentDisposition, DispositionType};
 use actix_web::web::{Data, Json};
-use serde::{Deserialize, Serialize};
-
-use crate::io::fs::basic_file::read_binary_file;
-use crate::io::fs::media::{destination_path, LoadedMedia, read_media_file, write_media_config, read_file_sizes};
+use actix_web::{error, get, post, Error, HttpRequest, Responder};
+use mime::Mime;
+use crate::io::fs::basic_file::{get_file_size, read_binary_file};
+use crate::io::fs::media::{create_absolute_media_path, destination_path, read_file_sizes, read_media_file, write_media_config, LoadedMedia, MediaOnDisk};
 use crate::io::hash::hash_file_content;
 use crate::io::http::mapper::map_markdown_file_to_dto;
 use crate::io::http::media::config::create_media_location;
-use crate::io::http::media::mapper::map_to_dto;
+use crate::io::http::media::dtos::{FileUploadResult, UploadForm};
+use crate::io::http::media::mapper::{map_to_asset_preview_dto, map_to_dto};
 use crate::looksyk::builtinpage::assets_overview::generate_assets_overview_page;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
+use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
 use crate::looksyk::renderer::render_file;
 use crate::state::state::AppState;
 
-#[derive(Debug, Deserialize)]
-struct Metadata {
-    name: String,
-}
-
-#[derive(Debug, MultipartForm)]
-struct UploadForm {
-    #[multipart(limit = "100MB")]
-    file: TempFile,
-    json: MPJson<Metadata>,
-}
 
 #[post("/api/media")]
 pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state: Data<AppState>) -> actix_web::Result<impl Responder> {
@@ -72,7 +62,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 
 #[get("/api/assets/suggestion/{filename:.*}")]
 pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder> {
-    let file_name: String = req.match_info().query("filename").parse().unwrap();
+    let file_name: String = req.match_info().query("filename").parse()?;
     let result = get_suggestion_for_file(&AssetDescriptor::new(file_name));
     let dto = map_to_dto(result);
     Ok(Json(dto))
@@ -97,18 +87,39 @@ pub async fn assets_overview(data: Data<AppState>) -> error::Result<impl Respond
 
 #[get("/assets/{filename:.*}")]
 pub async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile, Error> {
-    let path: String = req.match_info().query("filename").parse().unwrap();
+    let path: String = req.match_info().query("filename").parse()?;
     let file = read_media_file(&path, &data.data_path)?;
+    if path.to_ascii_lowercase().ends_with(".pdf") {
+        return Ok(file
+            .use_last_modified(true)
+            .set_content_disposition(ContentDisposition {
+                disposition: DispositionType::Inline,
+                parameters: vec![],
+            })
+            .set_content_type(Mime::from_str("application/pdf").unwrap())
+        )
+    }
+
     Ok(file
-        .use_last_modified(true)
-        .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Attachment,
-            parameters: vec![],
-        }))
+           .use_last_modified(true)
+    )
 }
 
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-struct FileUploadResult {
-    inline_markdown: String,
+
+#[get("/api/asset-preview/info/{filename:.*}")]
+pub async fn asset_preview(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
+    let path: String = req.match_info().query("filename").parse()?;
+    let asset_descriptor = AssetDescriptor::new(path);
+    let file_size = get_file_size(create_absolute_media_path(
+        &MediaOnDisk {
+            name: asset_descriptor.get_display_name(),
+        },
+        &data.data_path,
+    ));
+
+    let preview = generate_asset_preview(asset_descriptor, file_size, &mut data.asset_cache.lock().unwrap(), &data.data_path);
+    Ok(Json(map_to_asset_preview_dto(preview)))
 }
+
+
+

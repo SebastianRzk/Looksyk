@@ -1,0 +1,16 @@
+<h1>Media: {{ pageName$ | async }} </h1>
+<ng-container *ngIf="mediaInfo$ | async as mediaInfo">
+  <app-markdown *ngIf="mediaInfo.markdownPreview"
+                [markdown]="mediaInfo.markdownPreview"
+                [editable]="false"
+                [pageid]="'details/'+mediaInfo.properties.fullQualifiedPath"
+                [scrollIntoView]="false"
+
+
+  ></app-markdown>
+  <iframe *ngIf="mediaInfo.htmlPreviewLink" [src]="bypass(mediaInfo.htmlPreviewLink)">
+
+  </iframe>
+
+</ng-container>
+

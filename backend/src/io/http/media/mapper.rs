@@ -1,4 +1,5 @@
-use crate::io::http::media::dtos::{SuggestionDto, SuggestionsDto};
+use crate::io::http::media::dtos::{AssetPreviewDto, AssetPropertiesDto, SuggestionDto, SuggestionsDto};
+use crate::looksyk::media::asset_preview::{AssetPreview, AssetProperties};
 use crate::looksyk::media::suggestion::{Suggestion, Suggestions};
 
 pub fn map_to_dto(suggestions: Suggestions) -> SuggestionsDto {
@@ -11,7 +12,22 @@ pub fn map_to_dto(suggestions: Suggestions) -> SuggestionsDto {
 fn map_to_suggestion_dto(suggestion: &Suggestion) -> SuggestionDto {
     SuggestionDto {
         explanation: suggestion.explanation.clone(),
-        inplace_markdown: suggestion.inplace_markdown.clone()
+        inplace_markdown: suggestion.inplace_markdown.clone(),
+    }
+}
+
+pub fn map_to_asset_preview_dto(asset_preview: AssetPreview) -> AssetPreviewDto {
+    AssetPreviewDto {
+        markdown_preview: asset_preview.markdown_preview,
+        html_preview_link: asset_preview.html_preview_link,
+        properties: map_to_properties_dto(asset_preview.properties),
+    }
+}
+
+fn map_to_properties_dto(asset_properties_dto: AssetProperties) -> AssetPropertiesDto {
+    AssetPropertiesDto {
+        size: asset_properties_dto.size,
+        full_qualified_path: asset_properties_dto.full_qualified_path,
     }
 }
 

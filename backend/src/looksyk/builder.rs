@@ -4,10 +4,18 @@ use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 
 #[cfg(test)]
 pub mod test_builder {
+    use std::path::PathBuf;
     use crate::looksyk::datatypes::AssetDescriptor;
+    use crate::state::state::DataRootLocation;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
         AssetDescriptor::new(file_name.to_string())
+    }
+
+    pub fn data_root_location(location: &str) -> DataRootLocation {
+        DataRootLocation {
+            path: PathBuf::from(location),
+        }
     }
 }
 

@@ -38,6 +38,60 @@ If you have any changes or suggestions, please send me a pull request.
 For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
 
+** Implemented Features **
+
+* Pages
+* Journal
+* Todos
+* Content assist
+	* Creating links, inserting queries, tags and media
+* View (and link) media
+  * Images
+  * PDFs
+  * HTML Files (e.g. SingleFile saved pages from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/) or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+  * Video (html5 video player)
+  * Audio (html5 audio player)
+  * Code (with highlighting)
+  * Text files
+* Queries
+  * Query todos
+  * Page hierarchy
+  * References
+  * Render video, audio, images, text files and code files (with highlighting)
+* Favourites
+
+
+** Planned Features / Ideas **
+
+
+* Page templates
+	* Default template for journal page
+	* Template variables
+* Journal
+	* Calendar view
+	* Week view
+* Pages
+  * Delete pages
+  * Rename pages and tags across all pages and journals
+* Theming
+  * Visual theme editor
+  * Prebuild CSS themes
+  * Toggle for dark / light mode
+* Queries
+  * Render bar / pie charts from csv and json files
+  * Insert tables from csv files
+  * Support UML rendering with [kroki](https://kroki.io/)
+
+
+
+### Out of scope
+
+* Non-Markdown content (e.g. flashcards, whiteboards)
+* PDF annotation
+* Dynamic backend plugins
+* Server version / multi user / rcs
+* i18n
+
 ## Run Looksyk
 
 ### Production Build / Installation
@@ -148,93 +202,3 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  Insert an audio file
  {query: insert-file-content target-file:"myFile.ogg" display:"audio" }
 ```
-
-## Roadmap
-
-### MVP (done)
-
-* :white_check_mark: Done: Pages
-	* Links `[[a link]]`
-	* Code highlighting
-	* File upload (and automatic de-duplication on insert)
-	* Special page: wiki overview
-* :white_check_mark: Done: Journal
-	* Infinite scroll (not optimized)
-* :white_check_mark: Done: Todos
-	* With `[ ] -> todo, [x] -> done`
-* :white_check_mark: Done: Queries
-	* Query type: `page-hierarchy`
-	* Query type: `todos`
-	* Query type: `references-to`
-	* Display-type: `count`, `inplace-list`, `referenced-list`
-* :white_check_mark: Done: Favourites
-
-### Next steps (in progress)
-
-* Todo: fix encoding when tags contain special characters
-* Todo: Page
-	* :white_check_mark: Emoji support
-	* Rename pages / tags
-	* Page properties
-	* Page icons
-	* Delete page
-	* Custom page properties
-* Todo: Queries
-	* Query type: `page-by-property` (list pages with a certain property)
-	* :white_check_mark: Query type: `insert-content-from-file` (insert content from a asset file)
-	* :white_check_mark: ~Query type: `insert-code-from-file`~ display-type `code-block` (insert content from a asset file as a multiline code block with code highlighting)
-	* :white_check_mark: Improve query error messages
-	* :white_check_mark: Insert `insert-content-from-file` with display type `code-block`, `image`, `text-file`, `video` or `audio` on default, when code file is copy paste into Looksyk (instead of link)
-* Todo: Deployment / native build
-	* :white_check_mark: Serve all statics with the backend
-	* :white_check_mark: Basic graph configuration in user home directory
-	* :white_check_mark: Create configs and folders on initial start
-	* Create AUR package
-* :white_check_mark: Done: Favourites
-	* :white_check_mark: Reorder list in sidebar
-* :white_check_mark: Done: Design
-	* :white_check_mark: Extract variables in CSS for key elements (for easy theming) (edit config.json and restart
-	  server)
-	* :white_check_mark: ~Change and~ embed fonts
-* Todo: Config page
-	* Configure design (create a light and a dark theme)
-	* Configure favourites
-* :white_check_mark: Done: Content assist
-	* :white_check_mark: Done: Insert tags
-	* :white_check_mark: Done: Insert queries
-	* :white_check_mark: Done: Insert mode
-	* :white_check_mark: Done: Auto trigger by insert link (insert link mode)
-	* :white_check_mark: Done: Navigation mode
-
-### Vision
-
-* Page templates
-	* Default template for journal page
-	* Template variables
-* Journal
-	* Calendar view
-	* Week view
-* Media index page
-	* :white_check_mark: Show all media
-    * Create details page (for file links) with custom preview for all media types
-	* Scale down images
-* Queries
-	* Query type: `toc`
-	* Query type: `block-based-query`
-	* Query type: `media`
-	* Query parameter `from` `to` (journal)
-* Quality of life
-	* Shortcut delete block
-	* :white_check_mark: Editor assist inserting queries and tags
-	* Settings page
-* CSS themes
-* Render charts
-
-
-### Out of scope
-
-* Non-Markdown content (e.g. flashcards, whiteboards)
-* PDF annotation
-* Dynamic backend plugins
-* Server version / multi user / rcs
-* i18n
