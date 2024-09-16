@@ -77,17 +77,6 @@ export class AppComponent {
     }
     event.preventDefault();
     Array.from(event.clipboardData.files).forEach(async (file) => {
-      if (file.type.startsWith('text/')) {
-        let openBlockId = await firstValueFrom(this.userAction.openMarkdown$);
-
-        let text = await file.text();
-        this.userAction.insertText.next({
-            target: openBlockId.target,
-            inlineMarkdown: text
-          }
-        )
-        return;
-      }
       this.userAction.fileUpload.next({
         file: file
       })
