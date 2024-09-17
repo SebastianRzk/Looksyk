@@ -31,8 +31,14 @@ export class UseractionService {
   openMarkdown_ = this.openMarkdown$.subscribe(event => this.currentOpenMarkdown.next(event));
 
 
-  newBlock: Subject<UniqueEvent> = new Subject<UniqueEvent>();
-  newBlock$: Observable<UniqueEvent> = this.newBlock.asObservable();
+  newBlockAfterCurrentOpenBlock: Subject<UniqueEvent> = new Subject<UniqueEvent>();
+  newBlockAfterCurrentOpenBlock$: Observable<UniqueEvent> = this.newBlockAfterCurrentOpenBlock.asObservable();
+
+
+  newBlock: Subject<NewBlockEvent> = new Subject<NewBlockEvent>();
+  newBlock$: Observable<NewBlockEvent> = this.newBlock.asObservable();
+
+
 
   deleteBlock: Subject<DeleteBlockEvent> = new Subject<DeleteBlockEvent>();
   deleteBlock$: Observable<DeleteBlockEvent> = this.deleteBlock.asObservable();
@@ -130,56 +136,78 @@ export class UseractionService {
     )
   })
 
-
-  newBlock_ = combineLatest({
-    openMarkdown: this.openMarkdown$,
-    newBlock: this.newBlock$,
-  })
-    .pipe(distinct(event => event.newBlock.id))
-    .pipe(filter(event => event.openMarkdown.target.blockTarget.length > 0))
-    .pipe(debounce(() => timer(50)))
+  newBlock_ = this.newBlock$
     .subscribe(
       async event => {
-
-        let currentPage = await firstValueFrom(this.pageService.getPage(event.openMarkdown.target.fileTarget));
-        var found = false;
+        let currentPage = await firstValueFrom(this.pageService.getPage(event.target.fileTarget));
+        var foundForInsertAfter = false;
         var indentation: Subject<number> = new Subject();
         var newBlockList: Block[] = [];
         var newId = "";
         for (let block of currentPage.blocks) {
-          if (found) {
+          if (foundForInsertAfter) {
             let initialIndentation = await firstValueFrom(indentation);
             newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
-            found = false;
+            foundForInsertAfter = false;
           }
-          newBlockList.push(block);
 
-          if (event.openMarkdown.target.blockTarget == block.indentification) {
-            found = true;
-            newId = block.indentification + "_1";
+
+          if (event.target.blockTarget == block.indentification) {
+            newId = this.generateNewBlockId(block);
             indentation = block.indentation;
+            if (event.insert == InsertMode.INSERT_AFTER) {
+              foundForInsertAfter = true;
+            } else {
+              let initialIndentation = await firstValueFrom(indentation);
+              newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
+            }
           }
+
+          newBlockList.push(block);
         }
-        if (found) {
+        if (foundForInsertAfter) {
           let initialIndentation = await firstValueFrom(indentation);
           newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId));
         }
+
         this.pageService.onNextPageById(currentPage.pageid, {
           name: currentPage.name,
           blocks: newBlockList,
           pageid: currentPage.pageid,
           isFavourite: currentPage.isFavourite
         });
+
         this.closeCurrentMarkdownBlock();
         setTimeout(() => {
           this.openMarkdown.next({
             target: {
               blockTarget: newId,
-              fileTarget: event.openMarkdown.target.fileTarget
+              fileTarget: event.target.fileTarget
             },
           })
-        }, 50)
+        }, 70)
 
+      }
+    )
+
+
+  private generateNewBlockId(block: Block) {
+    return block.indentification + "_" + Math.random().toString(36).substring(7);
+  }
+
+  newBlockAfterCurrentOpenBlock_ = combineLatest({
+    openMarkdown: this.openMarkdown$,
+    newBlock: this.newBlockAfterCurrentOpenBlock$,
+  })
+    .pipe(distinct(event => event.newBlock.id))
+    .pipe(filter(event => event.openMarkdown.target.blockTarget.length > 0))
+    .pipe(debounce(() => timer(50)))
+    .subscribe(
+      async event => {
+          this.newBlock.next({
+            target: event.openMarkdown.target,
+            insert: InsertMode.INSERT_AFTER
+          })
       }
     )
 
@@ -299,6 +327,11 @@ export interface MergeBlockEvent {
   target: Target,
 }
 
+export interface NewBlockEvent {
+  target: Target,
+  insert: InsertMode,
+}
+
 export interface UniqueEvent {
   id: string,
 }
@@ -321,6 +354,11 @@ export const NO_OPEN_MARKDOWN: OpenMarkdownEvent = {
     blockTarget: "",
     fileTarget: ""
   }
+}
+
+export enum InsertMode {
+  INSERT_AFTER,
+  INSERT_BEFORE
 }
 
 

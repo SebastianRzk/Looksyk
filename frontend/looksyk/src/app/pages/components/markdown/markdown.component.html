@@ -18,6 +18,16 @@
         <mat-icon>delete</mat-icon>
         <span>Delete</span>
       </button>
+
+      <button mat-menu-item (click)="onClickAddBlockBefore()">
+        <mat-icon>expand_less</mat-icon>
+        <span>Add block before</span>
+      </button>
+
+      <button mat-menu-item (click)="onClickAddBlockAfter()">
+        <mat-icon>expand_more</mat-icon>
+        <span>Add block after</span>
+      </button>
     </mat-menu>
   </div>
   <ng-container *ngIf="todo$ | async as t">

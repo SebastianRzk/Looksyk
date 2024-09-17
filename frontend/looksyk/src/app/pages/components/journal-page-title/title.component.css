@@ -1,13 +1,8 @@
-.title:hover {
+.title-segment:hover {
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.2ex;
 }
 
 .title{
-  margin: 3ex 2ex 2ex;
-}
-
-
-
-.headline {
+  padding: 2ex 2ex 1ex;
 }

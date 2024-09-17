@@ -16,7 +16,7 @@ import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MarkdownValidatorService } from "../../../services/markdown-validator.service";
-import { UseractionService } from "../../../services/useraction.service";
+import { InsertMode, UseractionService } from "../../../services/useraction.service";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
@@ -186,6 +186,26 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   onClickRefresh() {
     this.onFocusOutEditor();
+  }
+
+  onClickAddBlockBefore() {
+    this.userInteraction.newBlock.next({
+      target: {
+        fileTarget: this.pageid,
+        blockTarget: this.markdown.indentification
+      },
+      insert: InsertMode.INSERT_BEFORE
+    })
+
+  }
+  onClickAddBlockAfter() {
+    this.userInteraction.newBlock.next({
+      target: {
+        fileTarget: this.pageid,
+        blockTarget: this.markdown.indentification
+      },
+      insert: InsertMode.INSERT_AFTER
+    })
   }
 
   clickOnMergeWithPrevPage() {

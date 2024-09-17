@@ -43,7 +43,7 @@ export class AppComponent {
     }
     if (event.key == 'Enter') {
       if (event.ctrlKey) {
-        this.userAction.newBlock.next({id: Math.random() + ""})
+        this.userAction.newBlockAfterCurrentOpenBlock.next({id: Math.random() + ""})
       }
       return;
     }

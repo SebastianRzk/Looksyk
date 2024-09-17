@@ -62,3 +62,7 @@ iframe {
   height: 80vh;
   overflow: scroll;
 }
+
+h1 > a {
+  text-decoration: none;
+}
