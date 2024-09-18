@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,9 +10,9 @@ import {
   Subject,
   timer
 } from "rxjs";
-import { BasicPageContent, PageService } from "./page.service";
-import { Block } from "../pages/model";
-import { MediaService } from "./media.service";
+import {BasicPageContent, PageService} from "./page.service";
+import {Block} from "../pages/model";
+import {MediaService} from "./media.service";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,6 @@ export class UseractionService {
 
   newBlock: Subject<NewBlockEvent> = new Subject<NewBlockEvent>();
   newBlock$: Observable<NewBlockEvent> = this.newBlock.asObservable();
-
 
 
   deleteBlock: Subject<DeleteBlockEvent> = new Subject<DeleteBlockEvent>();
@@ -73,7 +72,7 @@ export class UseractionService {
         let currentOpenBlock = await firstValueFrom(this.currentOpenMarkdown$);
         this.insertText.next({
           target: currentOpenBlock.target,
-          inlineMarkdown: result.inlineMarkdown
+          inlineMarkdown: "\n" + result.inlineMarkdown + "\n"
         })
       }
     )
@@ -204,10 +203,10 @@ export class UseractionService {
     .pipe(debounce(() => timer(50)))
     .subscribe(
       async event => {
-          this.newBlock.next({
-            target: event.openMarkdown.target,
-            insert: InsertMode.INSERT_AFTER
-          })
+        this.newBlock.next({
+          target: event.openMarkdown.target,
+          insert: InsertMode.INSERT_AFTER
+        })
       }
     )
 
@@ -223,7 +222,7 @@ export class UseractionService {
     );
   }
 
-  increaseIntdentation_ = combineLatest({
+  increaseIndentation_ = combineLatest({
     openMarkdown: this.openMarkdown$,
     increaseIndentation: this.increaseIndentation$,
   })
@@ -246,7 +245,7 @@ export class UseractionService {
     })
 
 
-  decreaseIntdentation_ = combineLatest({
+  decreaseIndentation_ = combineLatest({
     openMarkdown: this.openMarkdown$,
     decreaseIndentation: this.decreaseIndentation$,
   })

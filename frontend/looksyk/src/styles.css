@@ -52,13 +52,14 @@ tr:hover, th:hover, td:hover {
 }
 
 img {
-  max-width:  93vw;
+  max-width: 93vw;
   max-height: 93vh;
 }
+
 iframe {
-  max-width:  93vw;
+  max-width: 93vw;
   max-height: 93vh;
-  width:  80vw;
+  width: 80vw;
   height: 80vh;
   overflow: scroll;
 }
@@ -66,3 +67,12 @@ iframe {
 h1 > a {
   text-decoration: none;
 }
+
+[contenteditable] {
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
++
+}
+
