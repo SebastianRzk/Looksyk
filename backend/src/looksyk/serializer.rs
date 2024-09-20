@@ -46,7 +46,6 @@ fn serialize_block_content(result: &mut Vec<String>, block: &&ParsedBlock) {
     if serialized_block.contains("\n") {
         let mut first = true;
         for line in serialized_block.split("\n") {
-            println!("generate for line: {}", line);
             result.push(generate_file_line(indentation, first, line));
             first = false;
         }

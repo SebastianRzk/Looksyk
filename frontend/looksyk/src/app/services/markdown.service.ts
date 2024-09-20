@@ -56,7 +56,6 @@ export class MarkdownService {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
             let escapedDestination = originalDestination?.replaceAll("(", "%28").replaceAll(")", "%29");
-            console.log(escapedDestination);
             router.navigateByUrl(escapedDestination);
           }
         }

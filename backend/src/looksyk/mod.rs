@@ -14,3 +14,4 @@ pub mod favourite;
 pub mod media;
 pub mod markdown;
 pub mod datatypes;
+pub mod search;

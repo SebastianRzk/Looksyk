@@ -58,6 +58,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
   * Page hierarchy
   * References
   * Render video, audio, images, text files and code files (with highlighting)
+* Search across all pages and journals
 * Favourites
 
 
@@ -142,6 +143,7 @@ The application port and the graph location can be provided by arguments ( `--po
 * Ctrl+Space opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
+* Ctrl+Shift+F opens the content assist in "search mode" (case sensitive search across all pages and journals)
 
 ## Queries
 

@@ -10,7 +10,7 @@ use mime::Mime;
 use crate::io::fs::basic_file::{get_file_size, read_binary_file};
 use crate::io::fs::media::{create_absolute_media_path, destination_path, read_file_sizes, read_media_file, write_media_config, LoadedMedia, MediaOnDisk};
 use crate::io::hash::hash_file_content;
-use crate::io::http::mapper::map_markdown_file_to_dto;
+use crate::io::http::page::mapper::map_markdown_file_to_dto;
 use crate::io::http::media::config::create_media_location;
 use crate::io::http::media::dtos::{FileUploadResult, UploadForm};
 use crate::io::http::media::mapper::{map_to_asset_preview_dto, map_to_dto};

@@ -1,15 +1,7 @@
 @if (state$ | async; as state) {
   <span *ngIf="!isClosed(state)" class="popuptext">
-    @if (isNavigate(state) ) {
-      <h3>content assist navigate</h3>
-    } @else if(isInsert(state)) {
-      <h3>content assist insert</h3>
-    }@else {
-      <h3>content assist link</h3>
-    }
-
-   <input class="insert-value-input" value="{{ text$ | async }}"  placeholder="start typing"/>
-
+  <h3>{{ title$ | async }}</h3>
+   <input class="insert-value-input" value="{{ text$ | async }}" placeholder="start typing"/>
     <div class="suggestions">
       @for (group of stateGroupOptions | async; track group) {
         <div class="suggestion-group"> <h4>{{ group.title }}</h4>

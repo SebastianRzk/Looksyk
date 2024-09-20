@@ -9,6 +9,13 @@ pub fn append_user_page_prefix(page_name: &SimplePageName) -> PageId {
     }
 }
 
+pub fn append_page_prefix(page_name: &SimplePageName, page_type: &PageType) -> PageId {
+    match page_type {
+        PageType::UserPage => append_user_page_prefix(page_name),
+        PageType::JournalPage => append_journal_page_prefix(page_name)
+    }
+}
+
 pub fn append_journal_page_prefix(page_name: &SimplePageName) -> PageId {
     PageId {
         id: format!("{}{}", JOURNAL_PAGE_PREFIX, page_name.name)

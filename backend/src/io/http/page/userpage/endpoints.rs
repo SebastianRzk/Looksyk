@@ -2,10 +2,11 @@ use actix_web::{get, post, Responder, web};
 use actix_web::web::{Data, Path};
 
 use crate::io::fs::pages::{PageOnDisk, write_page};
-use crate::io::http::dtos::UpdateMarkdownFileDto;
-use crate::io::http::mapper::{map_from_update_markdown_dto, map_markdown_file_to_dto};
+use crate::io::http::page::dtos::UpdateMarkdownFileDto;
+use crate::io::http::page::mapper::{map_from_update_markdown_dto, map_markdown_file_to_dto};
 use crate::looksyk::builder::page_name;
 use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
+use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
 use crate::looksyk::favourite::is_favourite;
 use crate::looksyk::index::index::update_index_for_file;
 use crate::looksyk::index::tag::render_tag_index_for_page;
@@ -102,3 +103,16 @@ async fn get_backlinks(input_page_name: Path<String>, data: Data<AppState>) -> a
         &result, &page_guard, &todo_index_guard, &tag_guard, &mut asset_cache_guard, data_root_location,
     ), false)))
 }
+
+
+#[get("/api/builtin-pages/user-page-overview")]
+async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Responder> {
+    let tag_index_guard = data.tag_index.lock().unwrap();
+    let guard = data.user_pages.lock().unwrap();
+    let overview_page = generate_overview_page(&tag_index_guard, &guard);
+    let todo_guard = data.todo_index.lock().unwrap();
+    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let rendered_file = render_file(&overview_page, &guard, &todo_guard, &tag_index_guard, &mut asset_cache, &data.data_path);
+    Ok(web::Json(map_markdown_file_to_dto(rendered_file, false)))
+}
+

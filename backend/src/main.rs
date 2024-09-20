@@ -4,7 +4,7 @@ use std::sync::Mutex;
 
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
-
+use actix_web::middleware::Logger;
 use crate::configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder};
@@ -15,12 +15,15 @@ use crate::io::fs::media::{init_media, read_media_config, write_media_config};
 use crate::io::fs::pages::{read_all_journal_files, read_all_user_files};
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http::design;
-use crate::io::http::endpoints::{get_journal, get_overview_page, parse, update_block, update_journal};
+use crate::io::http::markdown;
 use crate::io::http::favourites;
 use crate::io::http::media;
 use crate::io::http::metainfo;
 use crate::io::http::r#static;
-use crate::io::http::userpage;
+use crate::io::http::page::userpage;
+use crate::io::http::page::journalpage;
+use crate::io::http::page::search;
+use crate::io::http::page;
 use crate::looksyk::config::config::{Config, Design};
 use crate::looksyk::index::asset::create_empty_asset_cache;
 use crate::looksyk::index::media::MediaIndex;
@@ -37,6 +40,7 @@ mod configuration;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     let default_config = configuration::get_default_configuration();
     let config = default_config.overwrite(get_cli_args());
 
@@ -61,12 +65,13 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(Logger::default())
             .app_data(app_state.clone())
-            .service(parse)
-            .service(update_block)
-            .service(get_overview_page)
-            .service(get_journal)
-            .service(update_journal)
+            .service(markdown::endpoints::parse)
+            .service(page::endpoints::update_block)
+            .service(userpage::endpoints::get_overview_page)
+            .service(journalpage::endpoints::get_journal)
+            .service(journalpage::endpoints::update_journal)
             .service(userpage::endpoints::get_page)
             .service(userpage::endpoints::update_page)
             .service(userpage::endpoints::get_backlinks)
@@ -89,6 +94,7 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::assets)
             .service(media::endpoints::assets_overview)
             .service(media::endpoints::asset_preview)
+            .service(search::endpoints::search_in_files)
             .service(r#static::endpoints::catch_all_journal)
             .service(r#static::endpoints::catch_all_journals)
             .service(r#static::endpoints::catch_all_pages)

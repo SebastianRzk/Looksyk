@@ -1,4 +1,4 @@
-use crate::io::http::dtos::{MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto};
+use crate::io::http::page::dtos::{MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto};
 use crate::io::http::link_encoding::encode_link_component;
 use crate::looksyk::model::{MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock, UpdateBlock, UpdateMarkdownFile};
 use crate::looksyk::page_index::get_page_type;
@@ -10,27 +10,31 @@ pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
             original_text: prepared_block.content.original_text.clone(),
             prepared_markdown: prepared_block.content.prepared_markdown.clone(),
         },
-        referenced_content: prepared_block.referenced_markdown.iter().map(|x| map_to_reference_to(x)).collect(),
+        referenced_content: prepared_block.referenced_markdown.iter().map(|x| map_to_prepared_reference_to(x)).collect(),
         has_dynamic_content: prepared_block.has_dynamic_content,
     }
 }
 
-fn map_to_reference_to(prepared_referenced_markdown: &PreparedReferencedMarkdown) -> PreparedReferencedMarkdownDto {
+pub fn map_to_prepared_reference_to(prepared_referenced_markdown: &PreparedReferencedMarkdown) -> PreparedReferencedMarkdownDto {
     PreparedReferencedMarkdownDto {
         content: PreparedBlockContentDto {
             original_text: prepared_referenced_markdown.content.original_text.clone(),
             prepared_markdown: prepared_referenced_markdown.content.prepared_markdown.clone(),
         },
-        reference: MarkdownReferenceDto {
-            file_id: prepared_referenced_markdown.reference.page_id.id.clone(),
-            file_name: prepared_referenced_markdown.reference.page_name.name.clone(),
-            block_number: prepared_referenced_markdown.reference.block_number,
-            link: from_markdown_reference_to_link(&prepared_referenced_markdown.reference),
-        },
+        reference: map_markdown_reference_to_dto(&prepared_referenced_markdown.reference),
     }
 }
 
-fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -> String {
+pub fn map_markdown_reference_to_dto(reference: &MarkdownReference) -> MarkdownReferenceDto {
+    MarkdownReferenceDto {
+        file_id: reference.page_id.id.clone(),
+        file_name: reference.page_name.name.clone(),
+        block_number: reference.block_number,
+        link: from_markdown_reference_to_link(&reference),
+    }
+}
+
+pub fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -> String {
     let page_type = get_page_type(&markdown_reference.page_id);
     match page_type {
         PageType::UserPage => {
@@ -69,7 +73,7 @@ pub fn map_markdown_block_dto(update_block_dto: &UpdateBlockContentDto, referenc
 
 #[cfg(test)]
 mod tests {
-    use crate::io::http::mapper::from_markdown_reference_to_link;
+    use crate::io::http::page::mapper::from_markdown_reference_to_link;
     use crate::looksyk::builder::{journal_page_id, page_name, user_page_id};
     use crate::looksyk::model::MarkdownReference;
 

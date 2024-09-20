@@ -84,8 +84,6 @@ export class UseractionService {
       let index = newBlocks.findIndex(block => block.indentification == event.target.blockTarget);
       console.log("index", index);
       if (index > 0) {
-        //newBlocks[index - 1].content.originalText += "\n\n" + newBlocks[index].content.originalText;
-        //newBlocks[index - 1].content.preparedMarkdown += "\n\n" + newBlocks[index].content.preparedMarkdown;
         let newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
         let newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
         newBlocks = newBlocks.filter(block => block.indentification != event.target.blockTarget);

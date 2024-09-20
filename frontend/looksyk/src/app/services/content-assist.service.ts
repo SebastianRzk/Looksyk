@@ -27,7 +27,6 @@ export class ContentAssistService {
 
   constructor() {
     this.useraction.openMarkdown$.subscribe((data) => {
-      console.log("open markdown in assist", data)
         if (!!data.target.fileTarget) {
           this.contentAssistModeRaw = ContentAssistMode.Insert;
         } else {
@@ -41,6 +40,11 @@ export class ContentAssistService {
     if (this.isOpenContentAssist(keyDownEvent)) {
       this.open(this.contentAssistModeRaw);
       return KeypressResult.StopAndStopPropagation;
+    }
+
+    if(this.isOpenContentAssistForSearch(keyDownEvent)){
+      this.open(ContentAssistMode.Search);
+      return KeypressResult.StopAndStopPropagation
     }
 
     if (keyDownEvent.key == "[" && this.lastChar == "[" && this.contentAssistModeRaw == ContentAssistMode.Insert) {
@@ -124,6 +128,10 @@ export class ContentAssistService {
     return event.key == ' ' && event.ctrlKey;
   }
 
+  private isOpenContentAssistForSearch(event: KeyboardEvent): boolean {
+    return event.key == 'F' && event.ctrlKey;
+  }
+
   private isCloseContentAssist(event: KeyboardEvent) {
     return event.key == 'Escape' && this.stateRaw;
   }
@@ -136,5 +144,5 @@ export enum KeypressResult {
 }
 
 export enum ContentAssistMode {
-  Closed, Insert, Navigate, InsertTag, Submenu
+  Closed, Insert, Navigate, InsertTag, Search, Submenu
 }

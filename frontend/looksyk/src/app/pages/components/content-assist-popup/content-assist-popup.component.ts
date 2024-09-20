@@ -1,7 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { BehaviorSubject, combineLatest, debounce, firstValueFrom, map, Observable, timer } from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounce,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  Subject,
+  timer
+} from "rxjs";
 import { MetaInformation, MetaInfoService, Suggestions } from "../../../services/meta-info.service";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -9,6 +19,7 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption } from 
 import { MatInput } from "@angular/material/input";
 import { Router } from "@angular/router";
 import { OpenMarkdownEvent, UseractionService } from "../../../services/useraction.service";
+import { SearchFinding, SearchResult, SearchService } from "../../../services/search.service";
 
 @Component({
   selector: 'app-content-assist-popup',
@@ -32,14 +43,17 @@ import { OpenMarkdownEvent, UseractionService } from "../../../services/useracti
 export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
-    this.metaInfoFromService_.unsubscribe();
+    this.contentAssistDataState_.unsubscribe();
     this.enter_.unsubscribe();
+    this.updateSearchState_.unsubscribe();
+    this.updateSearchStateEmpty_.unsubscribe();
   }
 
 
   contentAssist = inject(ContentAssistService);
   metaInfoFromBackend = inject(MetaInfoService);
   useraction = inject(UseractionService);
+  searchService = inject(SearchService);
   router = inject(Router);
 
   subMenuState = new BehaviorSubject<Suggestions>({
@@ -65,6 +79,19 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   state$ = this.contentAssist.state$;
 
+  title: Subject<string> = new BehaviorSubject<string>("");
+  title$: Observable<string> = this.state$.pipe(map(mode => {
+    if (mode == ContentAssistMode.Insert) {
+      return "content assist insert";
+    } else if (mode == ContentAssistMode.Navigate) {
+      return "content assist navigate";
+    } else if (mode == ContentAssistMode.Search) {
+      return "content assist search";
+    } else {
+      return "content assist link";
+    }
+  }));
+
   enter_ = this.contentAssist.enter$.subscribe(async () => {
     let currentFilterState = await firstValueFrom(this.stateGroupOptions);
     for (let group of currentFilterState) {
@@ -77,14 +104,33 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     }
   });
 
+  private readonly filterMinLength = 4;
+
+  updateSearchState_ = combineLatest({
+    filter: this.textDebounced$,
+    state: this.state$
+  }).pipe(filter(value => value.state === ContentAssistMode.Search),
+    filter(value => value.filter.length >= this.filterMinLength)).subscribe(value => {
+    this.searchService.search(value.filter);
+  });
+
+  updateSearchStateEmpty_ = combineLatest({
+    filter: this.textDebounced$,
+    state: this.state$
+  }).pipe(filter(value => (value.state === ContentAssistMode.Search && value.filter.length < this.filterMinLength) || value.state == ContentAssistMode.Closed))
+    .subscribe(value => {
+      this.searchService.resetSearch(this.filterMinLength);
+    });
+
   private async handleAction(item: Item, group: ContentAssistSection) {
-    console.log("selected item: ", item.name);
     let result = Result.Close;
     let state = await firstValueFrom(this.state$);
     if (state == ContentAssistMode.Navigate) {
       await this.handleNavigation(group, item);
     } else if (state == ContentAssistMode.InsertTag) {
       await this.handleInsertTag(group, item);
+    } else if (state == ContentAssistMode.Search) {
+      await this.handleSearchNavigation(group, item);
     } else {
       result = await this.handleElseActions(group, item);
     }
@@ -130,7 +176,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       } else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
         text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
       }
-    } else if( group.title == ADD_SUGGESTED_MEDIA){
+    } else if (group.title == ADD_SUGGESTED_MEDIA) {
       let allValues = await firstValueFrom(this.subMenuState);
       for (let value of allValues.suggestions) {
         if (value.explanation == item.name) {
@@ -162,6 +208,23 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     }
   }
 
+  private async handleSearchNavigation(group: ContentAssistSection, item: Item) {
+    this.useraction.closeCurrentMarkdownBlock();
+    let allSearchResult: SearchResult = await firstValueFrom(this.searchService.currentSearchResult$);
+    if (group.title == this.SEARCH_RESULT_IN_PAGES_TITLE) {
+      let selectedItem = this.resolveSearchItem(allSearchResult.page, item.name);
+      await this.router.navigate(["/page", selectedItem.reference.fileName]);
+    } else {
+      let selectedItem = this.resolveSearchItem(allSearchResult.page, item.name);
+      await this.router.navigate(["/journal", selectedItem.reference.fileName]);
+    }
+  }
+
+  private resolveSearchItem(allItems: SearchFinding[], title: string): SearchFinding {
+    return allItems.find(item => this.formatSearchResult(item) == title)!;
+  }
+
+
   private async handleNavigation(group: ContentAssistSection, item: Item) {
     this.useraction.closeCurrentMarkdownBlock();
     if (group.title == this.NAVIGATE_TO_NEW_PAGE) {
@@ -172,8 +235,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     }
   }
 
-  contentAssistContent: ContentAssistSection[] = []
-
+  contentAssistContent: Subject<ContentAssistSection[]> = new BehaviorSubject<ContentAssistSection[]>([]);
+  contentAssistContent$: Observable<ContentAssistSection[]> = this.contentAssistContent.asObservable();
 
   stateGroupOptions!: Observable<ContentAssistSection[]>;
 
@@ -182,10 +245,18 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     this.stateGroupOptions = combineLatest({
       filter: this.textDebounced$,
       cursor: this.contentAssist.cursorInContentAssist$,
-      subMenu: this.subMenuState$
-    }).pipe(debounce(() => timer(30)),
-      map(value => this._highlightItem(value.cursor, this._addAddLinkGroup(this._filterGroup(value.filter), value.filter, this.contentAssist.stateRaw, value.subMenu))
-      ));
+      subMenu: this.subMenuState$,
+      contentAssistContent: this.contentAssistContent,
+      mode: this.state$
+    }).pipe(
+      debounce(() => timer(30)),
+      map(value => {
+        let filteredGroups = value.contentAssistContent;
+        if (value.mode != ContentAssistMode.Search) {
+          filteredGroups = this._filterGroup(value.contentAssistContent, value.filter);
+        }
+        return this._highlightItem(value.cursor, this._addAddLinkGroup(filteredGroups, value.filter, this.contentAssist.stateRaw, value.subMenu))
+      }));
   }
 
   private readonly ADD_LINK = "Add Link";
@@ -195,7 +266,6 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   private readonly INSERT_NEW_TAG = "Insert new tag";
 
   private _addAddLinkGroup(groups: ContentAssistSection[], value: string, filter: ContentAssistMode, subMenu: ContentAssistSection): ContentAssistSection[] {
-    console.log("filter", filter, "submenu", subMenu);
     if (filter == ContentAssistMode.Insert) {
       groups.push({
         title: this.ADD_LINK,
@@ -224,7 +294,6 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       });
       return groups
     } else if (filter == ContentAssistMode.Submenu) {
-      console.log("submenu opened:", subMenu)
       return [subMenu]
     }
     return groups
@@ -245,20 +314,20 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         currentCursor++;
       }
     }
-    if (items.length > 0 && !highlighted) {
+    if (!highlighted && items.length > 0 && items[items.length - 1].items.length > 0) {
       items[items.length - 1].items[items[items.length - 1].items.length - 1].highlight = true;
     }
     return items
   }
 
-  private _filterGroup(value: string): ContentAssistSection[] {
+  private _filterGroup(content: ContentAssistSection[], value: string): ContentAssistSection[] {
     if (value) {
-      return this.contentAssistContent
+      return content
         .map(group => ({title: group.title, items: this._filter(group.items, value)}))
         .filter(group => group.items.length > 0);
     }
 
-    return this.contentAssistContent
+    return content
       .map(group => ({title: group.title, items: this._filter(group.items, value)}));
   }
 
@@ -268,8 +337,9 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   };
 
 
-  metaInfoFromService_ = combineLatest({
+  contentAssistDataState_ = combineLatest({
     info: this.metaInfoFromBackend.currentmetaInfo$,
+    search: this.searchService.currentSearchResult$,
     mode: this.state$
   }).subscribe(data => {
       let nextState;
@@ -277,12 +347,43 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         nextState = this.creteInsertState(data);
       } else if (data.mode === ContentAssistMode.Navigate) {
         nextState = this.createNavigationState(data)
+      } else if (data.mode === ContentAssistMode.Search) {
+        nextState = this.createSearchState(data.search);
       } else {
         nextState = this.createLinkState(data);
       }
-      this.contentAssistContent = nextState;
+      this.contentAssistContent.next(nextState);
     }
   );
+
+
+  readonly SEARCH_RESULT_IN_PAGES_TITLE = "Search results in pages";
+
+  private createSearchState(data: SearchResult): ContentAssistSection[] {
+    return [{
+      title: this.SEARCH_RESULT_IN_PAGES_TITLE,
+      items: data.page.map(page => {
+        return {
+          name: this.formatSearchResult(page),
+          highlight: false
+        }
+      }),
+    }, {
+      title: "Search results in journals",
+      items: data.journal.map(page => {
+        return {
+          name: this.formatSearchResult(page),
+          highlight: false
+        }
+      }),
+
+    }];
+  }
+
+
+  private formatSearchResult(page: SearchFinding) {
+    return `${page.reference.fileName}#${page.reference.blockNumber}: ${page.textLine}`;
+  }
 
   private createNavigationState(data: {
     mode: ContentAssistMode,
@@ -300,7 +401,6 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }
 
   private readonly INSERT_REFERENCE_TITLE = "Insert Reference";
-
 
   private readonly INSERT_MEDIA_TITLE = "Insert Media";
 

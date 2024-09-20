@@ -19,10 +19,10 @@ export class AppComponent {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {
     if (this.contentAssist.stateRaw != ContentAssistMode.Closed) {
-      this.stopProagation(event);
+      this.stopPropagation(event);
     } else {
       if (event.key == 'Tab') {
-        this.stopProagation(event);
+        this.stopPropagation(event);
         return;
       }
     }
@@ -32,12 +32,12 @@ export class AppComponent {
   keyUpEvent(event: KeyboardEvent) {
     let result = this.contentAssist.registerKeyPress(event);
     if (result == KeypressResult.StopAndStopPropagation) {
-      this.stopProagation(event);
+      this.stopPropagation(event);
       return;
     }
 
     if (event.key == 'Escape') {
-      this.stopProagation(event);
+      this.stopPropagation(event);
       this.userAction.closeCurrentMarkdownBlock();
       return;
     }
@@ -48,7 +48,6 @@ export class AppComponent {
       return;
     }
     if (event.key == 'Tab') {
-      console.log("tap pressed")
       if (event.shiftKey) {
         this.userAction.decreaseIndentation.next({
           id: Math.random() + ""
@@ -58,13 +57,13 @@ export class AppComponent {
           id: Math.random() + ""
         });
       }
-      this.stopProagation(event);
+      this.stopPropagation(event);
       return;
     }
 
   }
 
-  private stopProagation(event: KeyboardEvent) {
+  private stopPropagation(event: KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation()
     event.stopImmediatePropagation();
