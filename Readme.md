@@ -3,7 +3,8 @@
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
 I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the
-many control characters in the markdown files, the query language that is difficult to learn and limited in its capability, or the general
+many control characters in the markdown files, the query language that is difficult to learn and limited in its
+capability, or the general
 performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
@@ -22,10 +23,12 @@ Even if the project is currently a pure web project, I would not deploy it publi
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
 
 Currently, the backend is very fast, my [Logseq](https://logseq.com/) graph (~900 pages and 900kb text) is
-scanned and indexed in under a second (~200ms). That's why Looksyk doesn't have a database, reading new data into RAM is fast
+scanned and indexed in under a second (~200ms). That's why Looksyk doesn't have a database, reading new data into RAM is
+fast
 enough.
 
-The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal page has
+The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal
+page has
 issues.
 
 **Project work and future**
@@ -37,7 +40,6 @@ I am happy about every contribution, but I cannot guarantee that I will implemen
 If you have any changes or suggestions, please send me a pull request.
 For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
-
 ** Implemented Features **
 
 * Pages
@@ -46,24 +48,24 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Content assist
 	* Creating links, inserting queries, tags and media
 * View (and link) media
-  * Images
-  * PDFs
-  * HTML Files (e.g. SingleFile saved pages from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/) or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
-  * Video (html5 video player)
-  * Audio (html5 audio player)
-  * Code (with highlighting)
-  * Text files
+	* Images
+	* PDFs
+	* HTML Files (e.g. SingleFile saved pages
+	  from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
+	  or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+	* Video (html5 video player)
+	* Audio (html5 audio player)
+	* Code (with highlighting)
+	* Text files
 * Queries
-  * Query todos
-  * Page hierarchy
-  * References
-  * Render video, audio, images, text files and code files (with highlighting)
+	* Query todos
+	* Page hierarchy
+	* References
+	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Favourites
 
-
 ** Planned Features / Ideas **
-
 
 * Page templates
 	* Default template for journal page
@@ -72,18 +74,16 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 	* Calendar view
 	* Week view
 * Pages
-  * Delete pages
-  * Rename pages and tags across all pages and journals
+	* Delete pages
+	* Rename pages and tags across all pages and journals
 * Theming
-  * Visual theme editor
-  * Prebuild CSS themes
-  * Toggle for dark / light mode
+	* Visual theme editor
+	* Prebuild CSS themes
+	* Toggle for dark / light mode
 * Queries
-  * Render bar / pie charts from csv and json files
-  * Insert tables from csv files
-  * Support UML rendering with [kroki](https://kroki.io/)
-
-
+	* Render bar / pie charts from csv and json files
+	* Insert tables from csv files
+	* Support UML rendering with [kroki](https://kroki.io/)
 
 ### Out of scope
 
@@ -106,9 +106,9 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 
 ### Running different looksyk graphs at the same time (with different ports)
 
-You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or you can run the 
+You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or
+you can run the
 application with the arguments `--port` and `--graph-location` manually.
-
 
 ### Development Build
 
@@ -123,6 +123,11 @@ application with the arguments `--port` and `--graph-location` manually.
 3. Copy your pages into the pages folder (`~/graph/pages`)
 4. Copy your assets into the assets folder (`~/graph/assets`)
 5. Start / Restart the backend
+6. (Optional): Replace all asset references `(some name)[../assets/assetName]` with `(some name)[/assetName]` in your
+   pages so 'on click' navigates to the media preview page and does not download the file.
+7. (Optional): Replace all labels `#myTag` with `[[myTag]]` in your pages so the tags are recognized by the backend.
+8. (Optional): Replace your queries with the Looksyk query syntax
+9. (Optional): Replace your todos with the markdown checkbox / todo syntax. '[x]' for done, '[ ]' for todo.
 
 ## Configuration
 
@@ -184,7 +189,6 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  Show the count
  {query: references-to tag:"myTag" display:"count" }
 ```
-
 
 ### Render assets ("insert-content-from-file")
 

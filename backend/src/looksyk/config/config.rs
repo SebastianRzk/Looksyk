@@ -14,7 +14,7 @@ pub struct Design {
     pub primary_color: String,
     pub background_color: String,
     pub foreground_color: String,
-    pub primary_shading: String
+    pub primary_shading: String,
 }
 
 #[derive(Serialize, Deserialize, Clone)]

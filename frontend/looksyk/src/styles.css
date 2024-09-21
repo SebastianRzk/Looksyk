@@ -51,6 +51,14 @@ tr:hover, th:hover, td:hover {
   background: var(--primary-shading);
 }
 
+.mat-drawer-container {
+  background-color: var(--background-color) !important;
+}
+
+.mat-drawer {
+  background-color: var(--primary-shading) !important;
+}
+
 img {
   max-width: 93vw;
   max-height: 93vh;

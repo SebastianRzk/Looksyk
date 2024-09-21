@@ -114,7 +114,7 @@ fn init_empty_graph(data_root_location: &DataRootLocation) {
         favourites: vec![],
         design: Design {
             primary_color: "#0c884c".to_string(),
-            background_color: "rgb(20, 20, 20)".to_string(),
+            background_color: "#15212D".to_string(),
             foreground_color: "white".to_string(),
             primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
         },

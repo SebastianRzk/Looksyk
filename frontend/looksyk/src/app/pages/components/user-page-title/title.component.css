@@ -1,8 +1,9 @@
 .title:hover {
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--primary-shading);
+  padding: 0 1ex 0 0;
   border-radius: 0.2ex;
 }
 
 .title{
-  padding-right: 1ex;
+  padding: 2px 1ex 2px 2px;
 }

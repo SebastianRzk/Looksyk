@@ -1,6 +1,11 @@
 .title-segment:hover {
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--primary-shading);
+  padding: 0;
   border-radius: 0.2ex;
+}
+
+.title-segment {
+  padding: 2px;
 }
 
 .title{
