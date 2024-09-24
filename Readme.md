@@ -63,6 +63,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 	* References
 	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
+* Delete and rename pages (and update references across all pages and journals)
 * Favourites
 
 ** Planned Features / Ideas **
@@ -73,9 +74,6 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Journal
 	* Calendar view
 	* Week view
-* Pages
-	* Delete pages
-	* Rename pages and tags across all pages and journals
 * Theming
 	* Visual theme editor
 	* Prebuild CSS themes
