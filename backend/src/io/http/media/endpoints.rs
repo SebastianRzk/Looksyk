@@ -109,6 +109,7 @@ pub async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile,
 #[get("/api/asset-preview/info/{filename:.*}")]
 pub async fn asset_preview(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
     let path: String = req.match_info().query("filename").parse()?;
+
     let asset_descriptor = AssetDescriptor::new(path);
     let file_size = get_file_size(create_absolute_media_path(
         &MediaOnDisk {

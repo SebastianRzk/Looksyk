@@ -33,7 +33,6 @@ async fn catch_all_journal() -> Result<NamedFile, Error> {
 fn index_html_response() -> Result<NamedFile, Error> {
     let static_file_name = "index.html";
     let complete_path = to_static_path(static_file_name);
-    println!("serving {}", complete_path.display());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -70,8 +69,20 @@ async fn css(path: web::Path<String>) -> Result<NamedFile, Error> {
 #[get("/assets/fonts/{filename}.css")]
 async fn font_css(path: web::Path<String>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
-    println!("serving font css {}", static_file_name.as_str());
     let complete_path = to_static_asset_fonts(static_file_name.as_str());
+    Ok(NamedFile::open(complete_path)?
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Inline,
+            parameters: vec![],
+        }))
+}
+
+
+#[get("/assets/fav.png")]
+async fn fav() -> Result<NamedFile, Error> {
+    let static_file_name = "fav.png";
+    let complete_path = to_static_assets(static_file_name);
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
