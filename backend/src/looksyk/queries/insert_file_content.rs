@@ -5,7 +5,7 @@ use crate::io::fs::asset_cache_loader::load_cachable_asset;
 use crate::io::fs::media::MediaOnDisk;
 use crate::io::http::media::config::create_media_location;
 use crate::looksyk::datatypes::AssetDescriptor;
-use crate::looksyk::markdown::{render_as_audio, render_as_code_block, render_as_link, render_as_video};
+use crate::looksyk::syntax::markdown::{render_as_audio, render_as_code_block, render_as_link, render_as_video};
 use crate::looksyk::model::QueryRenderResult;
 use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET_FILE, parse_display_type_for_inplace, parse_property};
 use crate::looksyk::queries::unknown::render_display_unknown;

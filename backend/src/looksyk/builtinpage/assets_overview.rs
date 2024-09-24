@@ -1,7 +1,7 @@
 use crate::looksyk::builtinpage::generating_page_util::create_textblock;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::MediaIndex;
-use crate::looksyk::markdown::render_as_link;
+use crate::looksyk::syntax::markdown::render_as_link;
 use crate::looksyk::media::media_type::{get_media_type_from_extension, MediaType};
 use crate::looksyk::model::{ParsedBlock, ParsedMarkdownFile};
 use std::cmp::Ordering;

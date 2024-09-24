@@ -13,7 +13,7 @@ use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::render_file;
 use crate::looksyk::serializer::serialize_page;
-use crate::state::state::AppState;
+use crate::state::state::{AppState, CurrentPageAssociatedState};
 
 #[get("/api/journal/{journal_name}")]
 async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
@@ -70,13 +70,21 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     let mut journal_guard = data.journal_pages.lock().unwrap();
     let mut asset_cache = data.asset_cache.lock().unwrap();
 
-    let page_id = append_journal_page_prefix(&simple_page_name);
-    let (todo, tag, page, journal) = update_index_for_file(page_id, &simple_page_name, &PageType::JournalPage, &updated_page, &todo_guard, &tag_guard, &page_guard, &journal_guard);
+    let current_page_associated_state = CurrentPageAssociatedState {
+        user_pages: &page_guard,
+        journal_pages: &journal_guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_guard,
+    };
 
-    *todo_guard = todo;
-    *tag_guard = tag;
-    *page_guard = page;
-    *journal_guard = journal;
+
+    let page_id = append_journal_page_prefix(&simple_page_name);
+    let new_page_associated_state = update_index_for_file(page_id, &simple_page_name, &PageType::JournalPage, &updated_page, current_page_associated_state);
+
+    *todo_guard = new_page_associated_state.todo_index;
+    *tag_guard = new_page_associated_state.tag_index;
+    *page_guard = new_page_associated_state.user_pages;
+    *journal_guard = new_page_associated_state.journal_pages;
 
     let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
     let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
@@ -87,5 +95,5 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     drop(journal_guard);
     drop(asset_cache);
 
-    return Ok(web::Json(map_markdown_file_to_dto(rendered_file, is_fav)));
+    Ok(web::Json(map_markdown_file_to_dto(rendered_file, is_fav)))
 }

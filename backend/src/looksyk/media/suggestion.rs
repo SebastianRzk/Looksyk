@@ -1,5 +1,5 @@
 use crate::looksyk::datatypes::AssetDescriptor;
-use crate::looksyk::markdown::{render_as_audio, render_as_image, render_as_video, render_asset_as_link};
+use crate::looksyk::syntax::markdown::{render_as_audio, render_as_image, render_as_video, render_asset_as_link};
 use crate::looksyk::media::media_type::{get_media_type_from_extension, MediaType};
 use crate::looksyk::queries::insert_file_content::{query_insert_file_content_as_audio, query_insert_file_content_as_code, query_insert_file_content_as_text, query_insert_file_content_as_video};
 

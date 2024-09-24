@@ -12,6 +12,6 @@ pub mod page_index;
 pub mod config;
 pub mod favourite;
 pub mod media;
-pub mod markdown;
 pub mod datatypes;
 pub mod search;
+pub mod syntax;

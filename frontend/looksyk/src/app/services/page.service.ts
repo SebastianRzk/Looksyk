@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, map, Observable, Subject, tap } from "rxjs";
+import { BehaviorSubject, firstValueFrom, map, Observable, Subject, tap } from "rxjs";
 import {
   BlockContent,
   BlockDto,
@@ -50,6 +50,12 @@ export class PageService {
   private loadJournalPageById(pageName: string, pageId: string) {
     this.httpClient.get<MarkdownPageDto>("/api/journal/" + encodeURIComponent(pageName).toString())
       .subscribe(value => this.getOrCreatePage(pageId).next(fromDto(value, pageName, pageId)));
+  }
+
+  public deleteUserPage(pageName: string): Promise<void> {
+    let pageId = this.userpageId(pageName);
+    return firstValueFrom(this.httpClient.delete<void>("/api/pages/" + encodeURIComponent(pageName).toString())
+      .pipe(tap(_ => this.deletePage(pageId))));
   }
 
   public loadBuildInPage(pageName: string) {
@@ -109,6 +115,10 @@ export class PageService {
     return this.pageState.get(pageId)!;
   }
 
+  private deletePage(pageId: string) {
+    this.pageState.delete(pageId);
+  }
+
   public getUserPage(pagename: string): Observable<MarkdownPage> {
     return this.getOrCreatePage(this.userpageId(pagename)).asObservable();
   }
@@ -160,6 +170,17 @@ export class PageService {
 
     }
   }
+
+  renameUserPage(pageName: string, newName: string): Promise<string> {
+    return firstValueFrom(this.httpClient.post<RenameResultDto>("/api/rename-page", {
+      oldPageName: pageName,
+      newPageName: newName
+    }).pipe(map(x => x.newPageName)));
+  }
+}
+
+interface RenameResultDto{
+  newPageName: string
 }
 
 export interface BasicPageContent {

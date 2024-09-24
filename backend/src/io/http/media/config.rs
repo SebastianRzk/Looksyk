@@ -1,4 +1,4 @@
-use crate::looksyk::markdown::encode_uri_component;
+use crate::looksyk::syntax::markdown::encode_uri_component;
 
 pub const REL_MEDIA_LOCATION: &str = "assets";
 

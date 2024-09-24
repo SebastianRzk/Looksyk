@@ -1,7 +1,19 @@
 <div class="top">
   <app-user-page-title [title]="pageName$ | async"></app-user-page-title>
   <app-fav-star *ngIf="data | async as d" [isFavInitial]="d.page.isFavourite" [pageName]="d.pageName"></app-fav-star>
+  <mat-icon class="page-edit-icon" [matMenuTriggerFor]="menu" >more_horiz</mat-icon>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="rename()">
+      <mat-icon>drive_file_rename_outline</mat-icon>
+      <span>Rename page</span>
+    </button>
+    <button mat-menu-item (click)="delete()">
+      <mat-icon>delete</mat-icon>
+      <span>Delete page</span>
+    </button>
+  </mat-menu>
 </div>
+<app-rename-page-section *ngIf="renameOpen$ | async" (close)="renameOpen.next(false)" (submit)="submitRename($event)"></app-rename-page-section>
 <app-show-page *ngIf="page$ | async as p" [page]="p" [scrollIntoView]="true"></app-show-page>
 <mat-divider></mat-divider>
 <app-referenced-by *ngIf="pageName$ | async as p" [pageName]="p"></app-referenced-by>

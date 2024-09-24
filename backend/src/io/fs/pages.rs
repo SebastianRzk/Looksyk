@@ -1,14 +1,22 @@
 use std::fs;
 use std::path::Path;
 
-use crate::io::fs::basic_file::read_file;
+use crate::io::fs::basic_file::{delete_file, read_file};
 use crate::io::fs::paths::path_for_page_type;
-use crate::looksyk::model::PageType;
+use crate::looksyk::model::{PageType, SimplePageName};
 use crate::state::state::DataRootLocation;
 
 pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
     let page_path = data_root_location.path.clone().join(path_for_page_type(&PageType::UserPage));
     read_all_files(page_path.to_str().unwrap())
+}
+
+pub fn delete_user_file(data_root_location: &DataRootLocation, simple_page_name: SimplePageName) {
+    let page_path = data_root_location.path.clone().join(path_for_page_type(&PageType::UserPage));
+    let encoded_page_name = escape_page_name(&simple_page_name.name);
+    let destination = page_path.join(encoded_page_name + ".md");
+    println!("deleting {}", destination.to_str().unwrap());
+    delete_file(destination);
 }
 
 pub fn read_all_journal_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {

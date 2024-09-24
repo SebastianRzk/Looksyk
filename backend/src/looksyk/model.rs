@@ -1,6 +1,7 @@
+use crate::looksyk::builder::text_token;
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
-use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug)]
 pub struct RawBlock {
@@ -15,6 +16,17 @@ pub struct ParsedBlock {
     pub content: Vec<BlockContent>,
 }
 
+
+#[cfg(test)]
+pub fn block_with_text_content(content: &str) -> ParsedBlock {
+    ParsedBlock {
+        indentation: 0,
+        content: vec![BlockContent {
+            as_text: content.to_string(),
+            as_tokens: vec![text_token(content)],
+        }],
+    }
+}
 
 #[derive(Clone)]
 pub struct PreparedBlock {

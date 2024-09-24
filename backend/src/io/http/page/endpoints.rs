@@ -13,7 +13,7 @@ use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::render_block;
 use crate::looksyk::serializer::update_and_serialize_page;
-use crate::state::state::AppState;
+use crate::state::state::{AppState, CurrentPageAssociatedState};
 
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
@@ -71,12 +71,19 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
     let mut journal_guard = data.journal_pages.lock().unwrap();
     let mut asset_cache = data.asset_cache.lock().unwrap();
 
-    let (todo, tag, page, journal) = update_index_for_file(page_id, &simple_page_name, &page_type, &updated_page, &todo_guard, &tag_guard, &page_guard, &journal_guard);
+    let current_page_associated_state = CurrentPageAssociatedState {
+        user_pages:& page_guard,
+        journal_pages: &journal_guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_guard,
+    };
 
-    *todo_guard = todo;
-    *tag_guard = tag;
-    *page_guard = page;
-    *journal_guard = journal;
+    let new_page_associated_state = update_index_for_file(page_id, &simple_page_name, &page_type, &updated_page, current_page_associated_state);
+
+    *todo_guard = new_page_associated_state.todo_index;
+    *tag_guard = new_page_associated_state.tag_index;
+    *page_guard = new_page_associated_state.user_pages;
+    *journal_guard = new_page_associated_state.journal_pages;
 
     let parsed_block = parse_block(&RawBlock {
         indentation: 0,

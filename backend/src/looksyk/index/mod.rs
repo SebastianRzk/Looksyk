@@ -5,3 +5,4 @@ pub mod index;
 mod hierachy;
 pub mod media;
 pub mod asset;
+pub mod rename;

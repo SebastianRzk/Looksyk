@@ -31,6 +31,10 @@ pub fn get_file_size(path: PathBuf) -> u64 {
     fs::metadata(path).unwrap().len()
 }
 
+pub fn delete_file(path: PathBuf) {
+    fs::remove_file(path).unwrap();
+}
+
 
 pub fn is_text_file(path: PathBuf)-> bool {
     let file_content = read_binary_file(path);
@@ -42,5 +46,5 @@ pub fn is_text_file(path: PathBuf)-> bool {
             break;
         }
     }
-    return is_text;
+    is_text
 }
