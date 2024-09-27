@@ -28,3 +28,15 @@ pub enum TodoState {
     Todo,
     Done,
 }
+
+
+#[cfg(test)]
+pub mod builder {
+    use crate::state::todo::TodoIndex;
+
+    pub fn empty_todo_index() -> TodoIndex {
+        TodoIndex {
+            entries: vec![],
+        }
+    }
+}

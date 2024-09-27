@@ -24,6 +24,18 @@ pub struct DataRootLocation {
     pub path: PathBuf,
 }
 
+#[cfg(test)]
+pub mod builder {
+    use std::path::Path;
+    use crate::state::state::DataRootLocation;
+
+    pub fn empty_data_root_location() -> DataRootLocation {
+        DataRootLocation {
+            path: Path::new("").to_path_buf(),
+        }
+    }
+}
+
 
 pub struct CurrentPageAssociatedState<'a> {
     pub user_pages: &'a UserPageIndex,

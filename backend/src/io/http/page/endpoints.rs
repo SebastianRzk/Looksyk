@@ -11,7 +11,7 @@ use crate::looksyk::model::{MarkdownReference, PageId, PageType, RawBlock, RawMa
 use crate::looksyk::page_index::{get_page_type, strip_prefix};
 use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
-use crate::looksyk::renderer::render_block;
+use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::looksyk::serializer::update_and_serialize_page;
 use crate::state::state::{AppState, CurrentPageAssociatedState};
 
@@ -90,7 +90,11 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         text_content: vec![entity.markdown],
     });
 
-    let rendered_block = render_block(&parsed_block, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
+    let rendered_block = render_block(&parsed_block, &StaticRenderContext{
+        user_pages: &page_guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_guard,
+    }, &mut asset_cache, &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);

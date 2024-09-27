@@ -1,4 +1,3 @@
-use crate::looksyk::builder::text_token;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
@@ -18,13 +17,26 @@ pub struct ParsedBlock {
 
 
 #[cfg(test)]
-pub fn block_with_text_content(content: &str) -> ParsedBlock {
-    ParsedBlock {
-        indentation: 0,
-        content: vec![BlockContent {
-            as_text: content.to_string(),
-            as_tokens: vec![text_token(content)],
-        }],
+pub mod builder {
+    use crate::looksyk::builder::text_token;
+    use crate::looksyk::model::{BlockContent, BlockToken, ParsedBlock};
+
+    pub fn block_with_text_content(content: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: content.to_string(),
+                as_tokens: vec![text_token(content)],
+            }],
+        }
+    }
+
+
+    pub fn query_block_token(query_payload: &str) -> BlockToken {
+        BlockToken {
+            block_token_type: super::BlockTokenType::QUERY,
+            payload: query_payload.to_string(),
+        }
     }
 }
 
@@ -106,7 +118,7 @@ pub struct QueryRenderResult {
 #[derive(Clone)]
 pub struct ReferencedMarkdown {
     pub content: ParsedBlock,
-    pub refernce: MarkdownReference,
+    pub reference: MarkdownReference,
 }
 
 #[derive(Clone)]
@@ -136,14 +148,14 @@ pub struct SimplePageName {
 
 impl Hash for SimplePageName {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        return self.name.hash(state);
+        self.name.hash(state)
     }
 }
 
 
 impl PartialEq for SimplePageName {
     fn eq(&self, other: &Self) -> bool {
-        return self.name == other.name;
+        self.name == other.name
     }
 }
 
@@ -152,14 +164,14 @@ impl Eq for SimplePageName {}
 
 impl Hash for PageId {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        return self.id.hash(state);
+        self.id.hash(state)
     }
 }
 
 
 impl PartialEq for PageId {
     fn eq(&self, other: &Self) -> bool {
-        return self.id == other.id;
+        self.id == other.id
     }
 }
 

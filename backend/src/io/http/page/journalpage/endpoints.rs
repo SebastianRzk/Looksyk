@@ -1,5 +1,3 @@
-use actix_web::{get, post, web, Responder};
-use actix_web::web::{Data, Path};
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::dtos::UpdateMarkdownFileDto;
 use crate::io::http::page::mapper::{map_from_update_markdown_dto, map_markdown_file_to_dto};
@@ -11,9 +9,11 @@ use crate::looksyk::model::{PageType, RawMarkdownFile};
 use crate::looksyk::page_index::append_journal_page_prefix;
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
-use crate::looksyk::renderer::render_file;
+use crate::looksyk::renderer::{render_file, StaticRenderContext};
 use crate::looksyk::serializer::serialize_page;
 use crate::state::state::{AppState, CurrentPageAssociatedState};
+use actix_web::web::{Data, Path};
+use actix_web::{get, post, web, Responder};
 
 #[get("/api/journal/{journal_name}")]
 async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
@@ -31,9 +31,11 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
         let parsed_page = page.unwrap();
         let prepared_page = render_file(
             parsed_page,
-            &page_guard,
-            &todo_index_guard,
-            &data.tag_index.lock().unwrap(),
+            &StaticRenderContext {
+                user_pages: &page_guard,
+                todo_index: &todo_index_guard,
+                tag_index: &data.tag_index.lock().unwrap(),
+            },
             &mut asset_cache,
             &data.data_path,
         );
@@ -41,8 +43,13 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
     }
 
     Ok(web::Json(map_markdown_file_to_dto(render_file(
-        &generate_page_not_found(), &page_guard, &todo_index_guard,
-        &data.tag_index.lock().unwrap(), &mut asset_cache, &data.data_path), fav)))
+        &generate_page_not_found(),
+        &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_index_guard,
+            tag_index: &data.tag_index.lock().unwrap(),
+        },
+        &mut asset_cache, &data.data_path), fav)))
 }
 
 
@@ -87,7 +94,15 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     *journal_guard = new_page_associated_state.journal_pages;
 
     let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
-    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
+    let rendered_file = render_file(
+        &updated_page,
+        &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_guard,
+            tag_index: &tag_guard,
+        },
+        &mut asset_cache,
+        &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);

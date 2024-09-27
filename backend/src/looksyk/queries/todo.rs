@@ -21,11 +21,11 @@ pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
     args1.insert(PARAM_TAG.to_string(), query_root_opt.value);
     args1.insert(PARAM_STATE.to_string(), query_state_opt.value);
     let (display_type, args) = (display_type1, args1);
-    return Ok(Query {
+    Ok(Query {
         query_type: QueryType::Todo,
         display: display_type,
         args,
-    });
+    })
 }
 
 
@@ -71,7 +71,7 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
         referenced_markdown: selected_todos.iter().map(|x| {
             ReferencedMarkdown {
                 content: x.block.clone(),
-                refernce: MarkdownReference {
+                reference: MarkdownReference {
                     page_id: x.source.page_id.clone(),
                     block_number: x.source.blocknumber,
                     page_name: x.source.page_name.clone(),
@@ -83,11 +83,11 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
 
 
 fn render_as_count(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
-    return QueryRenderResult {
+    QueryRenderResult {
         has_dynamic_content: true,
         inplace_markdown: selected_todos.len().to_string(),
         referenced_markdown: vec![],
-    };
+    }
 }
 
 fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {

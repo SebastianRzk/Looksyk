@@ -35,8 +35,7 @@ pub fn create_tag_index_file(result: &mut HashMap<PageId, HashSet<PageId>>, curr
                     continue;
                 }
                 let payload = token.payload.clone();
-                let encoded_payload = payload.replace("/", "%2F");
-                let tag_name = append_user_page_prefix(&page_name(encoded_payload));
+                let tag_name = append_user_page_prefix(&page_name(payload));
                 let stored_list = result.get(&tag_name);
                 let mut tokenlist;
                 if stored_list.is_none() {
@@ -282,5 +281,4 @@ mod tests {
         let entry = result.entries.get(0).unwrap();
         assert_eq!(entry.tags, vec![page_name_str("testfile"), page_name_str("MyTag")]);
     }
-
 }

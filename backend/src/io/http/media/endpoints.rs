@@ -20,7 +20,7 @@ use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
-use crate::looksyk::renderer::render_file;
+use crate::looksyk::renderer::{render_file, StaticRenderContext};
 use crate::state::state::AppState;
 
 
@@ -80,7 +80,15 @@ pub async fn assets_overview(data: Data<AppState>) -> error::Result<impl Respond
     let guard = data.user_pages.lock().unwrap();
     let todo_guard = data.todo_index.lock().unwrap();
     let mut asset_cache = data.asset_cache.lock().unwrap();
-    let rendered_file = render_file(&assets_overview, &guard, &todo_guard, &tag_index_guard, &mut asset_cache, &data.data_path);
+
+    let render_context = StaticRenderContext{
+        user_pages: &guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_index_guard,
+    };
+
+    let rendered_file = render_file(&assets_overview, &render_context, &mut asset_cache, &data.data_path);
+
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 

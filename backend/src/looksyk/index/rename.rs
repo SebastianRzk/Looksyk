@@ -176,13 +176,14 @@ fn combine_two_pages(old_tag_name: &OldPageName, new_tag_name: &NewPageName, new
 mod tests {
     use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
-    use crate::looksyk::model::{block_with_text_content, PageId, ParsedMarkdownFile, SimplePageName};
+    use crate::looksyk::model::{PageId, ParsedMarkdownFile, SimplePageName};
     use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
     use crate::state::journal::JournalPageIndex;
     use crate::state::state::CurrentPageOnDiskState;
     use crate::state::tag::TagIndex;
     use crate::state::userpage::UserPageIndex;
     use std::collections::{HashMap, HashSet};
+    use crate::looksyk::model::builder::block_with_text_content;
 
     #[test]
     fn should_rename_references_and_merge_files_when_files_are_set() {

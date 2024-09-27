@@ -4,7 +4,7 @@ use crate::io::http::page::dtos::ToValidate;
 use crate::io::http::page::mapper::map_to_block_dto;
 use crate::looksyk::model::RawBlock;
 use crate::looksyk::parser::parse_block;
-use crate::looksyk::renderer::render_block;
+use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::state::state::AppState;
 
 #[post("/api/parse")]
@@ -17,9 +17,11 @@ async fn parse(content: web::Json<ToValidate>, data: Data<AppState>) -> actix_we
     let parsed_block = parse_block(&raw_block);
     let serialized_block = render_block(
         &parsed_block,
-        &data.user_pages.lock().unwrap(),
-        &data.todo_index.lock().unwrap(),
-        &data.tag_index.lock().unwrap(),
+        &StaticRenderContext{
+            user_pages: &data.user_pages.lock().unwrap(),
+            todo_index: &data.todo_index.lock().unwrap(),
+            tag_index: &data.tag_index.lock().unwrap(),
+        },
         &mut data.asset_cache.lock().unwrap(),
         &data.data_path);
     Ok(web::Json(map_to_block_dto(&serialized_block)))

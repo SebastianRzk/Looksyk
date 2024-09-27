@@ -11,17 +11,92 @@ use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
 
-pub fn render_file(markdown_file: &ParsedMarkdownFile, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedMarkdownFile {
+pub struct StaticRenderContext<'a> {
+    pub user_pages: &'a UserPageIndex,
+    pub todo_index: &'a TodoIndex,
+    pub tag_index: &'a TagIndex,
+}
+
+#[cfg(test)]
+pub mod builder {
+    use crate::looksyk::renderer::StaticRenderContext;
+    use crate::state::tag::builder::empty_tag_index;
+    use crate::state::tag::TagIndex;
+    use crate::state::todo::builder::empty_todo_index;
+    use crate::state::todo::TodoIndex;
+    use crate::state::userpage::builder::empty_user_page_index;
+    use crate::state::userpage::UserPageIndex;
+
+
+    pub struct TestRenderContext {
+        pub user_pages: UserPageIndex,
+        pub todo_index: TodoIndex,
+        pub tag_index: TagIndex,
+    }
+
+    impl TestRenderContext {
+        pub fn to_static(&self) -> StaticRenderContext {
+            StaticRenderContext {
+                user_pages: &self.user_pages,
+                todo_index: &self.todo_index,
+                tag_index: &self.tag_index,
+            }
+        }
+    }
+
+    pub fn create_render_context_with_user_page_index(user_page_index: UserPageIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: user_page_index,
+            todo_index: empty_todo_index(),
+            tag_index: empty_tag_index(),
+        }
+    }
+
+    pub fn create_render_context_with_todo_index(todo_index: TodoIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            todo_index,
+            tag_index: empty_tag_index(),
+        }
+    }
+
+
+    pub fn create_render_context_with_tag_index(tag_index: TagIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            todo_index: empty_todo_index(),
+            tag_index,
+        }
+    }
+
+    pub fn create_render_context(user_page_index: UserPageIndex, todo_index: TodoIndex, tag_index: TagIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: user_page_index,
+            todo_index,
+            tag_index,
+        }
+    }
+
+    pub fn create_empty_render_context<'a>() -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            todo_index: empty_todo_index(),
+            tag_index: empty_tag_index(),
+        }
+    }
+}
+
+pub fn render_file(markdown_file: &ParsedMarkdownFile, render_context: &StaticRenderContext, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
-        result_blocks.push(render_block(original_block, data, todo_index, tag_index, asset_cache, data_root_location));
+        result_blocks.push(render_block(original_block, render_context, asset_cache, data_root_location));
     }
     PreparedMarkdownFile {
         blocks: result_blocks
     }
 }
 
-pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedBlock {
+pub fn render_block(block: &ParsedBlock, render_context: &StaticRenderContext, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
     let mut references = vec![];
@@ -29,7 +104,7 @@ pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &Todo
 
     for content_element in &block.content {
         block_content_original_list.push(content_element.as_text.to_string());
-        let render_result = render_tokens_deep(&content_element.as_tokens, data, todo_index, tag_index, asset_cache, data_root_location);
+        let render_result = render_tokens_deep(&content_element.as_tokens, render_context, asset_cache, data_root_location);
         if render_result.has_dynamic_content {
             has_dynamic_content = true;
         }
@@ -53,9 +128,9 @@ pub fn render_block(block: &ParsedBlock, data: &UserPageIndex, todo_index: &Todo
 fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedReferencedMarkdown {
     PreparedReferencedMarkdown {
         reference: MarkdownReference {
-            block_number: referenced_markdown.refernce.block_number,
-            page_name: referenced_markdown.refernce.page_name.clone(),
-            page_id: referenced_markdown.refernce.page_id.clone(),
+            block_number: referenced_markdown.reference.block_number,
+            page_name: referenced_markdown.reference.page_name.clone(),
+            page_id: referenced_markdown.reference.page_id.clone(),
         },
         content: PreparedBlockContent {
             original_text: combine_text_content(&referenced_markdown.content),
@@ -106,10 +181,10 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
             }
         }
     }
-    return inline_markdown_result_list.join(" ");
+    inline_markdown_result_list.join(" ")
 }
 
-pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_index: &TodoIndex, tag_index: &TagIndex, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> RenderResult {
+pub fn render_tokens_deep(tokens: &Vec<BlockToken>, render_context: &StaticRenderContext, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];
     let mut has_dynamic_content = false;
@@ -125,7 +200,7 @@ pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_i
                 inline_markdown_result_list.push(render_journal_link_str(&token.payload));
             }
             BlockTokenType::QUERY => {
-                let render_result = render_query(token, data, todo_index, tag_index, asset_cache, data_root_location);
+                let render_result = render_query(token, render_context, asset_cache, data_root_location);
                 has_dynamic_content = render_result.has_dynamic_content;
                 for reference in render_result.referenced_markdown {
                     references.push(reference);
@@ -137,11 +212,11 @@ pub fn render_tokens_deep(tokens: &Vec<BlockToken>, data: &UserPageIndex, todo_i
             }
         }
     }
-    return RenderResult {
+    RenderResult {
         has_dynamic_content,
         referenced_markdown: references,
         inline_markdown: inline_markdown_result_list.join(" "),
-    };
+    }
 }
 
 pub struct RenderResult {
@@ -188,28 +263,12 @@ fn render_journal_link_str(destination: &String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-    use std::path::PathBuf;
     use crate::looksyk::builder::{journal_link_token, link_token, text_token};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
+    use crate::looksyk::renderer::builder::create_empty_render_context;
     use crate::looksyk::renderer::render_block;
-    use crate::state::state::DataRootLocation;
-    use crate::state::tag::TagIndex;
-    use crate::state::todo::TodoIndex;
-    use crate::state::userpage::UserPageIndex;
-
-    fn empty_todo_index() -> TodoIndex {
-        TodoIndex {
-            entries: vec![]
-        }
-    }
-
-    fn empty_tag_index() -> TagIndex {
-        TagIndex {
-            entries: HashMap::new()
-        }
-    }
+    use crate::state::state::builder::empty_data_root_location;
 
     #[test]
     fn should_serialize_original_text() {
@@ -228,16 +287,10 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "text");
         assert_eq!(result.content.prepared_markdown, "text")
-    }
-
-    fn empty_location() -> DataRootLocation {
-        DataRootLocation {
-            path: PathBuf::new(),
-        }
     }
 
     #[test]
@@ -256,7 +309,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
         assert_eq!(result.content.prepared_markdown, "before [MyPage](page/MyPage) after")
@@ -278,7 +331,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
         assert_eq!(result.content.prepared_markdown, "before [MyPage](journal/MyPage) after")
@@ -299,7 +352,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "[[My Page]]");
         assert_eq!(result.content.prepared_markdown, "[My Page](page/My%20Page)");
@@ -321,7 +374,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "[[link1]] asdf [[link2]]");
         assert_eq!(result.content.prepared_markdown, "[link1](page/link1) asdf [link2](page/link2)");
@@ -353,7 +406,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.has_dynamic_content, false);
     }
@@ -376,7 +429,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.has_dynamic_content, false);
     }
@@ -399,7 +452,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.has_dynamic_content, true);
     }
@@ -428,16 +481,10 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "[ ] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[ ] Mein Todo");
-    }
-
-    fn empty_page_index() -> UserPageIndex {
-        UserPageIndex {
-            entries: HashMap::new()
-        }
     }
 
     #[test]
@@ -461,7 +508,7 @@ mod tests {
             ],
         };
 
-        let result = render_block(&input, &empty_page_index(), &empty_todo_index(), &empty_tag_index(), &mut create_empty_asset_cache(), &empty_location());
+        let result = render_block(&input, &create_empty_render_context().to_static(), &mut create_empty_asset_cache(), &empty_data_root_location());
 
         assert_eq!(result.content.original_text, "[x] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[x] Mein Todo");

@@ -16,7 +16,7 @@ use crate::looksyk::model::{PageType, RawMarkdownFile};
 use crate::looksyk::page_index::{append_user_page_prefix, get_page_type, strip_prefix, strip_user_page_prefix};
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
-use crate::looksyk::renderer::render_file;
+use crate::looksyk::renderer::{render_file, StaticRenderContext};
 use crate::looksyk::serializer::serialize_page;
 use crate::state::state::{AppState, CurrentPageAssociatedState, CurrentPageOnDiskState};
 
@@ -61,7 +61,15 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
     *journal_guard = new_page_associated_state.journal_pages;
 
     let is_fav = is_favourite(&page_name, &data.config.lock().unwrap());
-    let rendered_file = render_file(&updated_page, &page_guard, &todo_guard, &tag_guard, &mut asset_cache, &data.data_path);
+    let rendered_file = render_file(
+        &updated_page,
+        &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_guard,
+            tag_index: &tag_guard,
+        },
+        &mut asset_cache,
+        &data.data_path);
 
     drop(todo_guard);
     drop(tag_guard);
@@ -86,12 +94,23 @@ async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_
     let data_root_location = &data.data_path;
     if page.is_some() {
         let parsed_page = page.unwrap();
-        let prepared_page = render_file(parsed_page, &page_guard, &todo_index_guard, &tag_guard, &mut asset_cache, data_root_location);
+        let prepared_page = render_file(parsed_page,
+                                        &StaticRenderContext {
+                                            user_pages: &page_guard,
+                                            todo_index: &todo_index_guard,
+                                            tag_index: &tag_guard,
+                                        },
+                                        &mut asset_cache, data_root_location);
         return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
     }
     Ok(Json(map_markdown_file_to_dto(render_file(
-        &generate_page_not_found(), &page_guard, &todo_index_guard,
-        &tag_guard, &mut asset_cache, data_root_location), is_fav)))
+        &generate_page_not_found(),
+        &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_index_guard,
+            tag_index: &tag_guard,
+        },
+        &mut asset_cache, data_root_location), is_fav)))
 }
 
 
@@ -109,7 +128,11 @@ async fn get_backlinks(input_page_name: Path<String>, data: Data<AppState>) -> a
 
 
     Ok(Json(map_markdown_file_to_dto(render_file(
-        &result, &page_guard, &todo_index_guard, &tag_guard, &mut asset_cache_guard, data_root_location,
+        &result, &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_index_guard,
+            tag_index: &tag_guard,
+        }, &mut asset_cache_guard, data_root_location,
     ), false)))
 }
 
@@ -121,7 +144,11 @@ async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Respo
     let overview_page = generate_overview_page(&tag_index_guard, &guard);
     let todo_guard = data.todo_index.lock().unwrap();
     let mut asset_cache = data.asset_cache.lock().unwrap();
-    let rendered_file = render_file(&overview_page, &guard, &todo_guard, &tag_index_guard, &mut asset_cache, &data.data_path);
+    let rendered_file = render_file(&overview_page, &StaticRenderContext {
+        user_pages: &guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_index_guard,
+    }, &mut asset_cache, &data.data_path);
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 
@@ -191,7 +218,6 @@ async fn rename_page(body: web::Json<RenamePageDto>, data: Data<AppState>) -> ac
     }
 
 
-
     for file_to_delete in rename_tag_result.file_changes.file_to_delete {
         let simple_page_name = strip_user_page_prefix(&file_to_delete);
         let current_page_associated_state = CurrentPageAssociatedState {
@@ -209,8 +235,6 @@ async fn rename_page(body: web::Json<RenamePageDto>, data: Data<AppState>) -> ac
         *page_guard = new_page_associated_state.user_pages;
         *journal_guard = new_page_associated_state.journal_pages;
     }
-
-
 
 
     Ok(Json(RenamePageResultDto {
@@ -249,5 +273,5 @@ async fn delete_page(input_page_name: Path<String>, data: Data<AppState>) -> act
     drop(page_guard);
     drop(journal_guard);
 
-    Ok(Json(PageDeletedDto{}))
+    Ok(Json(PageDeletedDto {}))
 }
