@@ -5,7 +5,7 @@ use actix_web::web::Data;
 use crate::state::state::AppState;
 
 #[get("/api/design")]
-pub async fn css_theme(app_state: Data<AppState>) -> HttpResponse {
+pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
     let config = app_state.config.lock().unwrap();
     let design = &config.design;
     let css_text = format!("

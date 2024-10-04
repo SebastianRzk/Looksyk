@@ -11,7 +11,6 @@ use crate::io::fs::basic_file::{get_file_size, read_binary_file};
 use crate::io::fs::media::{create_absolute_media_path, destination_path, read_file_sizes, read_media_file, write_media_config, LoadedMedia, MediaOnDisk};
 use crate::io::hash::hash_file_content;
 use crate::io::http::page::mapper::map_markdown_file_to_dto;
-use crate::io::http::media::config::create_media_location;
 use crate::io::http::media::dtos::{FileUploadResult, UploadForm};
 use crate::io::http::media::mapper::{map_to_asset_preview_dto, map_to_dto};
 use crate::looksyk::builtinpage::assets_overview::generate_assets_overview_page;
@@ -25,7 +24,7 @@ use crate::state::state::AppState;
 
 
 #[post("/api/media")]
-pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state: Data<AppState>) -> actix_web::Result<impl Responder> {
+pub async fn upload_file(MultipartForm(form): MultipartForm<UploadForm>, app_state: Data<AppState>) -> actix_web::Result<impl Responder> {
     let filename = form.json.name.clone();
     println!(
         "Uploaded file {}, with size: {}",
@@ -44,11 +43,10 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
         let absolute_destination_path = destination_path(filename.as_str(), &app_state.data_path);
         let name = absolute_destination_path.file_name().unwrap().to_os_string().to_str().unwrap().to_string();
         let new_entry = IndexedMedia {
-            file_name: create_media_location(&name),
+            file_name: name,
             sha3: hash.clone(),
         };
         media_guard.media.push(new_entry.clone());
-        write_media_config(&app_state.data_path, &media_guard);
         fs::write(Path::new(&absolute_destination_path), &file).unwrap();
         write_media_config(&app_state.data_path, &media_guard);
         new_entry
@@ -61,7 +59,7 @@ pub async fn post_file(MultipartForm(form): MultipartForm<UploadForm>, app_state
 
 
 #[get("/api/assets/suggestion/{filename:.*}")]
-pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder> {
+pub async fn compute_asset_suggestion(req: HttpRequest) -> error::Result<impl Responder> {
     let file_name: String = req.match_info().query("filename").parse()?;
     let result = get_suggestion_for_file(&AssetDescriptor::new(file_name));
     let dto = map_to_dto(result);
@@ -70,11 +68,11 @@ pub async fn asset_suggestion(req: HttpRequest) -> error::Result<impl Responder>
 
 
 #[get("/api/builtin-pages/assets-overview")]
-pub async fn assets_overview(data: Data<AppState>) -> error::Result<impl Responder> {
+pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<impl Responder> {
     let file_sizes = read_file_sizes(&data.data_path);
     let media_index = data.media_index.lock().unwrap();
 
-    let assets_overview = generate_assets_overview_page(&media_index, file_sizes);
+    let generate_assets_overview = generate_assets_overview_page(&media_index, file_sizes);
 
     let tag_index_guard = data.tag_index.lock().unwrap();
     let guard = data.user_pages.lock().unwrap();
@@ -87,7 +85,7 @@ pub async fn assets_overview(data: Data<AppState>) -> error::Result<impl Respond
         tag_index: &tag_index_guard,
     };
 
-    let rendered_file = render_file(&assets_overview, &render_context, &mut asset_cache, &data.data_path);
+    let rendered_file = render_file(&generate_assets_overview, &render_context, &mut asset_cache, &data.data_path);
 
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
@@ -115,7 +113,7 @@ pub async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile,
 
 
 #[get("/api/asset-preview/info/{filename:.*}")]
-pub async fn asset_preview(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
+pub async fn get_asset_preview(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
     let path: String = req.match_info().query("filename").parse()?;
 
     let asset_descriptor = AssetDescriptor::new(path);

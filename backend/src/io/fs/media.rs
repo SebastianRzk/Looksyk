@@ -67,19 +67,24 @@ pub fn read_file_sizes(data_root_location: &DataRootLocation) -> HashMap<String,
 
 
 pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -> PathBuf {
-    let timestamp = Utc::now().format("%Y_%m_%d_%H_%M_%S").to_string();
+    let timestamp = Utc::now().format("%Y%m%d_%H%M%S").to_string();
 
-    let (filestem, file_ending) = parse_name(filename);
+    let parsed_file_name = parse_name(filename);
 
-    let filename = format!("{}_{}.{}", filestem, timestamp, file_ending);
+    let escaped_filename = escape_stem(parsed_file_name);
+
+    let filename = format!("{}_{}.{}", escaped_filename.filestem, timestamp, escaped_filename.file_ending);
     create_absolute_media_path(&MediaOnDisk {
         name: filename
     }, data_root_location)
 }
 
-fn parse_name(filename: &str) -> (String, String) {
+fn parse_name(filename: &str) -> ParsedFilenName {
     if !filename.contains(".") {
-        return (filename.to_string(), "".to_string())
+        return ParsedFilenName {
+            filestem: filename.to_string(),
+            file_ending: "".to_string(),
+        };
     }
 
     let parsed_filename = filename.split(".").collect::<Vec<&str>>();
@@ -88,7 +93,10 @@ fn parse_name(filename: &str) -> (String, String) {
     let last_index = parsed_filename.len() - 1;
     let file_ending = &parsed_filename[last_index];
 
-    (filestem.clone(), file_ending.to_string())
+    ParsedFilenName {
+        filestem: filestem.clone(),
+        file_ending: file_ending.to_string(),
+    }
 }
 
 pub fn create_absolute_media_path(file: &MediaOnDisk, data_root_location: &DataRootLocation) -> PathBuf {
@@ -111,7 +119,7 @@ pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::R
 pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation) -> MediaState {
     let media_path = create_absolute_media_path(media_on_disk, location);
     println!("Checking media path: {}", media_path.to_str().unwrap());
-    if ! exists_file(media_path.clone()) {
+    if !exists_file(media_path.clone()) {
         return MediaState::NotFound;
     }
 
@@ -132,6 +140,18 @@ pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaO
         });
     }
     result
+}
+
+fn escape_stem(parsed_filen_name: ParsedFilenName) -> ParsedFilenName {
+    ParsedFilenName {
+        filestem: parsed_filen_name.filestem
+            .replace("[", "_")
+            .replace(']', "_")
+            .replace("!", "")
+            .replace("?", "")
+            .replace("#", ""),
+        file_ending: parsed_filen_name.file_ending,
+    }
 }
 
 
@@ -159,9 +179,39 @@ pub struct LoadedMedia {
 
 pub enum MediaState {
     Found(MediaSize),
-    NotFound
+    NotFound,
 }
 
-pub struct MediaSize{
-    pub size: u64
+pub struct MediaSize {
+    pub size: u64,
+}
+
+pub struct ParsedFilenName {
+    pub filestem: String,
+    pub file_ending: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::io::fs::media::{escape_stem, parse_name};
+
+    #[test]
+    fn test_parse_name_with_extension() {
+        let parsed_file_name = parse_name("test.txt");
+        assert_eq!(parsed_file_name.filestem, "test");
+        assert_eq!(parsed_file_name.file_ending, "txt");
+    }
+
+    #[test]
+    fn test_parse_name_without_extension() {
+        let parsed_file_name = parse_name("test");
+        assert_eq!(parsed_file_name.filestem, "test");
+        assert_eq!(parsed_file_name.file_ending, "");
+    }
+
+    #[test]
+    fn test_escape_filestem() {
+        assert_eq!(escape_stem(parse_name("test[1].txt")).filestem, "test_1_");
+        assert_eq!(escape_stem(parse_name("test?!#.txt")).filestem, "test");
+    }
 }

@@ -2,9 +2,6 @@ use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::Mutex;
 
-use actix_web::web::Data;
-use actix_web::{App, HttpServer};
-use actix_web::middleware::Logger;
 use crate::configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder};
@@ -15,15 +12,15 @@ use crate::io::fs::media::{init_media, read_media_config, write_media_config};
 use crate::io::fs::pages::{read_all_journal_files, read_all_user_files};
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http::design;
-use crate::io::http::markdown;
 use crate::io::http::favourites;
+use crate::io::http::markdown;
 use crate::io::http::media;
 use crate::io::http::metainfo;
-use crate::io::http::r#static;
-use crate::io::http::page::userpage;
+use crate::io::http::page;
 use crate::io::http::page::journalpage;
 use crate::io::http::page::search;
-use crate::io::http::page;
+use crate::io::http::page::userpage;
+use crate::io::http::r#static;
 use crate::looksyk::config::config::{Config, Design};
 use crate::looksyk::index::asset::create_empty_asset_cache;
 use crate::looksyk::index::media::MediaIndex;
@@ -31,6 +28,9 @@ use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
 use crate::state::state::{AppState, DataRootLocation};
+use actix_web::middleware::Logger;
+use actix_web::web::Data;
+use actix_web::{App, HttpServer};
 
 mod looksyk;
 mod state;
@@ -81,9 +81,9 @@ async fn main() -> std::io::Result<()> {
             .service(favourites::endpoints::delete_favourite)
             .service(favourites::endpoints::get_favourites)
             .service(favourites::endpoints::update_favourites)
-            .service(media::endpoints::post_file)
-            .service(media::endpoints::asset_suggestion)
-            .service(design::endpoints::css_theme)
+            .service(media::endpoints::upload_file)
+            .service(media::endpoints::compute_asset_suggestion)
+            .service(design::endpoints::get_css_theme)
             .service(metainfo::endpoints::get_metainfo)
             .service(r#static::endpoints::fav)
             .service(r#static::endpoints::index_html)
@@ -95,8 +95,8 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::emoji)
             .service(r#static::endpoints::asset_js)
             .service(media::endpoints::assets)
-            .service(media::endpoints::assets_overview)
-            .service(media::endpoints::asset_preview)
+            .service(media::endpoints::generate_assets_overview)
+            .service(media::endpoints::get_asset_preview)
             .service(search::endpoints::search_in_files)
             .service(r#static::endpoints::catch_all_journal)
             .service(r#static::endpoints::catch_all_journals)

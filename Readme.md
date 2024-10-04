@@ -2,6 +2,25 @@
 
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Current Status](#current-status)
+- [Implemented Features](#implemented-features)
+- [Out of Scope](#out-of-scope)
+- [Run Looksyk](#run-looksyk)
+	- [Production Build / Installation](#production-build--installation)
+	- [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+	- [Development Build](#development-build)
+- [Migrate Your Existing Logseq Graph](#migrate-your-existing-logseq-graph-to-looksyk)
+- [Configuration](#configuration)
+- [Basic Commands](#basic-commands)
+- [Queries](#queries)
+- [Contribution Guidelines](#contribution-guidelines)
+- [License](#license)
+
+## Introduction
+
 I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the
 many control characters in the markdown files, the query language that is difficult to learn and limited in its
 capability, or the general
@@ -9,9 +28,9 @@ performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
 
-## Current status of the project
+## Current status
 
-**Technical concept**
+### Technical concept
 
 With Looksyk I want to create a local platform to collect information.
 
@@ -31,7 +50,7 @@ The frontend still has some challenges. Performance and design can be improved a
 page has
 issues.
 
-**Project work and future**
+### Project work and future
 
 The project is a little hobby of mine, and I program a few lines sometimes when I feel like it and have the time.
 
@@ -40,7 +59,7 @@ I am happy about every contribution, but I cannot guarantee that I will implemen
 If you have any changes or suggestions, please send me a pull request.
 For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
-** Implemented Features **
+### Implemented Features
 
 * Pages
 * Journal
@@ -65,23 +84,6 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
-
-** Planned Features / Ideas **
-
-* Page templates
-	* Default template for journal page
-	* Template variables
-* Journal
-	* Calendar view
-	* Week view
-* Theming
-	* Visual theme editor
-	* Prebuild CSS themes
-	* Toggle for dark / light mode
-* Queries
-	* Render bar / pie charts from csv and json files
-	* Insert tables from csv files
-	* Support UML rendering with [kroki](https://kroki.io/)
 
 ### Out of scope
 
@@ -206,3 +208,16 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  Insert an audio file
  {query: insert-file-content target-file:"myFile.ogg" display:"audio" }
 ```
+
+## Contribution Guidelines
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Create a new Pull Request.
+
+## License
+
+This project is licensed under the AGPL3 License - see the `LICENSE` file for details.
