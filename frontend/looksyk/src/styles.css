@@ -70,6 +70,7 @@ iframe {
   width: 80vw;
   height: 80vh;
   overflow: scroll;
+  background-color: white;
 }
 
 h1 > a {
