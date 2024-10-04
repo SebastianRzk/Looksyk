@@ -8,8 +8,9 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 
 - [Introduction](#introduction)
 - [Current Status](#current-status)
-- [Implemented Features](#implemented-features)
-- [Out of Scope](#out-of-scope)
+	- [Technical concept](#technical-concept) 
+	- [Implemented Features](#implemented-features)
+	- [Out of Scope](#out-of-scope)
 - [Run Looksyk](#run-looksyk)
 	- [Production Build / Installation](#production-build--installation)
 	- [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
