@@ -1,5 +1,7 @@
 # Looksyk
 
+![logo](icon/Looksyk-scaled.png)
+
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
 ## Table of Contents
@@ -92,6 +94,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Dynamic backend plugins
 * Server version / multi user / rcs
 * i18n
+* Sync with other devices. Please use other tools like [Nextcloud](https://nextcloud.com/install/), [git](https://git-scm.com/) or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your graph
 
 ## Run Looksyk
 
