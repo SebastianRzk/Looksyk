@@ -17,8 +17,18 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 	- [Development Build](#development-build)
 - [Migrate Your Existing Logseq Graph](#migrate-your-existing-logseq-graph-to-looksyk)
 - [Configuration](#configuration)
-- [Basic Commands](#basic-commands)
-- [Queries](#queries)
+- [Usage](#usage)
+	- [Markdown Syntax and Features](#markdown-syntax-and-features)
+	- [Navigation](#navigation)
+	- [Page names and hierarchy](#page-names-and-hierarchy)
+	- [Favorites](#favorites)
+	- [Code](#code)
+	- [Todos](#todos)
+    - [Queries](#queries)
+      - [Query Page Hierarchy](#query-page-hierarchy)
+      - [Query Todos](#query-todos)
+      - [Query Backlinks](#query-backlinks)
+      - [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
 
@@ -142,23 +152,68 @@ The default graph location is in `~/graph` (or the configured location in the `c
 
 The application port and the graph location can be provided by arguments ( `--port` and `--graph-location`).
 
-## Basic commands
+## Usage
 
+
+### Markdown Syntax and Features
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
-* `[ ]` creates a todo
-* `[x]` marks a todo as done
 * Ctrl+Enter creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
 * Ctrl+Space opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
+
+### Navigation
+
 * Ctrl+Shift+F opens the content assist in "search mode" (case sensitive search across all pages and journals)
 
-## Queries
+### Page names and hierarchy
 
-Currently, queries must be inserted exactly as described. Parameters cannot (yet) be swapped or omitted.
+* Every tag `[[myTag]]` links to a page with the name `myTag`
+* To create a hierarchy, use the `/` character in the page name. `[[myTag / mySubTag]]` creates a page `myTag / mySubTag` in the
+  and the parent tag `myTag`
+* You can navigate to the parent page by clicking on the parent tag in the page header
+* You can query the page hierarchy with the query `page-hierarchy` (see [page hierarchy](#query-page-hierarchy))
 
-### Page Hierarchy
+### Favorites
+
+* You can mark a page as favorite by clicking on the star next to the page title
+* Favorites are displayed in the sidebar
+* You can reorder the favorites by dragging them
+
+### Code
+
+* Code block start with three backticks and the language name (e.g. ```rust)
+* Code blocks are highlighted with [highlightjs](https://highlightjs.org/). For proper highlighting, the language name must be
+  provided
+* Code blocks can be inserted with the query `insert-file-content` (see [render assets](#query-render-assets-insert-content-from-file))
+
+
+### Todos
+
+* Todo-blocks are blocks with a leading `[ ]` for todo or `[x]` for done. The rendered block has a checkbox that can be
+  toggled
+* You can query todos with the query `todos` (see [todos](#todos))
+* A todo block can be associated with a tags. 
+  * The todo is always tagged with the tag of the page it is on. If the todo is
+    on a page with the tag `myTag`, the todo is also tagged with `myTag`. 
+  * Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the todo.
+  * All tags in previous blocks that have a lower indentation will also be associated with the todo.
+
+
+### Queries
+
+Queries are placeholders for dynamic content in Markdown. The result of the query is calculated and displayed dynamically at runtime, whereby only the query syntax and not the result is stored in the Markdown file on disk.
+
+Queries are particularly suitable for three problems:
+
+* Content that changes continuously over time and where the references should be dynamically adapted across all pages. For example, "Which todos for the tag "myTag" are not yet completed?" or "which subpages does the page myTag have?".
+* Content that is not stored in the Markdown file, but should be displayed in the Markdown file. For example, "Insert the content of the file myFile.asdf as a code block" or "Insert the content of the file myFile.mp4 as a video".
+* Content that is not supported by the Markdown standard, but should be displayed in the Markdown file. For example, "Insert a video" or "Insert an audio file".
+
+Currently,all queries must be inserted exactly as described. Parameters cannot yet be swapped or omitted.
+
+#### Query Page Hierarchy
 
 ```
  Show a list of links
@@ -168,7 +223,7 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  {query: page-hierarchy root:"myRootTag" display:"count" }
 ```
 
-### Todos
+#### Query Todos
 
 ```
  Show a list of todos with a checkbox and a link to the source file. The list is appended to the end of the current block
@@ -184,7 +239,7 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  {query: todos tag:"myTag" state:"done" display:"referenced-list" }
 ```
 
-### Backlinks
+#### Query Backlinks
 
 ```
  Show a list of backlinks
@@ -194,7 +249,7 @@ Currently, queries must be inserted exactly as described. Parameters cannot (yet
  {query: references-to tag:"myTag" display:"count" }
 ```
 
-### Render assets ("insert-content-from-file")
+#### Query Render Assets ("insert-content-from-file")
 
 ```
  Insert the content of a file as text block
