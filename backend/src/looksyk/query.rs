@@ -201,7 +201,7 @@ mod tests {
             &mut create_empty_asset_cache(),
             &empty_data_root_location());
 
-        assert_eq!(result.inplace_markdown, "display type referenced-list not suppoerted for querytype");
+        assert_eq!(result.inplace_markdown, "display type referenced-list not supported for querytype");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 

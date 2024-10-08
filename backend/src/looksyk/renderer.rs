@@ -276,12 +276,7 @@ mod tests {
             indentation: 0,
             content: vec![
                 BlockContent {
-                    as_tokens: vec![
-                        BlockToken {
-                            payload: "text".to_string(),
-                            block_token_type: BlockTokenType::TEXT,
-                        },
-                    ],
+                    as_tokens: vec![text_token("text")],
                     as_text: "text".to_string(),
                 }
             ],

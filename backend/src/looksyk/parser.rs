@@ -49,7 +49,7 @@ impl BlockTokenPattern {
         if pattern.chars().nth(state.current_index).unwrap() == c {
             return state.current_index + 1;
         }
-        return 0;
+        0
     }
 }
 

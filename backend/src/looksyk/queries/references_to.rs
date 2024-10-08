@@ -20,11 +20,11 @@ pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
     let mut args1 = HashMap::new();
     args1.insert(PARAM_TARGET.to_string(), query_target_opt.value);
     let (display_type, args) = (display_type, args1);
-    return Ok(Query {
+    Ok(Query {
         query_type: QueryType::ReferencesTo,
         display: display_type,
         args,
-    });
+    })
 }
 
 
@@ -46,11 +46,11 @@ pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderR
 
 
 pub fn render_as_count(refs: &HashSet<PageId>) -> QueryRenderResult {
-    return QueryRenderResult {
+    QueryRenderResult {
         inplace_markdown: refs.len().to_string(),
         referenced_markdown: vec![],
         has_dynamic_content: false,
-    };
+    }
 }
 
 fn render_as_list(page_name: &SimplePageName, refs: &HashSet<PageId>) -> QueryRenderResult {

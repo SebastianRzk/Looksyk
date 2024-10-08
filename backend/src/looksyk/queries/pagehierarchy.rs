@@ -27,10 +27,10 @@ pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
 
 pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderResult {
     let root = query.args.get(PARAM_ROOT).unwrap();
-    let mut keys: Vec<&SimplePageName> = data.entries.keys().into_iter().collect();
-    keys.sort_unstable_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    let keys: Vec<&SimplePageName> = data.entries.keys().into_iter().collect();
 
-    let result = filter_pages_by_root(root, &mut keys);
+    let mut result = filter_pages_by_root(root, keys);
+    result.sort_unstable_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
 
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(root, result),
@@ -39,18 +39,18 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
     }
 }
 
-fn filter_pages_by_root(root: &String, keys: &mut Vec<&SimplePageName>) -> Vec<SimplePageName> {
+fn filter_pages_by_root<'a>(root: &String, keys: Vec<&'a SimplePageName>) -> Vec<&'a SimplePageName> {
     let mut result = vec![];
 
     for page in keys {
         if page.name.starts_with(root) {
-            result.push(page.clone());
+            result.push(page);
         }
     }
     result
 }
 
-pub fn render_as_count(selected_pages: Vec<SimplePageName>) -> QueryRenderResult {
+pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
     QueryRenderResult {
         referenced_markdown: vec![],
         inplace_markdown: selected_pages.len().to_string(),
@@ -58,7 +58,7 @@ pub fn render_as_count(selected_pages: Vec<SimplePageName>) -> QueryRenderResult
     }
 }
 
-pub fn render_as_list(root_name: &String, selected_pages: Vec<SimplePageName>) -> QueryRenderResult {
+pub fn render_as_list(root_name: &String, selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
     let mut result = format!("{}:\n", root_name);
     for page in selected_pages {
         result.push_str("- ");
@@ -104,7 +104,7 @@ mod test {
             &page_bar,
             &page_bar_baz,
         ];
-        let result = super::filter_pages_by_root(&root, &mut keys);
+        let result = super::filter_pages_by_root(&root, keys);
         assert_eq!(result.len(), 3);
         assert_eq!(result[0].name, "foo");
         assert_eq!(result[1].name, "foo/bar");
