@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use actix_web::{get, Responder, web};
 use actix_web::web::Data;
-use crate::io::http::metainfo::dtos::{MetaInfoDto, Title};
+use crate::io::http::metainfo::dtos::{MetaInfoDto, TitleDto};
 use crate::looksyk::model::{PageId, PageType};
 use crate::looksyk::page_index::{get_page_type, strip_prefix};
 use crate::state::state::AppState;
@@ -9,7 +9,7 @@ use crate::state::state::AppState;
 
 #[get("/api/title")]
 async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    Ok(web::Json(Title{
+    Ok(web::Json(TitleDto {
         title: data.title.clone()
     }))
 }

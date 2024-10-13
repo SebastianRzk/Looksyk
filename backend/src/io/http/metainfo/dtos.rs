@@ -7,6 +7,6 @@ pub struct MetaInfoDto {
 }
 
 #[derive(Serialize)]
-pub struct Title {
+pub struct TitleDto {
     pub title: String,
 }
