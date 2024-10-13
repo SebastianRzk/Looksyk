@@ -1,10 +1,18 @@
 use std::collections::HashSet;
 use actix_web::{get, Responder, web};
 use actix_web::web::Data;
-use serde::Serialize;
+use crate::io::http::metainfo::dtos::{MetaInfoDto, Title};
 use crate::looksyk::model::{PageId, PageType};
 use crate::looksyk::page_index::{get_page_type, strip_prefix};
 use crate::state::state::AppState;
+
+
+#[get("/api/title")]
+async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
+    Ok(web::Json(Title{
+        title: data.title.clone()
+    }))
+}
 
 #[get("/api/metainfo/")]
 async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder> {
@@ -42,10 +50,4 @@ fn to_meta(page_id: &PageId) -> TagMeta{
 struct TagMeta {
     simple_name: String,
     page_type: PageType
-}
-
-#[derive(Serialize)]
-struct MetaInfoDto {
-    tags: Vec<String>,
-    media: Vec<String>,
 }

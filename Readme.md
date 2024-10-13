@@ -114,15 +114,14 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 1. Run the script `bash build.sh` (this will build the frontend and backend, and requires `npm` and `cargo`)
 2. The application is now in the `target` folder
 3. (Optional) Create a shortcut icon `sh create_desktop_shortcut.sh`
-4. Start the application. Use the created shortcut or run `./looksyk` in the `target` folder. You can instrument the
-   application with the arguments `--port` and `--graph-location` to change the port and the graph location.
+4. Start the application. Use the created shortcut or run `./application-wrapper/looksyk` in the `target` folder. You can instrument the
+   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with `--title` to change the title.
 5. The application is now available at `http://localhost:8989` (or the configured port)
 
 ### Running different looksyk graphs at the same time (with different ports)
 
 You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or
-you can run the
-application with the arguments `--port` and `--graph-location` manually.
+you can run the application with the arguments `--port`, `--graph-location` and `--title` manually.
 
 ### Development Build
 
@@ -151,6 +150,8 @@ with the environment variable `LOOKSYK_CONFIG_PATH`.
 The default graph location is in `~/graph` (or the configured location in the `config.json`).
 
 The application port and the graph location can be provided by arguments ( `--port` and `--graph-location`).
+
+The application title can be modified with the argument `--title`.
 
 ## Usage
 

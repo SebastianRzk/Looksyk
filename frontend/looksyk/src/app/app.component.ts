@@ -2,6 +2,8 @@ import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular
 import { UseractionService } from "./services/useraction.service";
 import { firstValueFrom } from "rxjs";
 import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
+import {Title} from "@angular/platform-browser";
+import {TitleService} from "./services/title.service";
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,9 @@ export class AppComponent {
 
   userAction = inject(UseractionService);
   contentAssist = inject(ContentAssistService);
+  title = inject(Title);
+  titleService = inject(TitleService);
+  title_ = this.titleService.loadTitle().then(title => this.title.setTitle(title));
 
   @ViewChild('content')
   content!: ElementRef;

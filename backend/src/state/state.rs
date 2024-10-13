@@ -10,6 +10,7 @@ use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
 
 pub struct AppState {
+    pub title: String,
     pub media_index: Mutex<MediaIndex>,
     pub data_path: DataRootLocation,
     pub user_pages: Mutex<UserPageIndex>,

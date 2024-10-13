@@ -4,7 +4,7 @@ use crate::looksyk::model::SimplePageName;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub favourites: Vec<Favourite>,
-    pub design: Design
+    pub design: Design,
 }
 
 
@@ -36,7 +36,7 @@ pub fn config_with_fav(fav: &str) -> Config {
             name: SimplePageName {
                 name: fav.to_string()
             }
-        }]
+        }],
     }
 }
 

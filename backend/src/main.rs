@@ -2,7 +2,7 @@ use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::Mutex;
 
-use crate::configuration::APPLICATION_HOST;
+use crate::configuration::{APPLICATION_HOST};
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder};
 use crate::io::fs::basic_folder::home_directory;
@@ -29,7 +29,7 @@ use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
 use crate::state::state::{AppState, DataRootLocation};
 use actix_web::middleware::Logger;
-use actix_web::web::Data;
+use actix_web::web:: {Data};
 use actix_web::{App, HttpServer};
 
 mod looksyk;
@@ -58,7 +58,7 @@ async fn main() -> std::io::Result<()> {
         init_empty_graph(&data_root_location);
     }
 
-    let app_state = create_app_state(data_root_location);
+    let app_state = create_app_state(data_root_location, config.application_title);
 
 
     println!("Starting Looksyk on  http://{}:{}", APPLICATION_HOST, config.application_port);
@@ -85,6 +85,7 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::compute_asset_suggestion)
             .service(design::endpoints::get_css_theme)
             .service(metainfo::endpoints::get_metainfo)
+            .service(metainfo::endpoints::get_title)
             .service(r#static::endpoints::fav)
             .service(r#static::endpoints::index_html)
             .service(r#static::endpoints::css)
@@ -127,7 +128,7 @@ fn init_empty_graph(data_root_location: &DataRootLocation) {
     create_folder(data_root_location.path.join("pages"));
 }
 
-fn create_app_state(data_root_location: DataRootLocation) -> Data<AppState> {
+fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data<AppState> {
     let mut media_index = read_media_config(&data_root_location);
     media_index = init_media(&data_root_location, &media_index);
     write_media_config(&data_root_location, &media_index);
@@ -145,6 +146,7 @@ fn create_app_state(data_root_location: DataRootLocation) -> Data<AppState> {
     println!("all data refreshed");
 
     let app_state = Data::new(AppState {
+        title,
         media_index: Mutex::new(media_index),
         data_path: data_root_location,
         config: Mutex::new(config),
