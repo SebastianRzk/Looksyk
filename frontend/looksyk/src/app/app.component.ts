@@ -1,22 +1,23 @@
-import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { UseractionService } from "./services/useraction.service";
-import { firstValueFrom } from "rxjs";
 import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
-import {Title} from "@angular/platform-browser";
-import {TitleService} from "./services/title.service";
+import { Title } from "@angular/platform-browser";
+import { TitleService } from "./services/title.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
 
   userAction = inject(UseractionService);
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
   titleService = inject(TitleService);
-  title_ = this.titleService.loadTitle().then(title => this.title.setTitle(title));
+  title_: Subscription = this.titleService.title$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
 
   @ViewChild('content')
   content!: ElementRef;
@@ -31,6 +32,10 @@ export class AppComponent {
         return;
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.titleService.update();
   }
 
   @HostListener('window:keyup', ['$event'])

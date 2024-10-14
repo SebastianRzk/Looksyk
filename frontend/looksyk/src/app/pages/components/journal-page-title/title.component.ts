@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from "rxjs";
 import { RouterLink } from "@angular/router";
+import { HistoryService } from "../../../services/history.service";
 
 @Component({
   selector: 'app-journal-page-title',
@@ -14,6 +15,9 @@ export class TitleComponent implements OnChanges {
   @Input({required: true})
   title_date!: string;
 
+  @Input({required: true})
+  push_history!: boolean;
+
   @Input({required: false})
   rootPath: string = "/journal/";
 
@@ -21,6 +25,8 @@ export class TitleComponent implements OnChanges {
     name: "", link: ""
   });
   parsedTitle$ = this.parsedTitle.asObservable();
+
+  private historyService = inject(HistoryService);
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -37,6 +43,12 @@ export class TitleComponent implements OnChanges {
         link: this.rootPath + this.title_date
       }
     )
+    if(this.push_history){
+      this.historyService.pushEntry(
+        localeString,
+        this.rootPath + this.title_date
+      )
+    }
   }
 
   private appendDescription(splitted_date: string[], localeString: string) {

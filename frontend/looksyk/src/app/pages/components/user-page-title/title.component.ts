@@ -1,7 +1,8 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BehaviorSubject, Subject} from "rxjs";
 import {RouterLink} from "@angular/router";
+import { HistoryService } from "../../../services/history.service";
 
 @Component({
   selector: 'app-user-page-title',
@@ -11,6 +12,7 @@ import {RouterLink} from "@angular/router";
   styleUrls: ['./title.component.css']
 })
 export class TitleComponent implements OnChanges {
+
   @Input({required: true})
   title!: string | null;
 
@@ -22,6 +24,8 @@ export class TitleComponent implements OnChanges {
   }]);
   parsedTitle$ = this.parsedTitle.asObservable();
 
+
+  private historyService : HistoryService = inject(HistoryService);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.title) {
@@ -47,6 +51,9 @@ export class TitleComponent implements OnChanges {
       });
     }
     this.parsedTitle.next(result);
+    if(this.title){
+      this.historyService.pushEntry(this.title, this.rootPath + this.title);
+    }
   }
 }
 

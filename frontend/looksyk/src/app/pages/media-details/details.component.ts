@@ -7,6 +7,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MediaPreview, MediaService } from "../../services/media.service";
 import { MarkdownComponent } from "../components/markdown/markdown.component";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { HistoryService } from "../../services/history.service";
 
 @Component({
   selector: 'app-media-details-overview',
@@ -23,6 +24,8 @@ export class DetailsComponent implements OnInit {
 
   public pageName: Subject<string> = new BehaviorSubject("");
   public pageName$ = this.pageName.asObservable();
+
+  private historyService = inject(HistoryService);
 
 
   public mediaInfo: Subject<MediaPreview> = new BehaviorSubject({
@@ -46,6 +49,7 @@ export class DetailsComponent implements OnInit {
         this.mediaService.getMediaPreviewInfo(pageName).subscribe(
           mediaPreview => this.mediaInfo.next(mediaPreview)
         );
+        this.historyService.pushEntry(pageName, "/assets/" + pageName);
       });
   }
 

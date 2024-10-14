@@ -1,4 +1,4 @@
 <div class="top">
-  <app-journal-page-title *ngIf="pageName$ | async as p" [title_date]="p"></app-journal-page-title>
+  <app-journal-page-title *ngIf="pageName$ | async as p" [title_date]="p" [push_history]="true"></app-journal-page-title>
 </div>
 <app-show-page *ngIf="page$ | async as p" [page]="p" [scrollIntoView]="true"></app-show-page>

@@ -1,5 +1,6 @@
 <div class="title">
   <h1>Looksyk</h1>
+  <p>{{titleService.title$ | async}}</p>
 </div>
 <mat-divider></mat-divider>
 
@@ -12,6 +13,15 @@
 <mat-divider></mat-divider>
 
 
-<div class="fav-button-list" *ngIf="favs$ | async as favs" cdkDropList (cdkDropListDropped)="drop($event)">
-  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" cdkDrag>{{fav}}</button>
+<div class="menu-button-list" *ngIf="favs$ | async as favs" cdkDropList (cdkDropListDropped)="drop($event)">
+  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" cdkDrag><mat-icon>star</mat-icon>{{fav}}</button>
+</div>
+
+<mat-divider></mat-divider>
+
+<button mat-button (click)="onBack()"><mat-icon>navigate_before</mat-icon></button>
+<button mat-button (click)="onNext()"><mat-icon>navigate_next</mat-icon></button>
+<button mat-button (click)="onDelete()"><mat-icon>delete</mat-icon></button>
+<div class="menu-button-list" *ngIf="history$ | async as historyEntry">
+  <button *ngFor="let history of historyEntry" mat-button [routerLink]="history.url"><mat-icon>history</mat-icon>{{history.title}}</button>
 </div>

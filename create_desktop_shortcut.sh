@@ -13,7 +13,7 @@ Name=Looksyk - $graphname
 GenericName=Markdown knowledge platform
 Icon=$HOME/.local/share/icons/looksyk-logo.png
 Path=$PWD/target/
-Terminal=true
+Terminal=false
 Exec=bash -c 'cd \"$PWD/target/\" && $PWD/target/application-wrapper/looksyk --graph-location $graphpath --port $graphport --title $graphname'" >   ~/.local/share/applications/Looksyk-"$graphname".desktop
 
 cp ./icon/Looksyk-scaled.png ~/.local/share/icons/looksyk-logo.png

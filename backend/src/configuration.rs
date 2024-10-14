@@ -31,7 +31,7 @@ impl Configuration {
             overwrite_graph_location: cli_args.graph_location.map(|s| DataRootLocation {
                 path: s.into(),
             }),
-            application_title: cli_args.application_title.map(|x| format!("Looksyk - {}", x)).unwrap_or(self.application_title.clone()),
+            application_title: cli_args.application_title.unwrap_or(self.application_title.clone()),
             application_host: self.application_host.clone(),
             max_inline_filesize: self.max_inline_filesize,
         }

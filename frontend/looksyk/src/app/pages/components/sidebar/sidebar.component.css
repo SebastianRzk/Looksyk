@@ -1,12 +1,19 @@
-.menu-button-list, .fav-button-list {
+.menu-button-list {
   display: flex;
   flex-direction: column;
 }
 
-.menu-button-list > button , .fav-button-list > button {
+.menu-button-list > button {
   width: 100%;
   justify-content: start;
   padding: 0.5ex 0.5ex 0.5ex 4ex;
+  text-wrap: pretty;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+.menu-button-list > button > mat-icon {
+  min-width: fit-content;
 }
 
 mat-divider {
@@ -17,5 +24,9 @@ mat-divider {
 .title {
   font-size: large;
   display: flex;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  text-align: center;
   justify-content: center;
 }

@@ -1,12 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { FavouriteService } from "../../../services/favourite.service";
 import { MatIconModule } from "@angular/material/icon";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { firstValueFrom } from "rxjs";
+import { TitleService } from "../../../services/title.service";
+import { HistoryService } from "../../../services/history.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -15,9 +17,30 @@ import { firstValueFrom } from "rxjs";
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit{
+export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);
+  titleService = inject(TitleService);
   favs$ = this.favoriteService.favourites$;
+
+
+  private history: HistoryService = inject(HistoryService);
+  public history$ = this.history.history$
+
+
+  router = inject(Router);
+
+  onDelete() {
+    this.history.deleteAll();
+  }
+
+  onNext() {
+    window.history.forward();
+  }
+
+  onBack() {
+    window.history.back();
+  }
+
 
   ngOnInit(): void {
     this.favoriteService.updateFavourites();
@@ -31,3 +54,4 @@ export class SidebarComponent implements OnInit{
 
   protected readonly encodeURIComponent = encodeURIComponent;
 }
+
