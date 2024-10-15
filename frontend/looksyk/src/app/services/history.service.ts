@@ -10,7 +10,7 @@ export class HistoryService {
   private history: Subject<HistoryEntry[]> = new BehaviorSubject<HistoryEntry[]>([]);
   public history$ = this.history.asObservable();
 
-  public async pushEntry(title: string, url: string): Promise<void> {
+  public async pushEntry(title: string, url: string[]): Promise<void> {
     let history = [...await firstValueFrom(this.history$)];
     if (history.length >= this.MAX_HISTORY) {
       history.shift();
@@ -28,6 +28,6 @@ export class HistoryService {
 }
 
 export interface HistoryEntry {
-  url: string;
+  url: string[];
   title: string;
 }

@@ -43,10 +43,10 @@ export class TitleComponent implements OnChanges {
         link: this.rootPath + this.title_date
       }
     )
-    if(this.push_history){
+    if (this.push_history) {
       this.historyService.pushEntry(
         localeString,
-        this.rootPath + this.title_date
+        [this.rootPath, this.title_date]
       )
     }
   }

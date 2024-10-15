@@ -49,7 +49,7 @@ export class DetailsComponent implements OnInit {
         this.mediaService.getMediaPreviewInfo(pageName).subscribe(
           mediaPreview => this.mediaInfo.next(mediaPreview)
         );
-        this.historyService.pushEntry(pageName, "/assets/" + pageName);
+        this.historyService.pushEntry(pageName, ["/assets/", pageName]);
       });
   }
 

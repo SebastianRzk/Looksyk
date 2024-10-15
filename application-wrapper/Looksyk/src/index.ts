@@ -12,6 +12,7 @@ interface Options {
     "graph-location"?: string
     port?: number
     title?: string,
+    devtools?: boolean
 }
 
 function optionsToArgs(options: Options): string[]{
@@ -31,7 +32,8 @@ function optionsToArgs(options: Options): string[]{
 const argumentConfig: ArgumentConfig<Options> = {
     port: {type: Number, optional: true},
     "graph-location": {type: String, optional: true},
-    title: {type: String, optional: true}
+    title: {type: String, optional: true},
+    devtools: {type: Boolean, optional: true}
 }
 
 const args: Options = parse<Options>(argumentConfig, {argv: process.argv.slice(1), partial: true});
@@ -106,7 +108,9 @@ const createWindow = async (): Promise<void> => {
     // and load the index.html of the app.
     mainWindow.loadURL(`http://localhost:${port}/`);
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
+    if(args.devtools){
+        mainWindow.webContents.openDevTools();
+    }
 
     globalShortcut.register('Alt+Left', () => {
         mainWindow.webContents.navigationHistory.goBack();

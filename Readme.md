@@ -49,7 +49,7 @@ With Looksyk I want to create a local platform to collect information.
 
 Currently, the backend renders all content in Markdown, which is displayed with [Marked](https://marked.js.org/) in the
 frontend. This makes Looksyk relatively close to the Markdown standard. Code highlighting is done
-with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/).
+with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/). The application is wrapped in an electron app (with [electron forge](https://www.electronforge.io/)).
 
 Even if the project is currently a pure web project, I would not deploy it publicly because the project in its current
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
@@ -89,7 +89,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 	* Audio (html5 audio player)
 	* Code (with highlighting)
 	* Text files
-* Queries
+* Queries (placeholders for dynamic content)
 	* Query todos
 	* Page hierarchy
 	* References
@@ -97,6 +97,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
+* History: Show, drop, navigate to previous and next page. Keyboard shortcurts available.
 
 ### Out of scope
 
@@ -115,7 +116,7 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 2. The application is now in the `target` folder
 3. (Optional) Create a shortcut icon `sh create_desktop_shortcut.sh`
 4. Start the application. Use the created shortcut or run `./application-wrapper/looksyk` in the `target` folder. You can instrument the
-   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with `--title` to change the title.
+   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with `--title` to change the title. With the argument `--devtools true` the electron devtools are opened as default.
 5. The application is now available at `http://localhost:8989` (or the configured port)
 
 ### Running different looksyk graphs at the same time (with different ports)
@@ -125,9 +126,22 @@ you can run the application with the arguments `--port`, `--graph-location` and 
 
 ### Development Build
 
+#### Build backend and frontend
+
 1. Clone the repository
 2. Install frontend dependencies and run `cd frontend/looksyk`, `npm install`, `ng serve`
 3. Install backend dependencies and run `cd backend` and `cargo run`
+4. The application is now available at `http://localhost:4200` (frontend) and `http://localhost:8989` (backend)
+
+
+#### Build electron app
+
+1. Change into the application-wrapper directory `cd application-wrapper`
+2. Install electron dependencies `npm install`
+3. Build the electron app `npm run package`
+4. The application is now in the `out` folder e.g. `out/looksyk-linux-x64/looksyk`
+
+
 
 ### Migrate your existing Logseq graph to Looksyk
 
@@ -163,6 +177,11 @@ The application title can be modified with the argument `--title`.
 * Ctrl+Space opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
+* Ctrl+Left Navigate to the previous page
+* Ctrl+Right Navigate to the next page
+* Lists inside of blocks are supported.
+  * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
+  * Ordered lists are supported with `1.`, '2.' ...
 
 ### Navigation
 
