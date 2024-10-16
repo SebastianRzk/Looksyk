@@ -118,6 +118,9 @@ const createWindow = async (): Promise<void> => {
     globalShortcut.register('Alt+Right', () => {
         mainWindow.webContents.navigationHistory.goForward();
     })
+    globalShortcut.register('Ctrl+R', () => {
+        mainWindow.webContents.reload();
+    })
 };
 
 // This method will be called when Electron has finished

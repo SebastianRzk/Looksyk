@@ -2,6 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 
+export const EMPTY_REFERENCE: SearchReference = {
+  fileName: "",
+  blockNumber: 0,
+}
+
+
+export const MIN_FILTER_LENGTH = 4;
+export const TEXT_TO_SHORT_NAME = `Please enter at least ${MIN_FILTER_LENGTH} characters to search.`;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,14 +38,10 @@ export class SearchService {
   }
 
 
-  public resetSearch(minLength: number) {
+  public resetSearch() {
     let minLengthReference = {
-      reference: {
-        fileName: "",
-        blockNumber: 0,
-        link: ""
-      },
-      textLine: `Please enter at least ${minLength} characters to search.`
+      reference: EMPTY_REFERENCE,
+      textLine: TEXT_TO_SHORT_NAME
     };
     this.currentSearchResult.next({
       journal: [minLengthReference],

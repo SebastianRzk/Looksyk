@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:keyup', ['$event'])
   keyUpEvent(event: KeyboardEvent) {
-    let result = this.contentAssist.registerKeyPress(event);
+    const result = this.contentAssist.registerKeyPress(event);
     if (result == KeypressResult.StopAndStopPropagation) {
       this.stopPropagation(event);
       return;

@@ -19,7 +19,14 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption } from 
 import { MatInput } from "@angular/material/input";
 import { Router } from "@angular/router";
 import { OpenMarkdownEvent, UseractionService } from "../../../services/useraction.service";
-import { SearchFinding, SearchResult, SearchService } from "../../../services/search.service";
+import {
+  EMPTY_REFERENCE,
+  MIN_FILTER_LENGTH,
+  SearchFinding,
+  SearchResult,
+  SearchService,
+  TEXT_TO_SHORT_NAME
+} from "../../../services/search.service";
 
 @Component({
   selector: 'app-content-assist-popup',
@@ -60,11 +67,10 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     suggestions: []
   });
   subMenuState$: Observable<ContentAssistSection> = this.subMenuState.asObservable().pipe(map(s => s.suggestions.map(s => {
-      let e: Item = {
+      return {
         name: s.explanation,
         highlight: false
       };
-      return e;
     }
   ))).pipe(map(s => {
     return {
@@ -93,7 +99,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }));
 
   enter_ = this.contentAssist.enter$.subscribe(async () => {
-    let currentFilterState = await firstValueFrom(this.stateGroupOptions);
+    const currentFilterState = await firstValueFrom(this.stateGroupOptions);
     for (let group of currentFilterState) {
       for (let item of group.items) {
         if (item.highlight) {
@@ -104,27 +110,25 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     }
   });
 
-  private readonly filterMinLength = 4;
-
   updateSearchState_ = combineLatest({
     filter: this.textDebounced$,
     state: this.state$
   }).pipe(filter(value => value.state === ContentAssistMode.Search),
-    filter(value => value.filter.length >= this.filterMinLength)).subscribe(value => {
+    filter(value => value.filter.length >= MIN_FILTER_LENGTH)).subscribe(value => {
     this.searchService.search(value.filter);
   });
 
   updateSearchStateEmpty_ = combineLatest({
     filter: this.textDebounced$,
     state: this.state$
-  }).pipe(filter(value => (value.state === ContentAssistMode.Search && value.filter.length < this.filterMinLength) || value.state == ContentAssistMode.Closed))
-    .subscribe(value => {
-      this.searchService.resetSearch(this.filterMinLength);
+  }).pipe(filter(value => (value.state === ContentAssistMode.Search && value.filter.length < MIN_FILTER_LENGTH) || value.state == ContentAssistMode.Closed))
+    .subscribe(() => {
+      this.searchService.resetSearch();
     });
 
   private async handleAction(item: Item, group: ContentAssistSection) {
     let result = Result.Close;
-    let state = await firstValueFrom(this.state$);
+    const state = await firstValueFrom(this.state$);
     if (state == ContentAssistMode.Navigate) {
       await this.handleNavigation(group, item);
     } else if (state == ContentAssistMode.InsertTag) {
@@ -141,7 +145,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }
 
   private async handleElseActions(group: ContentAssistSection, item: Item) {
-    let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+    const target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
     let text_to_insert = "unknown";
     if (group.title === this.INSERT_REFERENCE_TITLE) {
       text_to_insert = `[[${item.name}]] `
@@ -177,7 +181,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
-      let allValues = await firstValueFrom(this.subMenuState);
+      const allValues = await firstValueFrom(this.subMenuState);
       for (let value of allValues.suggestions) {
         if (value.explanation == item.name) {
           text_to_insert = value.inplaceMarkdown
@@ -193,9 +197,9 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }
 
   private async handleInsertTag(group: ContentAssistSection, item: Item) {
-    let target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+    const target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
     if (group.title == this.INSERT_NEW_TAG) {
-      let targetText: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
+      const targetText: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
       this.useraction.insertText.next({
         target: target.target,
         inlineMarkdown: `${targetText}]] `
@@ -209,13 +213,19 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   }
 
   private async handleSearchNavigation(group: ContentAssistSection, item: Item) {
+    if (item.name == this.formatSearchResult({
+      reference: EMPTY_REFERENCE,
+      textLine: TEXT_TO_SHORT_NAME
+    })) {
+      return Promise.resolve();
+    }
     this.useraction.closeCurrentMarkdownBlock();
-    let allSearchResult: SearchResult = await firstValueFrom(this.searchService.currentSearchResult$);
+    const allSearchResult: SearchResult = await firstValueFrom(this.searchService.currentSearchResult$);
     if (group.title == this.SEARCH_RESULT_IN_PAGES_TITLE) {
-      let selectedItem = this.resolveSearchItem(allSearchResult.page, item.name);
+      const selectedItem = this.resolveSearchItem(allSearchResult.page, item.name);
       await this.router.navigate(["/page", selectedItem.reference.fileName]);
     } else {
-      let selectedItem = this.resolveSearchItem(allSearchResult.page, item.name);
+      const selectedItem = this.resolveSearchItem(allSearchResult.journal, item.name);
       await this.router.navigate(["/journal", selectedItem.reference.fileName]);
     }
   }
@@ -228,11 +238,16 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
   private async handleNavigation(group: ContentAssistSection, item: Item) {
     this.useraction.closeCurrentMarkdownBlock();
     if (group.title == this.NAVIGATE_TO_NEW_PAGE) {
-      let target: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
+      const target: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
       await this.router.navigate(["/page", target]);
     } else {
       await this.router.navigate(["/page", item.name]);
     }
+  }
+
+  async onClickItem(item: Item, group: ContentAssistSection) {
+    await this.handleAction(item, group);
+    this.contentAssist.registerKeyPress(new KeyboardEvent("keydown", {key: "Escape"}))
   }
 
   contentAssistContent: Subject<ContentAssistSection[]> = new BehaviorSubject<ContentAssistSection[]>([]);
@@ -246,7 +261,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       filter: this.textDebounced$,
       cursor: this.contentAssist.cursorInContentAssist$,
       subMenu: this.subMenuState$,
-      contentAssistContent: this.contentAssistContent,
+      contentAssistContent: this.contentAssistContent$,
       mode: this.state$
     }).pipe(
       debounce(() => timer(30)),
@@ -448,14 +463,6 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   isClosed(contentAssistMode: ContentAssistMode) {
     return contentAssistMode === ContentAssistMode.Closed;
-  }
-
-  isInsert(contentAssistMode: ContentAssistMode) {
-    return contentAssistMode === ContentAssistMode.Insert;
-  }
-
-  isNavigate(contentAssistMode: ContentAssistMode) {
-    return contentAssistMode === ContentAssistMode.Navigate;
   }
 }
 

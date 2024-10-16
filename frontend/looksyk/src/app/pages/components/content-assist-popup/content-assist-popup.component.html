@@ -6,7 +6,8 @@
       @for (group of stateGroupOptions | async; track group) {
         <div class="suggestion-group"> <h4>{{ group.title }}</h4>
           @for (name of group.items; track name.name) {
-            <div [classList]="name.highlight? 'active': 'inactive' ">{{ name.name }}</div>
+            <div [classList]="name.highlight? 'active': 'inactive'"
+                 (click)="onClickItem(name, group)">{{ name.name }}</div>
           }
               </div>
       }

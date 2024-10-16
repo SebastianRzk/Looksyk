@@ -177,11 +177,12 @@ The application title can be modified with the argument `--title`.
 * Ctrl+Space opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
-* Ctrl+Left Navigate to the previous page
-* Ctrl+Right Navigate to the next page
+* Alt+Left Navigate to the previous page
+* Alt+Right Navigate to the next page
+* Ctrl+R Refresh the current page
 * Lists inside of blocks are supported.
   * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
-  * Ordered lists are supported with `1.`, '2.' ...
+  * Ordered lists are supported with `1.`, `2.` ...
 
 ### Navigation
 

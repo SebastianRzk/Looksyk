@@ -2,8 +2,7 @@ import { EMOJIS } from "./emojis";
 import { MarkedExtension, Token, Tokens } from "marked";
 
 export function emojiExtension(): MarkedExtension {
-
-  let emojis = EMOJIS;
+  const emojis = EMOJIS;
 
   // Regex inspired from https://github.com/UziTech/marked-emoji
   const emojiNames = Object.keys(emojis).map(e => e.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
@@ -24,7 +23,7 @@ export function emojiExtension(): MarkedExtension {
         }
 
         const name = match[1];
-        let emoji = emojis[name];
+        const emoji = emojis[name];
 
         return {
           type: 'emoji',

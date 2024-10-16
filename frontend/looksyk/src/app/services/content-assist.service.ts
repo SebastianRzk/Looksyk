@@ -23,7 +23,7 @@ export class ContentAssistService {
   private cursorInContentAssist = new BehaviorSubject<number>(0);
   public cursorInContentAssist$ = this.cursorInContentAssist.asObservable();
   private enter = new Subject<void>()
-  public enter$ = this.enter.asObservable().pipe(filter(e => this.stateRaw != ContentAssistMode.Closed));
+  public enter$ = this.enter.asObservable().pipe(filter(() => this.stateRaw != ContentAssistMode.Closed));
 
   constructor() {
     this.useraction.openMarkdown$.subscribe((data) => {
