@@ -37,7 +37,7 @@ pub async fn upload_file(MultipartForm(form): MultipartForm<UploadForm>, app_sta
         content: file.clone(),
     });
 
-    let mut media_guard = app_state.media_index.lock().unwrap();
+    let mut media_guard = app_state.f_media_index.lock().unwrap();
 
     let index_element = find_file_by_hash(&hash, &media_guard).unwrap_or_else(|| {
         let absolute_destination_path = destination_path(filename.as_str(), &app_state.data_path);
@@ -51,6 +51,8 @@ pub async fn upload_file(MultipartForm(form): MultipartForm<UploadForm>, app_sta
         write_media_config(&app_state.data_path, &media_guard);
         new_entry
     });
+
+    drop(media_guard);
 
     Ok(Json(FileUploadResult {
         inline_markdown: inver_markdown_media_link(&index_element.file_name)
@@ -70,22 +72,30 @@ pub async fn compute_asset_suggestion(req: HttpRequest) -> error::Result<impl Re
 #[get("/api/builtin-pages/assets-overview")]
 pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<impl Responder> {
     let file_sizes = read_file_sizes(&data.data_path);
-    let media_index = data.media_index.lock().unwrap();
 
-    let generate_assets_overview = generate_assets_overview_page(&media_index, file_sizes);
 
-    let tag_index_guard = data.tag_index.lock().unwrap();
-    let guard = data.user_pages.lock().unwrap();
-    let todo_guard = data.todo_index.lock().unwrap();
-    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let user_page_guard = data.a_user_pages.lock().unwrap();
+    let todo_guard = data.c_todo_index.lock().unwrap();
+    let tag_index_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache_guard = data.e_asset_cache.lock().unwrap();
+    let media_index_guard = data.f_media_index.lock().unwrap();
+
+    let generate_assets_overview = generate_assets_overview_page(&media_index_guard, file_sizes);
+
 
     let render_context = StaticRenderContext{
-        user_pages: &guard,
+        user_pages: &user_page_guard,
         todo_index: &todo_guard,
         tag_index: &tag_index_guard,
     };
 
-    let rendered_file = render_file(&generate_assets_overview, &render_context, &mut asset_cache, &data.data_path);
+    let rendered_file = render_file(&generate_assets_overview, &render_context, &mut asset_cache_guard, &data.data_path);
+
+    drop(user_page_guard);
+    drop(todo_guard);
+    drop(tag_index_guard);
+    drop(asset_cache_guard);
+    drop(media_index_guard);
 
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
@@ -106,9 +116,7 @@ pub async fn assets(req: HttpRequest, data: Data<AppState>) -> Result<NamedFile,
         )
     }
 
-    Ok(file
-           .use_last_modified(true)
-    )
+    Ok(file.use_last_modified(true))
 }
 
 
@@ -124,7 +132,10 @@ pub async fn get_asset_preview(req: HttpRequest, data: Data<AppState>) -> error:
         &data.data_path,
     ));
 
-    let preview = generate_asset_preview(asset_descriptor, file_size, &mut data.asset_cache.lock().unwrap(), &data.data_path);
+    let mut asset_cache_quard = data.e_asset_cache.lock().unwrap();
+    let preview = generate_asset_preview(asset_descriptor, file_size, &mut asset_cache_quard, &data.data_path);
+    drop(asset_cache_quard);
+
     Ok(Json(map_to_asset_preview_dto(preview)))
 }
 

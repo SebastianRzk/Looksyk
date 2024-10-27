@@ -26,8 +26,8 @@ export class MarkdownService {
     );
   }
 
-  public renderMarkdown(input: string): string | Promise<string> {
-    return this.marked.parse(input);
+  public renderMarkdown(input: string): string {
+    return this.marked.parse(input).toString();
   }
 
   public makeLinksInternal(elementRef: ElementRef, router: Router) {

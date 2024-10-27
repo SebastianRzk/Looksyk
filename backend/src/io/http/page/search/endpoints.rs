@@ -9,10 +9,13 @@ use crate::looksyk::search;
 async fn search_in_files(body: web::Json<SearchTermDto>, data: Data<AppState>)-> Result<impl Responder> {
     let search_term = to_search_term(body.into_inner());
 
-    let page_guard = data.user_pages.lock().unwrap();
-    let journal_guard = data.journal_pages.lock().unwrap();
+    let page_guard = data.a_user_pages.lock().unwrap();
+    let journal_guard = data.b_journal_pages.lock().unwrap();
 
     let result = search::search(search_term, &journal_guard, &page_guard);
+
+    drop(page_guard);
+    drop(journal_guard);
 
     Ok(web::Json(search_result_to_dto(result)))
 }

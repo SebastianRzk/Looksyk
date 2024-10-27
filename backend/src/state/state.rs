@@ -11,14 +11,14 @@ use crate::state::userpage::UserPageIndex;
 
 pub struct AppState {
     pub title: String,
-    pub media_index: Mutex<MediaIndex>,
     pub data_path: DataRootLocation,
-    pub user_pages: Mutex<UserPageIndex>,
-    pub journal_pages: Mutex<JournalPageIndex>,
-    pub todo_index: Mutex<TodoIndex>,
-    pub tag_index: Mutex<TagIndex>,
-    pub config: Mutex<Config>,
-    pub asset_cache: Mutex<AssetCache>,
+    pub a_user_pages: Mutex<UserPageIndex>,
+    pub b_journal_pages: Mutex<JournalPageIndex>,
+    pub c_todo_index: Mutex<TodoIndex>,
+    pub d_tag_index: Mutex<TagIndex>,
+    pub e_asset_cache: Mutex<AssetCache>,
+    pub f_media_index: Mutex<MediaIndex>,
+    pub g_config: Mutex<Config>,
 }
 
 pub struct DataRootLocation {

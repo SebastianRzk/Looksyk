@@ -18,14 +18,16 @@ use actix_web::{get, post, web, Responder};
 #[get("/api/journal/{journal_name}")]
 async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let simple_page_name = page_name(path.into_inner());
-    let journal_guard = data.journal_pages.lock().unwrap();
-    let page_guard = data.user_pages.lock().unwrap();
-    let todo_index_guard = data.todo_index.lock().unwrap();
+
+    let page_guard = data.a_user_pages.lock().unwrap();
+    let journal_guard = data.b_journal_pages.lock().unwrap();
+    let todo_index_guard = data.c_todo_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
+
     let page = journal_guard.entries.get(&simple_page_name);
-    let mut asset_cache = data.asset_cache.lock().unwrap();
 
 
-    let fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
+    let fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
 
     if page.is_some() {
         let parsed_page = page.unwrap();
@@ -34,7 +36,7 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
             &StaticRenderContext {
                 user_pages: &page_guard,
                 todo_index: &todo_index_guard,
-                tag_index: &data.tag_index.lock().unwrap(),
+                tag_index: &data.d_tag_index.lock().unwrap(),
             },
             &mut asset_cache,
             &data.data_path,
@@ -42,14 +44,21 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
         return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
     }
 
-    Ok(web::Json(map_markdown_file_to_dto(render_file(
+    let rendered_file = render_file(
         &generate_page_not_found(),
         &StaticRenderContext {
             user_pages: &page_guard,
             todo_index: &todo_index_guard,
-            tag_index: &data.tag_index.lock().unwrap(),
+            tag_index: &data.d_tag_index.lock().unwrap(),
         },
-        &mut asset_cache, &data.data_path), fav)))
+        &mut asset_cache, &data.data_path);
+
+    drop(page_guard);
+    drop(journal_guard);
+    drop(todo_index_guard);
+    drop(asset_cache);
+
+    Ok(web::Json(map_markdown_file_to_dto(rendered_file, fav)))
 }
 
 
@@ -71,11 +80,11 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     }, &data.data_path, &PageType::JournalPage);
 
 
-    let mut page_guard = data.user_pages.lock().unwrap();
-    let mut todo_guard = data.todo_index.lock().unwrap();
-    let mut tag_guard = data.tag_index.lock().unwrap();
-    let mut journal_guard = data.journal_pages.lock().unwrap();
-    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,
@@ -93,7 +102,7 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
 
-    let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
+    let is_fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
     let rendered_file = render_file(
         &updated_page,
         &StaticRenderContext {

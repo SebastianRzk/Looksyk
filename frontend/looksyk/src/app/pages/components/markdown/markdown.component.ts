@@ -7,7 +7,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -70,7 +69,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   trigger!: MatMenuTrigger;
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.updateContent(this.markdown)
   }
 
@@ -92,8 +91,8 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   editMode$: Observable<boolean> = this.componentMode.pipe(map(x => x === MarkdownComponentState.EDITING));
   loadingMode$: Observable<boolean> = this.componentMode.pipe(map(x => x === MarkdownComponentState.LOADING));
 
-  renderedMarkdown: Subject<any> = new BehaviorSubject<any>("");
-  renderedMarkdown$ = this.renderedMarkdown.asObservable();
+  renderedMarkdown: Subject<string> = new BehaviorSubject<string>("");
+  renderedMarkdown$: Observable<string> = this.renderedMarkdown.asObservable();
 
   referencedMarkdown: Subject<RefecencedBlockContent[]> = new BehaviorSubject<RefecencedBlockContent[]>([]);
   referencedMarkdown$ = this.referencedMarkdown.asObservable();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
@@ -34,8 +34,7 @@ export class FavStarComponent implements OnChanges {
   isFav$ = this.isFav.asObservable();
 
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log("isFavInitial", this.isFavInitial)
+  ngOnChanges(): void {
     this.isFav.next({
       isFav: this.isFavInitial
     });

@@ -147,14 +147,14 @@ fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data
 
     let app_state = Data::new(AppState {
         title,
-        media_index: Mutex::new(media_index),
         data_path: data_root_location,
-        config: Mutex::new(config),
-        user_pages: Mutex::new(user_page_index.clone()),
-        todo_index: Mutex::new(todo_index.clone()),
-        tag_index: Mutex::new(tag_index.clone()),
-        journal_pages: Mutex::new(journal_index.clone()),
-        asset_cache: Mutex::new(asset_cache),
+        a_user_pages: Mutex::new(user_page_index.clone()),
+        b_journal_pages: Mutex::new(journal_index.clone()),
+        c_todo_index: Mutex::new(todo_index.clone()),
+        d_tag_index: Mutex::new(tag_index.clone()),
+        e_asset_cache: Mutex::new(asset_cache),
+        f_media_index: Mutex::new(media_index),
+        g_config: Mutex::new(config),
     });
     app_state
 }

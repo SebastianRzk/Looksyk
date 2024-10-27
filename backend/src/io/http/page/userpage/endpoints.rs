@@ -39,11 +39,11 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
     }, &data.data_path, &PageType::UserPage);
 
 
-    let mut page_guard = data.user_pages.lock().unwrap();
-    let mut todo_guard = data.todo_index.lock().unwrap();
-    let mut tag_guard = data.tag_index.lock().unwrap();
-    let mut journal_guard = data.journal_pages.lock().unwrap();
-    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
 
     let page_id = append_user_page_prefix(&page_name);
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -60,7 +60,7 @@ async fn update_page(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>,
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
 
-    let is_fav = is_favourite(&page_name, &data.config.lock().unwrap());
+    let is_fav = is_favourite(&page_name, &data.g_config.lock().unwrap());
     let rendered_file = render_file(
         &updated_page,
         &StaticRenderContext {
@@ -85,12 +85,15 @@ async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_
     let page_name_from_input = input_page_name.into_inner();
     let simple_page_name = page_name(page_name_from_input);
 
-    let page_guard = data.user_pages.lock().unwrap();
-    let todo_index_guard = data.todo_index.lock().unwrap();
-    let tag_guard = data.tag_index.lock().unwrap();
+    let page_guard = data.a_user_pages.lock().unwrap();
+    let todo_index_guard = data.c_todo_index.lock().unwrap();
+    let tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let is_fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
+
     let page = page_guard.entries.get(&simple_page_name);
-    let mut asset_cache = data.asset_cache.lock().unwrap();
-    let is_fav = is_favourite(&simple_page_name, &data.config.lock().unwrap());
+
+
     let data_root_location = &data.data_path;
     if page.is_some() {
         let parsed_page = page.unwrap();
@@ -103,14 +106,21 @@ async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_
                                         &mut asset_cache, data_root_location);
         return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
     }
-    Ok(Json(map_markdown_file_to_dto(render_file(
+    let rendered_file = render_file(
         &generate_page_not_found(),
         &StaticRenderContext {
             user_pages: &page_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,
         },
-        &mut asset_cache, data_root_location), is_fav)))
+        &mut asset_cache, data_root_location);
+
+    drop(page_guard);
+    drop(todo_index_guard);
+    drop(tag_guard);
+    drop(asset_cache);
+
+    Ok(Json(map_markdown_file_to_dto(rendered_file, is_fav)))
 }
 
 
@@ -118,37 +128,53 @@ async fn get_page(input_page_name: Path<String>, data: Data<AppState>) -> actix_
 async fn get_backlinks(input_page_name: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let simple_page_name = page_name(input_page_name.into_inner());
 
-    let tag_guard = data.tag_index.lock().unwrap();
-    let page_guard = data.user_pages.lock().unwrap();
-    let todo_index_guard = data.todo_index.lock().unwrap();
-    let mut asset_cache_guard = data.asset_cache.lock().unwrap();
+    let page_guard = data.a_user_pages.lock().unwrap();
+    let todo_index_guard = data.c_todo_index.lock().unwrap();
+    let tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache_guard = data.e_asset_cache.lock().unwrap();
+
     let data_root_location = &data.data_path;
 
     let result = render_tag_index_for_page(append_user_page_prefix(&simple_page_name), &tag_guard);
 
 
-    Ok(Json(map_markdown_file_to_dto(render_file(
+    let rendered_file = render_file(
         &result, &StaticRenderContext {
             user_pages: &page_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,
         }, &mut asset_cache_guard, data_root_location,
-    ), false)))
+    );
+
+    drop(page_guard);
+    drop(todo_index_guard);
+    drop(tag_guard);
+    drop(asset_cache_guard);
+
+    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 
 
 #[get("/api/builtin-pages/user-page-overview")]
 async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    let tag_index_guard = data.tag_index.lock().unwrap();
-    let guard = data.user_pages.lock().unwrap();
-    let overview_page = generate_overview_page(&tag_index_guard, &guard);
-    let todo_guard = data.todo_index.lock().unwrap();
-    let mut asset_cache = data.asset_cache.lock().unwrap();
+    let user_page_guard = data.a_user_pages.lock().unwrap();
+    let todo_guard = data.c_todo_index.lock().unwrap();
+    let tag_index_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
+
+    let overview_page = generate_overview_page(&tag_index_guard, &user_page_guard);
+
     let rendered_file = render_file(&overview_page, &StaticRenderContext {
-        user_pages: &guard,
+        user_pages: &user_page_guard,
         todo_index: &todo_guard,
         tag_index: &tag_index_guard,
     }, &mut asset_cache, &data.data_path);
+
+    drop(user_page_guard);
+    drop(todo_guard);
+    drop(tag_index_guard);
+    drop(asset_cache);
+
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
 }
 
@@ -158,10 +184,10 @@ async fn rename_page(body: web::Json<RenamePageDto>, data: Data<AppState>) -> ac
     let old_page_name = page_name(body.old_page_name);
     let new_page_name = page_name(body.new_page_name);
 
-    let mut page_guard = data.user_pages.lock().unwrap();
-    let mut todo_guard = data.todo_index.lock().unwrap();
-    let mut tag_guard = data.tag_index.lock().unwrap();
-    let mut journal_guard = data.journal_pages.lock().unwrap();
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
 
     let current_page_associated_state = CurrentPageOnDiskState {
         user_pages: &page_guard,
@@ -182,7 +208,6 @@ async fn rename_page(body: web::Json<RenamePageDto>, data: Data<AppState>) -> ac
 
 
     for file_to_save in rename_tag_result.file_changes.changed_files {
-        eprintln!("updating file: {}", file_to_save.id);
         let page_type = get_page_type(&file_to_save);
         let simple_page_name = strip_prefix(&file_to_save, &page_type);
         let page;
@@ -236,6 +261,10 @@ async fn rename_page(body: web::Json<RenamePageDto>, data: Data<AppState>) -> ac
         *journal_guard = new_page_associated_state.journal_pages;
     }
 
+    drop(page_guard);
+    drop(journal_guard);
+    drop(todo_guard);
+    drop(tag_guard);
 
     Ok(Json(RenamePageResultDto {
         new_page_name: new_page_name.name,
@@ -247,10 +276,10 @@ async fn delete_page(input_page_name: Path<String>, data: Data<AppState>) -> act
     let page_name_from_input = input_page_name.into_inner();
     let simple_page_name = page_name(page_name_from_input);
 
-    let mut page_guard = data.user_pages.lock().unwrap();
-    let mut todo_guard = data.todo_index.lock().unwrap();
-    let mut tag_guard = data.tag_index.lock().unwrap();
-    let mut journal_guard = data.journal_pages.lock().unwrap();
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,

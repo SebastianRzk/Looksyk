@@ -6,7 +6,7 @@ use crate::state::state::AppState;
 
 #[get("/api/design")]
 pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
-    let config = app_state.config.lock().unwrap();
+    let config = app_state.g_config.lock().unwrap();
     let design = &config.design;
     let css_text = format!("
 :root {{

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from "rxjs";
 import { RouterLink } from "@angular/router";
@@ -29,7 +29,7 @@ export class TitleComponent implements OnChanges {
   private historyService = inject(HistoryService);
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (!this.title_date) {
       return;
     }

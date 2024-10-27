@@ -35,17 +35,20 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
     let page_type = get_page_type(&page_id);
     let simple_page_name = strip_prefix(&page_id, &page_type);
 
+
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_cache = data.e_asset_cache.lock().unwrap();
+
     match page_type {
         PageType::JournalPage => {
-            let journal_guard = data.journal_pages.lock().unwrap();
             selected_page = journal_guard.entries.get(&simple_page_name).unwrap().clone();
-            drop(journal_guard);
         }
         PageType::UserPage => {
-            let page_guard = data.user_pages.lock().unwrap();
             println!("Simple page {}", simple_page_name.name);
             selected_page = page_guard.entries.get(&simple_page_name).unwrap().clone();
-            drop(page_guard);
         }
     }
 
@@ -64,15 +67,8 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
     }, &data.data_path,
                &page_type);
 
-
-    let mut todo_guard = data.todo_index.lock().unwrap();
-    let mut tag_guard = data.tag_index.lock().unwrap();
-    let mut page_guard = data.user_pages.lock().unwrap();
-    let mut journal_guard = data.journal_pages.lock().unwrap();
-    let mut asset_cache = data.asset_cache.lock().unwrap();
-
     let current_page_associated_state = CurrentPageAssociatedState {
-        user_pages:& page_guard,
+        user_pages: &page_guard,
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
@@ -90,7 +86,7 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         text_content: vec![entity.markdown],
     });
 
-    let rendered_block = render_block(&parsed_block, &StaticRenderContext{
+    let rendered_block = render_block(&parsed_block, &StaticRenderContext {
         user_pages: &page_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,

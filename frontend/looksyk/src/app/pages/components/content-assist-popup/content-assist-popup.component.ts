@@ -100,8 +100,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   enter_ = this.contentAssist.enter$.subscribe(async () => {
     const currentFilterState = await firstValueFrom(this.stateGroupOptions);
-    for (let group of currentFilterState) {
-      for (let item of group.items) {
+    for (const group of currentFilterState) {
+      for (const item of group.items) {
         if (item.highlight) {
           await this.handleAction(item, group);
           return;
@@ -168,7 +168,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         text_to_insert = "not yet implemented";
       }
     } else if (group.title == this.ADD_LINK) {
-      let target_text = await firstValueFrom(this.contentAssist.textInContentAssist$);
+      const target_text = await firstValueFrom(this.contentAssist.textInContentAssist$);
       text_to_insert = `[[${target_text}]] `
     } else if (group.title == ADD_QUERY) {
       if (item.name == ADD_QUERY_PAGE_HIERARCHY) {
@@ -182,7 +182,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
       const allValues = await firstValueFrom(this.subMenuState);
-      for (let value of allValues.suggestions) {
+      for (const value of allValues.suggestions) {
         if (value.explanation == item.name) {
           text_to_insert = value.inplaceMarkdown
           break;
@@ -318,8 +318,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     ContentAssistSection[] {
     let currentCursor = 0;
     let highlighted = false;
-    for (let group of items) {
-      for (let item of group.items) {
+    for (const group of items) {
+      for (const item of group.items) {
         if (cursor == currentCursor) {
           item.highlight = true;
           highlighted = true;

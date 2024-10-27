@@ -16,9 +16,9 @@ async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
 
 #[get("/api/metainfo/")]
 async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    let page_guard = data.user_pages.lock().unwrap();
-    let tag_guard = data.tag_index.lock().unwrap();
-    let media_guard = data.media_index.lock().unwrap();
+    let page_guard = data.a_user_pages.lock().unwrap();
+    let tag_guard = data.d_tag_index.lock().unwrap();
+    let media_guard = data.f_media_index.lock().unwrap();
 
 
     let mut tags: Vec<String> = page_guard.entries.keys().into_iter().map(|x| x.name.clone()).collect();
@@ -31,6 +31,10 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
 
     let mut media: Vec<String> = media_guard.media.iter().map(|x| x.file_name.clone()).collect();
     media.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+
+    drop(page_guard);
+    drop(tag_guard);
+    drop(media_guard);
 
     Ok(web::Json(MetaInfoDto {
         tags,
