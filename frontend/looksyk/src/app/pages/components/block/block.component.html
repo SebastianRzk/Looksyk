@@ -2,5 +2,5 @@
   <ng-container *ngIf="block.indentation$ | async as i">
     <div *ngFor="let _ of [].constructor(i)" class="indentation"></div>
   </ng-container>
-  <app-markdown [markdown]="block" [editable]="editable" [pageid]="pageid" [scrollIntoView]="scrollIntoView"></app-markdown>
+  <app-markdown [markdown]="block" [editable]="editable" [pageid]="pageid"></app-markdown>
 </div>

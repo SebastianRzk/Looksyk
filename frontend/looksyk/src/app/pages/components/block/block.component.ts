@@ -21,10 +21,6 @@ export class BlockComponent {
   pageid!: string;
 
   @Input({required: true})
-  scrollIntoView!: boolean;
-
-
-  @Input({required: true})
   public editable!: boolean;
 
 }

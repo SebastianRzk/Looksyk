@@ -29,11 +29,8 @@ export class PageService {
   public somethingHasChanged: Subject<BlockId> = new Subject<BlockId>();
   public somethingHasChanged$: Observable<BlockId> = this.somethingHasChanged.asObservable();
 
-  constructor() {
-  }
-
   public loadUserPage(pageName: string) {
-    let pageId = this.userpageId(pageName);
+    const pageId = this.userpageId(pageName);
     this.loadUserPageById(pageName, pageId);
   }
 
@@ -43,7 +40,7 @@ export class PageService {
   }
 
   public loadJournalPage(pageName: string) {
-    let pageId = this.journalpageId(pageName);
+    const pageId = this.journalpageId(pageName);
     this.loadJournalPageById(pageName, pageId);
   }
 
@@ -53,13 +50,13 @@ export class PageService {
   }
 
   public deleteUserPage(pageName: string): Promise<void> {
-    let pageId = this.userpageId(pageName);
+    const pageId = this.userpageId(pageName);
     return firstValueFrom(this.httpClient.delete<void>("/api/pages/" + encodeURIComponent(pageName).toString())
       .pipe(tap(_ => this.deletePage(pageId))));
   }
 
   public loadBuildInPage(pageName: string) {
-    let pageId = this.builtinPageId(pageName);
+    const pageId = this.builtinPageId(pageName);
     this.httpClient.get<MarkdownPageDto>("/api/builtin-pages/" + encodeURIComponent(pageName).toString())
       .subscribe(value => this.getOrCreatePage(pageId).next(fromDto(value, pageName, pageId)));
   }
@@ -101,7 +98,6 @@ export class PageService {
     if (!pageId) {
       throw new Error("pageId is undefined")
     }
-
     console.log("requesting page state ", pageId)
     if (!this.pageState.has(pageId)) {
       console.log("initializing page " + pageId)
@@ -137,7 +133,7 @@ export class PageService {
 
 
   public saveBlockOnPage(pageid: string, blockNumber: number, newContent: string, blockId: string): Observable<BlockContent> {
-    let url = "/api/pagesbyid/" + encodeURIComponent(pageid).toString() + "/block/" + blockNumber;
+    const url = "/api/pagesbyid/" + encodeURIComponent(pageid).toString() + "/block/" + blockNumber;
     return this.httpClient.post<BlockDto>(url, {
       "markdown": newContent,
     }).pipe(map(fromBlockContentDto)).pipe(tap(x => this.somethingHasChanged.next({
@@ -147,7 +143,7 @@ export class PageService {
 
   public savePage(pagename: string, pageIdentifier: string, content: BasicPageContent[], targetBlockId: string) {
     this.savingState.next(SavingState.Saving);
-    let url = this.urlForPage(pageIdentifier) + encodeURIComponent(pagename).toString();
+    const url = this.urlForPage(pageIdentifier) + encodeURIComponent(pagename).toString();
     this.httpClient.post(url, {blocks: content}).subscribe(
       _ => {
         this.savingState.next(SavingState.Saved);

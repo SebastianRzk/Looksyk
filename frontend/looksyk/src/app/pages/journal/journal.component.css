@@ -3,16 +3,7 @@
   height: 100%
 }
 
-.example-viewport {
+.journal-viewport {
   height: 80%;
   width: 100%;
-}
-
-.example-item {
-  min-height: 40ex;
-}
-
-app-journal-entry {
-  min-height: 20ex;
-  overflow: hidden;
 }

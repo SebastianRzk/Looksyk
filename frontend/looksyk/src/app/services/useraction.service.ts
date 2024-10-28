@@ -66,10 +66,10 @@ export class UseractionService {
 
   mediaService = inject(MediaService);
 
-  fileUpload_ = this.fileUpload.subscribe(event => {
+  fileUpload_ = this.fileUpload$.subscribe(event => {
     this.mediaService.uploadFile(event.file).subscribe(
       async result => {
-        let currentOpenBlock = await firstValueFrom(this.currentOpenMarkdown$);
+        const currentOpenBlock = await firstValueFrom(this.currentOpenMarkdown$);
         this.insertText.next({
           target: currentOpenBlock.target,
           inlineMarkdown: "\n" + result.inlineMarkdown + "\n"
@@ -81,11 +81,11 @@ export class UseractionService {
   mergeBlock_ = this.mergeWithPrevBlock$.subscribe(event => {
     firstValueFrom(this.pageService.getPage(event.target.fileTarget)).then(currentPage => {
       let newBlocks = currentPage.blocks;
-      let index = newBlocks.findIndex(block => block.indentification == event.target.blockTarget);
+      const index = newBlocks.findIndex(block => block.indentification == event.target.blockTarget);
       console.log("index", index);
       if (index > 0) {
-        let newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
-        let newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
+        const newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
+        const newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
         newBlocks = newBlocks.filter(block => block.indentification != event.target.blockTarget);
         newBlocks[index - 1] = {
           ...newBlocks[index - 1],
@@ -112,14 +112,7 @@ export class UseractionService {
 
   deleteBlock_ = this.deleteBlock$.subscribe(event => {
     firstValueFrom(this.pageService.getPage(event.target.fileTarget)).then(currentPage => {
-        let newBlocks = currentPage.blocks.filter(block => block.indentification != event.target.blockTarget);
-        //TODO: why twice?
-        this.pageService.onNextPageById(currentPage.pageid, {
-          name: currentPage.name,
-          blocks: newBlocks,
-          pageid: currentPage.pageid,
-          isFavourite: currentPage.isFavourite
-        });
+        const newBlocks = currentPage.blocks.filter(block => block.indentification != event.target.blockTarget);
         this.pageService.onNextPageById(currentPage.pageid, {
           blocks: newBlocks,
           name: currentPage.name,
@@ -136,14 +129,14 @@ export class UseractionService {
   newBlock_ = this.newBlock$
     .subscribe(
       async event => {
-        let currentPage = await firstValueFrom(this.pageService.getPage(event.target.fileTarget));
-        var foundForInsertAfter = false;
-        var indentation: Subject<number> = new Subject();
-        var newBlockList: Block[] = [];
-        var newId = "";
-        for (let block of currentPage.blocks) {
+        const currentPage = await firstValueFrom(this.pageService.getPage(event.target.fileTarget));
+        let foundForInsertAfter = false;
+        let indentation: Subject<number> = new Subject<number>();
+        const newBlockList: Block[] = [];
+        let newId = "";
+        for (const block of currentPage.blocks) {
           if (foundForInsertAfter) {
-            let initialIndentation = await firstValueFrom(indentation);
+            const initialIndentation = await firstValueFrom(indentation);
             newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
             foundForInsertAfter = false;
           }
@@ -155,7 +148,7 @@ export class UseractionService {
             if (event.insert == InsertMode.INSERT_AFTER) {
               foundForInsertAfter = true;
             } else {
-              let initialIndentation = await firstValueFrom(indentation);
+              const initialIndentation = await firstValueFrom(indentation);
               newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
             }
           }
@@ -163,7 +156,7 @@ export class UseractionService {
           newBlockList.push(block);
         }
         if (foundForInsertAfter) {
-          let initialIndentation = await firstValueFrom(indentation);
+          const initialIndentation = await firstValueFrom(indentation);
           newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId));
         }
 
@@ -227,8 +220,8 @@ export class UseractionService {
     .pipe(distinct(event => event.increaseIndentation.id))
     .pipe(filter(event => event.openMarkdown.target.blockTarget.length > 0))
     .subscribe(async event => {
-      let currentPage = await firstValueFrom(this.pageService.getPage(event.openMarkdown.target.fileTarget));
-      for (let block of currentPage.blocks) {
+      const currentPage = await firstValueFrom(this.pageService.getPage(event.openMarkdown.target.fileTarget));
+      for (const block of currentPage.blocks) {
         if (event.openMarkdown.target.blockTarget == block.indentification) {
           firstValueFrom(block.indentation$).then(currentIndentation => {
             block.indentation.next(currentIndentation + 1);
@@ -250,9 +243,9 @@ export class UseractionService {
     .pipe(distinct(event => event.decreaseIndentation.id))
     .pipe(filter(event => event.openMarkdown.target.blockTarget.length > 0))
     .subscribe(async event => {
-      let currentPage = await firstValueFrom(this.pageService.getPage(event.openMarkdown.target.fileTarget));
+      const currentPage = await firstValueFrom(this.pageService.getPage(event.openMarkdown.target.fileTarget));
 
-      for (let block of currentPage.blocks) {
+      for (const block of currentPage.blocks) {
         if (event.openMarkdown.target.blockTarget === block.indentification) {
           firstValueFrom(block.indentation$).then(currentIndentation => {
             block.indentation.next(this.calcDecreaseIndentation(currentIndentation));
@@ -288,11 +281,9 @@ export class UseractionService {
 
   async convertToBasicContent(content: Block[]):
     Promise<BasicPageContent[]> {
-    let result
-      :
-      BasicPageContent[] = [];
-    for (let block of content) {
-      let indentation = await firstValueFrom(block.indentation);
+    const result: BasicPageContent[] = [];
+    for (const block of content) {
+      const indentation = await firstValueFrom(block.indentation);
       result.push({
         indentation: indentation,
         markdown: block.content.originalText

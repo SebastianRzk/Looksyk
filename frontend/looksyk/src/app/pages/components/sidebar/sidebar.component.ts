@@ -6,7 +6,7 @@ import { MatListModule } from "@angular/material/list";
 import { FavouriteService } from "../../../services/favourite.service";
 import { MatIconModule } from "@angular/material/icon";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { firstValueFrom, map } from "rxjs";
+import { firstValueFrom, map, Observable } from "rxjs";
 import { TitleService } from "../../../services/title.service";
 import { HistoryService } from "../../../services/history.service";
 
@@ -25,6 +25,7 @@ export class SidebarComponent implements OnInit {
 
   private history: HistoryService = inject(HistoryService);
   public history$ = this.history.history$.pipe(map(x => [...x].reverse()));
+  public historyEmpty$: Observable<boolean> = this.history.history$.pipe(map(x => x.length === 0));
 
 
   router = inject(Router);

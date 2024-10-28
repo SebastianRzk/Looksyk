@@ -19,8 +19,4 @@ export class ShowPageComponent {
 
   @Input({required: false})
   public editable: boolean = true;
-
-  @Input({required: true})
-  scrollIntoView!: boolean;
-
 }

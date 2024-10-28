@@ -2,11 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 
-export const EMPTY_REFERENCE: SearchReference = {
-  fileName: "",
-  blockNumber: 0,
-}
-
 
 export const MIN_FILTER_LENGTH = 4;
 export const TEXT_TO_SHORT_NAME = `Please enter at least ${MIN_FILTER_LENGTH} characters to search.`;
@@ -15,21 +10,14 @@ export const TEXT_TO_SHORT_NAME = `Please enter at least ${MIN_FILTER_LENGTH} ch
   providedIn: 'root'
 })
 export class SearchService {
-
-
-  private currentSearchResult = new BehaviorSubject<SearchResult>(
-    {
-      journal: [],
-      page: []
-    }
-  );
+  private currentSearchResult = new BehaviorSubject<SearchResult>(EMPTY_SEARCH_RESULT);
 
   public currentSearchResult$ = this.currentSearchResult.asObservable();
 
   private http = inject(HttpClient);
 
   public search(searchTerm: string): void {
-    let searchTermDto: SearchTermDto = {
+    const searchTermDto: SearchTermDto = {
       asString: searchTerm
     }
     this.http.post<SearchResultDto>("/api/search", searchTermDto).pipe(map(mapToEntity)).subscribe((data: SearchResult) => {
@@ -39,14 +27,7 @@ export class SearchService {
 
 
   public resetSearch() {
-    let minLengthReference = {
-      reference: EMPTY_REFERENCE,
-      textLine: TEXT_TO_SHORT_NAME
-    };
-    this.currentSearchResult.next({
-      journal: [minLengthReference],
-      page: [minLengthReference]
-    })
+    this.currentSearchResult.next(MIN_LENGTH_SEARCH_RESULT)
   }
 }
 
@@ -107,4 +88,24 @@ export interface SearchFinding {
   reference: SearchReference,
   textLine: string,
 }
+
+export const EMPTY_REFERENCE: SearchReference = {
+  fileName: "",
+  blockNumber: 0,
+}
+
+const MIN_LENGTH_REFERENCE: SearchFinding = {
+  reference: EMPTY_REFERENCE,
+  textLine: TEXT_TO_SHORT_NAME
+};
+
+const MIN_LENGTH_SEARCH_RESULT: SearchResult = {
+  journal: [MIN_LENGTH_REFERENCE],
+  page: [MIN_LENGTH_REFERENCE]
+};
+
+const EMPTY_SEARCH_RESULT: SearchResult = {
+  journal: [],
+  page: []
+};
 

@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MarkdownPage } from "../model";
 import { PageService } from "../../services/page.service";
+import { MatDivider, MatDividerModule } from "@angular/material/divider";
 
 @Component({
   selector: 'app-journal',

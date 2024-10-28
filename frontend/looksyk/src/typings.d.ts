@@ -1,2 +1,2 @@
-declare var marked:any;
-declare var highlight:any;
+declare const marked:any;
+declare const highlight:any;

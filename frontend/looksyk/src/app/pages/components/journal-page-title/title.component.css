@@ -1,3 +1,7 @@
+h1 {
+  margin-top: 0;
+}
+
 .title-segment:hover {
   border: 2px solid var(--primary-shading);
   padding: 0;

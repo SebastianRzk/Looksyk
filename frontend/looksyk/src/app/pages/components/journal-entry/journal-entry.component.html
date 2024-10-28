@@ -1,4 +1,6 @@
 <ng-container *ngIf="page | async as p">
-  <app-journal-page-title [title_date]="p.name" [push_history]="false">{{ p.name }}</app-journal-page-title>
-  <app-show-page [editable]="true" [page]="p" [scrollIntoView]="false"></app-show-page>
+  <div class="page">
+    <app-journal-page-title [title_date]="p.name" [push_history]="false">{{ p.name }}</app-journal-page-title>
+    <app-show-page [editable]="true" [page]="p"></app-show-page>
+  </div>
 </ng-container>

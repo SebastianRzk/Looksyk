@@ -1,5 +1,9 @@
 mat-drawer-container {
   height: 100vh;
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  position: absolute;
 }
 
 mat-drawer-content {

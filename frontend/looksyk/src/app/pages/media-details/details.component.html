@@ -4,9 +4,6 @@
                 [markdown]="mediaInfo.markdownPreview"
                 [editable]="false"
                 [pageid]="'details/'+mediaInfo.properties.fullQualifiedPath"
-                [scrollIntoView]="false"
-
-
   ></app-markdown>
   <iframe *ngIf="mediaInfo.htmlPreviewLink" [src]="bypass(mediaInfo.htmlPreviewLink)">
 

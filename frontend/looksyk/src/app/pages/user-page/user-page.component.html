@@ -14,6 +14,6 @@
   </mat-menu>
 </div>
 <app-rename-page-section *ngIf="renameOpen$ | async" (close)="renameOpen.next(false)" (submit)="submitRename($event)"></app-rename-page-section>
-<app-show-page *ngIf="page$ | async as p" [page]="p" [scrollIntoView]="true"></app-show-page>
+<app-show-page *ngIf="page$ | async as p" [page]="p"></app-show-page>
 <mat-divider></mat-divider>
 <app-referenced-by *ngIf="pageName$ | async as p" [pageName]="p"></app-referenced-by>

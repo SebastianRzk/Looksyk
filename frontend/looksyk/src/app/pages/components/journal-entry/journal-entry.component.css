@@ -1,7 +1,8 @@
-.divider {
-  margin-top: 3ex;
-  margin-bottom: 3ex;
-  margin-left: 1ex;
+app-show-page {
+  margin-bottom: 4ex;
 }
 
-
+.page {
+  display:flex;
+  flex-direction: column;
+}

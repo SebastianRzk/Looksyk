@@ -64,7 +64,6 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   @ViewChild("markdownComponent")
   markdownRef!: ElementRef;
 
-
   @ViewChild(MatMenuTrigger)
   trigger!: MatMenuTrigger;
 
@@ -76,15 +75,11 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   @Input({required: true})
   markdown!: Block;
 
-
   @Input({required: true})
   public editable!: boolean;
 
   @Input({required: true})
   public pageid!: string;
-
-  @Input({required: true})
-  public scrollIntoView!: boolean;
 
   componentMode: Subject<MarkdownComponentState> = new BehaviorSubject<MarkdownComponentState>(MarkdownComponentState.PRESENTING);
   viewMode$: Observable<boolean> = this.componentMode.pipe(map(x => x === MarkdownComponentState.PRESENTING));
@@ -173,13 +168,6 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   openEditor() {
     this.componentMode.next(MarkdownComponentState.EDITING);
-    if (this.scrollIntoView) {
-      this.textareaRef.nativeElement.scrollIntoView({
-        block: "center",
-        behavior: "smooth"
-      })
-
-    }
     this.textareaRef.nativeElement.focus();
   }
 
