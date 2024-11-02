@@ -2,6 +2,7 @@
   <h1>Looksyk</h1>
   <p>{{titleService.title$ | async}}</p>
 </div>
+
 <mat-divider></mat-divider>
 
 <div class="menu-button-list">
@@ -11,7 +12,6 @@
 </div>
 
 <mat-divider></mat-divider>
-
 
 <div class="menu-button-list" *ngIf="favs$ | async as favs" cdkDropList (cdkDropListDropped)="drop($event)">
   <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" cdkDrag><mat-icon>star</mat-icon>{{fav}}</button>

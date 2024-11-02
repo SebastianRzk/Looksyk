@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { PageService } from "../../services/page.service";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
@@ -24,7 +24,8 @@ import { TitleComponent } from "../components/journal-page-title/title.component
     TitleComponent
   ],
   templateUrl: './journal-single-entry.component.html',
-  styleUrl: './journal-single-entry.component.css'
+  styleUrl: './journal-single-entry.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalSingleEntryComponent implements OnInit{
 

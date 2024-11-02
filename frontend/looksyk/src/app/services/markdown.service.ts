@@ -31,32 +31,32 @@ export class MarkdownService {
   }
 
   public makeLinksInternal(elementRef: ElementRef, router: Router) {
-    let as = elementRef.nativeElement.querySelectorAll('a');
+    const as = elementRef.nativeElement.querySelectorAll('a');
     for (let a of as) {
-      let link = a as unknown as HTMLLinkElement;
-      let originalDestination = link.getAttribute("href");
+      const link = a as unknown as HTMLLinkElement;
+      const originalDestination = link.getAttribute("href");
       if (originalDestination) {
         if (originalDestination.startsWith("page/")) {
           link.removeAttribute("href");
-          link.onclick = (clickEvent) => {
+          link.onclick = async (clickEvent) => {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
-            router.navigateByUrl(originalDestination);
+            await router.navigateByUrl(originalDestination);
           }
         } else if (originalDestination.startsWith("journal/")) {
           link.removeAttribute("href");
-          link.onclick = (clickEvent) => {
+          link.onclick = async (clickEvent) => {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
-            router.navigateByUrl(originalDestination);
+            await router.navigateByUrl(originalDestination);
           }
         } else if (originalDestination.startsWith("assets/") || originalDestination.startsWith("/assets/")) {
           link.removeAttribute("href");
-          link.onclick = (clickEvent) => {
+          link.onclick = async (clickEvent) => {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
             let escapedDestination = originalDestination?.replaceAll("(", "%28").replaceAll(")", "%29");
-            router.navigateByUrl(escapedDestination);
+            await router.navigateByUrl(escapedDestination);
           }
         }
       }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink } from "@angular/router";
@@ -15,7 +15,8 @@ import { HistoryService } from "../../../services/history.service";
   standalone: true,
   imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);

@@ -11,7 +11,7 @@ export class HistoryService {
   public history$ = this.history.asObservable();
 
   public async pushEntry(title: string, url: string[]): Promise<void> {
-    let history = [...await firstValueFrom(this.history$)];
+    const history = [...await firstValueFrom(this.history$)];
     if (history.length >= this.MAX_HISTORY) {
       history.shift();
     }

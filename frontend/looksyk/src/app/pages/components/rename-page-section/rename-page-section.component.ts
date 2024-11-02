@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
@@ -13,7 +13,8 @@ import { MatDivider } from "@angular/material/divider";
     MatFormField
   ],
   templateUrl: './rename-page-section.component.html',
-  styleUrl: './rename-page-section.component.css'
+  styleUrl: './rename-page-section.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RenamePageSectionComponent {
 

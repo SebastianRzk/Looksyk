@@ -85,16 +85,15 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   state$ = this.contentAssist.state$;
 
-  title: Subject<string> = new BehaviorSubject<string>("");
   title$: Observable<string> = this.state$.pipe(map(mode => {
     if (mode == ContentAssistMode.Insert) {
-      return "content assist insert";
+      return "Insert";
     } else if (mode == ContentAssistMode.Navigate) {
-      return "content assist navigate";
+      return "Navigate";
     } else if (mode == ContentAssistMode.Search) {
-      return "content assist search";
+      return "Search";
     } else {
-      return "content assist link";
+      return "Insert link";
     }
   }));
 

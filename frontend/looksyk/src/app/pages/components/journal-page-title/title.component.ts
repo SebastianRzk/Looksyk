@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from "rxjs";
 import { RouterLink } from "@angular/router";
@@ -9,7 +9,8 @@ import { HistoryService } from "../../../services/history.service";
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './title.component.html',
-  styleUrls: ['./title.component.css']
+  styleUrls: ['./title.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnChanges {
   @Input({required: true})

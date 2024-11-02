@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowPageComponent } from "../show-page/show-page.component";
 import { TitleComponent } from "../components/user-page-title/title.component";
@@ -14,7 +14,8 @@ import { HistoryService } from "../../services/history.service";
   standalone: true,
   imports: [CommonModule, ShowPageComponent, TitleComponent, MarkdownComponent],
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css']
+  styleUrls: ['./details.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit {
 

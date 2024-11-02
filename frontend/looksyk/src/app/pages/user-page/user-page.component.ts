@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageService } from "../../services/page.service";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -19,7 +19,8 @@ import { RenamePageSectionComponent } from "../components/rename-page-section/re
   standalone: true,
   imports: [CommonModule, TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatButton, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent],
   templateUrl: './user-page.component.html',
-  styleUrls: ['./user-page.component.css']
+  styleUrls: ['./user-page.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
@@ -55,8 +56,8 @@ export class UserPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(
       params => {
-        let pageNameUnencoded = params["name"];
-        let pageName = decodeURIComponent(pageNameUnencoded);
+        const pageNameUnencoded = params["name"];
+        const pageName = decodeURIComponent(pageNameUnencoded);
         this.page_.unsubscribe();
         this.page_ = this.pageSerivce.getUserPage(pageName).subscribe(
           value => this.pageState.next(value)
@@ -73,7 +74,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   }
 
   async submitRename(newName: string) {
-    let pageName = await firstValueFrom(this.pageName$);
+    const pageName = await firstValueFrom(this.pageName$);
     await this.pageSerivce.renameUserPage(pageName, newName).then(
       name => {
         this.renameOpen.next(false);
@@ -83,7 +84,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   }
 
   async delete() {
-    let pageName = await firstValueFrom(this.pageName$);
+    const pageName = await firstValueFrom(this.pageName$);
     await this.pageSerivce.deleteUserPage(pageName);
     await this.router.navigate(["/"]);
   }

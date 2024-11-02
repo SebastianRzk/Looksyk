@@ -14,7 +14,7 @@ export class MediaService {
 
     const formData = new FormData();
     formData.append("file", file);
-    let value = {
+    const value = {
       "name": file.name
     };
     formData.append('json', new Blob([JSON.stringify(value)], {
@@ -36,9 +36,6 @@ export class MediaService {
         fullQualifiedPath: dto.properties.fullQualifiedPath
       }
     }
-    console.log(dto)
-    console.log(dto.markdownPreview)
-    console.log(!!dto.markdownPreview)
 
     if (dto.markdownPreview) {
       preview.markdownPreview = new Block(

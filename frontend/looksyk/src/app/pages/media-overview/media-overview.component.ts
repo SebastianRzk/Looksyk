@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowPageComponent } from "../show-page/show-page.component";
 import { TitleComponent } from "../components/user-page-title/title.component";
@@ -11,7 +11,8 @@ import { MarkdownPage } from "../model";
   standalone: true,
   imports: [CommonModule, ShowPageComponent, TitleComponent],
   templateUrl: './media-overview.component.html',
-  styleUrls: ['./media-overview.component.css']
+  styleUrls: ['./media-overview.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaOverviewComponent implements OnInit {
 
