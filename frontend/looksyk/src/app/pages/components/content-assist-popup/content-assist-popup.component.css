@@ -9,13 +9,14 @@
   padding: 0 0 0 2ex;
   margin-right: 5ex;
   margin-bottom: 5ex;
+  margin-left: -5ex;
   width: -moz-available;
   width: -webkit-fill-available;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
-  .popuptext {
-    margin-left: -5ex;
+@-moz-document url-prefix() {
+  .popuptext{
+    margin-left: 0 !important;
   }
 }
 

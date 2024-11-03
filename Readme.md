@@ -4,31 +4,36 @@
 
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
+Read more
+in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
 - [Current Status](#current-status)
-	- [Technical concept](#technical-concept) 
-	- [Implemented Features](#implemented-features)
-	- [Out of Scope](#out-of-scope)
+    - [Technical concept](#technical-concept)
+    - [Project work and future](#project-work-and-future)
+    - [Key Selling Points](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
+    - [Implemented Features](#implemented-features)
+    - [Out of Scope](#out-of-scope)
 - [Run Looksyk](#run-looksyk)
-	- [Production Build / Installation](#production-build--installation)
-	- [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
-	- [Development Build](#development-build)
+    - [Production Build / Installation](#production-build--installation)
+    - [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+    - [Development Build](#development-build)
 - [Migrate Your Existing Logseq Graph](#migrate-your-existing-logseq-graph-to-looksyk)
 - [Configuration](#configuration)
 - [Usage](#usage)
-	- [Markdown Syntax and Features](#markdown-syntax-and-features)
-	- [Navigation](#navigation)
-	- [Page names and hierarchy](#page-names-and-hierarchy)
-	- [Favorites](#favorites)
-	- [Code](#code)
-	- [Todos](#todos)
+    - [Markdown Syntax and Features](#markdown-syntax-and-features)
+    - [Navigation](#navigation)
+    - [Page names and hierarchy](#page-names-and-hierarchy)
+    - [Favorites](#favorites)
+    - [Code](#code)
+    - [Todos](#todos)
     - [Queries](#queries)
-      - [Query Page Hierarchy](#query-page-hierarchy)
-      - [Query Todos](#query-todos)
-      - [Query Backlinks](#query-backlinks)
-      - [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
+        - [Query Page Hierarchy](#query-page-hierarchy)
+        - [Query Todos](#query-todos)
+        - [Query Backlinks](#query-backlinks)
+        - [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
 
@@ -49,7 +54,8 @@ With Looksyk I want to create a local platform to collect information.
 
 Currently, the backend renders all content in Markdown, which is displayed with [Marked](https://marked.js.org/) in the
 frontend. This makes Looksyk relatively close to the Markdown standard. Code highlighting is done
-with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/). The application is wrapped in an electron app (with [electron forge](https://www.electronforge.io/)).
+with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/). The application is
+wrapped in an electron app (with [electron forge](https://www.electronforge.io/)).
 
 Even if the project is currently a pure web project, I would not deploy it publicly because the project in its current
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
@@ -60,8 +66,23 @@ fast
 enough.
 
 The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal
-page has
-issues.
+page has issues.
+
+Tested browsers:
+
+| Browser                        | Compatibility |
+|--------------------------------|---------------| 
+| application-wrapper (Electron) | works         |
+| Chromium / Chrome              | works         |
+| Firefox                        | works         |
+
+Tested operating systems
+
+| OS      | Compatibility                                                                                                                                                                                                                                                                       |
+|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Linux   | works                                                                                                                                                                                                                                                                               |
+| Windows | Not tested. The build script certainly doesn't work (at least not without WSL). In addition, the resolution of the home directory may fail (please specify `--graph-location`) and the desktop shortcut doesn't work. Otherwise, Looksyk should be programmed platform independent. |
+| MacOs   | Not tested. Keyboard shortcuts are currently only designed for a Windows keyboard layout, but this can be changed via a pull request. There are also likely to be challenges in the build script. Otherwise, Looksyk is programmed to be platform-independent.                      |
 
 ### Project work and future
 
@@ -72,32 +93,41 @@ I am happy about every contribution, but I cannot guarantee that I will implemen
 If you have any changes or suggestions, please send me a pull request.
 For feature requests and bugs, you can submit an issue (or a pull request if you can).
 
+### What are the key selling points compared to other knowledge platforms?
+
+* Runs local on your computer.
+* Your information is always exclusively in the Markdown files. No replication in a database or similar. The files can
+  be easily synchronized with other sync tools.
+* Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
+* Simple, use case based query language.
+* Multiple instances of Looksyk with different graphs can be opened in parallel.
+
 ### Implemented Features
 
 * Pages
 * Journal
 * Todos
 * Content assist
-	* Creating links, inserting queries, tags and media
+    * Creating links, inserting queries, tags and media
 * View (and link) media
-	* Images
-	* PDFs
-	* HTML Files (e.g. SingleFile saved pages
-	  from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
-	  or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
-	* Video (html5 video player)
-	* Audio (html5 audio player)
-	* Code (with highlighting)
-	* Text files
+    * Images
+    * PDFs
+    * HTML Files (e.g. SingleFile saved pages
+      from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
+      or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+    * Video (html5 video player)
+    * Audio (html5 audio player)
+    * Code (with highlighting)
+    * Text files
 * Queries (placeholders for dynamic content)
-	* Query todos
-	* Page hierarchy
-	* References
-	* Render video, audio, images, text files and code files (with highlighting)
+    * Query todos
+    * Page hierarchy
+    * References
+    * Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
-* History: Show, drop, navigate to previous and next page. Keyboard shortcurts available.
+* History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
 
 ### Out of scope
 
@@ -106,7 +136,9 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Dynamic backend plugins
 * Server version / multi user / rcs
 * i18n
-* Sync with other devices. Please use other tools like [Nextcloud](https://nextcloud.com/install/), [git](https://git-scm.com/) or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your graph
+* Sync with other devices. Please use other tools
+  like [Nextcloud](https://nextcloud.com/install/), [git](https://git-scm.com/)
+  or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your graph
 
 ## Run Looksyk
 
@@ -115,8 +147,10 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 1. Run the script `bash build.sh` (this will build the frontend and backend, and requires `npm` and `cargo`)
 2. The application is now in the `target` folder
 3. (Optional) Create a shortcut icon `sh create_desktop_shortcut.sh`
-4. Start the application. Use the created shortcut or run `./application-wrapper/looksyk` in the `target` folder. You can instrument the
-   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with `--title` to change the title. With the argument `--devtools true` the electron devtools are opened as default.
+4. Start the application. Use the created shortcut or run `./application-wrapper/looksyk` in the `target` folder. You
+   can instrument the
+   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with
+   `--title` to change the title. With the argument `--devtools true` the electron devtools are opened as default.
 5. The application is now available at `http://localhost:8989` (or the configured port)
 
 ### Running different looksyk graphs at the same time (with different ports)
@@ -133,15 +167,12 @@ you can run the application with the arguments `--port`, `--graph-location` and 
 3. Install backend dependencies and run `cd backend` and `cargo run`
 4. The application is now available at `http://localhost:4200` (frontend) and `http://localhost:8989` (backend)
 
-
 #### Build electron app
 
 1. Change into the application-wrapper directory `cd application-wrapper`
 2. Install electron dependencies `npm install`
 3. Build the electron app `npm run package`
 4. The application is now in the `out` folder e.g. `out/looksyk-linux-x64/looksyk`
-
-
 
 ### Migrate your existing Logseq graph to Looksyk
 
@@ -150,7 +181,8 @@ you can run the application with the arguments `--port`, `--graph-location` and 
 3. Copy your pages into the pages folder (`~/graph/pages`)
 4. Copy your assets into the assets folder (`~/graph/assets`)
 5. Start / Restart the backend
-6. (Optional): Replace all asset references `(some name)[../assets/assetName]` with `(some name)[/assets/assetName]` in your
+6. (Optional): Replace all asset references `(some name)[../assets/assetName]` with `(some name)[/assets/assetName]` in
+   your
    pages so 'on click' navigates to the media preview page and does not download the file.
 7. (Optional): Replace all labels `#myTag` with `[[myTag]]` in your pages so the tags are recognized by the backend.
 8. (Optional): Replace your queries with the Looksyk query syntax
@@ -169,20 +201,20 @@ The application title can be modified with the argument `--title`.
 
 ## Usage
 
-
 ### Markdown Syntax and Features
+
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
 * Ctrl+Enter creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
 * Ctrl+Space opens the content assist
-	* With open markdown block -> "insert mode"
-	* With no open markdown block -> "navigation mode"
+    * With open markdown block -> "insert mode"
+    * With no open markdown block -> "navigation mode"
 * Alt+Left Navigate to the previous page
 * Alt+Right Navigate to the next page
 * Ctrl+R Refresh the current page
 * Lists inside of blocks are supported.
-  * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
-  * Ordered lists are supported with `1.`, `2.` ...
+    * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
+    * Ordered lists are supported with `1.`, `2.` ...
 
 ### Navigation
 
@@ -191,7 +223,8 @@ The application title can be modified with the argument `--title`.
 ### Page names and hierarchy
 
 * Every tag `[[myTag]]` links to a page with the name `myTag`
-* To create a hierarchy, use the `/` character in the page name. `[[myTag / mySubTag]]` creates a page `myTag / mySubTag` in the
+* To create a hierarchy, use the `/` character in the page name. `[[myTag / mySubTag]]` creates a page
+  `myTag / mySubTag` in the
   and the parent tag `myTag`
 * You can navigate to the parent page by clicking on the parent tag in the page header
 * You can query the page hierarchy with the query `page-hierarchy` (see [page hierarchy](#query-page-hierarchy))
@@ -205,32 +238,37 @@ The application title can be modified with the argument `--title`.
 ### Code
 
 * Code block start with three backticks and the language name (e.g. ```rust)
-* Code blocks are highlighted with [highlightjs](https://highlightjs.org/). For proper highlighting, the language name must be
+* Code blocks are highlighted with [highlightjs](https://highlightjs.org/). For proper highlighting, the language name
+  must be
   provided
-* Code blocks can be inserted with the query `insert-file-content` (see [render assets](#query-render-assets-insert-content-from-file))
-
+* Code blocks can be inserted with the query `insert-file-content` (
+  see [render assets](#query-render-assets-insert-content-from-file))
 
 ### Todos
 
 * Todo-blocks are blocks with a leading `[ ]` for todo or `[x]` for done. The rendered block has a checkbox that can be
   toggled
 * You can query todos with the query `todos` (see [todos](#todos))
-* A todo block can be associated with a tags. 
-  * The todo is always tagged with the tag of the page it is on. If the todo is
-    on a page with the tag `myTag`, the todo is also tagged with `myTag`. 
-  * Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the todo.
-  * All tags in previous blocks that have a lower indentation will also be associated with the todo.
-
+* A todo block can be associated with a tags.
+    * The todo is always tagged with the tag of the page it is on. If the todo is
+      on a page with the tag `myTag`, the todo is also tagged with `myTag`.
+    * Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the
+      todo.
+    * All tags in previous blocks that have a lower indentation will also be associated with the todo.
 
 ### Queries
 
-Queries are placeholders for dynamic content in Markdown. The result of the query is calculated and displayed dynamically at runtime, whereby only the query syntax and not the result is stored in the Markdown file on disk.
+Queries are placeholders for dynamic content in Markdown. The result of the query is calculated and displayed
+dynamically at runtime, whereby only the query syntax and not the result is stored in the Markdown file on disk.
 
 Queries are particularly suitable for three problems:
 
-* Content that changes continuously over time and where the references should be dynamically adapted across all pages. For example, "Which todos for the tag "myTag" are not yet completed?" or "which subpages does the page myTag have?".
-* Content that is not stored in the Markdown file, but should be displayed in the Markdown file. For example, "Insert the content of the file myFile.asdf as a code block" or "Insert the content of the file myFile.mp4 as a video".
-* Content that is not supported by the Markdown standard, but should be displayed in the Markdown file. For example, "Insert a video" or "Insert an audio file".
+* Content that changes continuously over time and where the references should be dynamically adapted across all pages.
+  For example, "Which todos for the tag "myTag" are not yet completed?" or "which subpages does the page myTag have?".
+* Content that is not stored in the Markdown file, but should be displayed in the Markdown file. For example, "Insert
+  the content of the file myFile.asdf as a code block" or "Insert the content of the file myFile.mp4 as a video".
+* Content that is not supported by the Markdown standard, but should be displayed in the Markdown file. For example, "
+  Insert a video" or "Insert an audio file".
 
 Currently,all queries must be inserted exactly as described. Parameters cannot yet be swapped or omitted.
 
