@@ -24,7 +24,6 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 - [Configuration](#configuration)
 - [Usage](#usage)
     - [Markdown Syntax and Features](#markdown-syntax-and-features)
-    - [Navigation](#navigation)
     - [Page names and hierarchy](#page-names-and-hierarchy)
     - [Favorites](#favorites)
     - [Code](#code)
@@ -41,8 +40,7 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 
 I have always been a fan of [Logseq](https://logseq.com/), but there were a few things that bothered me, such as the
 many control characters in the markdown files, the query language that is difficult to learn and limited in its
-capability, or the general
-performance.
+capability, or the general performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
 
@@ -101,6 +99,11 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
 * Simple, use case based query language.
 * Multiple instances of Looksyk with different graphs can be opened in parallel.
+* Developer-centric file support: 
+  * Insert code blocks with syntax highlighting
+  * Save and display existing code files in your pages with syntax highlighting
+  * Save and display backups of websites in your pages (with single-file-downloader)
+  * Insert videos, audio files, images, text files and PDFs.
 
 ### Implemented Features
 
@@ -204,21 +207,19 @@ The application title can be modified with the argument `--title`.
 ### Markdown Syntax and Features
 
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
-* Ctrl+Enter creates a new block
+* <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
-* Ctrl+Space opens the content assist
+* <kbd>Ctrl</kbd>+<kbd>Space</kbd> opens the content assist
     * With open markdown block -> "insert mode"
     * With no open markdown block -> "navigation mode"
-* Alt+Left Navigate to the previous page
-* Alt+Right Navigate to the next page
-* Ctrl+R Refresh the current page
+* <kbd>Alt</kbd>+<kbd>Left</kbd> Navigate to the previous page
+* <kbd>Alt</kbd>+<kbd>Right</kbd> Navigate to the next page
+* <kbd>Ctrl</kbd>+<kbd>R</kbd> Refresh the current page
 * Lists inside of blocks are supported.
     * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
     * Ordered lists are supported with `1.`, `2.` ...
-
-### Navigation
-
-* Ctrl+Shift+F opens the content assist in "search mode" (case sensitive search across all pages and journals)
+* <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> opens the content assist in "search mode" (case sensitive search across all pages and journals)
+* <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>.</kbd> and <kbd>Ctrl</kbd>+<kbd>-</kbd> zoom in and out, <kbd>Ctrl</kbd>+<kbd>0</kbd> resets the zoom
 
 ### Page names and hierarchy
 

@@ -177,7 +177,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       } else if (item.name == ADD_QUERY_TODOS) {
         text_to_insert = "{query: todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\" }"
       } else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
-        text_to_insert = "{query: inline-file-content target-file:\"myFile\" display:\"inline-text\" }"
+        text_to_insert = "{query: insert-file-content target-file:\"myFile\" display:\"inline-text\" }"
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
       const allValues = await firstValueFrom(this.subMenuState);

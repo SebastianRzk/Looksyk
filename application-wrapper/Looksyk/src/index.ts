@@ -114,13 +114,28 @@ const createWindow = async (): Promise<void> => {
 
     globalShortcut.register('Alt+Left', () => {
         mainWindow.webContents.navigationHistory.goBack();
-    })
+    });
     globalShortcut.register('Alt+Right', () => {
         mainWindow.webContents.navigationHistory.goForward();
-    })
+    });
     globalShortcut.register('Ctrl+R', () => {
         mainWindow.webContents.reload();
-    })
+    });
+    globalShortcut.register('Ctrl+0', () => {
+        mainWindow.webContents.setZoomLevel(1);
+    });
+    globalShortcut.register('Ctrl+Plus', () => {
+        mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() + 0.1);
+    });
+    globalShortcut.register('Ctrl+=', () => {
+        mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() + 0.1);
+    });
+    globalShortcut.register('Ctrl+.', () => {
+        mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() + 0.1);
+    });
+    globalShortcut.register('Ctrl+-', () => {
+        mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() - 0.1);
+    });
 };
 
 // This method will be called when Electron has finished

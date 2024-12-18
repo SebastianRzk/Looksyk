@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::PathBuf;
 
+const NULL_BYTE: &str = "\0";
+
 pub fn read_file(path: PathBuf) -> String {
     println!("loading file {}", path.to_str().unwrap());
     fs::read_to_string::<PathBuf>(path).unwrap()
@@ -38,13 +40,15 @@ pub fn delete_file(path: PathBuf) {
 
 pub fn is_text_file(path: PathBuf)-> bool {
     let file_content = read_binary_file(path);
-    let mut is_text = true;
-    for byte in file_content {
-        if byte > 127 && (byte < 161 || byte > 191) && byte != 195 {
-            println!("Found non text byte: {}", byte);
-            is_text = false;
-            break;
-        }
+    !file_content.contains(&NULL_BYTE.as_bytes()[0])
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn test_null_byte_is_len_1(){
+        let null_byte = "\0";
+        assert_eq!(null_byte.as_bytes().len(), 1);
     }
-    is_text
 }
