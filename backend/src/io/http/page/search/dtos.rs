@@ -6,14 +6,12 @@ pub struct SearchResultDto {
     pub page: Vec<SearchFindingDto>,
 }
 
-
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchFindingDto {
     pub reference: SearchReferenceDto,
     pub text_line: String,
 }
-
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]

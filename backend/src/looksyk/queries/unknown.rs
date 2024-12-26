@@ -12,7 +12,10 @@ pub fn render_display_unknown(display_type: QueryDisplayType) -> QueryRenderResu
     }
     QueryRenderResult {
         has_dynamic_content: false,
-        inplace_markdown: format!("display type {} not supported for querytype", display_type.to_string()),
+        inplace_markdown: format!(
+            "display type {} not supported for querytype",
+            display_type.to_string()
+        ),
         referenced_markdown: vec![],
     }
 }

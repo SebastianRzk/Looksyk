@@ -1,11 +1,21 @@
-use crate::io::http::page::search::dtos::{SearchFindingDto, SearchReferenceDto, SearchResultDto, SearchTermDto};
+use crate::io::http::page::search::dtos::{
+    SearchFindingDto, SearchReferenceDto, SearchResultDto, SearchTermDto,
+};
 use crate::looksyk::model::MarkdownReference;
 use crate::looksyk::search::{SearchFinding, SearchResult, SearchTerm};
 
 pub fn search_result_to_dto(search_result: SearchResult) -> SearchResultDto {
     SearchResultDto {
-        journal: search_result.journal.iter().map(|x| search_finding_to_dto(x)).collect(),
-        page: search_result.page.iter().map(|x| search_finding_to_dto(x)).collect(),
+        journal: search_result
+            .journal
+            .iter()
+            .map(|x| search_finding_to_dto(x))
+            .collect(),
+        page: search_result
+            .page
+            .iter()
+            .map(|x| search_finding_to_dto(x))
+            .collect(),
     }
 }
 
@@ -23,10 +33,9 @@ fn to_search_reference(markdown_reference: &MarkdownReference) -> SearchReferenc
     }
 }
 
-
 pub fn to_search_term(search_term_dto: SearchTermDto) -> SearchTerm {
     SearchTerm {
-        as_string: search_term_dto.as_string
+        as_string: search_term_dto.as_string,
     }
 }
 

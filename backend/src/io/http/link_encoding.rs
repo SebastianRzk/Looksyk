@@ -1,5 +1,7 @@
 pub fn encode_link_component(link: &String) -> String {
-    link.replace(" ", "%20").replace("#", "%23").replace("/", "%2F")
+    link.replace(" ", "%20")
+        .replace("#", "%23")
+        .replace("/", "%2F")
 }
 
 #[cfg(test)]

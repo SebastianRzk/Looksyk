@@ -1,14 +1,17 @@
-use actix_web::{post, web, Responder};
-use actix_web::web::Data;
 use crate::io::http::page::dtos::ToValidate;
 use crate::io::http::page::mapper::map_to_block_dto;
 use crate::looksyk::model::RawBlock;
 use crate::looksyk::parser::parse_block;
 use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::state::state::AppState;
+use actix_web::web::Data;
+use actix_web::{post, web, Responder};
 
 #[post("/api/parse")]
-async fn parse(content: web::Json<ToValidate>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn parse(
+    content: web::Json<ToValidate>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     println!("on demand render block");
     let raw_block = RawBlock {
         indentation: 0,
@@ -23,13 +26,14 @@ async fn parse(content: web::Json<ToValidate>, data: Data<AppState>) -> actix_we
 
     let serialized_block = render_block(
         &parsed_block,
-        &StaticRenderContext{
+        &StaticRenderContext {
             user_pages: &user_page_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,
         },
         &mut asset_guard,
-        &data.data_path);
+        &data.data_path,
+    );
 
     drop(user_page_guard);
     drop(todo_index_guard);

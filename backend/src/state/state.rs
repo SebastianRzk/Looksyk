@@ -27,8 +27,8 @@ pub struct DataRootLocation {
 
 #[cfg(test)]
 pub mod builder {
-    use std::path::Path;
     use crate::state::state::DataRootLocation;
+    use std::path::Path;
 
     pub fn empty_data_root_location() -> DataRootLocation {
         DataRootLocation {
@@ -37,7 +37,6 @@ pub mod builder {
     }
 }
 
-
 pub struct CurrentPageAssociatedState<'a> {
     pub user_pages: &'a UserPageIndex,
     pub journal_pages: &'a JournalPageIndex,
@@ -45,15 +44,12 @@ pub struct CurrentPageAssociatedState<'a> {
     pub tag_index: &'a TagIndex,
 }
 
-
 pub struct NewPageAssociatedState {
     pub user_pages: UserPageIndex,
     pub journal_pages: JournalPageIndex,
     pub todo_index: TodoIndex,
     pub tag_index: TagIndex,
 }
-
-
 
 pub struct CurrentPageOnDiskState<'a> {
     pub user_pages: &'a UserPageIndex,
@@ -65,10 +61,3 @@ pub struct NewPageOnDiskState {
     pub user_pages: UserPageIndex,
     pub journal_pages: JournalPageIndex,
 }
-
-
-
-
-
-
-

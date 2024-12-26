@@ -1,19 +1,16 @@
-use std::collections::HashMap;
 use crate::io::fs::media::MediaOnDisk;
+use std::collections::HashMap;
 
 pub struct AssetCache {
     asset_cache: HashMap<String, AssetState>,
 }
 
-#[derive(Clone)]
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct AssetFileContent {
     pub content: String,
 }
 
-
-#[derive(Clone)]
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum AssetState {
     Miss,
     NotFound,
@@ -22,13 +19,11 @@ pub enum AssetState {
     Found(AssetFileContent),
 }
 
-#[derive(Clone)]
-#[derive(PartialEq)]
-pub struct FileSizeViolation{
+#[derive(Clone, PartialEq)]
+pub struct FileSizeViolation {
     pub file_size: u64,
     pub max_size: u64,
 }
-
 
 impl AssetCache {
     pub fn new() -> AssetCache {
@@ -38,7 +33,7 @@ impl AssetCache {
     }
 
     pub fn get(&self, media_on_disk: &MediaOnDisk) -> AssetState {
-        if let Some(element) =self.asset_cache.get(media_on_disk.name.as_str()) {
+        if let Some(element) = self.asset_cache.get(media_on_disk.name.as_str()) {
             println!("Cache hit for {}", media_on_disk.name);
             return element.clone();
         }

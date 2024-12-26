@@ -5,9 +5,6 @@ use crate::looksyk::model::{RawBlock, RawMarkdownFile};
 const INDENTATION: char = '\t';
 const BULLET: char = '-';
 
-
-
-
 pub fn calculate_indentation(string: &str) -> usize {
     let mut tab_count = 0;
     for char in string.chars() {
@@ -22,10 +19,9 @@ pub fn calculate_indentation(string: &str) -> usize {
 pub fn read_file_contents(file_content: String) -> RawMarkdownFile {
     let lines = file_content.lines();
     RawMarkdownFile {
-        blocks: parse_lines(lines)
+        blocks: parse_lines(lines),
     }
 }
-
 
 pub fn parse_lines(lines: Lines) -> Vec<RawBlock> {
     let mut result = vec![];
@@ -55,7 +51,6 @@ pub fn parse_lines(lines: Lines) -> Vec<RawBlock> {
     }
     result
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -95,5 +90,4 @@ mod tests {
         //assert_eq!(block.children_blocks.len(), 0);
         assert_eq!(block.text_content, vec!["line1", "line2"]);
     }
-
 }

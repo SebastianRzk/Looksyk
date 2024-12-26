@@ -12,8 +12,9 @@ const CONFIG_FILE_NAME: &str = "config.json";
 const INITIAL_GRAPH_NAME: &str = "MyFirstGraph";
 const INITIAL_GRAPH_PATH: &str = "graph";
 
-
-pub fn get_current_active_data_root_location(config_location: &InitialConfigLocation) -> DataRootLocation {
+pub fn get_current_active_data_root_location(
+    config_location: &InitialConfigLocation,
+) -> DataRootLocation {
     let path = Path::new(config_location.path.as_str()).to_path_buf();
     if !exists_folder(path.clone()) {
         create_folder(path.clone());
@@ -29,7 +30,8 @@ pub fn get_current_active_data_root_location(config_location: &InitialConfigLoca
                 path: home_directory().join(INITIAL_GRAPH_PATH),
             },
             available: vec![],
-        }).unwrap();
+        })
+        .unwrap();
         std::fs::write(file.clone(), config_file_content_as_str).unwrap();
     }
 
@@ -40,11 +42,9 @@ pub fn get_current_active_data_root_location(config_location: &InitialConfigLoca
     }
 }
 
-
 pub struct InitialConfigLocation {
     pub path: String,
 }
-
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -52,7 +52,6 @@ pub struct RootPathConfig {
     pub current_active: RootPath,
     pub available: Vec<RootPath>,
 }
-
 
 #[derive(Serialize, Deserialize)]
 pub struct RootPath {

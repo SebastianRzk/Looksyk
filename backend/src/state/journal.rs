@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
+use std::collections::HashMap;
 
 #[derive(Clone)]
 pub struct JournalPageIndex {

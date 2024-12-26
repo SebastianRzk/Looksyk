@@ -2,7 +2,7 @@ use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::Mutex;
 
-use crate::configuration::{APPLICATION_HOST};
+use crate::configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder};
 use crate::io::fs::basic_folder::home_directory;
@@ -29,14 +29,13 @@ use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
 use crate::state::state::{AppState, DataRootLocation};
 use actix_web::middleware::Logger;
-use actix_web::web:: {Data};
+use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 
+mod configuration;
+mod io;
 mod looksyk;
 mod state;
-mod io;
-mod configuration;
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -44,15 +43,20 @@ async fn main() -> std::io::Result<()> {
     let default_config = configuration::get_default_configuration();
     let config = default_config.overwrite(get_cli_args());
 
-
-    let data_root_location = config.overwrite_graph_location.unwrap_or_else(
-        || {
-            let initial_config_path = env::get_or_default("LOOKSYK_CONFIG_PATH", home_directory().join(".local").join("share").join("looksyk").to_str().unwrap());
-            get_current_active_data_root_location(&InitialConfigLocation {
-                path: initial_config_path
-            })
-        }
-    );
+    let data_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
+        let initial_config_path = env::get_or_default(
+            "LOOKSYK_CONFIG_PATH",
+            home_directory()
+                .join(".local")
+                .join("share")
+                .join("looksyk")
+                .to_str()
+                .unwrap(),
+        );
+        get_current_active_data_root_location(&InitialConfigLocation {
+            path: initial_config_path,
+        })
+    });
 
     if !exists_folder(data_root_location.path.to_path_buf()) {
         init_empty_graph(&data_root_location);
@@ -60,8 +64,10 @@ async fn main() -> std::io::Result<()> {
 
     let app_state = create_app_state(data_root_location, config.application_title);
 
-
-    println!("Starting Looksyk on  http://{}:{}", APPLICATION_HOST, config.application_port);
+    println!(
+        "Starting Looksyk on  http://{}:{}",
+        APPLICATION_HOST, config.application_port
+    );
 
     HttpServer::new(move || {
         App::new()
@@ -103,26 +109,30 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::catch_all_journals)
             .service(r#static::endpoints::catch_all_pages)
     })
-        .bind(SocketAddr::new(IpAddr::from_str(config.application_host.as_str()).unwrap(), config.application_port))?
-        .run()
-        .await
+    .bind(SocketAddr::new(
+        IpAddr::from_str(config.application_host.as_str()).unwrap(),
+        config.application_port,
+    ))?
+    .run()
+    .await
 }
 
 fn init_empty_graph(data_root_location: &DataRootLocation) {
     create_folder(data_root_location.path.join("assets"));
     create_folder(data_root_location.path.join("config"));
-    write_media_config(&data_root_location, &MediaIndex {
-        media: vec![]
-    });
-    save_config_to_file(&data_root_location, &Config {
-        favourites: vec![],
-        design: Design {
-            primary_color: "#0c884c".to_string(),
-            background_color: "#15212D".to_string(),
-            foreground_color: "white".to_string(),
-            primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
+    write_media_config(&data_root_location, &MediaIndex { media: vec![] });
+    save_config_to_file(
+        &data_root_location,
+        &Config {
+            favourites: vec![],
+            design: Design {
+                primary_color: "#0c884c".to_string(),
+                background_color: "#15212D".to_string(),
+                foreground_color: "white".to_string(),
+                primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
+            },
         },
-    });
+    );
 
     create_folder(data_root_location.path.join("journals"));
     create_folder(data_root_location.path.join("pages"));
@@ -132,7 +142,6 @@ fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data
     let mut media_index = read_media_config(&data_root_location);
     media_index = init_media(&data_root_location, &media_index);
     write_media_config(&data_root_location, &media_index);
-
 
     let config = read_config_from_file(&data_root_location);
     let all_pages = read_all_user_files(&data_root_location);
@@ -158,5 +167,3 @@ fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data
     });
     app_state
 }
-
-

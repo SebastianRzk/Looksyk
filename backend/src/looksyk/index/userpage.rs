@@ -10,13 +10,13 @@ use crate::state::userpage::UserPageIndex;
 
 pub fn create_user_page_index(all_files: Vec<PageOnDisk>) -> UserPageIndex {
     UserPageIndex {
-        entries: parse_files(all_files)
+        entries: parse_files(all_files),
     }
 }
 
 pub fn create_journal_page_index(all_files: Vec<PageOnDisk>) -> JournalPageIndex {
     JournalPageIndex {
-        entries: parse_files(all_files)
+        entries: parse_files(all_files),
     }
 }
 
@@ -30,19 +30,28 @@ fn parse_files(all_files: Vec<PageOnDisk>) -> HashMap<SimplePageName, ParsedMark
     parsed_file_index
 }
 
-pub fn remove_file_from_page_index(page_index: &UserPageIndex, simple_page_name: &SimplePageName) -> UserPageIndex {
+pub fn remove_file_from_page_index(
+    page_index: &UserPageIndex,
+    simple_page_name: &SimplePageName,
+) -> UserPageIndex {
     UserPageIndex {
-        entries: remove_from_index(&page_index.entries, simple_page_name)
+        entries: remove_from_index(&page_index.entries, simple_page_name),
     }
 }
 
-pub fn remove_file_from_journal_index(page_index: &JournalPageIndex, simple_page_name: &SimplePageName) -> JournalPageIndex {
+pub fn remove_file_from_journal_index(
+    page_index: &JournalPageIndex,
+    simple_page_name: &SimplePageName,
+) -> JournalPageIndex {
     JournalPageIndex {
-        entries: remove_from_index(&page_index.entries, simple_page_name)
+        entries: remove_from_index(&page_index.entries, simple_page_name),
     }
 }
 
-fn remove_from_index(current_index: &HashMap<SimplePageName, ParsedMarkdownFile>, page_id: &SimplePageName) -> HashMap<SimplePageName, ParsedMarkdownFile> {
+fn remove_from_index(
+    current_index: &HashMap<SimplePageName, ParsedMarkdownFile>,
+    page_id: &SimplePageName,
+) -> HashMap<SimplePageName, ParsedMarkdownFile> {
     let mut result = HashMap::new();
     for key in current_index.keys() {
         if key != page_id {

@@ -32,7 +32,13 @@ impl HierarchyParser {
     }
 
     fn last_depth(&self) -> usize {
-        return self.current_hierarchy.iter().last().map(|x| x.depth).or(Some(0)).unwrap();
+        return self
+            .current_hierarchy
+            .iter()
+            .last()
+            .map(|x| x.depth)
+            .or(Some(0))
+            .unwrap();
     }
 
     pub fn get_current_tag_set(&self) -> Vec<SimplePageName> {
@@ -66,14 +72,12 @@ mod tests {
         assert_eq!(cut.get_current_tag_set(), vec![page_name_str("MyPage")])
     }
 
-
     #[test]
     fn should_return_tags_when_tag_line_feeded() {
         let mut cut = HierarchyParser {
             page_name: page_name_str("MyPage"),
             current_hierarchy: vec![],
         };
-
 
         cut.feed(&ParsedBlock {
             indentation: 0,
@@ -86,7 +90,10 @@ mod tests {
             }],
         });
 
-        assert_eq!(cut.get_current_tag_set(), vec![page_name_str("MyPage"), page_name_str("mytag")])
+        assert_eq!(
+            cut.get_current_tag_set(),
+            vec![page_name_str("MyPage"), page_name_str("mytag")]
+        )
     }
 
     #[test]
@@ -95,7 +102,6 @@ mod tests {
             page_name: page_name_str("MyPage"),
             current_hierarchy: vec![],
         };
-
 
         cut.feed(&ParsedBlock {
             indentation: 0,
@@ -119,7 +125,14 @@ mod tests {
             }],
         });
 
-        assert_eq!(cut.get_current_tag_set(), vec![page_name_str("MyPage"), page_name_str("mytag"), page_name_str("mytag2")])
+        assert_eq!(
+            cut.get_current_tag_set(),
+            vec![
+                page_name_str("MyPage"),
+                page_name_str("mytag"),
+                page_name_str("mytag2")
+            ]
+        )
     }
 
     #[test]
@@ -128,7 +141,6 @@ mod tests {
             page_name: page_name_str("MyPage"),
             current_hierarchy: vec![],
         };
-
 
         cut.feed(&ParsedBlock {
             indentation: 0,
@@ -163,8 +175,13 @@ mod tests {
             }],
         });
 
-        assert_eq!(cut.get_current_tag_set(), vec![page_name_str("MyPage"), page_name_str("mytag"), page_name_str("mytag3")])
+        assert_eq!(
+            cut.get_current_tag_set(),
+            vec![
+                page_name_str("MyPage"),
+                page_name_str("mytag"),
+                page_name_str("mytag3")
+            ]
+        )
     }
 }
-
-

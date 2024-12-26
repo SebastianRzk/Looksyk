@@ -1,4 +1,4 @@
-pub mod http;
+pub mod cli;
 pub mod fs;
 mod hash;
-pub mod cli;
+pub mod http;

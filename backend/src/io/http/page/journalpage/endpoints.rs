@@ -16,7 +16,10 @@ use actix_web::web::{Data, Path};
 use actix_web::{get, post, web, Responder};
 
 #[get("/api/journal/{journal_name}")]
-async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn get_journal(
+    path: Path<String>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let simple_page_name = page_name(path.into_inner());
 
     let page_guard = data.a_user_pages.lock().unwrap();
@@ -25,7 +28,6 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
 
     let page = journal_guard.entries.get(&simple_page_name);
-
 
     let fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
 
@@ -51,7 +53,9 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
             todo_index: &todo_index_guard,
             tag_index: &data.d_tag_index.lock().unwrap(),
         },
-        &mut asset_cache, &data.data_path);
+        &mut asset_cache,
+        &data.data_path,
+    );
 
     drop(page_guard);
     drop(journal_guard);
@@ -61,9 +65,12 @@ async fn get_journal(path: Path<String>, data: Data<AppState>) -> actix_web::Res
     Ok(web::Json(map_markdown_file_to_dto(rendered_file, fav)))
 }
 
-
 #[post("/api/journal/{page_name}")]
-async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDto>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn update_journal(
+    path: Path<String>,
+    body: web::Json<UpdateMarkdownFileDto>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
     let simple_page_name = page_name(path.into_inner());
 
@@ -71,14 +78,17 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
     let serialized_page = serialize_page(&parsed_page);
     let parsed_lines = parse_lines(serialized_page.join("\n").lines());
     let updated_page = parse_markdown_file(RawMarkdownFile {
-        blocks: parsed_lines
+        blocks: parsed_lines,
     });
 
-    write_page(PageOnDisk {
-        name: simple_page_name.name.clone(),
-        content: serialized_page.join("\n"),
-    }, &data.data_path, &PageType::JournalPage);
-
+    write_page(
+        PageOnDisk {
+            name: simple_page_name.name.clone(),
+            content: serialized_page.join("\n"),
+        },
+        &data.data_path,
+        &PageType::JournalPage,
+    );
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
@@ -93,9 +103,14 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
         tag_index: &tag_guard,
     };
 
-
     let page_id = append_journal_page_prefix(&simple_page_name);
-    let new_page_associated_state = update_index_for_file(page_id, &simple_page_name, &PageType::JournalPage, &updated_page, current_page_associated_state);
+    let new_page_associated_state = update_index_for_file(
+        page_id,
+        &simple_page_name,
+        &PageType::JournalPage,
+        &updated_page,
+        current_page_associated_state,
+    );
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
@@ -111,7 +126,8 @@ async fn update_journal(path: Path<String>, body: web::Json<UpdateMarkdownFileDt
             tag_index: &tag_guard,
         },
         &mut asset_cache,
-        &data.data_path);
+        &data.data_path,
+    );
 
     drop(todo_guard);
     drop(tag_guard);

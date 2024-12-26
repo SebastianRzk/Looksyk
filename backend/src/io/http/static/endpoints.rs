@@ -1,13 +1,11 @@
 use std::path::{Path, PathBuf};
 
 use actix_files::NamedFile;
-use actix_web::{Error, get};
 use actix_web::http::header::{ContentDisposition, DispositionType};
 use actix_web::web;
+use actix_web::{get, Error};
 
 const STATIC_PATH: &str = "./static";
-
-
 
 #[get("/")]
 async fn index_html() -> Result<NamedFile, Error> {
@@ -28,7 +26,6 @@ async fn catch_all_journals() -> Result<NamedFile, Error> {
 async fn catch_all_journal() -> Result<NamedFile, Error> {
     index_html_response()
 }
-
 
 fn index_html_response() -> Result<NamedFile, Error> {
     let static_file_name = "index.html";
@@ -65,7 +62,6 @@ async fn css(path: web::Path<String>) -> Result<NamedFile, Error> {
         }))
 }
 
-
 #[get("/assets/fonts/{filename}.css")]
 async fn font_css(path: web::Path<String>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
@@ -78,7 +74,6 @@ async fn font_css(path: web::Path<String>) -> Result<NamedFile, Error> {
         }))
 }
 
-
 #[get("/assets/fav.png")]
 async fn fav() -> Result<NamedFile, Error> {
     let static_file_name = "fav.png";
@@ -90,7 +85,6 @@ async fn fav() -> Result<NamedFile, Error> {
             parameters: vec![],
         }))
 }
-
 
 #[get("/assets/fonts/ebgaramond/{filename}.ttf")]
 async fn font_garamond(path: web::Path<String>) -> Result<NamedFile, Error> {
@@ -149,8 +143,15 @@ fn to_static_assets(static_file_name: &str) -> PathBuf {
 }
 
 fn to_static_asset_fonts(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH).join("assets").join("fonts").join(static_file_name)
+    Path::new(STATIC_PATH)
+        .join("assets")
+        .join("fonts")
+        .join(static_file_name)
 }
 fn to_garamond(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH).join("assets").join("fonts").join("ebgaramond").join(static_file_name)
+    Path::new(STATIC_PATH)
+        .join("assets")
+        .join("fonts")
+        .join("ebgaramond")
+        .join(static_file_name)
 }

@@ -5,7 +5,6 @@ pub struct TodoIndex {
     pub entries: Vec<TodoIndexEntry>,
 }
 
-
 #[derive(Clone)]
 pub struct TodoIndexEntry {
     pub state: TodoState,
@@ -22,21 +21,17 @@ pub struct TodoSourceReference {
     pub page_type: PageType,
 }
 
-
 #[derive(Clone, PartialEq, Debug)]
 pub enum TodoState {
     Todo,
     Done,
 }
 
-
 #[cfg(test)]
 pub mod builder {
     use crate::state::todo::TodoIndex;
 
     pub fn empty_todo_index() -> TodoIndex {
-        TodoIndex {
-            entries: vec![],
-        }
+        TodoIndex { entries: vec![] }
     }
 }

@@ -1,5 +1,5 @@
-use std::collections::{HashMap, HashSet};
 use crate::looksyk::model::PageId;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Clone)]
 pub struct TagIndex {
@@ -9,7 +9,7 @@ pub struct TagIndex {
 #[cfg(test)]
 pub mod builder {
     use crate::state::tag::TagIndex;
-    use std::collections::{HashMap};
+    use std::collections::HashMap;
 
     pub fn empty_tag_index() -> TagIndex {
         TagIndex {

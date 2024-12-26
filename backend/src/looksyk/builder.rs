@@ -1,12 +1,10 @@
 use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 
-
-
 #[cfg(test)]
 pub mod test_builder {
-    use std::path::PathBuf;
     use crate::looksyk::datatypes::AssetDescriptor;
     use crate::state::state::DataRootLocation;
+    use std::path::PathBuf;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
         AssetDescriptor::new(file_name.to_string())
@@ -41,7 +39,6 @@ pub fn page_name_str(name: &str) -> SimplePageName {
     }
 }
 
-
 #[cfg(test)]
 pub fn link_token(link: &str) -> BlockToken {
     BlockToken {
@@ -59,18 +56,13 @@ pub fn journal_link_token(link: &str) -> BlockToken {
 }
 
 pub fn page_name(name: String) -> SimplePageName {
-    SimplePageName {
-        name,
-    }
+    SimplePageName { name }
 }
 
 #[cfg(test)]
 pub fn page_id(id: &str) -> PageId {
-    PageId {
-        id: id.to_string(),
-    }
+    PageId { id: id.to_string() }
 }
-
 
 #[cfg(test)]
 pub fn user_page_id(id: &str) -> PageId {
@@ -112,12 +104,12 @@ pub fn any_page_name() -> SimplePageName {
 }
 
 #[cfg(test)]
-pub fn any_page_id()  -> PageId {
+pub fn any_page_id() -> PageId {
     page_id("")
 }
 
 #[cfg(test)]
-pub fn empty_journal_index()  -> JournalPageIndex {
+pub fn empty_journal_index() -> JournalPageIndex {
     JournalPageIndex {
         entries: std::collections::HashMap::new(),
     }

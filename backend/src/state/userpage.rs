@@ -6,7 +6,6 @@ pub struct UserPageIndex {
     pub entries: HashMap<SimplePageName, ParsedMarkdownFile>,
 }
 
-
 #[cfg(test)]
 pub mod builder {
     use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
@@ -17,9 +16,9 @@ pub mod builder {
         user_page_index_with(HashMap::new())
     }
 
-    pub fn user_page_index_with(content: HashMap<SimplePageName, ParsedMarkdownFile>) -> UserPageIndex {
-        UserPageIndex {
-            entries: content,
-        }
+    pub fn user_page_index_with(
+        content: HashMap<SimplePageName, ParsedMarkdownFile>,
+    ) -> UserPageIndex {
+        UserPageIndex { entries: content }
     }
 }

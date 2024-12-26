@@ -15,26 +15,28 @@ use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::looksyk::serializer::update_and_serialize_page;
 use crate::state::state::{AppState, CurrentPageAssociatedState};
 
-
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
-async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockContentDto>, data: Data<AppState>) -> Result<impl Responder> {
+async fn update_block(
+    path: Path<(String, usize)>,
+    body: web::Json<UpdateBlockContentDto>,
+    data: Data<AppState>,
+) -> Result<impl Responder> {
     let request_body = body.into_inner();
     let (file_id, block_number) = path.into_inner();
-    let page_id = PageId {
-        id: file_id
-    };
+    let page_id = PageId { id: file_id };
     let page_type = get_page_type(&page_id);
-    let entity = map_markdown_block_dto(&request_body, MarkdownReference {
-        block_number,
-        page_name: strip_prefix(&page_id, &page_type),
-        page_id: page_id.clone(),
-    });
+    let entity = map_markdown_block_dto(
+        &request_body,
+        MarkdownReference {
+            block_number,
+            page_name: strip_prefix(&page_id, &page_type),
+            page_id: page_id.clone(),
+        },
+    );
     let selected_page;
-
 
     let page_type = get_page_type(&page_id);
     let simple_page_name = strip_prefix(&page_id, &page_type);
-
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
@@ -44,7 +46,11 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
 
     match page_type {
         PageType::JournalPage => {
-            selected_page = journal_guard.entries.get(&simple_page_name).unwrap().clone();
+            selected_page = journal_guard
+                .entries
+                .get(&simple_page_name)
+                .unwrap()
+                .clone();
         }
         PageType::UserPage => {
             println!("Simple page {}", simple_page_name.name);
@@ -52,20 +58,20 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         }
     }
 
-    let serialized_page = update_and_serialize_page(
-        &entity,
-        &selected_page,
-    );
+    let serialized_page = update_and_serialize_page(&entity, &selected_page);
     let parsed_lines = parse_lines(serialized_page.join("\n").lines());
     let updated_page = parse_markdown_file(RawMarkdownFile {
-        blocks: parsed_lines
+        blocks: parsed_lines,
     });
 
-    write_page(PageOnDisk {
-        name: strip_prefix(&page_id, &page_type).name,
-        content: serialized_page.join("\n"),
-    }, &data.data_path,
-               &page_type);
+    write_page(
+        PageOnDisk {
+            name: strip_prefix(&page_id, &page_type).name,
+            content: serialized_page.join("\n"),
+        },
+        &data.data_path,
+        &page_type,
+    );
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,
@@ -74,7 +80,13 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         tag_index: &tag_guard,
     };
 
-    let new_page_associated_state = update_index_for_file(page_id, &simple_page_name, &page_type, &updated_page, current_page_associated_state);
+    let new_page_associated_state = update_index_for_file(
+        page_id,
+        &simple_page_name,
+        &page_type,
+        &updated_page,
+        current_page_associated_state,
+    );
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
@@ -86,11 +98,16 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
         text_content: vec![entity.markdown],
     });
 
-    let rendered_block = render_block(&parsed_block, &StaticRenderContext {
-        user_pages: &page_guard,
-        todo_index: &todo_guard,
-        tag_index: &tag_guard,
-    }, &mut asset_cache, &data.data_path);
+    let rendered_block = render_block(
+        &parsed_block,
+        &StaticRenderContext {
+            user_pages: &page_guard,
+            todo_index: &todo_guard,
+            tag_index: &tag_guard,
+        },
+        &mut asset_cache,
+        &data.data_path,
+    );
 
     drop(todo_guard);
     drop(tag_guard);
@@ -100,4 +117,3 @@ async fn update_block(path: Path<(String, usize)>, body: web::Json<UpdateBlockCo
 
     Ok(web::Json(map_to_block_dto(&rendered_block)))
 }
-

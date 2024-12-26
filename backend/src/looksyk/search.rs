@@ -8,7 +8,6 @@ pub struct SearchTerm {
     pub as_string: String,
 }
 
-
 pub struct SearchResult {
     pub journal: Vec<SearchFinding>,
     pub page: Vec<SearchFinding>,
@@ -19,14 +18,26 @@ pub struct SearchFinding {
     pub text_line: String,
 }
 
-pub fn search(search_term: SearchTerm, journal_page_index: &JournalPageIndex, user_page_index: &UserPageIndex) -> SearchResult {
+pub fn search(
+    search_term: SearchTerm,
+    journal_page_index: &JournalPageIndex,
+    user_page_index: &UserPageIndex,
+) -> SearchResult {
     SearchResult {
         page: search_in_index(&search_term, PageType::UserPage, &user_page_index.entries),
-        journal: search_in_index(&search_term, PageType::JournalPage, &journal_page_index.entries),
+        journal: search_in_index(
+            &search_term,
+            PageType::JournalPage,
+            &journal_page_index.entries,
+        ),
     }
 }
 
-fn search_in_index(search_term: &SearchTerm, page_type: PageType, pages: &HashMap<SimplePageName, ParsedMarkdownFile>) -> Vec<SearchFinding> {
+fn search_in_index(
+    search_term: &SearchTerm,
+    page_type: PageType,
+    pages: &HashMap<SimplePageName, ParsedMarkdownFile>,
+) -> Vec<SearchFinding> {
     let mut result = vec![];
 
     for (simple_page_name, parsed_markdown_file) in pages.iter() {
@@ -53,7 +64,9 @@ fn search_in_index(search_term: &SearchTerm, page_type: PageType, pages: &HashMa
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::model::{BlockContent, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName};
+    use crate::looksyk::model::{
+        BlockContent, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
+    };
     use crate::looksyk::search::SearchTerm;
     use std::collections::HashMap;
 
@@ -64,17 +77,20 @@ mod tests {
         };
 
         let mut pages = HashMap::new();
-        let mut page = ParsedMarkdownFile {
-            blocks: vec![],
-        };
+        let mut page = ParsedMarkdownFile { blocks: vec![] };
         page.blocks.push(ParsedBlock {
             content: vec![BlockContent {
                 as_text: "asf search alkj".to_string(),
-                as_tokens: vec![]
+                as_tokens: vec![],
             }],
-            indentation: 0
+            indentation: 0,
         });
-        pages.insert(SimplePageName { name: "page_name".to_string() }, page);
+        pages.insert(
+            SimplePageName {
+                name: "page_name".to_string(),
+            },
+            page,
+        );
 
         let result = super::search_in_index(&search_term, PageType::UserPage, &pages);
 

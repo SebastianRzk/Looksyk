@@ -9,7 +9,6 @@ pub fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
                 block_token_type: BlockTokenType::TEXT,
             }],
             as_text: "".to_string(),
-        }
-        ],
+        }],
     }
 }

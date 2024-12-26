@@ -9,4 +9,3 @@ pub struct CliArgsDto {
     #[arg(long, value_name = "port")]
     pub port: Option<u16>,
 }
-

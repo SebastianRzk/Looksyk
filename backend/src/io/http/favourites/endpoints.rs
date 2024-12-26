@@ -9,7 +9,10 @@ use crate::looksyk::favourite::{add_favourite, remove_favourite, set_favourites}
 use crate::state::state::AppState;
 
 #[post("/api/favourites/{fav_name}")]
-async fn insert_favourite(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn insert_favourite(
+    path: Path<String>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let page_name = page_name(path.into_inner());
 
     let mut config_guard = data.g_config.lock().unwrap();
@@ -24,7 +27,10 @@ async fn insert_favourite(path: Path<String>, data: Data<AppState>) -> actix_web
 }
 
 #[delete("/api/favourites/{fav_name}")]
-async fn delete_favourite(path: Path<String>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn delete_favourite(
+    path: Path<String>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let page_name = page_name(path.into_inner());
 
     let mut config_guard = data.g_config.lock().unwrap();
@@ -45,9 +51,11 @@ async fn get_favourites(data: Data<AppState>) -> actix_web::Result<impl Responde
     Ok(web::Json(favs))
 }
 
-
 #[post("/api/favourites/")]
-async fn update_favourites(body: web::Json<FavListDto>, data: Data<AppState>) -> actix_web::Result<impl Responder> {
+async fn update_favourites(
+    body: web::Json<FavListDto>,
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let page_names = map_from_dto(body.into_inner());
 
     let mut config_guard = data.g_config.lock().unwrap();
@@ -59,5 +67,3 @@ async fn update_favourites(body: web::Json<FavListDto>, data: Data<AppState>) ->
 
     Ok(web::Json(map_to_dto(config_guard)))
 }
-
-

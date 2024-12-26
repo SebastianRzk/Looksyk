@@ -23,24 +23,24 @@ pub fn get_default_configuration() -> Configuration {
     }
 }
 
-
 impl Configuration {
     pub fn overwrite(&self, cli_args: CliArgs) -> Self {
         Configuration {
             application_port: cli_args.port.unwrap_or(self.application_port),
-            overwrite_graph_location: cli_args.graph_location.map(|s| DataRootLocation {
-                path: s.into(),
-            }),
-            application_title: cli_args.application_title.unwrap_or(self.application_title.clone()),
+            overwrite_graph_location: cli_args
+                .graph_location
+                .map(|s| DataRootLocation { path: s.into() }),
+            application_title: cli_args
+                .application_title
+                .unwrap_or(self.application_title.clone()),
             application_host: self.application_host.clone(),
             max_inline_filesize: self.max_inline_filesize,
         }
     }
 }
 
-
 pub struct CliArgs {
     pub graph_location: Option<String>,
     pub port: Option<u16>,
-    pub application_title: Option<String>
+    pub application_title: Option<String>,
 }

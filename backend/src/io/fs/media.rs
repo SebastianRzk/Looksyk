@@ -14,22 +14,28 @@ use crate::state::state::DataRootLocation;
 pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
     let media_config_path = media_config_path(data_root_location);
     let config_file_content_as_str = read_file(media_config_path);
-    let json: Vec<IndexedMedia> = serde_json::from_str(config_file_content_as_str.as_str()).unwrap();
-    MediaIndex {
-        media: json
-    }
+    let json: Vec<IndexedMedia> =
+        serde_json::from_str(config_file_content_as_str.as_str()).unwrap();
+    MediaIndex { media: json }
 }
 
 pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &MediaIndex) {
     let config_file_content_as_str = serde_json::to_string(&media_index.media).unwrap();
-    std::fs::write(media_config_path(&data_root_location), config_file_content_as_str).unwrap();
+    std::fs::write(
+        media_config_path(&data_root_location),
+        config_file_content_as_str,
+    )
+    .unwrap();
 }
 
 fn media_config_path(data_path: &DataRootLocation) -> PathBuf {
     data_path.path.clone().join(REL_MEDIA_CONFIG_PATH)
 }
 
-pub fn init_media(data_root_location: &DataRootLocation, current_media_index: &MediaIndex) -> MediaIndex {
+pub fn init_media(
+    data_root_location: &DataRootLocation,
+    current_media_index: &MediaIndex,
+) -> MediaIndex {
     let all_files_in_folder = read_all_media_files(data_root_location);
     let mut result_index: Vec<IndexedMedia> = vec![];
 
@@ -65,7 +71,6 @@ pub fn read_file_sizes(data_root_location: &DataRootLocation) -> HashMap<String,
     result
 }
 
-
 pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -> PathBuf {
     let timestamp = Utc::now().format("%Y%m%d_%H%M%S").to_string();
 
@@ -73,10 +78,11 @@ pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -
 
     let escaped_filename = escape_stem(parsed_file_name);
 
-    let filename = format!("{}_{}.{}", escaped_filename.filestem, timestamp, escaped_filename.file_ending);
-    create_absolute_media_path(&MediaOnDisk {
-        name: filename
-    }, data_root_location)
+    let filename = format!(
+        "{}_{}.{}",
+        escaped_filename.filestem, timestamp, escaped_filename.file_ending
+    );
+    create_absolute_media_path(&MediaOnDisk { name: filename }, data_root_location)
 }
 
 fn parse_name(filename: &str) -> ParsedFilenName {
@@ -88,7 +94,9 @@ fn parse_name(filename: &str) -> ParsedFilenName {
     }
 
     let parsed_filename = filename.split(".").collect::<Vec<&str>>();
-    let filestem = &parsed_filename[0..parsed_filename.len() - 1].join(".").to_string();
+    let filestem = &parsed_filename[0..parsed_filename.len() - 1]
+        .join(".")
+        .to_string();
 
     let last_index = parsed_filename.len() - 1;
     let file_ending = &parsed_filename[last_index];
@@ -99,8 +107,15 @@ fn parse_name(filename: &str) -> ParsedFilenName {
     }
 }
 
-pub fn create_absolute_media_path(file: &MediaOnDisk, data_root_location: &DataRootLocation) -> PathBuf {
-    data_root_location.path.clone().join(REL_MEDIA_LOCATION).join(file.name.clone())
+pub fn create_absolute_media_path(
+    file: &MediaOnDisk,
+    data_root_location: &DataRootLocation,
+) -> PathBuf {
+    data_root_location
+        .path
+        .clone()
+        .join(REL_MEDIA_LOCATION)
+        .join(file.name.clone())
 }
 
 pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> String {
@@ -111,9 +126,10 @@ pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> 
 }
 
 pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::Result<NamedFile> {
-    NamedFile::open(create_absolute_media_path(&MediaOnDisk {
-        name: name.clone()
-    }, location))
+    NamedFile::open(create_absolute_media_path(
+        &MediaOnDisk { name: name.clone() },
+        location,
+    ))
 }
 
 pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation) -> MediaState {
@@ -124,27 +140,23 @@ pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation
     }
 
     let size = get_file_size(media_path);
-    MediaState::Found(MediaSize {
-        size
-    })
+    MediaState::Found(MediaSize { size })
 }
-
 
 pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaOnDisk> {
     let media_path = data_root_location.path.clone().join(REL_MEDIA_LOCATION);
     let mut result = vec![];
     for file in media_path.read_dir().unwrap() {
         let location = file.unwrap().file_name().to_str().unwrap().to_string();
-        result.push(MediaOnDisk {
-            name: location
-        });
+        result.push(MediaOnDisk { name: location });
     }
     result
 }
 
 fn escape_stem(parsed_filen_name: ParsedFilenName) -> ParsedFilenName {
     ParsedFilenName {
-        filestem: parsed_filen_name.filestem
+        filestem: parsed_filen_name
+            .filestem
             .replace("[", "_")
             .replace(']', "_")
             .replace("!", "")
@@ -153,7 +165,6 @@ fn escape_stem(parsed_filen_name: ParsedFilenName) -> ParsedFilenName {
         file_ending: parsed_filen_name.file_ending,
     }
 }
-
 
 pub struct MediaOnDisk {
     pub name: String,
@@ -166,16 +177,14 @@ impl MediaOnDisk {
 
     pub fn new(asset_descriptor: &AssetDescriptor) -> MediaOnDisk {
         MediaOnDisk {
-            name: asset_descriptor.get_display_name()
+            name: asset_descriptor.get_display_name(),
         }
     }
 }
 
-
 pub struct LoadedMedia {
     pub content: Vec<u8>,
 }
-
 
 pub enum MediaState {
     Found(MediaSize),

@@ -9,7 +9,7 @@ pub enum MediaType {
     Code,
     Text,
     Html,
-    Pdf
+    Pdf,
 }
 
 pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> MediaType {
@@ -22,18 +22,18 @@ pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> Medi
         "mp4" | "webm" | "ogm" => MediaType::Video,
         "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" => MediaType::Image,
         "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
-        "txt"  => MediaType::Text,
-        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php"=> MediaType::Code,
+        "txt" => MediaType::Text,
+        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" => MediaType::Code,
         "html" | "htm" => MediaType::Html,
         "pdf" => MediaType::Pdf,
-        _ => MediaType::Other
+        _ => MediaType::Other,
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::test_builder::asset_descriptor;
     use super::*;
+    use crate::looksyk::builder::test_builder::asset_descriptor;
 
     #[test]
     fn test_get_media_type_from_extension_with_video_extension_should_return_video() {

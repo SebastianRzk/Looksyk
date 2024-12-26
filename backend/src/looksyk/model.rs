@@ -8,13 +8,11 @@ pub struct RawBlock {
     pub text_content: Vec<String>,
 }
 
-
 #[derive(Clone)]
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
 }
-
 
 #[cfg(test)]
 pub mod builder {
@@ -30,7 +28,6 @@ pub mod builder {
             }],
         }
     }
-
 
     pub fn query_block_token(query_payload: &str) -> BlockToken {
         BlockToken {
@@ -75,7 +72,6 @@ pub struct BlockToken {
     pub payload: String,
 }
 
-
 #[derive(Clone)]
 pub struct PreparedMarkdownFile {
     pub blocks: Vec<PreparedBlock>,
@@ -91,7 +87,6 @@ pub struct ParsedMarkdownFile {
     pub blocks: Vec<ParsedBlock>,
 }
 
-
 impl Display for RawMarkdownFile {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self.blocks)
@@ -103,11 +98,9 @@ pub struct UpdateBlock {
     pub reference: MarkdownReference,
 }
 
-
 pub struct UpdateMarkdownFile {
     pub blocks: Vec<RawBlock>,
 }
-
 
 pub struct QueryRenderResult {
     pub inplace_markdown: String,
@@ -134,7 +127,6 @@ pub struct PreparedReferencedMarkdown {
     pub reference: MarkdownReference,
 }
 
-
 #[derive(PartialEq, Eq, Debug, Clone)]
 pub enum PageType {
     UserPage,
@@ -152,7 +144,6 @@ impl Hash for SimplePageName {
     }
 }
 
-
 impl PartialEq for SimplePageName {
     fn eq(&self, other: &Self) -> bool {
         self.name == other.name
@@ -161,13 +152,11 @@ impl PartialEq for SimplePageName {
 
 impl Eq for SimplePageName {}
 
-
 impl Hash for PageId {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.id.hash(state)
     }
 }
-
 
 impl PartialEq for PageId {
     fn eq(&self, other: &Self) -> bool {
@@ -176,7 +165,6 @@ impl PartialEq for PageId {
 }
 
 impl Eq for PageId {}
-
 
 #[derive(Clone, Debug)]
 pub struct PageId {

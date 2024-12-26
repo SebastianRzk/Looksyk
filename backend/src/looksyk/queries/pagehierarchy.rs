@@ -2,7 +2,9 @@ use std::collections::HashMap;
 use std::io::{Error, ErrorKind};
 
 use crate::looksyk::model::{QueryRenderResult, SimplePageName};
-use crate::looksyk::queries::args::{ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_ROOT, parse_display_type_for_lists, parse_property};
+use crate::looksyk::queries::args::{
+    parse_display_type_for_lists, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_ROOT,
+};
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::render_user_link;
@@ -11,7 +13,13 @@ use crate::state::userpage::UserPageIndex;
 pub const QUERY_NAME_PAGE_HIERARCHY: &str = "page-hierarchy";
 
 pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
-    let query_content = query_str.strip_prefix(QUERY_NAME_PAGE_HIERARCHY).ok_or(Error::new(ErrorKind::Other, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?.trim();
+    let query_content = query_str
+        .strip_prefix(QUERY_NAME_PAGE_HIERARCHY)
+        .ok_or(Error::new(
+            ErrorKind::Other,
+            ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
+        ))?
+        .trim();
     let query_root_opt = parse_property(query_content, PARAM_ROOT)?;
     let display_type = parse_display_type_for_lists(query_root_opt.remaining_text.clone())?;
 
@@ -24,7 +32,6 @@ pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
     })
 }
 
-
 pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderResult {
     let root = query.args.get(PARAM_ROOT).unwrap();
     let keys: Vec<&SimplePageName> = data.entries.keys().into_iter().collect();
@@ -35,11 +42,14 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(root, result),
         QueryDisplayType::Count => render_as_count(result),
-        _ => render_display_unknown(query.display)
+        _ => render_display_unknown(query.display),
     }
 }
 
-fn filter_pages_by_root<'a>(root: &String, keys: Vec<&'a SimplePageName>) -> Vec<&'a SimplePageName> {
+fn filter_pages_by_root<'a>(
+    root: &String,
+    keys: Vec<&'a SimplePageName>,
+) -> Vec<&'a SimplePageName> {
     let mut result = vec![];
 
     for page in keys {
@@ -58,7 +68,10 @@ pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResul
     }
 }
 
-pub fn render_as_list(root_name: &String, selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
+pub fn render_as_list(
+    root_name: &String,
+    selected_pages: Vec<&SimplePageName>,
+) -> QueryRenderResult {
     let mut result = format!("{}:\n", root_name);
     for page in selected_pages {
         result.push_str("- ");
@@ -88,14 +101,24 @@ mod test {
     }
 
     #[test]
-    fn test_filter_pages(){
+    fn test_filter_pages() {
         let root = "foo".to_string();
 
-        let page_foo = SimplePageName { name: "foo".to_string() };
-        let page_foo_bar = SimplePageName { name: "foo/bar".to_string() };
-        let page_foo_bar_baz = SimplePageName { name: "foo/bar/baz".to_string() };
-        let page_bar = SimplePageName { name: "bar".to_string() };
-        let page_bar_baz = SimplePageName { name: "bar/foo".to_string() };
+        let page_foo = SimplePageName {
+            name: "foo".to_string(),
+        };
+        let page_foo_bar = SimplePageName {
+            name: "foo/bar".to_string(),
+        };
+        let page_foo_bar_baz = SimplePageName {
+            name: "foo/bar/baz".to_string(),
+        };
+        let page_bar = SimplePageName {
+            name: "bar".to_string(),
+        };
+        let page_bar_baz = SimplePageName {
+            name: "bar/foo".to_string(),
+        };
 
         let mut keys = vec![
             &page_foo,

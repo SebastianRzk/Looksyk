@@ -5,31 +5,48 @@ pub fn render_as_link(filename: &String, path: &String) -> String {
 }
 
 pub fn render_asset_as_link(asset_descriptor: &AssetDescriptor) -> String {
-    render_as_link(&asset_descriptor.get_display_name(), &asset_descriptor.get_qualified_path())
+    render_as_link(
+        &asset_descriptor.get_display_name(),
+        &asset_descriptor.get_qualified_path(),
+    )
 }
 
 pub fn render_as_image(asset_descriptor: &AssetDescriptor) -> String {
-    format!("![{}]({})", asset_descriptor.get_display_name(), asset_descriptor.get_qualified_path())
+    format!(
+        "![{}]({})",
+        asset_descriptor.get_display_name(),
+        asset_descriptor.get_qualified_path()
+    )
 }
 
 pub fn render_as_video(asset_descriptor: &AssetDescriptor) -> String {
-    format!("<video width=\"720\" controls>
+    format!(
+        "<video width=\"720\" controls>
 <source src=\"{}\" type=\"video/{}\">
-</video>", asset_descriptor.get_qualified_path(), asset_descriptor.get_extension("mp4"))
+</video>",
+        asset_descriptor.get_qualified_path(),
+        asset_descriptor.get_extension("mp4")
+    )
 }
 
 pub fn render_as_audio(asset_descriptor: &AssetDescriptor) -> String {
-    format!("<audio controls>
+    format!(
+        "<audio controls>
 <source src=\"{}\" type=\"audio/{}\">
-</audio>", asset_descriptor.get_qualified_path(), asset_descriptor.get_extension("mp3"))
+</audio>",
+        asset_descriptor.get_qualified_path(),
+        asset_descriptor.get_extension("mp3")
+    )
 }
 
-
 pub fn render_as_code_block(language: String, content: &String) -> String {
-    format!("\
+    format!(
+        "\
 ```{}
 {}
-```", language, content)
+```",
+        language, content
+    )
 }
 
 pub fn encode_uri_component(file_name: &String) -> String {
@@ -38,8 +55,8 @@ pub fn encode_uri_component(file_name: &String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::test_builder::asset_descriptor;
     use super::*;
+    use crate::looksyk::builder::test_builder::asset_descriptor;
 
     #[test]
     fn test_render_as_link_with_filename_and_path_should_render_link() {
@@ -72,6 +89,9 @@ mod tests {
     fn test_render_as_audio_with_filename_and_path_should_render_audio() {
         let result = render_as_audio(&asset_descriptor("filename.ogg"));
 
-        assert_eq!(result, "<audio controls>\n<source src=\"/assets/filename.ogg\" type=\"audio/ogg\">\n</audio>");
+        assert_eq!(
+            result,
+            "<audio controls>\n<source src=\"/assets/filename.ogg\" type=\"audio/ogg\">\n</audio>"
+        );
     }
 }

@@ -1,6 +1,11 @@
-use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock};
+use crate::looksyk::model::{
+    BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock,
+};
 
-pub fn update_and_serialize_page(update_block: &UpdateBlock, parsed_markdown_file: &ParsedMarkdownFile) -> Vec<String> {
+pub fn update_and_serialize_page(
+    update_block: &UpdateBlock,
+    parsed_markdown_file: &ParsedMarkdownFile,
+) -> Vec<String> {
     let mut result = vec![];
     let mut block_number: usize = 0;
     for block in &parsed_markdown_file.blocks {
@@ -14,7 +19,11 @@ pub fn update_and_serialize_page(update_block: &UpdateBlock, parsed_markdown_fil
                     first = false;
                 }
             } else {
-                result.push(format!("{}- {}", generate_indentation(indentation), sanitize_prefix(update_block.markdown.as_str())));
+                result.push(format!(
+                    "{}- {}",
+                    generate_indentation(indentation),
+                    sanitize_prefix(update_block.markdown.as_str())
+                ));
             }
         } else {
             serialize_block_content(&mut result, &block);
@@ -50,7 +59,11 @@ fn serialize_block_content(result: &mut Vec<String>, block: &&ParsedBlock) {
             first = false;
         }
     } else {
-        result.push(format!("{}- {}", generate_indentation(indentation), sanitize_prefix(serialized_block.as_str())));
+        result.push(format!(
+            "{}- {}",
+            generate_indentation(indentation),
+            sanitize_prefix(serialized_block.as_str())
+        ));
     }
 }
 
@@ -58,7 +71,11 @@ fn generate_file_line(indentation: usize, first: bool, line: &str) -> String {
     if first {
         return format!("{}- {}", generate_indentation(indentation), line);
     }
-    format!("{}{}", generate_indentation(indentation), sanitize_prefix(line))
+    format!(
+        "{}{}",
+        generate_indentation(indentation),
+        sanitize_prefix(line)
+    )
 }
 
 fn sanitize_prefix(line: &str) -> String {
@@ -73,12 +90,9 @@ fn generate_indentation(depth: usize) -> String {
     return result;
 }
 
-
 fn serialize_block_token(block_token: &BlockToken) -> String {
     return match block_token.block_token_type {
-        BlockTokenType::TEXT => {
-            block_token.payload.clone()
-        }
+        BlockTokenType::TEXT => block_token.payload.clone(),
         BlockTokenType::LINK => {
             format!("[[{}]]", block_token.payload.clone())
         }
@@ -96,8 +110,13 @@ fn serialize_block_token(block_token: &BlockToken) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::{any_page_id, any_page_name, journal_link_token, page_id, page_name_str, text_token};
-    use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, MarkdownReference, ParsedBlock, ParsedMarkdownFile, UpdateBlock};
+    use crate::looksyk::builder::{
+        any_page_id, any_page_name, journal_link_token, page_id, page_name_str, text_token,
+    };
+    use crate::looksyk::model::{
+        BlockContent, BlockToken, BlockTokenType, MarkdownReference, ParsedBlock,
+        ParsedMarkdownFile, UpdateBlock,
+    };
     use crate::looksyk::serializer::{serialize_block_token, update_and_serialize_page};
 
     #[test]
@@ -118,7 +137,6 @@ mod tests {
         assert_eq!(result, "[x] ");
     }
 
-
     #[test]
     fn should_serialize_link() {
         let block_token = link_block("my link");
@@ -135,7 +153,6 @@ mod tests {
 
         assert_eq!(result, "[[journal::my link]]");
     }
-
 
     #[test]
     fn should_serialize_query() {
@@ -187,10 +204,15 @@ mod tests {
             },
         );
 
-        assert_eq!(result, vec!["\t- this is a new content",
-                                "\twith line 2",
-                                "\t\t- This is line 2",
-                                "\t\tthis is line 3"])
+        assert_eq!(
+            result,
+            vec![
+                "\t- this is a new content",
+                "\twith line 2",
+                "\t\t- This is line 2",
+                "\t\tthis is line 3"
+            ]
+        )
     }
 
     #[test]
@@ -209,21 +231,24 @@ mod tests {
                     parsed_text_block("This is Line 1", 1),
                     ParsedBlock {
                         indentation: 0,
-                        content: vec![
-                            BlockContent {
-                                as_text: "".to_string(),
-                                as_tokens: vec![todo_block("x"), text_token("mytodo "), link_block("my link")],
-                            }
-                        ],
+                        content: vec![BlockContent {
+                            as_text: "".to_string(),
+                            as_tokens: vec![
+                                todo_block("x"),
+                                text_token("mytodo "),
+                                link_block("my link"),
+                            ],
+                        }],
                     },
                 ],
             },
         );
 
-        assert_eq!(result, vec!["\t- this is a new content",
-                                "- [x] mytodo [[my link]]"])
+        assert_eq!(
+            result,
+            vec!["\t- this is a new content", "- [x] mytodo [[my link]]"]
+        )
     }
-
 
     #[test]
     fn should_join_content_with_linebreak() {
@@ -256,9 +281,10 @@ mod tests {
             },
         );
 
-        assert_eq!(result, vec!["\t- this is a new content",
-                                "\t- my text",
-                                "\t2my text2"])
+        assert_eq!(
+            result,
+            vec!["\t- this is a new content", "\t- my text", "\t2my text2"]
+        )
     }
 
     #[test]
@@ -292,12 +318,16 @@ mod tests {
             },
         );
 
-        assert_eq!(result, vec!["\t- this is a new",
-                                "\tcontent",
-                                "\t- my text",
-                                "\t2my text2"])
+        assert_eq!(
+            result,
+            vec![
+                "\t- this is a new",
+                "\tcontent",
+                "\t- my text",
+                "\t2my text2"
+            ]
+        )
     }
-
 
     #[test]
     fn should_handle_trailing_new_lines() {
@@ -319,7 +349,6 @@ mod tests {
                             as_text: "".to_string(),
                             as_tokens: vec![text_token("")],
                         }],
-
                     },
                     ParsedBlock {
                         indentation: 1,
@@ -338,24 +367,26 @@ mod tests {
             },
         );
 
-        assert_eq!(result, vec!["\t- update",
-                                "\t",
-                                "- ",
-                                "\t- my text",
-                                "\t2my text2",
-                                "\t",
-                                "\t"])
+        assert_eq!(
+            result,
+            vec![
+                "\t- update",
+                "\t",
+                "- ",
+                "\t- my text",
+                "\t2my text2",
+                "\t",
+                "\t"
+            ]
+        )
     }
-
 
     fn parsed_text_block(text: &str, indentation: usize) -> ParsedBlock {
         ParsedBlock {
-            content: vec![
-                BlockContent {
-                    as_text: "".to_string(),
-                    as_tokens: vec![text_token(text)],
-                }
-            ],
+            content: vec![BlockContent {
+                as_text: "".to_string(),
+                as_tokens: vec![text_token(text)],
+            }],
             indentation,
         }
     }

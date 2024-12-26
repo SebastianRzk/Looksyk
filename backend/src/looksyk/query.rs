@@ -3,9 +3,16 @@ use std::fmt::{Display, Formatter};
 use std::io::Error;
 
 use crate::looksyk::model::{BlockToken, QueryRenderResult};
-use crate::looksyk::queries::insert_file_content::{parse_query_insert_file_content, render_query_insert_file_content, QUERY_NAME_INSERT_FILE_CONTENT};
-use crate::looksyk::queries::pagehierarchy::{parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY};
-use crate::looksyk::queries::references_to::{parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO};
+use crate::looksyk::queries::insert_file_content::{
+    parse_query_insert_file_content, render_query_insert_file_content,
+    QUERY_NAME_INSERT_FILE_CONTENT,
+};
+use crate::looksyk::queries::pagehierarchy::{
+    parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY,
+};
+use crate::looksyk::queries::references_to::{
+    parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO,
+};
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query, QUERY_NAME_TODOS};
 use crate::looksyk::renderer::StaticRenderContext;
 use crate::state::asset_cache::AssetCache;
@@ -27,9 +34,13 @@ pub fn render_query(
             has_dynamic_content: false,
         };
     }
-    render_parsed_query(query.unwrap(), render_context, asset_cache, data_root_location)
+    render_parsed_query(
+        query.unwrap(),
+        render_context,
+        asset_cache,
+        data_root_location,
+    )
 }
-
 
 pub fn parse_query(payload: &String) -> Result<Query, Error> {
     let query_str = payload.trim();
@@ -49,31 +60,26 @@ pub fn parse_query(payload: &String) -> Result<Query, Error> {
     })
 }
 
-
-pub fn render_parsed_query(query: Query, render_context: &StaticRenderContext, asset_cache: &mut AssetCache, data_root_location: &DataRootLocation) -> QueryRenderResult {
+pub fn render_parsed_query(
+    query: Query,
+    render_context: &StaticRenderContext,
+    asset_cache: &mut AssetCache,
+    data_root_location: &DataRootLocation,
+) -> QueryRenderResult {
     match query.query_type {
-        QueryType::PageHierarchy => {
-            render_page_hierarchy(query, &render_context.user_pages)
-        }
-        QueryType::Todo => {
-            render_todo_query(query, render_context.todo_index)
-        }
-        QueryType::ReferencesTo => {
-            render_references_of_query(query, render_context.tag_index)
-        }
+        QueryType::PageHierarchy => render_page_hierarchy(query, &render_context.user_pages),
+        QueryType::Todo => render_todo_query(query, render_context.todo_index),
+        QueryType::ReferencesTo => render_references_of_query(query, render_context.tag_index),
         QueryType::InsertFileContent => {
             render_query_insert_file_content(query, asset_cache, data_root_location)
         }
-        QueryType::Unknown => {
-            QueryRenderResult {
-                inplace_markdown: "Query type unknown".to_string(),
-                referenced_markdown: vec![],
-                has_dynamic_content: false,
-            }
-        }
+        QueryType::Unknown => QueryRenderResult {
+            inplace_markdown: "Query type unknown".to_string(),
+            referenced_markdown: vec![],
+            has_dynamic_content: false,
+        },
     }
 }
-
 
 pub struct Query {
     pub query_type: QueryType,
@@ -125,9 +131,14 @@ mod tests {
     use crate::looksyk::builder::{page_id, page_name_str, text_token, user_page_id};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::builder::query_block_token;
-    use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::model::{
+        BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
+    };
     use crate::looksyk::query::{parse_query, render_query, QueryDisplayType, QueryType};
-    use crate::looksyk::renderer::builder::{create_empty_render_context, create_render_context, create_render_context_with_tag_index, create_render_context_with_todo_index, create_render_context_with_user_page_index};
+    use crate::looksyk::renderer::builder::{
+        create_empty_render_context, create_render_context, create_render_context_with_tag_index,
+        create_render_context_with_todo_index, create_render_context_with_user_page_index,
+    };
     use crate::state::asset_cache::{AssetFileContent, AssetState, FileSizeViolation};
     use crate::state::state::builder::empty_data_root_location;
     use crate::state::tag::builder::empty_tag_index;
@@ -161,14 +172,15 @@ mod tests {
 
         let result = render_query(
             &query_block_token("page-hierarchy root:\"parent\" display:\"inplace-list\" "),
-            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data)).to_static(),
+            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data))
+                .to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "parent:\n- [parent / sub1](page/parent%20%2F%20sub1)\n- [parent / sub2](page/parent%20%2F%20sub2)\n");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
-
 
     #[test]
     pub fn should_render_hierarchy_query_with_unknown_displaytype() {
@@ -179,14 +191,18 @@ mod tests {
 
         let result = render_query(
             &query_block_token("page-hierarchy root:\"parent\" display:\"unknown\" "),
-            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data)).to_static(),
+            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data))
+                .to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "Decode error: Unknown display type");
+        assert_eq!(
+            result.inplace_markdown,
+            "Decode error: Unknown display type"
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
-
 
     #[test]
     pub fn should_render_hierarchy_with_unsupported_displaytype() {
@@ -197,17 +213,24 @@ mod tests {
 
         let result = render_query(
             &query_block_token("page-hierarchy root:\"parent\" display:\"referenced-list\" "),
-            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data)).to_static(),
+            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data))
+                .to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "display type referenced-list not supported for querytype");
+        assert_eq!(
+            result.inplace_markdown,
+            "display type referenced-list not supported for querytype"
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
     #[test]
     pub fn should_parse_query() {
-        let result = parse_query(&"page-hierarchy root:\"parent\" display:\"inplace-list\" ".to_string()).unwrap();
+        let result =
+            parse_query(&"page-hierarchy root:\"parent\" display:\"inplace-list\" ".to_string())
+                .unwrap();
 
         assert_eq!(result.query_type, QueryType::PageHierarchy);
         assert_eq!(result.display, QueryDisplayType::InplaceList);
@@ -221,7 +244,6 @@ mod tests {
         assert_eq!(result.is_err(), true);
     }
 
-
     #[test]
     pub fn should_render_page_hierarchy_as_count() {
         let mut hierarchy_data = HashMap::new();
@@ -231,18 +253,18 @@ mod tests {
 
         let result = render_query(
             &query_block_token("page-hierarchy root:\"parent\" display:\"count\" "),
-            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data)).to_static(),
+            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data))
+                .to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "2");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
     fn empty_file() -> ParsedMarkdownFile {
-        ParsedMarkdownFile {
-            blocks: vec![]
-        }
+        ParsedMarkdownFile { blocks: vec![] }
     }
 
     #[test]
@@ -264,14 +286,15 @@ mod tests {
                     blocknumber: 0,
                     page_type: PageType::UserPage,
                 },
-            }]
+            }],
         };
 
         let result = render_query(
             &query_block_token("todos tag:\"parent\" state:\"todo\" display:\"count\" "),
             &create_render_context_with_todo_index(todo_index).to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "1");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -314,21 +337,24 @@ mod tests {
                         blocknumber: 0,
                         page_type: PageType::UserPage,
                     },
-                }]
+                },
+            ],
         };
         let mut entries = HashMap::new();
         entries.insert(page_name_str("testfile"), empty_file());
-        let page_index = UserPageIndex {
-            entries
-        };
+        let page_index = UserPageIndex { entries };
 
         let result = render_query(
             &query_block_token("todos tag:\"parent\" state:\"todo\" display:\"inplace-list\" "),
             &create_render_context(page_index, todo_index, empty_tag_index()).to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "\n\n* :white large square: [testfile](page/testfile): todo not done\n\n".to_string());
+        assert_eq!(
+            result.inplace_markdown,
+            "\n\n* :white large square: [testfile](page/testfile): todo not done\n\n".to_string()
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -369,23 +395,26 @@ mod tests {
                         blocknumber: 0,
                         page_type: PageType::UserPage,
                     },
-                }]
+                },
+            ],
         };
         let mut entries = HashMap::new();
         entries.insert(page_name_str("testfile"), empty_file());
-        let page_index = UserPageIndex {
-            entries
-        };
+        let page_index = UserPageIndex { entries };
 
         let result = render_query(
             &query_block_token("todos tag:\"parent\" state:\"done\" display:\"inplace-list\" "),
             &create_render_context(page_index, todo_index, empty_tag_index()).to_static(),
-            &mut create_empty_asset_cache(), &empty_data_root_location());
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "\n\n* :check mark: [testfile2](page/testfile2): todo done\n\n".to_string());
+        assert_eq!(
+            result.inplace_markdown,
+            "\n\n* :check mark: [testfile2](page/testfile2): todo done\n\n".to_string()
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
-
 
     #[test]
     pub fn should_render_todo_done_as_reference_list() {
@@ -424,14 +453,16 @@ mod tests {
                         blocknumber: 0,
                         page_type: PageType::UserPage,
                     },
-                }]
+                },
+            ],
         };
 
         let result = render_query(
             &query_block_token("todos tag:\"parent\" state:\"done\" display:\"referenced-list\" "),
             &create_render_context_with_todo_index(todo_index).to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "");
         assert_eq!(result.referenced_markdown.len(), 1);
@@ -440,7 +471,10 @@ mod tests {
         assert_eq!(reference.reference.block_number, 0);
         assert_eq!(reference.content.content.len(), 1);
         assert_eq!(reference.content.content.get(0).unwrap().as_tokens, vec![]);
-        assert_eq!(reference.content.content.get(0).unwrap().as_text, "todo done");
+        assert_eq!(
+            reference.content.content.get(0).unwrap().as_text,
+            "todo done"
+        );
     }
 
     #[test]
@@ -450,14 +484,15 @@ mod tests {
         references.insert(user_page_id("something"));
         tag_index_entries.insert(user_page_id("mysite123"), references);
         let tag_index = TagIndex {
-            entries: tag_index_entries
+            entries: tag_index_entries,
         };
 
         let result = render_query(
             &query_block_token("references-to target:\"mysite123\" display:\"count\" "),
             &create_render_context_with_tag_index(tag_index).to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "1");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -470,18 +505,22 @@ mod tests {
         references.insert(user_page_id("something"));
         tag_index_entries.insert(user_page_id("mysite123"), references);
         let tag_index = TagIndex {
-            entries: tag_index_entries
+            entries: tag_index_entries,
         };
 
         let result = render_query(
             &query_block_token("references-to target:\"mysite123\" display:\"inplace-list\" "),
             &create_render_context_with_tag_index(tag_index).to_static(),
-            &mut create_empty_asset_cache(), &empty_data_root_location());
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "Pages that reference [mysite123](page/mysite123)\n* [something](page/something)\n");
+        assert_eq!(
+            result.inplace_markdown,
+            "Pages that reference [mysite123](page/mysite123)\n* [something](page/something)\n"
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
-
 
     #[test]
     pub fn should_render_references_to_as_inplace_list_no_ref_should_show_no_ref_message() {
@@ -489,9 +528,13 @@ mod tests {
             &query_block_token("references-to target:\"mysite123\" display:\"inplace-list\" "),
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
-        assert_eq!(result.inplace_markdown, "Pages that reference [mysite123](page/mysite123)\n* No references found!\n");
+        assert_eq!(
+            result.inplace_markdown,
+            "Pages that reference [mysite123](page/mysite123)\n* No references found!\n"
+        );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -503,15 +546,18 @@ mod tests {
                 name: "myfile".to_string(),
             },
             AssetState::Found(AssetFileContent {
-                content: "myFileContent".to_string()
+                content: "myFileContent".to_string(),
             }),
         );
 
         let result = render_query(
-            &query_block_token("insert-file-content target-file:\"myfile\" display:\"inline-text\" "),
+            &query_block_token(
+                "insert-file-content target-file:\"myfile\" display:\"inline-text\" ",
+            ),
             &create_empty_render_context().to_static(),
             &mut asset_cache,
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "myFileContent");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -528,15 +574,17 @@ mod tests {
         );
 
         let result = render_query(
-            &query_block_token("insert-file-content target-file:\"myfile\" display:\"inline-text\" "),
+            &query_block_token(
+                "insert-file-content target-file:\"myfile\" display:\"inline-text\" ",
+            ),
             &create_empty_render_context().to_static(),
             &mut asset_cache,
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "File not found");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
-
 
     #[test]
     pub fn should_render_inline_text_with_file_too_large() {
@@ -552,10 +600,13 @@ mod tests {
         );
 
         let result = render_query(
-            &query_block_token("insert-file-content target-file:\"myfile\" display:\"inline-text\" "),
+            &query_block_token(
+                "insert-file-content target-file:\"myfile\" display:\"inline-text\" ",
+            ),
             &create_empty_render_context().to_static(),
             &mut asset_cache,
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "File is too large. Max size is 512. File size is 1025. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -572,10 +623,13 @@ mod tests {
         );
 
         let result = render_query(
-            &query_block_token("insert-file-content target-file:\"myfile\" display:\"inline-text\" "),
+            &query_block_token(
+                "insert-file-content target-file:\"myfile\" display:\"inline-text\" ",
+            ),
             &create_empty_render_context().to_static(),
             &mut asset_cache,
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -589,15 +643,18 @@ mod tests {
                 name: "myfile.rs".to_string(),
             },
             AssetState::Found(AssetFileContent {
-                content: "myFileContent".to_string()
+                content: "myFileContent".to_string(),
             }),
         );
 
         let result = render_query(
-            &query_block_token("insert-file-content target-file:\"myfile.rs\" display:\"code-block\" "),
+            &query_block_token(
+                "insert-file-content target-file:\"myfile.rs\" display:\"code-block\" ",
+            ),
             &create_empty_render_context().to_static(),
             &mut asset_cache,
-            &empty_data_root_location());
+            &empty_data_root_location(),
+        );
 
         assert_eq!(result.inplace_markdown, "```rust\nmyFileContent\n```");
         assert_eq!(result.referenced_markdown.len(), 0);

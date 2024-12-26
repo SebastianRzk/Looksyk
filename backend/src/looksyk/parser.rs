@@ -1,8 +1,11 @@
 use std::collections::HashMap;
 use std::string::ToString;
 
-use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, RawBlock, RawMarkdownFile, UpdateMarkdownFile};
 use crate::looksyk::model::BlockTokenType::TEXT;
+use crate::looksyk::model::{
+    BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, RawBlock,
+    RawMarkdownFile, UpdateMarkdownFile,
+};
 
 #[derive(Clone, Debug)]
 struct BlockTokenPattern {
@@ -14,7 +17,7 @@ struct BlockTokenPattern {
 impl BlockTokenPattern {
     fn feed(&self, c: char, state: &MatcherState) -> MatcherState {
         let mut new_inner_text = state.inner_text.clone();
-        let  new_index ;
+        let new_index;
         if !state.active {
             new_index = self.feed_pattern(c, self.start_sequence.clone(), state);
             if new_index == self.start_sequence.len() {
@@ -63,11 +66,10 @@ fn generate_block_patterns() -> Vec<BlockTokenPattern> {
         BlockTokenPattern {
             block_token_type: BlockTokenType::QUERY,
             start_sequence: "{query: ".to_string(),
-            stop_sequence: " }".to_string()
-        }
+            stop_sequence: " }".to_string(),
+        },
     ]
 }
-
 
 pub fn parse_markdown_file(file: RawMarkdownFile) -> ParsedMarkdownFile {
     let mut parsed_blocks = vec![];
@@ -81,7 +83,6 @@ pub fn parse_markdown_file(file: RawMarkdownFile) -> ParsedMarkdownFile {
     }
 }
 
-
 pub fn parse_markdown_update_file(file: UpdateMarkdownFile) -> ParsedMarkdownFile {
     let mut parsed_blocks = vec![];
 
@@ -94,23 +95,20 @@ pub fn parse_markdown_update_file(file: UpdateMarkdownFile) -> ParsedMarkdownFil
     }
 }
 
-
 pub fn parse_block(raw_block: &RawBlock) -> ParsedBlock {
     ParsedBlock {
         content: parse_all_text_lines(&raw_block.text_content),
-        indentation: raw_block.indentation
+        indentation: raw_block.indentation,
     }
 }
-
 
 pub fn parse_all_text_lines(all_lines: &Vec<String>) -> Vec<BlockContent> {
     let mut parsed_content = vec![];
 
-
     for line in all_lines {
         parsed_content.push(BlockContent {
             as_text: line.clone(),
-            as_tokens: parse_text_content(line)
+            as_tokens: parse_text_content(line),
         });
     }
 
@@ -149,21 +147,26 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
 
     let mut remaining_text_content = text_content.clone();
 
-    if text_content.starts_with("[ ] "){
-        parsed_tokens.push(BlockToken{
+    if text_content.starts_with("[ ] ") {
+        parsed_tokens.push(BlockToken {
             payload: " ".to_string(),
-            block_token_type: BlockTokenType::TODO
+            block_token_type: BlockTokenType::TODO,
         });
-        remaining_text_content = remaining_text_content.strip_prefix("[ ] ").unwrap().to_string();
+        remaining_text_content = remaining_text_content
+            .strip_prefix("[ ] ")
+            .unwrap()
+            .to_string();
     }
-    if text_content.starts_with("[x] "){
-        parsed_tokens.push(BlockToken{
+    if text_content.starts_with("[x] ") {
+        parsed_tokens.push(BlockToken {
             payload: "x".to_string(),
-            block_token_type: BlockTokenType::TODO
+            block_token_type: BlockTokenType::TODO,
         });
-        remaining_text_content = remaining_text_content.strip_prefix("[x] ").unwrap().to_string();
+        remaining_text_content = remaining_text_content
+            .strip_prefix("[x] ")
+            .unwrap()
+            .to_string();
     }
-
 
     for char in remaining_text_content.chars() {
         if current_matcher.is_none() {
@@ -200,7 +203,7 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
                     block_token_type: token_type.clone(),
                 });
                 matcher_state = create_initial_matcher_states()
-            }else {
+            } else {
                 matcher_state.insert(token_type, new_state);
             }
         }
@@ -283,7 +286,6 @@ mod tests {
         assert_eq!(element.payload, " dahinter");
         assert_eq!(element.block_token_type, BlockTokenType::TEXT);
     }
-
 
     #[test]
     fn should_parse_todo_type_unchecked() {

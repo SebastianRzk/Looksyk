@@ -1,6 +1,12 @@
-use crate::io::http::page::dtos::{MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto};
 use crate::io::http::link_encoding::encode_link_component;
-use crate::looksyk::model::{MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock, UpdateBlock, UpdateMarkdownFile};
+use crate::io::http::page::dtos::{
+    MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto,
+    PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto,
+};
+use crate::looksyk::model::{
+    MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown,
+    RawBlock, UpdateBlock, UpdateMarkdownFile,
+};
 use crate::looksyk::page_index::get_page_type;
 
 pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
@@ -10,16 +16,25 @@ pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
             original_text: prepared_block.content.original_text.clone(),
             prepared_markdown: prepared_block.content.prepared_markdown.clone(),
         },
-        referenced_content: prepared_block.referenced_markdown.iter().map(|x| map_to_prepared_reference_to(x)).collect(),
+        referenced_content: prepared_block
+            .referenced_markdown
+            .iter()
+            .map(|x| map_to_prepared_reference_to(x))
+            .collect(),
         has_dynamic_content: prepared_block.has_dynamic_content,
     }
 }
 
-pub fn map_to_prepared_reference_to(prepared_referenced_markdown: &PreparedReferencedMarkdown) -> PreparedReferencedMarkdownDto {
+pub fn map_to_prepared_reference_to(
+    prepared_referenced_markdown: &PreparedReferencedMarkdown,
+) -> PreparedReferencedMarkdownDto {
     PreparedReferencedMarkdownDto {
         content: PreparedBlockContentDto {
             original_text: prepared_referenced_markdown.content.original_text.clone(),
-            prepared_markdown: prepared_referenced_markdown.content.prepared_markdown.clone(),
+            prepared_markdown: prepared_referenced_markdown
+                .content
+                .prepared_markdown
+                .clone(),
         },
         reference: map_markdown_reference_to_dto(&prepared_referenced_markdown.reference),
     }
@@ -38,7 +53,10 @@ pub fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -
     let page_type = get_page_type(&markdown_reference.page_id);
     match page_type {
         PageType::UserPage => {
-            format!("/page/{}", encode_link_component(&markdown_reference.page_name.name))
+            format!(
+                "/page/{}",
+                encode_link_component(&markdown_reference.page_name.name)
+            )
         }
         PageType::JournalPage => {
             format!("/journal/{}", markdown_reference.page_name.name)
@@ -46,25 +64,39 @@ pub fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -
     }
 }
 
-
-pub fn map_markdown_file_to_dto(prepared_markdown_file: PreparedMarkdownFile, is_fav: bool) -> PreparedMarkdownFileDto {
+pub fn map_markdown_file_to_dto(
+    prepared_markdown_file: PreparedMarkdownFile,
+    is_fav: bool,
+) -> PreparedMarkdownFileDto {
     PreparedMarkdownFileDto {
         is_favourite: is_fav,
-        blocks: prepared_markdown_file.blocks.iter().map(|x| map_to_block_dto(x)).collect(),
+        blocks: prepared_markdown_file
+            .blocks
+            .iter()
+            .map(|x| map_to_block_dto(x))
+            .collect(),
     }
 }
 
-
-pub fn map_from_update_markdown_dto(update_markdown_file_dto: UpdateMarkdownFileDto) -> UpdateMarkdownFile {
+pub fn map_from_update_markdown_dto(
+    update_markdown_file_dto: UpdateMarkdownFileDto,
+) -> UpdateMarkdownFile {
     UpdateMarkdownFile {
-        blocks: update_markdown_file_dto.blocks.iter().map(|x| RawBlock {
-            indentation: x.indentation,
-            text_content: vec![x.markdown.trim().to_string()],
-        }).collect()
+        blocks: update_markdown_file_dto
+            .blocks
+            .iter()
+            .map(|x| RawBlock {
+                indentation: x.indentation,
+                text_content: vec![x.markdown.trim().to_string()],
+            })
+            .collect(),
     }
 }
 
-pub fn map_markdown_block_dto(update_block_dto: &UpdateBlockContentDto, reference: MarkdownReference) -> UpdateBlock {
+pub fn map_markdown_block_dto(
+    update_block_dto: &UpdateBlockContentDto,
+    reference: MarkdownReference,
+) -> UpdateBlock {
     UpdateBlock {
         markdown: update_block_dto.markdown.clone(),
         reference,

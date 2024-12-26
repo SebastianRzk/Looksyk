@@ -7,12 +7,18 @@ use crate::looksyk::model::{PageType, SimplePageName};
 use crate::state::state::DataRootLocation;
 
 pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
-    let page_path = data_root_location.path.clone().join(path_for_page_type(&PageType::UserPage));
+    let page_path = data_root_location
+        .path
+        .clone()
+        .join(path_for_page_type(&PageType::UserPage));
     read_all_files(page_path.to_str().unwrap())
 }
 
 pub fn delete_user_file(data_root_location: &DataRootLocation, simple_page_name: SimplePageName) {
-    let page_path = data_root_location.path.clone().join(path_for_page_type(&PageType::UserPage));
+    let page_path = data_root_location
+        .path
+        .clone()
+        .join(path_for_page_type(&PageType::UserPage));
     let encoded_page_name = escape_page_name(&simple_page_name.name);
     let destination = page_path.join(encoded_page_name + ".md");
     println!("deleting {}", destination.to_str().unwrap());
@@ -20,10 +26,12 @@ pub fn delete_user_file(data_root_location: &DataRootLocation, simple_page_name:
 }
 
 pub fn read_all_journal_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
-    let journal_path = data_root_location.path.clone().join(path_for_page_type(&PageType::JournalPage));
+    let journal_path = data_root_location
+        .path
+        .clone()
+        .join(path_for_page_type(&PageType::JournalPage));
     read_all_files(journal_path.to_str().unwrap())
 }
-
 
 fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
     println!("Reading {}", data_path);
@@ -44,11 +52,14 @@ fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
     all_files
 }
 
-
 pub fn write_page(page: PageOnDisk, data_path: &DataRootLocation, page_type: &PageType) {
     let page_name = page.name;
     let encoded_page_name = escape_page_name(&page_name);
-    let destination = data_path.path.clone().join(path_for_page_type(page_type)).join(encoded_page_name + ".md");
+    let destination = data_path
+        .path
+        .clone()
+        .join(path_for_page_type(page_type))
+        .join(encoded_page_name + ".md");
     println!("writing to {}", destination.to_str().unwrap());
     let content_with_newline = format!("{}\n", page.content);
     fs::write(destination, content_with_newline).unwrap();
