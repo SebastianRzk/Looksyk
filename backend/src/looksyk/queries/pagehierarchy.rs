@@ -120,7 +120,7 @@ mod test {
             name: "bar/foo".to_string(),
         };
 
-        let mut keys = vec![
+        let keys = vec![
             &page_foo,
             &page_foo_bar,
             &page_foo_bar_baz,

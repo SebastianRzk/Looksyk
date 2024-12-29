@@ -1,4 +1,4 @@
-use std::env::home_dir;
+use dirs::home_dir;
 use std::path::PathBuf;
 
 pub fn home_directory() -> PathBuf {

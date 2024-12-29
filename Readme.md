@@ -2,7 +2,7 @@
 
 ![logo](icon/Looksyk-scaled.png)
 
-![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=master)
+![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main)
 
 
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
