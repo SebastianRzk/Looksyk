@@ -33,7 +33,7 @@ jobs:
         run: cargo fmt --all -- --check
         working-directory: ./backend
   frontend:
-    name: build frontend
+    name: frontend build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -42,3 +42,33 @@ jobs:
           npm i
           npm run build --configuration=production
         working-directory: ./frontend/looksyk
+  frontend-lint:
+    name: frontend lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: npm install and npm run CI commands
+        run: |
+          npm i
+          npm run lint
+        working-directory: ./frontend/looksyk
+  application-wrapper:
+    name: application-wrapper build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: npm install and npm run CI commands
+        run: |
+          npm i
+          npm run publish
+        working-directory: ./application-wrapper/Looksyk
+  application-wrapper-lint:
+    name: application-wrapper lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: npm install and npm run CI commands
+        run: |
+          npm i
+          npm run lint
+        working-directory: ./application-wrapper/Looksyk
