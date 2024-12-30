@@ -10,6 +10,9 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
 
+
+![intro animation](docs/intro_animation.gif)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
