@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from "rxjs";
 import { RouterLink } from "@angular/router";
@@ -18,7 +18,7 @@ export class TitleComponent implements OnChanges {
   title!: string | null;
 
   @Input({required: false})
-  rootPath: string = "/page/";
+  rootPath = "/page/";
 
   parsedTitle: Subject<TitleSegment[]> = new BehaviorSubject([{
     name: "", link: "", viewName: ""
@@ -28,7 +28,7 @@ export class TitleComponent implements OnChanges {
 
   private historyService: HistoryService = inject(HistoryService);
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (!this.title) {
       return;
     }
@@ -39,10 +39,10 @@ export class TitleComponent implements OnChanges {
         viewName: this.title
       }])
     }
-    let result = [];
-    let segments = this.title.split("/")
-    let cummulatedSegments = [];
-    for (let segment of segments) {
+    const result = [];
+    const segments = this.title.split("/")
+    const cummulatedSegments = [];
+    for (const segment of segments) {
       cummulatedSegments.push(segment);
       console.log(cummulatedSegments)
       result.push({

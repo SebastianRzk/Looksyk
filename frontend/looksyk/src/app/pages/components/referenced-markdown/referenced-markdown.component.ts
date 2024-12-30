@@ -6,7 +6,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -51,7 +50,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   private router: Router = inject(Router);
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.updateContent(this.markdown)
   }
 
@@ -61,10 +60,10 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   @Input({required: true})
   parentId!: string;
 
-  renderedMarkdown: Subject<any> = new BehaviorSubject<any>("");
-  renderedMarkdown$: Observable<any> = this.renderedMarkdown.asObservable();
+  renderedMarkdown: Subject<string | Promise<string>> = new BehaviorSubject<string | Promise<string>>("");
+  renderedMarkdown$: Observable<string | Promise<string>> = this.renderedMarkdown.asObservable();
 
-  renderedMarkdown_ = this.renderedMarkdown$.subscribe(update => {
+  renderedMarkdown_ = this.renderedMarkdown$.subscribe(() => {
     setTimeout(() => this.markdownService.makeLinksInternal(this.markdownRef, this.router)
       , 0)
   })
@@ -92,7 +91,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
 
   clickCheckbox() {
     firstValueFrom(this.todo$).then(x => {
-      let flippedContent = computeNewTodoState(x, this.markdown.content.originalText);
+      const flippedContent = computeNewTodoState(x, this.markdown.content.originalText);
       this.pageService.saveBlockOnPage(
         this.markdown.reference.fileId,
         this.markdown.reference.blockNumber,

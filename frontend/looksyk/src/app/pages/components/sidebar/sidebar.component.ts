@@ -49,9 +49,9 @@ export class SidebarComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<string[]>) {
-    let fav_list = await firstValueFrom(this.favs$);
-    moveItemInArray(fav_list, event.previousIndex, event.currentIndex);
-    this.favoriteService.updateFavList(fav_list);
+    const favList: string[] = await firstValueFrom(this.favs$);
+    moveItemInArray(favList, event.previousIndex, event.currentIndex);
+    this.favoriteService.updateFavList(favList);
   }
 
   protected readonly encodeURIComponent = encodeURIComponent;

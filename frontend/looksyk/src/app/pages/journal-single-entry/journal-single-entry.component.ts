@@ -53,7 +53,7 @@ export class JournalSingleEntryComponent implements OnInit{
   ngOnInit(): void {
     this.route.params.subscribe(
       params => {
-        let pageName = params["name"];
+        const pageName = params["name"];
         if (this.page_){
           this.page_.unsubscribe();
         }

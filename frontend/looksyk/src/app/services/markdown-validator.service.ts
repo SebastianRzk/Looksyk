@@ -10,9 +10,6 @@ export class MarkdownValidatorService {
 
   httpClient = inject(HttpClient);
 
-  constructor() {
-  }
-
   public validate(content: string): Observable<Block> {
     return this.httpClient.post<BlockDto>("/api/parse", {
       'block': content

@@ -13,10 +13,10 @@ export function emojiExtension(): MarkedExtension {
     extensions: [{
       name: 'emoji',
       level: 'inline',
-      start(src: any) {
+      start(src: string) {
         return src.match(emojiRegex)?.index;
       },
-      tokenizer(src: any, tokens: any): Token | undefined {
+      tokenizer(src: string): Token | undefined {
         const match = tokenizerRule.exec(src);
         if (!match) {
           return;

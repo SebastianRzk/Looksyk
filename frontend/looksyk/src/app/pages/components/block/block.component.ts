@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Block } from "../../model";
 import { MarkdownComponent } from "../markdown/markdown.component";
-import { ReferencedMarkdownComponent } from "../referenced-markdown/referenced-markdown.component";
 
 @Component({
   selector: 'app-block',
   standalone: true,
-  imports: [CommonModule, MarkdownComponent, ReferencedMarkdownComponent],
+  imports: [CommonModule, MarkdownComponent],
   templateUrl: './block.component.html',
   styleUrls: ['./block.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -37,15 +37,15 @@ export class DetailsComponent implements OnInit {
   });
   public mediaInfo$ = this.mediaInfo.asObservable();
 
-  bypass(trustedUrl: String): SafeResourceUrl {
+  bypass(trustedUrl: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(trustedUrl.toString());
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(
       params => {
-        let pageNameUnencoded = params["name"];
-        let pageName = decodeURIComponent(pageNameUnencoded);
+        const pageNameUnencoded = params["name"];
+        const pageName = decodeURIComponent(pageNameUnencoded);
         this.pageName.next(pageName);
         this.mediaService.getMediaPreviewInfo(pageName).subscribe(
           mediaPreview => this.mediaInfo.next(mediaPreview)

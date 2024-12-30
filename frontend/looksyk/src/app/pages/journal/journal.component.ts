@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MarkdownPage } from "../model";
 import { PageService } from "../../services/page.service";
-import { MatDivider, MatDividerModule } from "@angular/material/divider";
 
 @Component({
   selector: 'app-journal',
@@ -26,7 +25,7 @@ export class JournalComponent {
 export const todayDate = new Date().getDate();
 export const mapToDay: (x: number) => Date = (index: number) => {
   console.log("loading date: ", index, todayDate, todayDate-index)
-  let date = new Date();
+  const date = new Date();
   date.setDate(todayDate - index + 1);
   return date;
 }
@@ -67,8 +66,8 @@ export class MyDataSource extends DataSource<Observable<MarkdownPage>> {
   }
 
   private loadData(pageNumber: number): Observable<MarkdownPage>{
-    let pageDay = mapToDay(pageNumber);
-    let pageName = mapDateToJournalPageName(pageDay);
+    const pageDay = mapToDay(pageNumber);
+    const pageName = mapDateToJournalPageName(pageDay);
     this.pageService.loadJournalPage(pageName);
     return this.pageService.getJournalPage(pageName);
   }

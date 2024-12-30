@@ -13,7 +13,7 @@ export class ContentAssistService {
   private state = new BehaviorSubject<ContentAssistMode>(ContentAssistMode.Closed);
   public state$ = this.state.asObservable();
 
-  private lastChar: string = "";
+  private lastChar = "";
 
   private contentAssistModeRaw: ContentAssistMode = ContentAssistMode.Navigate;
 
@@ -27,7 +27,7 @@ export class ContentAssistService {
 
   constructor() {
     this.useraction.openMarkdown$.subscribe((data) => {
-        if (!!data.target.fileTarget) {
+        if (data.target.fileTarget) {
           this.contentAssistModeRaw = ContentAssistMode.Insert;
         } else {
           this.contentAssistModeRaw = ContentAssistMode.Navigate;

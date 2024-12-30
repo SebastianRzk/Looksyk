@@ -19,9 +19,9 @@ import { MatDivider } from "@angular/material/divider";
 export class RenamePageSectionComponent {
 
   @Output()
-  public close = new EventEmitter<void>();
+  public closeRenamePageSection = new EventEmitter<void>();
   @Output()
-  public submit = new EventEmitter<string>();
+  public submitRenamePageSection = new EventEmitter<string>();
 
 
 }

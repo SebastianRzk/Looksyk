@@ -52,7 +52,7 @@ export class PageService {
   public deleteUserPage(pageName: string): Promise<void> {
     const pageId = this.userpageId(pageName);
     return firstValueFrom(this.httpClient.delete<void>("/api/pages/" + encodeURIComponent(pageName).toString())
-      .pipe(tap(_ => this.deletePage(pageId))));
+      .pipe(tap(() => this.deletePage(pageId))));
   }
 
   public loadBuildInPage(pageName: string) {
@@ -136,7 +136,7 @@ export class PageService {
     const url = "/api/pagesbyid/" + encodeURIComponent(pageid).toString() + "/block/" + blockNumber;
     return this.httpClient.post<BlockDto>(url, {
       "markdown": newContent,
-    }).pipe(map(fromBlockContentDto)).pipe(tap(x => this.somethingHasChanged.next({
+    }).pipe(map(fromBlockContentDto)).pipe(tap(() => this.somethingHasChanged.next({
       blockId: blockId
     })));
   }
@@ -145,7 +145,7 @@ export class PageService {
     this.savingState.next(SavingState.Saving);
     const url = this.urlForPage(pageIdentifier) + encodeURIComponent(pagename).toString();
     this.httpClient.post(url, {blocks: content}).subscribe(
-      _ => {
+      () => {
         this.savingState.next(SavingState.Saved);
         this.somethingHasChanged.next({
           blockId: targetBlockId
@@ -156,11 +156,11 @@ export class PageService {
   updateReferenceIfLoaded(reference: Reference) {
     if (this.pageState.get(reference.fileId)) {
       if (this.isUserPage(reference.fileId)) {
-        let pageName = reference.fileId.substring(USER_ID_PREFIX.length);
+        const pageName = reference.fileId.substring(USER_ID_PREFIX.length);
         this.loadUserPageById(pageName, reference.fileId);
       } else {
         console.log("loading journal page")
-        let pageName = reference.fileId.substring(JOURNAL_ID_PREFIX.length);
+        const pageName = reference.fileId.substring(JOURNAL_ID_PREFIX.length);
         this.loadJournalPageById(pageName, reference.fileId);
       }
 

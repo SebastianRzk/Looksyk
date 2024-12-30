@@ -1,2 +1,4 @@
-declare const marked:any;
-declare const highlight:any;
+import { Marked } from "marked";
+
+declare const marked:Marked;
+declare const highlight:Highlight;

@@ -85,10 +85,10 @@ export function fromBlockDto(dto: BlockDto, randomStr: string, runningNumber: nu
 }
 
 export function fromDto(dto: MarkdownPageDto, name: string, pageid: string): MarkdownPage {
-  let result = [];
-  let randomStr = "" + Math.random();
+  const result = [];
+  const randomStr = "" + Math.random();
   let runningNumber = 0;
-  for (let block of dto.blocks) {
+  for (const block of dto.blocks) {
     runningNumber += 1;
     result.push(
       fromBlockDto(block, randomStr, runningNumber, name))
@@ -99,5 +99,4 @@ export function fromDto(dto: MarkdownPageDto, name: string, pageid: string): Mar
     name: name,
     pageid: pageid
   }
-
 }

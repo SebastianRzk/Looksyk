@@ -38,6 +38,7 @@
   </ng-container>
   <div class="full-width">
     <div class="auto-update" *ngIf="autoUpdate$| async">autoupdate</div>
+    <!-- eslint-disable-next-line -->,
     <div [innerHTML]="renderedMarkdown$ | async"
          [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"
          class="markdown" #markdownComponent></div>

@@ -20,7 +20,7 @@ export class TitleComponent implements OnChanges {
   push_history!: boolean;
 
   @Input({required: false})
-  rootPath: string = "/journal/";
+  rootPath = "/journal/";
 
   parsedTitle: Subject<TitleSegment> = new BehaviorSubject({
     name: "", link: ""
@@ -34,7 +34,7 @@ export class TitleComponent implements OnChanges {
     if (!this.title_date) {
       return;
     }
-    let splitted_date = this.title_date.split("_");
+    const splitted_date = this.title_date.split("_");
 
     let localeString = splitted_date[2] + "." + splitted_date[1] + "." + splitted_date[0];
     localeString = this.appendDescription(splitted_date, localeString);
@@ -53,7 +53,7 @@ export class TitleComponent implements OnChanges {
   }
 
   private appendDescription(splitted_date: string[], localeString: string) {
-    let dateAsDate = new Date(parseInt(splitted_date[0]), parseInt(splitted_date[1]) - 1, parseInt(splitted_date[2]));
+    const dateAsDate = new Date(parseInt(splitted_date[0]), parseInt(splitted_date[1]) - 1, parseInt(splitted_date[2]));
     if (this.isToday(dateAsDate)) {
       localeString = localeString + " (today)";
     } else if (this.isTomorrow(dateAsDate)) {
@@ -65,18 +65,18 @@ export class TitleComponent implements OnChanges {
   }
 
   isToday(inputDate: Date): boolean {
-    let todaysDate = new Date();
+    const todaysDate = new Date();
     return inputDate.setHours(0, 0, 0, 0) == todaysDate.setHours(0, 0, 0, 0)
   }
 
   isTomorrow(inputDate: Date): boolean {
-    let tomorrowsDate = new Date();
+    const tomorrowsDate = new Date();
     tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
     return inputDate.setHours(0, 0, 0, 0) == tomorrowsDate.setHours(0, 0, 0, 0)
   }
 
   isYesterday(inputDate: Date): boolean {
-    let yesterdaysDate = new Date();
+    const yesterdaysDate = new Date();
     yesterdaysDate.setDate(yesterdaysDate.getDate() - 1);
     return inputDate.setHours(0, 0, 0, 0) == yesterdaysDate.setHours(0, 0, 0, 0)
   }

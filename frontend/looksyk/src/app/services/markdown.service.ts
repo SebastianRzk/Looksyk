@@ -17,7 +17,7 @@ export class MarkdownService {
     this.marked = new Marked(
       markedHighlight({
         langPrefix: 'hljs language-',
-        highlight(code, lang, info) {
+        highlight(code: string, lang: string): string {
           const language = hljs.getLanguage(lang) ? lang : 'plaintext';
           return hljs.highlight(code, {language}).value;
         }
@@ -32,7 +32,7 @@ export class MarkdownService {
 
   public makeLinksInternal(elementRef: ElementRef, router: Router) {
     const as = elementRef.nativeElement.querySelectorAll('a');
-    for (let a of as) {
+    for (const a of as) {
       const link = a as unknown as HTMLLinkElement;
       const originalDestination = link.getAttribute("href");
       if (originalDestination) {
@@ -55,7 +55,7 @@ export class MarkdownService {
           link.onclick = async (clickEvent) => {
             clickEvent.stopImmediatePropagation();
             clickEvent.stopPropagation();
-            let escapedDestination = originalDestination?.replaceAll("(", "%28").replaceAll(")", "%29");
+            const escapedDestination = originalDestination?.replaceAll("(", "%28").replaceAll(")", "%29");
             await router.navigateByUrl(escapedDestination);
           }
         }

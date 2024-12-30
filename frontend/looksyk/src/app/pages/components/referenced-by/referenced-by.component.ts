@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { BacklinkService } from "../../../services/backlink.service";
 import { ShowPageComponent } from "../../show-page/show-page.component";
 import { AsyncPipe, NgIf } from "@angular/common";
@@ -26,7 +26,7 @@ export class ReferencedByComponent implements OnChanges {
 
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.backlinkService.loadBacklinks(this.pageName);
   }
 

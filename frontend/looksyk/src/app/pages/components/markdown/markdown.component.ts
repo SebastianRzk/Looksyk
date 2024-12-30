@@ -110,18 +110,18 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
     change: this.pageService.somethingHasChanged$
   }).pipe(filter(x => x.enabled))
     .pipe(filter(x => x.change.blockId != this.markdown.indentification))
-    .subscribe(event => {
+    .subscribe(() => {
       this.updateSilent();
     })
 
-  renderedMarkdown_ = this.renderedMarkdown$.subscribe(update => {
+  renderedMarkdown_ = this.renderedMarkdown$.subscribe(() => {
     setTimeout(() => this.markdownService.makeLinksInternal(this.markdownRef, this.router)
       , 0
     )
   })
 
 
-  keyboadActionTrigger_ = this.userInteraction.openMarkdown$.pipe(filter(_ => this.editable)).subscribe(openMarkdown => {
+  keyboadActionTrigger_ = this.userInteraction.openMarkdown$.pipe(filter(() => this.editable)).subscribe(openMarkdown => {
     if (openMarkdown.target.blockTarget == this.markdown.indentification) {
       this.openEditor();
     } else {
@@ -139,8 +139,8 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   insertText_ = this.userInteraction.insertText$.pipe(filter(event => event.target.blockTarget == this.markdown.indentification))
     .subscribe(insertText => {
-      var sel: Selection | null;
-      var range;
+      let sel: Selection | null;
+      let range;
       if (window.getSelection) {
         sel = window.getSelection();
         if (sel?.getRangeAt && sel?.rangeCount) {
@@ -260,7 +260,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
   clickCheckbox() {
     firstValueFrom(this.todo$).then(x => {
-      let newState = computeNewTodoState(x, this.markdown.content.originalText);
+      const newState = computeNewTodoState(x, this.markdown.content.originalText);
       this.markdown.content.originalText = newState;
       this.editText.next(newState);
       this.userInteraction.savePage.next({
