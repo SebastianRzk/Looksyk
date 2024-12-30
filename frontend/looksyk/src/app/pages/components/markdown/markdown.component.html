@@ -23,7 +23,6 @@
         <mat-icon>expand_less</mat-icon>
         <span>Add block before</span>
       </button>
-
       <button mat-menu-item (click)="onClickAddBlockAfter()">
         <mat-icon>expand_more</mat-icon>
         <span>Add block after</span>
@@ -38,7 +37,7 @@
   </ng-container>
   <div class="full-width">
     <div class="auto-update" *ngIf="autoUpdate$| async">autoupdate</div>
-    <!-- eslint-disable-next-line -->,
+    <!-- eslint-disable-next-line -->
     <div [innerHTML]="renderedMarkdown$ | async"
          [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"
          class="markdown" #markdownComponent></div>
@@ -52,7 +51,6 @@
       <div class="loading">Loading...</div>
     </div>
   </div>
-
 </div>
 <div class="flex-col">
   <ng-container *ngIf="referencedMarkdown$ | async as refs">
