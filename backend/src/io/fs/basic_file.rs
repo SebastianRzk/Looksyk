@@ -17,6 +17,12 @@ pub fn exists_folder(path: PathBuf) -> bool {
     fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_dir()
 }
 
+pub fn folder_empty(path: PathBuf) -> bool {
+    fs::metadata(path.clone()).is_ok()
+        && fs::metadata(path.clone()).unwrap().is_dir()
+        && fs::read_dir(path).unwrap().count() == 0
+}
+
 pub fn exists_file(path: PathBuf) -> bool {
     fs::metadata(path.clone()).is_ok() && fs::metadata(path).unwrap().is_file()
 }

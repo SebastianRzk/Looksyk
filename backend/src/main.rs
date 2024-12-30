@@ -4,7 +4,7 @@ use std::sync::Mutex;
 
 use crate::configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
-use crate::io::fs::basic_file::{create_folder, exists_folder};
+use crate::io::fs::basic_file::{create_folder, exists_folder, folder_empty};
 use crate::io::fs::basic_folder::home_directory;
 use crate::io::fs::config::{read_config_from_file, save_config_to_file};
 use crate::io::fs::env;
@@ -58,7 +58,9 @@ async fn main() -> std::io::Result<()> {
         })
     });
 
-    if !exists_folder(data_root_location.path.to_path_buf()) {
+    if !exists_folder(data_root_location.path.to_path_buf())
+        || folder_empty(data_root_location.path.to_path_buf())
+    {
         init_empty_graph(&data_root_location);
     }
 

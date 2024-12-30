@@ -48,6 +48,11 @@ console.log("apiServerArgs", apiServerArgs)
 console.log("pwd", pwd)
 
 function pollServer() {
+    if (serverProcess.exitCode !== null) {
+        serverUp.error("Server process exited");
+        return;
+    }
+
     console.log("poll")
     const request = new Request(
         `http://localhost:${port}/api/metainfo/`,
