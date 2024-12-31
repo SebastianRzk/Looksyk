@@ -1,5 +1,4 @@
 use std::cmp::max;
-use std::collections::HashMap;
 use std::string::ToString;
 
 use crate::looksyk::model::BlockTokenType::TEXT;
@@ -27,7 +26,7 @@ fn feed_inactive(c: char, state: MatcherState, start_sequence: &str) -> MatcherS
 fn feed_active(c: char, state: &MatcherState, stop_sequence: &str) -> MatcherState {
     let mut new_inner_text = state.inner_text.clone();
     let new_index;
-    new_index = feed_pattern(c, stop_sequence.clone(), state);
+    new_index = feed_pattern(c, stop_sequence, state);
     new_inner_text.push(c);
     if new_index == stop_sequence.len() {
         let additional_chars_to_remove = stop_sequence.len() - 1;
@@ -115,13 +114,6 @@ fn create_inactive_matcher_state() -> MatcherState {
         current_index: 0,
         inner_text: vec![],
     }
-}
-
-fn create_initial_matcher_states() -> HashMap<BlockTokenType, MatcherState> {
-    let mut matcher_state = HashMap::new();
-    matcher_state.insert(BlockTokenType::LINK, create_inactive_matcher_state());
-    matcher_state.insert(BlockTokenType::QUERY, create_inactive_matcher_state());
-    matcher_state
 }
 
 pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
