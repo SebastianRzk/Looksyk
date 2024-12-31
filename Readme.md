@@ -65,9 +65,8 @@ Even if the project is currently a pure web project, I would not deploy it publi
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
 
 Currently, the backend is very fast, my [Logseq](https://logseq.com/) graph (~900 pages and 900kb text) is
-scanned and indexed in under a second (~200ms). That's why Looksyk doesn't have a database, reading new data into RAM is
-fast
-enough.
+scanned and indexed in under a second (~80ms on a 3 year old Laptop). That's why Looksyk doesn't have a database, reading 
+new data into RAM is fast enough.
 
 The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal
 page has issues.
