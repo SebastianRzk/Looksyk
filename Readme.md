@@ -28,6 +28,11 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
     - [Development Build](#development-build)
 - [Migrate Your Existing Logseq Graph](#migrate-your-existing-logseq-graph-to-looksyk)
 - [Configuration](#configuration)
+- [Data Storage](#data-storage)
+- [Design](#design)
+    - [Dark Mode (default)](#dark-mode-default)
+    - [Light Mode / Solarized Light](#light-mode--solarized-light)
+    - [Extra Dark Mode](#extra-dark-mode)
 - [Usage](#usage)
     - [Markdown Syntax and Features](#markdown-syntax-and-features)
     - [Page names and hierarchy](#page-names-and-hierarchy)
@@ -208,6 +213,64 @@ The application port and the graph location can be provided by arguments ( `--po
 The application title can be modified with the argument `--title`.
 
 ## Usage
+
+### Data Storage
+
+The `graph` folder in the home directory contains all data.
+
+* `pages` contains all pages
+* `journals` contains all journals
+* `assets` contains all media files (images, videos, audio files, text files, PDFs), deduplicated by checksum
+* `config` contains the configuration
+    * `config.json` contains the configuration (design, favourites)
+    * `media.json` contains all the checksums of the media files
+
+### Design
+
+The design is based on the [Material Design](https://material.io/design) guidelines. All colors can be configured in the
+`config.json` file.
+
+#### Dark Mode (default)
+
+![dark mode](docs/dark.png)
+
+Configuration:
+```json
+"design": {
+    "primaryColor": "#0c884c",
+    "backgroundColor": "#15212D",
+    "foregroundColor": "white",
+    "primaryShading": "rgba(255, 255, 255, 0.1)"
+}
+```
+
+#### Light Mode / Solarized Light
+
+![light mode](docs/light.png)
+
+Configuration:
+```json
+"design": {
+    "primaryColor": "#859900",
+    "backgroundColor": "#fdf6e3",
+    "foregroundColor": "#002b36",
+    "primaryShading": "rgba(0, 0, 0, 0.1)"
+}
+```
+
+#### Extra Dark Mode
+
+![extra dark mode](docs/extra_dark.png)
+
+Configuration:
+```json
+"design": {
+    "primaryColor": "#859900",
+    "backgroundColor": "black",
+    "foregroundColor": "white",
+    "primaryShading": "rgba(255, 255, 255, 0.1)"
+}
+```
 
 ### Markdown Syntax and Features
 
