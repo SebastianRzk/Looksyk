@@ -230,6 +230,24 @@ The `graph` folder in the home directory contains all data.
 The design is based on the [Material Design](https://material.io/design) guidelines. All colors can be configured in the
 `config.json` file.
 
+The following color values are supported:
+
+* Predefined browser-colors (e.g. `black`, `white`)
+* RGB `rgb(R, G, B)` (e.g. `rgb(255, 0, 0)`)
+* RGBA `rgba(R, G, B, A)` (e.g. `rgba(255, 0, 0, 0.5)`)
+* Hex `#RRGGBB` (e.g. `#FF0000`)
+* HSL `hsl(H, S%, L%)` (e.g. `hsl(0, 100%, 50%)`)
+* HSLA `hsla(H, S%, L%, A)` (e.g. `hsla(0, 100%, 50%, 0.5)`)
+
+The design consists of the following elements:
+
+* `primaryColor` is the color of the primary elements (e.g. links, buttons)
+* `backgroundColor` is the color of the background
+* `foregroundColor` is the color of the text
+* `primaryShading` is the color of the shading, used for the sidebar, the hover effect and the active element
+
+Inspire yourself with the following examples:
+
 #### Dark Mode (default)
 
 ![dark mode](docs/dark.png)
