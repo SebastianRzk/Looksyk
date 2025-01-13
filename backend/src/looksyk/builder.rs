@@ -17,15 +17,6 @@ pub mod test_builder {
     }
 }
 
-#[cfg(test)]
-use crate::looksyk::model::PageId;
-
-#[cfg(test)]
-use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
-
-#[cfg(test)]
-use crate::state::journal::JournalPageIndex;
-
 pub fn text_token(text: &str) -> BlockToken {
     BlockToken {
         block_token_type: BlockTokenType::TEXT,
@@ -60,57 +51,43 @@ pub fn page_name(name: String) -> SimplePageName {
 }
 
 #[cfg(test)]
-pub fn page_id(id: &str) -> PageId {
-    PageId { id: id.to_string() }
-}
+pub mod builder {
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::model::{BlockToken, BlockTokenType, PageId};
+    use crate::state::journal::JournalPageIndex;
 
-#[cfg(test)]
-pub fn user_page_id(id: &str) -> PageId {
-    append_user_page_prefix(&page_name(id.to_string()))
-}
-
-#[cfg(test)]
-pub fn journal_page_id(id: &str) -> PageId {
-    append_journal_page_prefix(&page_name(id.to_string()))
-}
-
-#[cfg(test)]
-pub fn todo_token() -> BlockToken {
-    BlockToken {
-        block_token_type: BlockTokenType::TODO,
-        payload: " ".to_string(),
+    pub fn user_page_id(id: &str) -> PageId {
+        page_name_str(id).as_user_page()
     }
-}
 
-#[cfg(test)]
-pub fn done_token() -> BlockToken {
-    BlockToken {
-        block_token_type: BlockTokenType::TODO,
-        payload: "x".to_string(),
+    pub fn journal_page_id(id: &str) -> PageId {
+        page_name_str(id).as_journal_page()
     }
-}
 
-#[cfg(test)]
-pub fn any_text_token() -> BlockToken {
-    BlockToken {
-        block_token_type: BlockTokenType::TEXT,
-        payload: "my todo".to_string(),
+    pub fn todo_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::TODO,
+            payload: " ".to_string(),
+        }
     }
-}
-
-#[cfg(test)]
-pub fn any_page_name() -> SimplePageName {
-    page_name_str("")
-}
-
-#[cfg(test)]
-pub fn any_page_id() -> PageId {
-    page_id("")
-}
-
-#[cfg(test)]
-pub fn empty_journal_index() -> JournalPageIndex {
-    JournalPageIndex {
-        entries: std::collections::HashMap::new(),
+    pub fn done_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::TODO,
+            payload: "x".to_string(),
+        }
+    }
+    pub fn any_text_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::TEXT,
+            payload: "my todo".to_string(),
+        }
+    }
+    pub fn any_page_id() -> PageId {
+        user_page_id("")
+    }
+    pub fn empty_journal_index() -> JournalPageIndex {
+        JournalPageIndex {
+            entries: std::collections::HashMap::new(),
+        }
     }
 }

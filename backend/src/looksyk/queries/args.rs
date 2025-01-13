@@ -20,7 +20,6 @@ pub const PARAM_TAG: &str = "tag";
 
 pub const ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX: &str =
     "Decode error: Can not strip query name prefix";
-pub const ERROR_DISPLAY_TYPE_UNKNOWN: &str = "Decode error: Unknown display type";
 
 pub fn parse_property(
     input_string: &str,

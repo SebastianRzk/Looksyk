@@ -46,6 +46,7 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
         - [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
+- [Changelog (external file)](docs/changelog.md)
 
 ## Introduction
 

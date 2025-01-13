@@ -28,7 +28,7 @@ fn search_finding_to_dto(search_finding: &SearchFinding) -> SearchFindingDto {
 
 fn to_search_reference(markdown_reference: &MarkdownReference) -> SearchReferenceDto {
     SearchReferenceDto {
-        file_name: markdown_reference.page_name.name.clone(),
+        file_name: markdown_reference.page_id.name.name.clone(),
         block_number: markdown_reference.block_number,
     }
 }
@@ -42,7 +42,7 @@ pub fn to_search_term(search_term_dto: SearchTermDto) -> SearchTerm {
 #[cfg(test)]
 mod tests {
     use crate::io::http::page::search::mapper::{search_finding_to_dto, search_result_to_dto};
-    use crate::looksyk::builder::{journal_page_id, page_name_str, user_page_id};
+    use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
     use crate::looksyk::model::MarkdownReference;
     use crate::looksyk::search::{SearchFinding, SearchResult};
 
@@ -51,7 +51,6 @@ mod tests {
         let search_finding = SearchFinding {
             reference: MarkdownReference {
                 page_id: journal_page_id("page_id"),
-                page_name: page_name_str("page_name"),
                 block_number: 0,
             },
             text_line: "text_line".to_string(),
@@ -60,7 +59,7 @@ mod tests {
         let dto = search_finding_to_dto(&search_finding);
 
         assert_eq!(dto.text_line, "text_line");
-        assert_eq!(dto.reference.file_name, "page_name");
+        assert_eq!(dto.reference.file_name, "page_id");
     }
 
     #[test]
@@ -69,7 +68,6 @@ mod tests {
             journal: vec![SearchFinding {
                 reference: MarkdownReference {
                     page_id: journal_page_id("page_id"),
-                    page_name: page_name_str("page_name"),
                     block_number: 0,
                 },
                 text_line: "text_line".to_string(),
@@ -77,7 +75,6 @@ mod tests {
             page: vec![SearchFinding {
                 reference: MarkdownReference {
                     page_id: user_page_id("page_id"),
-                    page_name: page_name_str("page_name"),
                     block_number: 0,
                 },
                 text_line: "text_line".to_string(),

@@ -3,7 +3,6 @@ use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
     SimplePageName,
 };
-use crate::looksyk::page_index::{append_user_page_prefix, get_page_type, strip_user_page_prefix};
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
 use std::collections::HashSet;
@@ -24,21 +23,15 @@ pub fn generate_overview_page(
         let mut visited_pages = HashSet::new();
 
         for (tag, references) in &all_tags.entries {
-            let page_type = get_page_type(tag);
-            if page_type == PageType::JournalPage {
+            if tag.page_type == PageType::JournalPage {
                 continue;
             }
-            render_table_line(
-                all_pages,
-                &mut result_table,
-                &strip_user_page_prefix(tag),
-                references,
-            );
+            render_table_line(all_pages, &mut result_table, &tag.name, references);
             visited_pages.insert(tag);
         }
 
         for simple_page_name in all_pages.entries.keys() {
-            let id = append_user_page_prefix(simple_page_name);
+            let id = simple_page_name.as_user_page();
             if !visited_pages.contains(&id) {
                 render_table_line(
                     all_pages,
@@ -101,14 +94,15 @@ fn get_display_text_page_created(
     if all_data.entries.contains_key(simple_page_name) {
         return "yes".to_string();
     }
-    return "not yet".to_string();
+    "not yet".to_string()
 }
 
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
 
-    use crate::looksyk::builder::{page_name_str, user_page_id};
+    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
     use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile};
     use crate::state::tag::TagIndex;

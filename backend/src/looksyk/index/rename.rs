@@ -1,9 +1,6 @@
 use crate::looksyk::model::{
     BlockContent, PageId, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
 };
-use crate::looksyk::page_index::{
-    append_user_page_prefix, get_page_type, strip_journal_page_prefix, strip_user_page_prefix,
-};
 use crate::looksyk::parser::parse_text_content;
 use crate::looksyk::syntax::looksyk_markdown::render_as_tag;
 use crate::state::state::{CurrentPageOnDiskState, NewPageOnDiskState};
@@ -89,26 +86,25 @@ fn rename_tag_across_all_files(
 
     let references = tag_index
         .entries
-        .get(&append_user_page_prefix(&old_page_name.page_name));
+        .get(&old_page_name.page_name.as_user_page());
 
     if let Some(r) = references {
         for reference in r {
-            let page_type = get_page_type(reference);
-            match page_type {
+            match reference.page_type {
                 PageType::UserPage => {
-                    let page_name = strip_user_page_prefix(reference);
-                    let file = new_user_pages.entries.get(&page_name).unwrap();
+                    let file = new_user_pages.entries.get(&reference.name).unwrap();
                     let new_file = rename_tag_in_file(old, new, file);
-                    new_user_pages.entries.insert(page_name.clone(), new_file);
+                    new_user_pages
+                        .entries
+                        .insert(reference.name.clone(), new_file);
                     changed_files.insert(reference.clone());
                 }
                 PageType::JournalPage => {
-                    let page_name = strip_journal_page_prefix(reference);
-                    let file = new_journal_pages.entries.get(&page_name).unwrap();
+                    let file = new_journal_pages.entries.get(&reference.name).unwrap();
                     let new_file = rename_tag_in_file(old, new, file);
                     new_journal_pages
                         .entries
-                        .insert(page_name.clone(), new_file);
+                        .insert(reference.name.clone(), new_file);
                     changed_files.insert(reference.clone());
                 }
             }
@@ -206,8 +202,8 @@ fn combine_two_pages(
             journal_pages: new_page_associated_state.journal_pages.clone(),
         },
         file_changes: FileChanges {
-            changed_files: HashSet::from([append_user_page_prefix(&new_tag_name.page_name)]),
-            file_to_delete: HashSet::from([append_user_page_prefix(&old_tag_name.page_name)]),
+            changed_files: HashSet::from([new_tag_name.page_name.as_user_page()]),
+            file_to_delete: HashSet::from([old_tag_name.page_name.as_user_page()]),
         },
     }
 }
@@ -218,7 +214,6 @@ mod tests {
     use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
     use crate::looksyk::model::builder::block_with_text_content;
     use crate::looksyk::model::{PageId, ParsedMarkdownFile, SimplePageName};
-    use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
     use crate::state::journal::JournalPageIndex;
     use crate::state::state::CurrentPageOnDiskState;
     use crate::state::tag::TagIndex;
@@ -266,9 +261,9 @@ mod tests {
 
         let mut tags_index: HashMap<PageId, HashSet<PageId>> = HashMap::new();
         let mut tag_list: HashSet<PageId> = HashSet::new();
-        tag_list.insert(append_user_page_prefix(&referencing_page_name_user));
-        tag_list.insert(append_journal_page_prefix(&referencing_page_name_journal));
-        tags_index.insert(append_user_page_prefix(&old_page_name), tag_list);
+        tag_list.insert(referencing_page_name_user.as_user_page());
+        tag_list.insert(referencing_page_name_journal.as_journal_page());
+        tags_index.insert(old_page_name.as_user_page(), tag_list);
 
         let result = rename_page_across_all_files(
             OldPageName {
@@ -295,7 +290,7 @@ mod tests {
             result
                 .file_changes
                 .file_to_delete
-                .contains(&append_user_page_prefix(&old_page_name)),
+                .contains(&old_page_name.as_user_page()),
             true
         );
         assert_eq!(result.file_changes.changed_files.len(), 3);
@@ -303,21 +298,21 @@ mod tests {
             result
                 .file_changes
                 .changed_files
-                .contains(&append_user_page_prefix(&new_page_name)),
+                .contains(&new_page_name.as_user_page()),
             true
         );
         assert_eq!(
             result
                 .file_changes
                 .changed_files
-                .contains(&append_user_page_prefix(&referencing_page_name_user)),
+                .contains(&referencing_page_name_user.as_user_page()),
             true
         );
         assert_eq!(
             result
                 .file_changes
                 .changed_files
-                .contains(&append_journal_page_prefix(&referencing_page_name_journal)),
+                .contains(&referencing_page_name_journal.as_journal_page()),
             true
         );
         let new_user_pages = result.new_page_associated_state.user_pages.entries;

@@ -6,7 +6,6 @@ use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
 use crate::looksyk::favourite::is_favourite;
 use crate::looksyk::index::index::update_index_for_file;
 use crate::looksyk::model::{PageType, RawMarkdownFile};
-use crate::looksyk::page_index::append_journal_page_prefix;
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_file, StaticRenderContext};
@@ -103,14 +102,9 @@ async fn update_journal(
         tag_index: &tag_guard,
     };
 
-    let page_id = append_journal_page_prefix(&simple_page_name);
-    let new_page_associated_state = update_index_for_file(
-        page_id,
-        &simple_page_name,
-        &PageType::JournalPage,
-        &updated_page,
-        current_page_associated_state,
-    );
+    let page_id = simple_page_name.as_journal_page();
+    let new_page_associated_state =
+        update_index_for_file(page_id, &updated_page, current_page_associated_state);
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;

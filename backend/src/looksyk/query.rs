@@ -3,6 +3,7 @@ use std::fmt::{Display, Formatter};
 use std::io::Error;
 
 use crate::looksyk::model::{BlockToken, QueryRenderResult};
+use crate::looksyk::queries::available::available_query_types;
 use crate::looksyk::queries::insert_file_content::{
     parse_query_insert_file_content, render_query_insert_file_content,
     QUERY_NAME_INSERT_FILE_CONTENT,
@@ -74,7 +75,10 @@ pub fn render_parsed_query(
             render_query_insert_file_content(query, asset_cache, data_root_location)
         }
         QueryType::Unknown => QueryRenderResult {
-            inplace_markdown: "Query type unknown".to_string(),
+            inplace_markdown: format!(
+                "Query type unknown. Allowed types: {}",
+                available_query_types()
+            ),
             referenced_markdown: vec![],
             has_dynamic_content: false,
         },
@@ -128,11 +132,12 @@ impl Display for QueryDisplayType {
 #[cfg(test)]
 mod tests {
     use crate::io::fs::media::MediaOnDisk;
-    use crate::looksyk::builder::{page_id, page_name_str, text_token, user_page_id};
+    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::builder::{page_name_str, text_token};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::builder::query_block_token;
     use crate::looksyk::model::{
-        BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
+        BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
     use crate::looksyk::query::{parse_query, render_query, QueryDisplayType, QueryType};
     use crate::looksyk::renderer::builder::{
@@ -159,7 +164,7 @@ mod tests {
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
         );
-        assert_eq!(result.inplace_markdown, "Query type unknown");
+        assert_eq!(result.inplace_markdown, "Query type unknown. Allowed types: page-hierarchy, references-to, todos, insert-file-content");
         assert_eq!(result.referenced_markdown.len(), 0);
     }
 
@@ -199,29 +204,7 @@ mod tests {
 
         assert_eq!(
             result.inplace_markdown,
-            "Decode error: Unknown display type"
-        );
-        assert_eq!(result.referenced_markdown.len(), 0);
-    }
-
-    #[test]
-    pub fn should_render_hierarchy_with_unsupported_displaytype() {
-        let mut hierarchy_data = HashMap::new();
-        hierarchy_data.insert(page_name_str("parent / sub1"), empty_file());
-        hierarchy_data.insert(page_name_str("parent / sub2"), empty_file());
-        hierarchy_data.insert(page_name_str("other / unknown"), empty_file());
-
-        let result = render_query(
-            &query_block_token("page-hierarchy root:\"parent\" display:\"referenced-list\" "),
-            &create_render_context_with_user_page_index(user_page_index_with(hierarchy_data))
-                .to_static(),
-            &mut create_empty_asset_cache(),
-            &empty_data_root_location(),
-        );
-
-        assert_eq!(
-            result.inplace_markdown,
-            "display type referenced-list not supported for querytype"
+            "display type unknown not supported for querytype. Avaliable display types: inplace-list, count"
         );
         assert_eq!(result.referenced_markdown.len(), 0);
     }
@@ -281,10 +264,8 @@ mod tests {
                 tags: vec![page_name_str("parent")],
                 state: TodoState::Todo,
                 source: TodoSourceReference {
-                    page_id: page_id("%%user/testfile"),
-                    page_name: page_name_str("testfile"),
+                    page_id: user_page_id("%%user/testfile"),
                     blocknumber: 0,
-                    page_type: PageType::UserPage,
                 },
             }],
         };
@@ -315,10 +296,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
                     source: TodoSourceReference {
-                        page_id: page_id("%%user/testfile"),
-                        page_name: page_name_str("testfile"),
+                        page_id: user_page_id("testfile"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
@@ -332,10 +311,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,
                     source: TodoSourceReference {
-                        page_id: page_id("%%user/testfile"),
-                        page_name: page_name_str("testfile2"),
+                        page_id: user_page_id("testfile"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
             ],
@@ -373,10 +350,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
                     source: TodoSourceReference {
-                        page_id: page_id("%%user/testfile"),
-                        page_name: page_name_str("testfile"),
+                        page_id: user_page_id("testfile"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
@@ -390,10 +365,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,
                     source: TodoSourceReference {
-                        page_id: page_id("%%user/testfile2"),
-                        page_name: page_name_str("testfile2"),
+                        page_id: user_page_id("testfile2"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
             ],
@@ -431,10 +404,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
                     source: TodoSourceReference {
-                        page_name: page_name_str("testfile"),
-                        page_id: page_id("%%user/testfile"),
+                        page_id: user_page_id("testfile"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
                 TodoIndexEntry {
@@ -448,10 +419,8 @@ mod tests {
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,
                     source: TodoSourceReference {
-                        page_name: page_name_str("testfile2"),
-                        page_id: page_id("%%user/testfile2"),
+                        page_id: user_page_id("testfile2"),
                         blocknumber: 0,
-                        page_type: PageType::UserPage,
                     },
                 },
             ],
@@ -467,7 +436,7 @@ mod tests {
         assert_eq!(result.inplace_markdown, "");
         assert_eq!(result.referenced_markdown.len(), 1);
         let reference = result.referenced_markdown.get(0).unwrap();
-        assert_eq!(reference.reference.page_name.name, "testfile2");
+        assert_eq!(reference.reference.page_id.name.name, "testfile2");
         assert_eq!(reference.reference.block_number, 0);
         assert_eq!(reference.content.content.len(), 1);
         assert_eq!(reference.content.content.get(0).unwrap().as_tokens, vec![]);

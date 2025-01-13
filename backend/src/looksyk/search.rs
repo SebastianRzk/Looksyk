@@ -1,5 +1,4 @@
 use crate::looksyk::model::{MarkdownReference, PageType, ParsedMarkdownFile, SimplePageName};
-use crate::looksyk::page_index::append_page_prefix;
 use crate::state::journal::JournalPageIndex;
 use crate::state::userpage::UserPageIndex;
 use std::collections::HashMap;
@@ -47,8 +46,7 @@ fn search_in_index(
                 if block_content.as_text.contains(&search_term.as_string) {
                     result.push(SearchFinding {
                         reference: MarkdownReference {
-                            page_id: append_page_prefix(simple_page_name, &page_type),
-                            page_name: simple_page_name.clone(),
+                            page_id: simple_page_name.as_page_id(&page_type),
                             block_number,
                         },
                         text_line: block_content.as_text.clone(),
@@ -96,6 +94,5 @@ mod tests {
 
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].text_line, "asf search alkj");
-        assert_eq!(result[0].reference.page_name.name, "page_name");
     }
 }

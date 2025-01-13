@@ -1,6 +1,5 @@
 use crate::looksyk::index::hierachy::HierarchyParser;
-use crate::looksyk::model::{BlockTokenType, PageId, PageType, ParsedMarkdownFile, SimplePageName};
-use crate::looksyk::page_index::{append_journal_page_prefix, append_user_page_prefix};
+use crate::looksyk::model::{BlockTokenType, PageId, ParsedMarkdownFile, SimplePageName};
 use crate::state::journal::JournalPageIndex;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoSourceReference, TodoState};
 use crate::state::userpage::UserPageIndex;
@@ -13,22 +12,14 @@ pub fn create_todo_index(
 
     for simple_page_name in data_state.entries.keys() {
         if let Some(file) = (&data_state.entries).get(simple_page_name) {
-            create_todo_index_file(
-                &mut (&mut result),
-                &append_user_page_prefix(simple_page_name),
-                &PageType::UserPage,
-                &simple_page_name,
-                file,
-            );
+            create_todo_index_file(&mut (&mut result), &simple_page_name.as_user_page(), file);
         }
     }
     for simple_page_name in journal_state.entries.keys() {
         if let Some(file) = &journal_state.entries.get(simple_page_name) {
             create_todo_index_file(
                 &mut (&mut result),
-                &append_journal_page_prefix(simple_page_name),
-                &PageType::UserPage,
-                &simple_page_name,
+                &simple_page_name.as_journal_page(),
                 file,
             );
         }
@@ -40,12 +31,10 @@ pub fn create_todo_index(
 pub fn create_todo_index_file(
     result: &mut Vec<TodoIndexEntry>,
     page_id: &PageId,
-    page_type: &PageType,
-    page_name: &SimplePageName,
     file: &ParsedMarkdownFile,
 ) {
     let mut hierarchy_index = HierarchyParser {
-        page_name: page_name.clone(),
+        page_name: page_id.name.clone(),
         current_hierarchy: vec![],
     };
 
@@ -61,8 +50,6 @@ pub fn create_todo_index_file(
                         block: block.clone(),
                         source: TodoSourceReference {
                             page_id: page_id.clone(),
-                            page_name: page_name.clone(),
-                            page_type: page_type.clone(),
                             blocknumber,
                         },
                         state: state_from_payload(&first_token.payload),
@@ -78,7 +65,7 @@ pub fn create_todo_index_file(
 pub fn remove_file_from_todo_index(todo_index: &TodoIndex, tag_name: &SimplePageName) -> TodoIndex {
     let mut result = vec![];
     for entry in &todo_index.entries {
-        if entry.source.page_name.name != tag_name.name {
+        if entry.source.page_id.name.name != tag_name.name {
             result.push(entry.clone());
         }
     }
@@ -94,15 +81,15 @@ fn state_from_payload(payload: &String) -> TodoState {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-
-    use crate::looksyk::builder::{
-        any_text_token, done_token, empty_journal_index, page_id, page_name_str, todo_token,
+    use crate::looksyk::builder::builder::{
+        any_text_token, done_token, empty_journal_index, todo_token, user_page_id,
     };
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::todo::create_todo_index;
-    use crate::looksyk::model::{BlockContent, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::model::{BlockContent, ParsedBlock, ParsedMarkdownFile};
     use crate::state::todo::{TodoSourceReference, TodoState};
     use crate::state::userpage::UserPageIndex;
+    use std::collections::HashMap;
 
     #[test]
     pub fn non_todo_file_should_return_empty_index() {
@@ -157,10 +144,8 @@ mod tests {
         assert_eq!(
             entry.source,
             TodoSourceReference {
-                page_id: page_id("%%user-page/testfile"),
-                page_name: page_name_str("testfile"),
+                page_id: user_page_id("testfile"),
                 blocknumber: 0,
-                page_type: PageType::UserPage,
             }
         )
     }
@@ -195,10 +180,8 @@ mod tests {
         assert_eq!(
             entry.source,
             TodoSourceReference {
-                page_id: page_id("%%user-page/testfile"),
-                page_name: page_name_str("testfile"),
+                page_id: user_page_id("testfile"),
                 blocknumber: 0,
-                page_type: PageType::UserPage,
             }
         )
     }

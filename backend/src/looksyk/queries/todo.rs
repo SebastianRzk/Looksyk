@@ -56,7 +56,14 @@ pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
         QueryDisplayType::InplaceList => render_as_list(result),
         QueryDisplayType::Count => render_as_count(result),
         QueryDisplayType::ReferencedList => render_as_references(result),
-        _ => render_display_unknown(query.display),
+        _ => render_display_unknown(
+            query.display,
+            vec![
+                QueryDisplayType::InplaceList,
+                QueryDisplayType::Count,
+                QueryDisplayType::ReferencedList,
+            ],
+        ),
     }
 }
 
@@ -78,7 +85,6 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
                 reference: MarkdownReference {
                     page_id: x.source.page_id.clone(),
                     block_number: x.source.blocknumber,
-                    page_name: x.source.page_name.clone(),
                 },
             })
             .collect(),
@@ -98,13 +104,13 @@ fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderR
     for todo in selected_selected_todos {
         if todo.state == TodoState::Done {
             result.push_str("* :check mark: ");
-            result.push_str(render_link(&todo.source.page_name, &todo.source.page_type).as_str());
+            result.push_str(render_link(&todo.source.page_id).as_str());
             result.push_str(": ");
             result.push_str(render_block_flat(&todo.block).strip_prefix("[x] ").unwrap());
             result.push_str("\n\n")
         } else {
             result.push_str("* :white large square: ");
-            result.push_str(render_link(&todo.source.page_name, &todo.source.page_type).as_str());
+            result.push_str(render_link(&todo.source.page_id).as_str());
             result.push_str(": ");
             result.push_str(render_block_flat(&todo.block).strip_prefix("[ ] ").unwrap());
             result.push_str("\n\n")

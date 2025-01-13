@@ -1,6 +1,4 @@
 use crate::io::http::metainfo::dtos::{MetaInfoDto, TitleDto};
-use crate::looksyk::model::{PageId, PageType};
-use crate::looksyk::page_index::{get_page_type, strip_prefix};
 use crate::state::state::AppState;
 use actix_web::web::Data;
 use actix_web::{get, web, Responder};
@@ -30,9 +28,8 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
             .entries
             .keys()
             .into_iter()
-            .map(|x| to_meta(x))
-            .filter(|x| x.page_type == PageType::UserPage)
-            .map(|x| x.simple_name),
+            .filter(|x| x.is_user_page())
+            .map(|x| x.name.name.clone()),
     );
     tags = tags
         .iter()
@@ -55,17 +52,4 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
     drop(media_guard);
 
     Ok(web::Json(MetaInfoDto { tags, media }))
-}
-
-fn to_meta(page_id: &PageId) -> TagMeta {
-    let page_type = get_page_type(page_id);
-    TagMeta {
-        simple_name: strip_prefix(page_id, &page_type).name.clone(),
-        page_type,
-    }
-}
-
-struct TagMeta {
-    simple_name: String,
-    page_type: PageType,
 }

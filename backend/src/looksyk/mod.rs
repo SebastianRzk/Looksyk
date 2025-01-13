@@ -6,7 +6,6 @@ pub mod favourite;
 pub mod index;
 pub mod media;
 pub mod model;
-pub mod page_index;
 pub mod parser;
 mod queries;
 mod query;

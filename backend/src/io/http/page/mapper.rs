@@ -3,11 +3,11 @@ use crate::io::http::page::dtos::{
     MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto,
     PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto,
 };
+use crate::io::http::page_type::page_id_to_external_string;
 use crate::looksyk::model::{
     MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown,
     RawBlock, UpdateBlock, UpdateMarkdownFile,
 };
-use crate::looksyk::page_index::get_page_type;
 
 pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
     PreparedBlockDto {
@@ -42,24 +42,23 @@ pub fn map_to_prepared_reference_to(
 
 pub fn map_markdown_reference_to_dto(reference: &MarkdownReference) -> MarkdownReferenceDto {
     MarkdownReferenceDto {
-        file_id: reference.page_id.id.clone(),
-        file_name: reference.page_name.name.clone(),
+        file_id: page_id_to_external_string(&reference.page_id),
+        file_name: reference.page_id.name.name.clone(),
         block_number: reference.block_number,
         link: from_markdown_reference_to_link(&reference),
     }
 }
 
 pub fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -> String {
-    let page_type = get_page_type(&markdown_reference.page_id);
-    match page_type {
+    match markdown_reference.page_id.page_type {
         PageType::UserPage => {
             format!(
                 "/page/{}",
-                encode_link_component(&markdown_reference.page_name.name)
+                encode_link_component(&markdown_reference.page_id.name.name)
             )
         }
         PageType::JournalPage => {
-            format!("/journal/{}", markdown_reference.page_name.name)
+            format!("/journal/{}", markdown_reference.page_id.name.name)
         }
     }
 }
@@ -106,14 +105,13 @@ pub fn map_markdown_block_dto(
 #[cfg(test)]
 mod tests {
     use crate::io::http::page::mapper::from_markdown_reference_to_link;
-    use crate::looksyk::builder::{journal_page_id, page_name, user_page_id};
+    use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
     use crate::looksyk::model::MarkdownReference;
 
     #[test]
     fn test_map_markdown_file_to_dto_journal() {
         let markdown_reference = MarkdownReference {
             page_id: journal_page_id("my-journal"),
-            page_name: page_name("my-journal".to_string()),
             block_number: 0,
         };
 
@@ -125,7 +123,6 @@ mod tests {
     fn test_map_markdown_file_to_dto_user_page() {
         let markdown_reference = MarkdownReference {
             page_id: user_page_id("my-page"),
-            page_name: page_name("my-page".to_string()),
             block_number: 0,
         };
 

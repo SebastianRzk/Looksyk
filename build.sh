@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -ue
 
 pushd frontend/looksyk
 npm install

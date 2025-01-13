@@ -5,4 +5,5 @@ pub mod markdown;
 pub mod media;
 pub mod metainfo;
 pub mod page;
+mod page_type;
 pub mod r#static;

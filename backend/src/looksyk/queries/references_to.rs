@@ -2,7 +2,6 @@ use std::collections::{HashMap, HashSet};
 use std::io::{Error, ErrorKind};
 
 use crate::looksyk::model::{PageId, QueryRenderResult, SimplePageName};
-use crate::looksyk::page_index::append_user_page_prefix;
 use crate::looksyk::queries::args::{
     parse_display_type_for_lists, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
     PARAM_TARGET,
@@ -44,13 +43,16 @@ pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderR
     let empty_set: HashSet<PageId> = HashSet::new();
     let references = data
         .entries
-        .get(&append_user_page_prefix(&target))
+        .get(&target.as_user_page())
         .unwrap_or(&empty_set);
 
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(&target, &references),
         QueryDisplayType::Count => render_as_count(references),
-        _ => render_display_unknown(query.display),
+        _ => render_display_unknown(
+            query.display,
+            vec![QueryDisplayType::InplaceList, QueryDisplayType::Count],
+        ),
     }
 }
 

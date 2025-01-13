@@ -99,7 +99,16 @@ pub fn render_query_insert_file_content(
             inplace_markdown: render_as_audio(&media_on_disk.as_asset_descriptor()),
             referenced_markdown: vec![],
         },
-        _ => render_display_unknown(query.display),
+        _ => render_display_unknown(
+            query.display,
+            vec![
+                QueryDisplayType::InlineText,
+                QueryDisplayType::Link,
+                QueryDisplayType::CodeBlock,
+                QueryDisplayType::Video,
+                QueryDisplayType::Audio,
+            ],
+        ),
     }
 }
 

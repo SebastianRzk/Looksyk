@@ -1,14 +1,9 @@
 extern crate urlencoding;
 
-use urlencoding::encode;
-
 use crate::looksyk::model::{
     BlockToken, BlockTokenType, MarkdownReference, PageId, PageType, ParsedBlock,
     ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile,
     PreparedReferencedMarkdown, ReferencedMarkdown, SimplePageName,
-};
-use crate::looksyk::page_index::{
-    get_page_type, strip_journal_page_prefix, strip_user_page_prefix,
 };
 use crate::looksyk::query::render_query;
 use crate::state::asset_cache::AssetCache;
@@ -16,6 +11,7 @@ use crate::state::state::DataRootLocation;
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
+use urlencoding::encode;
 
 pub struct StaticRenderContext<'a> {
     pub user_pages: &'a UserPageIndex,
@@ -159,7 +155,6 @@ fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedRefe
     PreparedReferencedMarkdown {
         reference: MarkdownReference {
             block_number: referenced_markdown.reference.block_number,
-            page_name: referenced_markdown.reference.page_name.clone(),
             page_id: referenced_markdown.reference.page_id.clone(),
         },
         content: PreparedBlockContent {
@@ -260,10 +255,10 @@ pub struct RenderResult {
     has_dynamic_content: bool,
 }
 
-pub fn render_link(destination: &SimplePageName, page_type: &PageType) -> String {
-    match page_type {
-        PageType::UserPage => render_user_link_str(&destination.name),
-        PageType::JournalPage => render_journal_link_str(&destination.name),
+pub fn render_link(destination: &PageId) -> String {
+    match destination.page_type {
+        PageType::UserPage => render_user_link_str(&destination.name.name),
+        PageType::JournalPage => render_journal_link_str(&destination.name.name),
     }
 }
 
@@ -272,12 +267,9 @@ pub fn render_user_link(destination: &SimplePageName) -> String {
 }
 
 pub fn render_link_by_id(destination: &PageId) -> String {
-    let page_type = get_page_type(destination);
-    match page_type {
-        PageType::UserPage => render_user_link_str(&strip_user_page_prefix(destination).name),
-        PageType::JournalPage => {
-            render_journal_link_str(&strip_journal_page_prefix(destination).name)
-        }
+    match destination.page_type {
+        PageType::UserPage => render_user_link_str(&destination.name.name),
+        PageType::JournalPage => render_journal_link_str(&destination.name.name),
     }
 }
 
@@ -469,7 +461,7 @@ mod tests {
     }
 
     #[test]
-    fn should_render_unwknown_query_as_non_dynamic() {
+    fn should_render_unknown_query_as_non_dynamic() {
         let input = ParsedBlock {
             indentation: 0,
             content: vec![BlockContent {

@@ -110,9 +110,8 @@ fn serialize_block_token(block_token: &BlockToken) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::{
-        any_page_id, any_page_name, journal_link_token, page_id, page_name_str, text_token,
-    };
+    use crate::looksyk::builder::builder::any_page_id;
+    use crate::looksyk::builder::{journal_link_token, text_token};
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, MarkdownReference, ParsedBlock,
         ParsedMarkdownFile, UpdateBlock,
@@ -170,8 +169,7 @@ mod tests {
                 markdown: "this is a new content".to_string(),
                 reference: MarkdownReference {
                     block_number: 1,
-                    page_name: page_name_str(""),
-                    page_id: page_id(""),
+                    page_id: any_page_id(),
                 },
             },
             &ParsedMarkdownFile {
@@ -192,7 +190,6 @@ mod tests {
                 markdown: "this is a new content\nwith line 2".to_string(),
                 reference: MarkdownReference {
                     block_number: 0,
-                    page_name: any_page_name(),
                     page_id: any_page_id(),
                 },
             },
@@ -222,7 +219,6 @@ mod tests {
                 markdown: "this is a new content".to_string(),
                 reference: MarkdownReference {
                     block_number: 0,
-                    page_name: any_page_name(),
                     page_id: any_page_id(),
                 },
             },
@@ -257,7 +253,6 @@ mod tests {
                 markdown: "this is a new content".to_string(),
                 reference: MarkdownReference {
                     block_number: 0,
-                    page_name: any_page_name(),
                     page_id: any_page_id(),
                 },
             },
@@ -294,7 +289,6 @@ mod tests {
                 markdown: "this is a new\n-content".to_string(),
                 reference: MarkdownReference {
                     block_number: 0,
-                    page_name: any_page_name(),
                     page_id: any_page_id(),
                 },
             },
@@ -336,7 +330,6 @@ mod tests {
                 markdown: "update\n".to_string(),
                 reference: MarkdownReference {
                     block_number: 0,
-                    page_name: any_page_name(),
                     page_id: any_page_id(),
                 },
             },

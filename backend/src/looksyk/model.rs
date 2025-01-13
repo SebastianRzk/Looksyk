@@ -117,7 +117,6 @@ pub struct ReferencedMarkdown {
 #[derive(Clone)]
 pub struct MarkdownReference {
     pub page_id: PageId,
-    pub page_name: SimplePageName,
     pub block_number: usize,
 }
 
@@ -138,6 +137,29 @@ pub struct SimplePageName {
     pub name: String,
 }
 
+impl SimplePageName {
+    pub fn as_journal_page(&self) -> PageId {
+        PageId {
+            page_type: PageType::JournalPage,
+            name: self.clone(),
+        }
+    }
+
+    pub fn as_user_page(&self) -> PageId {
+        PageId {
+            page_type: PageType::UserPage,
+            name: self.clone(),
+        }
+    }
+
+    pub fn as_page_id(&self, page_type: &PageType) -> PageId {
+        PageId {
+            page_type: page_type.clone(),
+            name: self.clone(),
+        }
+    }
+}
+
 impl Hash for SimplePageName {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.name.hash(state)
@@ -154,19 +176,53 @@ impl Eq for SimplePageName {}
 
 impl Hash for PageId {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.id.hash(state)
+        self.name.hash(state)
     }
 }
 
-impl PartialEq for PageId {
-    fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
-    }
-}
-
-impl Eq for PageId {}
-
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PageId {
-    pub id: String,
+    pub page_type: PageType,
+    pub name: SimplePageName,
+}
+
+impl PageId {
+    pub fn is_user_page(&self) -> bool {
+        self.page_type == PageType::UserPage
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::model::{PageId, PageType};
+
+    #[test]
+    fn test_journal_page_id_should_be_a_journal_page() {
+        let page_id = PageId {
+            page_type: PageType::JournalPage,
+            name: page_name_str("my-page"),
+        };
+        assert!(!page_id.is_user_page());
+    }
+    #[test]
+    fn test_user_page_id_should_be_a_user_page() {
+        let page_id = PageId {
+            page_type: PageType::UserPage,
+            name: page_name_str("my-page"),
+        };
+        assert!(page_id.is_user_page());
+    }
+
+    #[test]
+    fn test_as_journal_page_id_should_be_journal_page_id() {
+        let page_id = page_name_str("my-page").as_journal_page();
+        assert_eq!(page_id.page_type, PageType::JournalPage);
+    }
+
+    #[test]
+    fn test_as_user_page_id_should_be_user_page_id() {
+        let page_id = page_name_str("my-page").as_user_page();
+        assert_eq!(page_id.page_type, PageType::UserPage);
+    }
 }

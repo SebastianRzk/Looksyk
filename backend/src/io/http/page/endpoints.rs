@@ -6,9 +6,9 @@ use actix_web::{post, web, Responder, Result};
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::dtos::UpdateBlockContentDto;
 use crate::io::http::page::mapper::{map_markdown_block_dto, map_to_block_dto};
+use crate::io::http::page_type::get_page_id_from_external_string;
 use crate::looksyk::index::index::update_index_for_file;
-use crate::looksyk::model::{MarkdownReference, PageId, PageType, RawBlock, RawMarkdownFile};
-use crate::looksyk::page_index::{get_page_type, strip_prefix};
+use crate::looksyk::model::{MarkdownReference, PageType, RawBlock, RawMarkdownFile};
 use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_block, StaticRenderContext};
@@ -23,20 +23,15 @@ async fn update_block(
 ) -> Result<impl Responder> {
     let request_body = body.into_inner();
     let (file_id, block_number) = path.into_inner();
-    let page_id = PageId { id: file_id };
-    let page_type = get_page_type(&page_id);
+    let page_id = get_page_id_from_external_string(&file_id);
     let entity = map_markdown_block_dto(
         &request_body,
         MarkdownReference {
             block_number,
-            page_name: strip_prefix(&page_id, &page_type),
             page_id: page_id.clone(),
         },
     );
     let selected_page;
-
-    let page_type = get_page_type(&page_id);
-    let simple_page_name = strip_prefix(&page_id, &page_type);
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
@@ -44,17 +39,13 @@ async fn update_block(
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
 
-    match page_type {
+    match page_id.page_type {
         PageType::JournalPage => {
-            selected_page = journal_guard
-                .entries
-                .get(&simple_page_name)
-                .unwrap()
-                .clone();
+            selected_page = journal_guard.entries.get(&page_id.name).unwrap().clone();
         }
         PageType::UserPage => {
-            println!("Simple page {}", simple_page_name.name);
-            selected_page = page_guard.entries.get(&simple_page_name).unwrap().clone();
+            println!("Simple page {:?}", page_id);
+            selected_page = page_guard.entries.get(&page_id.name).unwrap().clone();
         }
     }
 
@@ -66,11 +57,11 @@ async fn update_block(
 
     write_page(
         PageOnDisk {
-            name: strip_prefix(&page_id, &page_type).name,
+            name: page_id.name.name.clone(),
             content: serialized_page.join("\n"),
         },
         &data.data_path,
-        &page_type,
+        &page_id.page_type,
     );
 
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -80,13 +71,8 @@ async fn update_block(
         tag_index: &tag_guard,
     };
 
-    let new_page_associated_state = update_index_for_file(
-        page_id,
-        &simple_page_name,
-        &page_type,
-        &updated_page,
-        current_page_associated_state,
-    );
+    let new_page_associated_state =
+        update_index_for_file(page_id, &updated_page, current_page_associated_state);
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;

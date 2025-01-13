@@ -4,10 +4,6 @@ use crate::looksyk::builder::page_name;
 use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
 };
-use crate::looksyk::page_index::{
-    append_journal_page_prefix, append_user_page_prefix, get_page_type, strip_journal_page_prefix,
-    strip_user_page_prefix,
-};
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
@@ -20,13 +16,13 @@ pub fn create_tag_index(
 
     for simple_page_name in data_state.entries.keys() {
         let page = data_state.entries.get(simple_page_name).unwrap();
-        let id = append_user_page_prefix(simple_page_name);
+        let id = simple_page_name.as_user_page();
         create_tag_index_file(&mut result, &id, &page);
     }
 
     for simple_page_name in journal_page_index.entries.keys() {
         let page = journal_page_index.entries.get(simple_page_name).unwrap();
-        let id = append_journal_page_prefix(simple_page_name);
+        let id = simple_page_name.as_journal_page();
         create_tag_index_file(&mut result, &id, &page);
     }
 
@@ -36,7 +32,7 @@ pub fn create_tag_index(
 pub fn create_tag_index_file(
     result: &mut HashMap<PageId, HashSet<PageId>>,
     current_page_name: &PageId,
-    file: &&ParsedMarkdownFile,
+    file: &ParsedMarkdownFile,
 ) {
     for block in &file.blocks {
         for content in &block.content {
@@ -45,7 +41,7 @@ pub fn create_tag_index_file(
                     continue;
                 }
                 let payload = token.payload.clone();
-                let tag_name = append_user_page_prefix(&page_name(payload));
+                let tag_name = page_name(payload).as_user_page();
                 let stored_list = result.get(&tag_name);
                 let mut tokenlist;
                 if stored_list.is_none() {
@@ -61,20 +57,17 @@ pub fn create_tag_index_file(
     }
 }
 
-pub fn remove_file_from_tag_index(tag_index: &TagIndex, file_id: &PageId) -> TagIndex {
-    println!("Removing file {} from tag index", file_id.id);
-    let page_type = get_page_type(file_id);
-    if page_type == PageType::JournalPage {
+pub fn remove_file_from_tag_index(tag_index: &TagIndex, page_id: &PageId) -> TagIndex {
+    println!("Removing file {:?} from tag index", page_id.name);
+    if page_id.page_type == PageType::JournalPage {
         return tag_index.clone();
     }
 
     let mut result = HashMap::new();
     for key in tag_index.entries.keys() {
-        if key != file_id {
-            let current_list = tag_index.entries.get(key);
-            let referenced_tags = filter_tag(current_list.unwrap(), &file_id);
-            result.insert(key.clone(), referenced_tags);
-        }
+        let current_list = tag_index.entries.get(key);
+        let referenced_tags = filter_tag(current_list.unwrap(), &page_id);
+        result.insert(key.clone(), referenced_tags);
     }
     TagIndex { entries: result }
 }
@@ -94,14 +87,14 @@ pub fn render_tag_index_for_page(page_id: PageId, tag_index: &TagIndex) -> Parse
     }
 
     let mut sorted_pages = tags_for_page.clone().into_iter().collect::<Vec<PageId>>();
-    sorted_pages.sort_by(|a, b| a.id.cmp(&b.id));
+    sorted_pages.sort_by(|a, b| a.name.name.cmp(&b.name.name));
     let page_references = sorted_pages
         .iter()
-        .filter(|p| get_page_type(p) == PageType::UserPage)
+        .filter(|p| p.page_type == PageType::UserPage)
         .collect::<Vec<&PageId>>();
     let journal_references = sorted_pages
         .iter()
-        .filter(|p| get_page_type(p) == PageType::JournalPage)
+        .filter(|p| p.page_type == PageType::JournalPage)
         .collect::<Vec<&PageId>>();
 
     let mut blocks: Vec<ParsedBlock> = vec![];
@@ -111,7 +104,7 @@ pub fn render_tag_index_for_page(page_id: PageId, tag_index: &TagIndex) -> Parse
         "Journal-Pages",
     ));
 
-    return ParsedMarkdownFile { blocks };
+    ParsedMarkdownFile { blocks }
 }
 
 fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<ParsedBlock> {
@@ -127,28 +120,9 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
     }];
 
     for tag in page_references {
-        let page_type = get_page_type(tag);
-        match page_type {
-            PageType::JournalPage => blocks.push(ParsedBlock {
-                indentation: 1,
-                content: vec![BlockContent {
-                    as_tokens: vec![BlockToken {
-                        payload: strip_journal_page_prefix(tag).name.clone(),
-                        block_token_type: BlockTokenType::JOURNALLINK,
-                    }],
-                    as_text: strip_user_page_prefix(tag).name.clone(),
-                }],
-            }),
-            PageType::UserPage => blocks.push(ParsedBlock {
-                indentation: 1,
-                content: vec![BlockContent {
-                    as_tokens: vec![BlockToken {
-                        payload: strip_user_page_prefix(tag).name.clone(),
-                        block_token_type: BlockTokenType::LINK,
-                    }],
-                    as_text: strip_user_page_prefix(tag).name.clone(),
-                }],
-            }),
+        match tag.page_type {
+            PageType::JournalPage => blocks.push(to_block_token(tag, BlockTokenType::JOURNALLINK)),
+            PageType::UserPage => blocks.push(to_block_token(tag, BlockTokenType::LINK)),
         }
     }
     if page_references.is_empty() {
@@ -157,9 +131,22 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
     blocks
 }
 
+fn to_block_token(tag: &PageId, token_type: BlockTokenType) -> ParsedBlock {
+    ParsedBlock {
+        indentation: 1,
+        content: vec![BlockContent {
+            as_tokens: vec![BlockToken {
+                payload: tag.name.name.clone(),
+                block_token_type: token_type,
+            }],
+            as_text: tag.name.name.clone(),
+        }],
+    }
+}
+
 fn no_references_found_text(indentation: usize) -> ParsedBlock {
     ParsedBlock {
-        indentation: indentation,
+        indentation,
         content: vec![BlockContent {
             as_tokens: vec![BlockToken {
                 payload: "No references found".to_string(),
@@ -173,16 +160,15 @@ fn no_references_found_text(indentation: usize) -> ParsedBlock {
 fn filter_tag(current_list: &HashSet<PageId>, page_to_remove: &PageId) -> HashSet<PageId> {
     let mut new_list = current_list.clone();
     new_list.remove(page_to_remove);
-    return new_list;
+    new_list
 }
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{HashMap, HashSet};
-
-    use crate::looksyk::builder::{
-        any_text_token, done_token, journal_page_id, page_name_str, user_page_id,
+    use crate::looksyk::builder::builder::{
+        any_text_token, done_token, journal_page_id, user_page_id,
     };
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::tag::create_tag_index;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{
@@ -190,6 +176,7 @@ mod tests {
     };
     use crate::state::journal::JournalPageIndex;
     use crate::state::userpage::UserPageIndex;
+    use std::collections::{HashMap, HashSet};
 
     #[test]
     pub fn should_create_tag_index_with_empty_state() {

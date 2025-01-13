@@ -42,7 +42,10 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(root, result),
         QueryDisplayType::Count => render_as_count(result),
-        _ => render_display_unknown(query.display),
+        _ => render_display_unknown(
+            query.display,
+            vec![QueryDisplayType::InplaceList, QueryDisplayType::Count],
+        ),
     }
 }
 

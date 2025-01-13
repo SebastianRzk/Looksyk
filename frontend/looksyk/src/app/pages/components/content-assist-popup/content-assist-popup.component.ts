@@ -173,7 +173,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       if (item.name == ADD_QUERY_PAGE_HIERARCHY) {
         text_to_insert = "{query: page-hierarchy root:\"myRootTag\" display:\"inplace-list\" }"
       } else if (item.name == ADD_QUERY_REFERENCES) {
-        text_to_insert = "{query: references-to tag:\"myTag\" display:\"referenced-list\" }"
+        text_to_insert = "{query: references-to target:\"myTag\" display:\"inplace-list\" }"
       } else if (item.name == ADD_QUERY_TODOS) {
         text_to_insert = "{query: todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\" }"
       } else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
