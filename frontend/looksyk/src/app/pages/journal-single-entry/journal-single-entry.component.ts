@@ -1,24 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { PageService } from "../../services/page.service";
-import { ActivatedRoute } from "@angular/router";
-import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
-import { MarkdownPage } from "../model";
-import { AsyncPipe, NgIf } from "@angular/common";
-import { FavStarComponent } from "../components/fav-star/fav-star.component";
-import { MatDivider } from "@angular/material/divider";
-import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
-import { ShowPageComponent } from "../show-page/show-page.component";
-import { TitleComponent } from "../components/journal-page-title/title.component";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {PageService} from "../../services/page.service";
+import {ActivatedRoute} from "@angular/router";
+import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from "rxjs";
+import {MarkdownPage} from "../model";
+import {AsyncPipe, NgIf} from "@angular/common";
+import {ShowPageComponent} from "../show-page/show-page.component";
+import {TitleComponent} from "../components/journal-page-title/title.component";
 
 @Component({
   selector: 'app-journal-single-entry',
   standalone: true,
   imports: [
     AsyncPipe,
-    FavStarComponent,
-    MatDivider,
     NgIf,
-    ReferencedByComponent,
     ShowPageComponent,
     TitleComponent,
     TitleComponent

@@ -1,17 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-experimental/scrolling';
-import { JournalEntryComponent } from "../components/journal-entry/journal-entry.component";
-import { CollectionViewer, DataSource } from "@angular/cdk/collections";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
-import { AsyncPipe, NgIf } from "@angular/common";
-import { MarkdownPage } from "../model";
-import { PageService } from "../../services/page.service";
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+import {JournalEntryComponent} from "../components/journal-entry/journal-entry.component";
+import {CollectionViewer, DataSource} from "@angular/cdk/collections";
+import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {MarkdownPage} from "../model";
+import {PageService} from "../../services/page.service";
 
 @Component({
   selector: 'app-journal',
   standalone: true,
-  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, NgIf, AsyncPipe],
+  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent],
   templateUrl: './journal.component.html',
   styleUrls: ['./journal.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

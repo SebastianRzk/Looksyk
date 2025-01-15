@@ -1,18 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ShowPageComponent } from "../show-page/show-page.component";
-import { TitleComponent } from "../components/user-page-title/title.component";
-import { BehaviorSubject, Subject } from "rxjs";
-import { ActivatedRoute } from "@angular/router";
-import { MediaPreview, MediaService } from "../../services/media.service";
-import { MarkdownComponent } from "../components/markdown/markdown.component";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { HistoryService } from "../../services/history.service";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BehaviorSubject, Subject} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {MediaPreview, MediaService} from "../../services/media.service";
+import {MarkdownComponent} from "../components/markdown/markdown.component";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {HistoryService} from "../../services/history.service";
 
 @Component({
   selector: 'app-media-details-overview',
   standalone: true,
-  imports: [CommonModule, ShowPageComponent, TitleComponent, MarkdownComponent],
+  imports: [CommonModule, MarkdownComponent],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

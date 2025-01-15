@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { MarkdownPage } from "../../model";
 import { ShowPageComponent } from "../../show-page/show-page.component";
 import { MatListModule } from "@angular/material/list";
-import { RouterLink } from "@angular/router";
 import { TitleComponent } from "../journal-page-title/title.component";
 
 @Component({

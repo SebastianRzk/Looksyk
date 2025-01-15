@@ -1,24 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
-import { AsyncPipe, NgIf } from "@angular/common";
-import {
-  BehaviorSubject,
-  combineLatest,
-  debounce,
-  filter,
-  firstValueFrom,
-  map,
-  Observable,
-  Subject,
-  timer
-} from "rxjs";
-import { MetaInformation, MetaInfoService, Suggestions } from "../../../services/meta-info.service";
-import { ReactiveFormsModule } from "@angular/forms";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption } from "@angular/material/autocomplete";
-import { MatInput } from "@angular/material/input";
-import { Router } from "@angular/router";
-import { OpenMarkdownEvent, UseractionService } from "../../../services/useraction.service";
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {ContentAssistMode, ContentAssistService} from "../../../services/content-assist.service";
+import {AsyncPipe, NgIf} from "@angular/common";
+import {BehaviorSubject, combineLatest, debounce, filter, firstValueFrom, map, Observable, Subject, timer} from "rxjs";
+import {MetaInformation, MetaInfoService, Suggestions} from "../../../services/meta-info.service";
+import {ReactiveFormsModule} from "@angular/forms";
+import {Router} from "@angular/router";
+import {OpenMarkdownEvent, UseractionService} from "../../../services/useraction.service";
 import {
   EMPTY_REFERENCE,
   MIN_FILTER_LENGTH,
@@ -34,14 +21,7 @@ import {
   imports: [
     AsyncPipe,
     NgIf,
-    MatFormField,
-    MatAutocomplete,
-    MatOptgroup,
-    MatLabel,
-    MatOption,
-    MatAutocompleteTrigger,
     ReactiveFormsModule,
-    MatInput,
   ],
   templateUrl: './content-assist-popup.component.html',
   styleUrl: './content-assist-popup.component.css',

@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ShowPageComponent } from "../show-page/show-page.component";
-import { TitleComponent } from "../components/user-page-title/title.component";
-import { PageService } from "../../services/page.service";
-import { Observable } from "rxjs";
-import { MarkdownPage } from "../model";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ShowPageComponent} from "../show-page/show-page.component";
+import {PageService} from "../../services/page.service";
+import {Observable} from "rxjs";
+import {MarkdownPage} from "../model";
 
 @Component({
   selector: 'app-user-page-overview',
   standalone: true,
-  imports: [CommonModule, ShowPageComponent, TitleComponent],
+  imports: [CommonModule, ShowPageComponent],
   templateUrl: './user-page-overview.component.html',
   styleUrls: ['./user-page-overview.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
