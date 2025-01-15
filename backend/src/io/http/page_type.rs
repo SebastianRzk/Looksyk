@@ -1,4 +1,4 @@
-use crate::io::http::link_encoding::encode_link_component;
+use crate::io::http::link_encoding::{decode_link_component, encode_link_component};
 use crate::looksyk::model::{PageId, PageType, SimplePageName};
 
 pub const USER_PAGE_PREFIX: &str = "%%user-page/";
@@ -8,7 +8,7 @@ pub fn get_page_id_from_external_string(external_string: &String) -> PageId {
     if external_string.starts_with(USER_PAGE_PREFIX) {
         PageId {
             name: SimplePageName {
-                name: external_string.replace(USER_PAGE_PREFIX, ""),
+                name: decode_link_component(&external_string.replace(USER_PAGE_PREFIX, "")),
             },
             page_type: PageType::UserPage,
         }

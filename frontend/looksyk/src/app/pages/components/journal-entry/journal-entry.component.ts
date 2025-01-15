@@ -10,7 +10,7 @@ import { TitleComponent } from "../journal-page-title/title.component";
 @Component({
   selector: 'app-journal-entry',
   standalone: true,
-  imports: [CommonModule, ShowPageComponent, MatListModule, RouterLink, TitleComponent],
+  imports: [CommonModule, ShowPageComponent, MatListModule, TitleComponent],
   templateUrl: './journal-entry.component.html',
   styleUrls: ['./journal-entry.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

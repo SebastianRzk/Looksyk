@@ -30,3 +30,7 @@ mat-divider {
   text-align: center;
   justify-content: center;
 }
+
+.small-history-item {
+  font-size: x-small;
+}

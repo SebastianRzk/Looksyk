@@ -4,10 +4,11 @@ h1 {
 
 .title:hover {
   border: 2px solid var(--primary-shading);
-  padding: 0 1ex 0 0;
+  padding: 0 0.5ex 0 0.5ex;
   border-radius: 0.2ex;
 }
 
 .title{
-  padding: 2px 1ex 2px 2px;
+  border: 2px solid rgba(0,0,0,0);
+  padding: 0 0.5ex 0 0.5ex;
 }
