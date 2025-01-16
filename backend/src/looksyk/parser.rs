@@ -329,4 +329,15 @@ mod tests {
         assert_eq!(element.payload, "Ein kleines TODO");
         assert_eq!(element.block_token_type, BlockTokenType::TEXT);
     }
+
+    #[test]
+    fn should_not_parse_on_splitted_start_signal() {
+        let input_text = "davor [123[link]]".to_string();
+        let result = parse_text_content(&input_text);
+
+        assert_eq!(result.len(), 1);
+        let element = result.get(0).unwrap();
+        assert_eq!(element.payload, "davor [123[link]]");
+        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+    }
 }

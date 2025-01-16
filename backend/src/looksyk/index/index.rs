@@ -75,3 +75,70 @@ pub fn remove_page_from_internal_state(
         tag_index: new_tag_index,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::index::index::update_index_for_file;
+    use crate::looksyk::model::{ParsedMarkdownFile, RawBlock};
+    use crate::looksyk::parser::parse_block;
+    use crate::state::journal::JournalPageIndex;
+    use crate::state::state::CurrentPageAssociatedState;
+    use crate::state::tag::TagIndex;
+    use crate::state::todo::TodoIndex;
+    use crate::state::userpage::UserPageIndex;
+    use std::collections::{HashMap, HashSet};
+
+    #[test]
+    fn test_update_index_for_file_should_refresh_tag_index() {
+        let page_id = user_page_id("test-page-name");
+        let parsed_markdown_file = ParsedMarkdownFile {
+            blocks: vec![parse_block(&RawBlock {
+                indentation: 0,
+                text_content: vec!["[[new-link-on-page]]".to_string()],
+            })],
+        };
+
+        let mut tag_index_map = HashMap::new();
+        let mut test_page_backlinks = HashSet::new();
+        test_page_backlinks.insert(user_page_id("other-page-name"));
+        let mut other_page_backlinks = HashSet::new();
+        other_page_backlinks.insert(user_page_id("test-page-name"));
+
+        tag_index_map.insert(user_page_id("test-page-name"), test_page_backlinks);
+        tag_index_map.insert(user_page_id("other-page-name"), other_page_backlinks);
+        let tag_index = TagIndex {
+            entries: tag_index_map,
+        };
+        let current_page_associated_state = CurrentPageAssociatedState {
+            tag_index: &tag_index,
+            todo_index: &TodoIndex { entries: vec![] },
+            user_pages: &UserPageIndex {
+                entries: HashMap::new(),
+            },
+            journal_pages: &JournalPageIndex {
+                entries: HashMap::new(),
+            },
+        };
+
+        let result = update_index_for_file(
+            page_id.clone(),
+            &parsed_markdown_file,
+            current_page_associated_state,
+        );
+
+        assert_eq!(result.tag_index.entries.get(&page_id).unwrap().len(), 1);
+        assert!(result
+            .tag_index
+            .entries
+            .get(&page_id)
+            .unwrap()
+            .contains(&user_page_id("other-page-name")));
+        assert!(result
+            .tag_index
+            .entries
+            .get(&user_page_id("new-link-on-page"))
+            .unwrap()
+            .contains(&page_id));
+    }
+}
