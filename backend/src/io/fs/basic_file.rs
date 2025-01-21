@@ -1,4 +1,5 @@
 use std::fs;
+use std::fs::Metadata;
 use std::path::PathBuf;
 
 const NULL_BYTE: &str = "\0";
@@ -11,6 +12,10 @@ pub fn read_file(path: PathBuf) -> String {
 pub fn read_binary_file(path: PathBuf) -> Vec<u8> {
     println!("loading file {}", path.to_str().unwrap());
     fs::read::<PathBuf>(path).unwrap()
+}
+
+pub fn read_metadata(path: PathBuf) -> Metadata {
+    fs::metadata(path).unwrap()
 }
 
 pub fn exists_folder(path: PathBuf) -> bool {
@@ -44,6 +49,13 @@ pub fn is_text_file(path: PathBuf) -> bool {
     !file_content.contains(&NULL_BYTE.as_bytes()[0])
 }
 
+pub fn delete_all_forbidden_chars_in_filename(filename: String) -> String {
+    filename
+        .chars()
+        .filter(|c| c.is_alphanumeric() || c == &' ' || c == &'.' || c == &'-')
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -51,5 +63,33 @@ mod tests {
     fn test_null_byte_is_len_1() {
         let null_byte = "\0";
         assert_eq!(null_byte.as_bytes().len(), 1);
+    }
+
+    #[test]
+    fn test_delete_all_forbidden_chars_in_filename() {
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test\0".to_string()),
+            "test"
+        );
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test\t".to_string()),
+            "test"
+        );
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test.html".to_string()),
+            "test.html"
+        );
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test-1".to_string()),
+            "test-1"
+        );
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test 1".to_string()),
+            "test 1"
+        );
+        assert_eq!(
+            super::delete_all_forbidden_chars_in_filename("test[[1".to_string()),
+            "test1"
+        );
     }
 }

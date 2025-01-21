@@ -21,3 +21,9 @@ mat-drawer {
   flex-direction: column;
   width: 100%;
 }
+
+app-sidebar {
+  height: 99%;
+  display: flex;
+  flex-direction: column;
+}

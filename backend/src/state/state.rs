@@ -21,6 +21,19 @@ pub struct AppState {
     pub g_config: Mutex<Config>,
 }
 
+pub struct PureAppState {
+    pub title: String,
+    pub data_path: DataRootLocation,
+    pub a_user_pages: UserPageIndex,
+    pub b_journal_pages: JournalPageIndex,
+    pub c_todo_index: TodoIndex,
+    pub d_tag_index: TagIndex,
+    pub e_asset_cache: AssetCache,
+    pub f_media_index: MediaIndex,
+    pub g_config: Config,
+}
+
+#[derive(Clone)]
 pub struct DataRootLocation {
     pub path: PathBuf,
 }

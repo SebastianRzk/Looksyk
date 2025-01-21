@@ -16,7 +16,7 @@ pub struct ParsedBlock {
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::builder::text_token;
+    use crate::looksyk::builder::text_token_str;
     use crate::looksyk::model::{BlockContent, BlockToken, ParsedBlock};
 
     pub fn block_with_text_content(content: &str) -> ParsedBlock {
@@ -24,7 +24,7 @@ pub mod builder {
             indentation: 0,
             content: vec![BlockContent {
                 as_text: content.to_string(),
-                as_tokens: vec![text_token(content)],
+                as_tokens: vec![text_token_str(content)],
             }],
         }
     }
@@ -184,6 +184,10 @@ impl Hash for PageId {
 pub struct PageId {
     pub page_type: PageType,
     pub name: SimplePageName,
+}
+
+pub fn no_text_content() -> String {
+    "".to_string()
 }
 
 impl PageId {

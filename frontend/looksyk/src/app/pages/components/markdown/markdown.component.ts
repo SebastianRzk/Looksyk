@@ -69,7 +69,9 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
 
 
   ngOnChanges(): void {
-    this.updateContent(this.markdown)
+    if (this.markdown) {
+      this.updateContent(this.markdown)
+    }
   }
 
   @Input({required: true})

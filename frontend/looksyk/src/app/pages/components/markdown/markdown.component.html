@@ -44,7 +44,7 @@
     <div (focusout)="onFocusOutEditor()"
          [className]="(editMode$ | async) ?'active' : 'inactive' "
          [innerText]="editText$ | async"
-         #textarea contenteditable></div>
+         #textarea contenteditable="plaintext-only" ></div>
     <div *ngIf="editMode$ | async">
     </div>
     <div *ngIf="loadingMode$ | async">

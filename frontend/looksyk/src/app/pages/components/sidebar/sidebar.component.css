@@ -34,3 +34,12 @@ mat-divider {
 .small-history-item {
   font-size: x-small;
 }
+
+.bottom {
+  margin-top: auto;
+}
+
+.unimportant {
+  color: grey !important;
+  font-size: x-small;
+}

@@ -9,6 +9,7 @@ import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk
 import { firstValueFrom, map, Observable } from "rxjs";
 import { TitleService } from "../../../services/title.service";
 import { HistoryService } from "../../../services/history.service";
+import { StateService } from "../../../services/state.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -22,6 +23,7 @@ export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);
   titleService = inject(TitleService);
   favs$ = this.favoriteService.favourites$;
+  state = inject(StateService)
 
 
   private history: HistoryService = inject(HistoryService);
@@ -52,6 +54,10 @@ export class SidebarComponent implements OnInit {
     const favList: string[] = await firstValueFrom(this.favs$);
     moveItemInArray(favList, event.previousIndex, event.currentIndex);
     this.favoriteService.updateFavList(favList);
+  }
+
+  reload(){
+    this.state.invalidateAndReload();
   }
 
   protected readonly encodeURIComponent = encodeURIComponent;

@@ -1,4 +1,7 @@
-use crate::io::fs::basic_file::{get_file_size, read_binary_file};
+use crate::io::fs::basic_file::{
+    delete_all_forbidden_chars_in_filename, exists_file, get_file_size, read_binary_file,
+    read_metadata,
+};
 use crate::io::fs::media::{
     create_absolute_media_path, destination_path, read_file_sizes, read_media_file,
     write_media_config, LoadedMedia, MediaOnDisk,
@@ -7,13 +10,14 @@ use crate::io::hash::hash_file_content;
 use crate::io::http::media::dtos::{FileUploadResult, UploadForm};
 use crate::io::http::media::mapper::{map_to_asset_preview_dto, map_to_dto};
 use crate::io::http::page::mapper::map_markdown_file_to_dto;
+use crate::looksyk::builtinpage::asset_metainfo_table::get_asset_meta_info_table;
 use crate::looksyk::builtinpage::assets_overview::generate_assets_overview_page;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
-use crate::looksyk::renderer::{render_file, StaticRenderContext};
+use crate::looksyk::renderer::{render_file, render_file_flat, StaticRenderContext};
 use crate::state::state::AppState;
 use actix_files::NamedFile;
 use actix_multipart::form::MultipartForm;
@@ -22,6 +26,7 @@ use actix_web::web::{Data, Json};
 use actix_web::{error, get, post, Error, HttpRequest, Responder};
 use mime::Mime;
 use std::fs;
+use std::os::unix::fs::MetadataExt;
 use std::path::Path;
 use std::str::FromStr;
 
@@ -30,9 +35,15 @@ pub async fn upload_file(
     MultipartForm(form): MultipartForm<UploadForm>,
     app_state: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
-    let filename = form.json.name.clone();
-    println!("Uploaded file {}, with size: {}", filename, form.file.size);
-    println!("path {}", form.file.file.path().display());
+    let json_filename = form.json.name.clone();
+    println!(
+        "Uploaded file {}, with size: {}",
+        json_filename, form.file.size
+    );
+    println!("path: {}", form.file.file.path().display());
+    println!("original file-name: {}", json_filename);
+    let filename = delete_all_forbidden_chars_in_filename(json_filename);
+    println!("name after cleanup: {}", filename);
     let file = read_binary_file(form.file.file.path().to_path_buf());
 
     let hash = hash_file_content(LoadedMedia {
@@ -73,6 +84,31 @@ pub async fn compute_asset_suggestion(req: HttpRequest) -> error::Result<impl Re
     let result = get_suggestion_for_file(&AssetDescriptor::new(file_name));
     let dto = map_to_dto(result);
     Ok(Json(dto))
+}
+
+#[get("/api/assets/metadata/{filename:.*}")]
+pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
+    let filename = req.match_info().query("filename").to_string();
+    let path = create_absolute_media_path(
+        &MediaOnDisk {
+            name: filename.clone(),
+        },
+        &data.data_path,
+    );
+    if !exists_file(path.clone()) {
+        return Ok(Json(map_markdown_file_to_dto(
+            render_file_flat(&get_asset_meta_info_table(0, 0)),
+            false,
+        )));
+    }
+    let metadata = read_metadata(path);
+    let size = metadata.size();
+    let last_modified = metadata.mtime();
+
+    Ok(Json(map_markdown_file_to_dto(
+        render_file_flat(&get_asset_meta_info_table(size, last_modified)),
+        false,
+    )))
 }
 
 #[get("/api/builtin-pages/assets-overview")]

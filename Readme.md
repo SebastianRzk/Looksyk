@@ -4,12 +4,10 @@
 
 ![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main)
 
-
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
-
 
 ![intro animation](docs/intro_animation.gif)
 
@@ -17,33 +15,33 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 
 - [Introduction](#introduction)
 - [Current Status](#current-status)
-    - [Technical concept](#technical-concept)
-    - [Project work and future](#project-work-and-future)
-    - [Key Selling Points](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
-    - [Implemented Features](#implemented-features)
-    - [Out of Scope](#out-of-scope)
+	- [Technical concept](#technical-concept)
+	- [Project work and future](#project-work-and-future)
+	- [Key Selling Points](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
+	- [Implemented Features](#implemented-features)
+	- [Out of Scope](#out-of-scope)
 - [Run Looksyk](#run-looksyk)
-    - [Production Build / Installation](#production-build--installation)
-    - [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
-    - [Development Build](#development-build)
+	- [Production Build / Installation](#production-build--installation)
+	- [Running Different Looksyk Graphs](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+	- [Development Build](#development-build)
 - [Migrate Your Existing Logseq Graph](#migrate-your-existing-logseq-graph-to-looksyk)
 - [Configuration](#configuration)
 - [Data Storage](#data-storage)
 - [Design](#design)
-    - [Dark Mode (default)](#dark-mode-default)
-    - [Light Mode / Solarized Light](#light-mode--solarized-light)
-    - [Extra Dark Mode](#extra-dark-mode)
+	- [Dark Mode (default)](#dark-mode-default)
+	- [Light Mode / Solarized Light](#light-mode--solarized-light)
+	- [Extra Dark Mode](#extra-dark-mode)
 - [Usage](#usage)
-    - [Markdown Syntax and Features](#markdown-syntax-and-features)
-    - [Page names and hierarchy](#page-names-and-hierarchy)
-    - [Favorites](#favorites)
-    - [Code](#code)
-    - [Todos](#todos)
-    - [Queries](#queries)
-        - [Query Page Hierarchy](#query-page-hierarchy)
-        - [Query Todos](#query-todos)
-        - [Query Backlinks](#query-backlinks)
-        - [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
+	- [Markdown Syntax and Features](#markdown-syntax-and-features)
+	- [Page names and hierarchy](#page-names-and-hierarchy)
+	- [Favorites](#favorites)
+	- [Code](#code)
+	- [Todos](#todos)
+	- [Queries](#queries)
+		- [Query Page Hierarchy](#query-page-hierarchy)
+		- [Query Todos](#query-todos)
+		- [Query Backlinks](#query-backlinks)
+		- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
 - [Changelog (external file)](docs/changelog.md)
@@ -71,7 +69,8 @@ Even if the project is currently a pure web project, I would not deploy it publi
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
 
 Currently, the backend is very fast, my [Logseq](https://logseq.com/) graph (~900 pages and 900kb text) is
-scanned and indexed in under a second (~80ms on a 3 year old Laptop). That's why Looksyk doesn't have a database, reading 
+scanned and indexed in under a second (~80ms on a 3-year-old Laptop). That's why Looksyk does not have a database,
+reading
 new data into RAM is fast enough.
 
 The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal
@@ -110,11 +109,11 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
 * Simple, use case based query language.
 * Multiple instances of Looksyk with different graphs can be opened in parallel.
-* Developer-centric file support: 
-  * Insert code blocks with syntax highlighting
-  * Save and display existing code files in your pages with syntax highlighting
-  * Save and display backups of websites in your pages (with single-file-downloader)
-  * Insert videos, audio files, images, text files and PDFs.
+* Developer-centric file support:
+	* Insert code blocks with syntax highlighting
+	* Save and display existing code files in your pages with syntax highlighting
+	* Save and display backups of websites in your pages (with single-file-downloader)
+	* Insert videos, audio files, images, text files and PDFs.
 
 ### Implemented Features
 
@@ -122,22 +121,22 @@ For feature requests and bugs, you can submit an issue (or a pull request if you
 * Journal
 * Todos
 * Content assist
-    * Creating links, inserting queries, tags and media
+	* Creating links, inserting queries, tags and media
 * View (and link) media
-    * Images
-    * PDFs
-    * HTML Files (e.g. SingleFile saved pages
-      from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
-      or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
-    * Video (html5 video player)
-    * Audio (html5 audio player)
-    * Code (with highlighting)
-    * Text files
+	* Images
+	* PDFs
+	* HTML Files (e.g. SingleFile saved pages
+	  from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
+	  or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+	* Video (html5 video player)
+	* Audio (html5 audio player)
+	* Code (with highlighting)
+	* Text files
 * Queries (placeholders for dynamic content)
-    * Query todos
-    * Page hierarchy
-    * References
-    * Render video, audio, images, text files and code files (with highlighting)
+	* Query todos
+	* Page hierarchy
+	* References
+	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
@@ -223,8 +222,8 @@ The `graph` folder in the home directory contains all data.
 * `journals` contains all journals
 * `assets` contains all media files (images, videos, audio files, text files, PDFs), deduplicated by checksum
 * `config` contains the configuration
-    * `config.json` contains the configuration (design, favourites)
-    * `media.json` contains all the checksums of the media files
+	* `config.json` contains the configuration (design, favourites)
+	* `media.json` contains all the checksums of the media files
 
 ### Design
 
@@ -251,43 +250,46 @@ Inspire yourself with the following examples:
 
 #### Dark Mode (default)
 
-![dark mode](docs/dark.png)
+![dark mode](docs/themes/default.png)
 
 Configuration:
+
 ```json
 "design": {
-    "primaryColor": "#0c884c",
-    "backgroundColor": "#15212D",
-    "foregroundColor": "white",
-    "primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryColor": "#0c884c",
+"backgroundColor": "#15212D",
+"foregroundColor": "white",
+"primaryShading": "rgba(255, 255, 255, 0.1)"
 }
 ```
 
 #### Light Mode / Solarized Light
 
-![light mode](docs/light.png)
+![light mode](docs/themes/light.png)
 
 Configuration:
+
 ```json
 "design": {
-    "primaryColor": "#859900",
-    "backgroundColor": "#fdf6e3",
-    "foregroundColor": "#002b36",
-    "primaryShading": "rgba(0, 0, 0, 0.1)"
+"primaryColor": "#859900",
+"backgroundColor": "#fdf6e3",
+"foregroundColor": "#002b36",
+"primaryShading": "rgba(0, 0, 0, 0.1)"
 }
 ```
 
 #### Extra Dark Mode
 
-![extra dark mode](docs/extra_dark.png)
+![extra dark mode](docs/themes/extra_dark.png)
 
 Configuration:
+
 ```json
 "design": {
-    "primaryColor": "#859900",
-    "backgroundColor": "black",
-    "foregroundColor": "white",
-    "primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryColor": "#859900",
+"backgroundColor": "black",
+"foregroundColor": "white",
+"primaryShading": "rgba(255, 255, 255, 0.1)"
 }
 ```
 
@@ -297,27 +299,33 @@ Configuration:
 * <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
 * <kbd>Ctrl</kbd>+<kbd>Space</kbd> opens the content assist
-    * With open markdown block -> "insert mode"
-    * With no open markdown block -> "navigation mode"
+	* With open markdown block -> "insert mode"
+	* With no open markdown block -> "navigation mode"
 * <kbd>Alt</kbd>+<kbd>Left</kbd> Navigate to the previous page
 * <kbd>Alt</kbd>+<kbd>Right</kbd> Navigate to the next page
 * <kbd>Ctrl</kbd>+<kbd>R</kbd> Refresh the current page
 * Lists inside of blocks are supported.
-    * Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
-    * Ordered lists are supported with `1.`, `2.` ...
-* <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> opens the content assist in "search mode" (case sensitive search across all pages and journals)
-* <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>.</kbd> and <kbd>Ctrl</kbd>+<kbd>-</kbd> zoom in and out, <kbd>Ctrl</kbd>+<kbd>0</kbd> resets the zoom
+	* Unordered lists are supported with `*` (and not with `-`, because `-` starts a new block)
+	* Ordered lists are supported with `1.`, `2.` ...
+* <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> opens the content assist in "search mode" (case-sensitive search across
+  all pages and journals)
+* <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>.</kbd> and <kbd>Ctrl</kbd>+<kbd>-</kbd> zoom in and out, <kbd>Ctrl</kbd>+<kbd>
+  0</kbd> resets the zoom
 
 ### Page names and hierarchy
 
+![page hierarchy](docs/hierarchy/animation.gif)
+
 * Every tag `[[myTag]]` links to a page with the name `myTag`
 * To create a hierarchy, use the `/` character in the page name. `[[myTag / mySubTag]]` creates a page
-  `myTag / mySubTag` in the
+  `mySubTag` with the parent tag `myTag`
   and the parent tag `myTag`
 * You can navigate to the parent page by clicking on the parent tag in the page header
 * You can query the page hierarchy with the query `page-hierarchy` (see [page hierarchy](#query-page-hierarchy))
 
 ### Favorites
+
+![favorites](docs/fav/animation.gif)
 
 * You can mark a page as favorite by clicking on the star next to the page title
 * Favorites are displayed in the sidebar
@@ -338,11 +346,11 @@ Configuration:
   toggled
 * You can query todos with the query `todos` (see [todos](#todos))
 * A todo block can be associated with a tags.
-    * The todo is always tagged with the tag of the page it is on. If the todo is
-      on a page with the tag `myTag`, the todo is also tagged with `myTag`.
-    * Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the
-      todo.
-    * All tags in previous blocks that have a lower indentation will also be associated with the todo.
+	* The todo is always tagged with the tag of the page it is on. If the todo is
+	  on a page with the tag `myTag`, the todo is also tagged with `myTag`.
+	* Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the
+	  todo.
+	* All tags in previous blocks that have a lower indentation will also be associated with the todo.
 
 ### Queries
 
@@ -362,6 +370,8 @@ Currently,all queries must be inserted exactly as described. Parameters cannot y
 
 #### Query Page Hierarchy
 
+Quick examples:
+
 ```
  Show a list of links
  {query: page-hierarchy root:"myRootTag" display:"inplace-list" }
@@ -370,7 +380,23 @@ Currently,all queries must be inserted exactly as described. Parameters cannot y
  {query: page-hierarchy root:"myRootTag" display:"count" }
 ```
 
+Display types:
+
+* **inplace-list**
+	* Creates a list of the selected pages in the markdown-block. Each item is prefixed with a icon, and the location as
+	  link. The list is not modifiable.
+	* Query without trailing slash ![inplace-list](docs/queries/page-hierarchy/inplace-list-query.png)
+	* Result ![inplace-list](docs/queries/page-hierarchy/inplace-list-result.png)
+	* Query with trailing slash ![inplace-list](docs/queries/page-hierarchy/inplace-list-query-trailing-slash.png)
+	* Result ![inplace-list](docs/queries/page-hierarchy/inplace-list-result-trailing-slash.png)
+* **count**
+	* Creates a number of the selected pages in the markdown-block.
+	* Query ![count](docs/queries/page-hierarchy/count-query.png)
+	* Result ![count](docs/queries/page-hierarchy/count-result.png)
+
 #### Query Todos
+
+Quick examples:
 
 ```
  Show a list of todos with a checkbox and a link to the source file. The list is appended to the end of the current block
@@ -385,6 +411,40 @@ Currently,all queries must be inserted exactly as described. Parameters cannot y
  Show done todos
  {query: todos tag:"myTag" state:"done" display:"referenced-list" }
 ```
+
+Display-types:
+
+* **referenced-list**
+	* Creates a list of the selected todos at the end of the current block. Each item contains a checkbox and a link to
+	  the
+	  source file. If the checkbox is clicked, the todo is marked as done. Query-results can be stacked.
+    * Query 
+      
+      ![referenced-list](docs/queries/todo/reference-list-query.png)
+	* Result 
+
+      ![referenced-list](docs/queries/todo/reference-list-result.png)
+  	
+* **inplace-list**
+	* Creates a list of the selected todos in the markdown-block. Each item is prefixed with a icon. The list is not
+	  modifiable.
+	* Query 
+  
+      ![inplace-list](docs/queries/todo/inplace-list-query.png)
+	* Result 
+  
+      ![inplace-list](docs/queries/todo/inplace-list-result.png)
+	* Result (done) 
+  
+      ![inplace-list](docs/queries/todo/inplace-list-result-done.png)
+* **count**
+	* Creates a number of the selected todos in the markdown-block.
+	* Query 
+
+      ![count](docs/queries/todo/count-query.png)
+	* Result 
+  
+      ![count](docs/queries/todo/count-result.png)
 
 #### Query Backlinks
 
@@ -414,6 +474,18 @@ Currently,all queries must be inserted exactly as described. Parameters cannot y
  Insert an audio file
  {query: insert-file-content target-file:"myFile.ogg" display:"audio" }
 ```
+
+### History
+
+![history](docs/history.png)
+
+Looksyk has a history feature that allows you to navigate to the previous and next page. The history is stored in the
+local storage of the browser and is not synchronized with other devices.
+
+The history is displayed in the sidebar and can be dropped. The history is limited to 5 visible entries,
+but all entries are stored in the local storage.
+
+
 
 ## Contribution Guidelines
 

@@ -112,6 +112,16 @@ pub fn render_file(
     }
 }
 
+pub fn render_file_flat(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
+    let mut result_blocks = vec![];
+    for original_block in &markdown_file.blocks {
+        result_blocks.push(render_block_flat(original_block));
+    }
+    PreparedMarkdownFile {
+        blocks: result_blocks,
+    }
+}
+
 pub fn render_block(
     block: &ParsedBlock,
     render_context: &StaticRenderContext,
@@ -157,12 +167,7 @@ fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedRefe
             block_number: referenced_markdown.reference.block_number,
             page_id: referenced_markdown.reference.page_id.clone(),
         },
-        content: PreparedBlockContent {
-            original_text: combine_text_content(&referenced_markdown.content),
-            prepared_markdown: render_block_flat(&referenced_markdown.content)
-                .trim()
-                .to_string(),
-        },
+        content: render_block_content_flat(&referenced_markdown.content),
     }
 }
 
@@ -175,7 +180,23 @@ fn combine_text_content(block: &ParsedBlock) -> String {
     result_list.join("\n")
 }
 
-pub fn render_block_flat(block: &ParsedBlock) -> String {
+pub fn render_block_flat(block: &ParsedBlock) -> PreparedBlock {
+    PreparedBlock {
+        indentation: block.indentation,
+        content: render_block_content_flat(block),
+        referenced_markdown: vec![],
+        has_dynamic_content: false,
+    }
+}
+
+fn render_block_content_flat(block: &ParsedBlock) -> PreparedBlockContent {
+    PreparedBlockContent {
+        prepared_markdown: render_block_flat_as_string(block),
+        original_text: combine_text_content(block),
+    }
+}
+
+pub fn render_block_flat_as_string(block: &ParsedBlock) -> String {
     let mut result_list = vec![];
 
     for content in &block.content {
@@ -295,7 +316,7 @@ fn render_journal_link_str(destination: &String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::{journal_link_token, link_token, text_token};
+    use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::renderer::builder::create_empty_render_context;
@@ -307,7 +328,7 @@ mod tests {
         let input = ParsedBlock {
             indentation: 0,
             content: vec![BlockContent {
-                as_tokens: vec![text_token("text")],
+                as_tokens: vec![text_token_str("text")],
                 as_text: "text".to_string(),
             }],
         };
@@ -329,9 +350,9 @@ mod tests {
             indentation: 0,
             content: vec![BlockContent {
                 as_tokens: vec![
-                    text_token("before"),
+                    text_token_str("before"),
                     link_token("MyPage"),
-                    text_token("after"),
+                    text_token_str("after"),
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
@@ -357,9 +378,9 @@ mod tests {
             indentation: 0,
             content: vec![BlockContent {
                 as_tokens: vec![
-                    text_token("before"),
+                    text_token_str("before"),
                     journal_link_token("MyPage"),
-                    text_token("after"),
+                    text_token_str("after"),
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
@@ -408,7 +429,11 @@ mod tests {
         let input = ParsedBlock {
             indentation: 0,
             content: vec![BlockContent {
-                as_tokens: vec![link_token("link1"), text_token("asdf"), link_token("link2")],
+                as_tokens: vec![
+                    link_token("link1"),
+                    text_token_str("asdf"),
+                    link_token("link2"),
+                ],
                 as_text: "[[link1]] asdf [[link2]]".to_string(),
             }],
         };
@@ -521,7 +546,7 @@ mod tests {
                         payload: " ".to_string(),
                         block_token_type: BlockTokenType::TODO,
                     },
-                    text_token("Mein Todo"),
+                    text_token_str("Mein Todo"),
                 ],
                 as_text: "[ ] Mein Todo".to_string(),
             }],

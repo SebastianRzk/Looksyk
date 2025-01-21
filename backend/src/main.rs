@@ -11,6 +11,7 @@ use crate::io::fs::env;
 use crate::io::fs::media::{init_media, read_media_config, write_media_config};
 use crate::io::fs::pages::{read_all_journal_files, read_all_user_files};
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
+use crate::io::http;
 use crate::io::http::design;
 use crate::io::http::favourites;
 use crate::io::http::markdown;
@@ -27,7 +28,7 @@ use crate::looksyk::index::media::MediaIndex;
 use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
-use crate::state::state::{AppState, DataRootLocation};
+use crate::state::state::{AppState, DataRootLocation, PureAppState};
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
@@ -64,7 +65,7 @@ async fn main() -> std::io::Result<()> {
         init_empty_graph(&data_root_location);
     }
 
-    let app_state = create_app_state(data_root_location, config.application_title);
+    let app_state = convert_to_app_state(init_data(data_root_location, config.application_title));
 
     println!(
         "Starting Looksyk on  http://{}:{}",
@@ -106,10 +107,12 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::assets)
             .service(media::endpoints::generate_assets_overview)
             .service(media::endpoints::get_asset_preview)
+            .service(media::endpoints::get_metadata)
             .service(search::endpoints::search_in_files)
             .service(r#static::endpoints::catch_all_journal)
             .service(r#static::endpoints::catch_all_journals)
             .service(r#static::endpoints::catch_all_pages)
+            .service(http::state::endpoints::update_block)
     })
     .bind(SocketAddr::new(
         IpAddr::from_str(config.application_host.as_str()).unwrap(),
@@ -140,7 +143,7 @@ fn init_empty_graph(data_root_location: &DataRootLocation) {
     create_folder(data_root_location.path.join("pages"));
 }
 
-fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data<AppState> {
+fn init_data(data_root_location: DataRootLocation, title: String) -> PureAppState {
     let mut media_index = read_media_config(&data_root_location);
     media_index = init_media(&data_root_location, &media_index);
     write_media_config(&data_root_location, &media_index);
@@ -156,16 +159,29 @@ fn create_app_state(data_root_location: DataRootLocation, title: String) -> Data
 
     println!("all data refreshed");
 
-    let app_state = Data::new(AppState {
+    PureAppState {
         title,
         data_path: data_root_location,
-        a_user_pages: Mutex::new(user_page_index.clone()),
-        b_journal_pages: Mutex::new(journal_index.clone()),
-        c_todo_index: Mutex::new(todo_index.clone()),
-        d_tag_index: Mutex::new(tag_index.clone()),
-        e_asset_cache: Mutex::new(asset_cache),
-        f_media_index: Mutex::new(media_index),
-        g_config: Mutex::new(config),
-    });
-    app_state
+        a_user_pages: user_page_index,
+        b_journal_pages: journal_index,
+        c_todo_index: todo_index,
+        d_tag_index: tag_index,
+        e_asset_cache: asset_cache,
+        f_media_index: media_index,
+        g_config: config,
+    }
+}
+
+fn convert_to_app_state(state: PureAppState) -> Data<AppState> {
+    Data::new(AppState {
+        title: state.title,
+        data_path: state.data_path,
+        a_user_pages: Mutex::new(state.a_user_pages),
+        b_journal_pages: Mutex::new(state.b_journal_pages),
+        c_todo_index: Mutex::new(state.c_todo_index),
+        d_tag_index: Mutex::new(state.d_tag_index),
+        e_asset_cache: Mutex::new(state.e_asset_cache),
+        f_media_index: Mutex::new(state.f_media_index),
+        g_config: Mutex::new(state.g_config),
+    })
 }

@@ -9,7 +9,7 @@ use crate::looksyk::queries::args::{
 };
 use crate::looksyk::queries::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::{render_block_flat, render_link};
+use crate::looksyk::renderer::{render_block_flat_as_string, render_link};
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
 pub const QUERY_NAME_TODOS: &str = "todos";
@@ -106,13 +106,21 @@ fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderR
             result.push_str("* :check mark: ");
             result.push_str(render_link(&todo.source.page_id).as_str());
             result.push_str(": ");
-            result.push_str(render_block_flat(&todo.block).strip_prefix("[x] ").unwrap());
+            result.push_str(
+                render_block_flat_as_string(&todo.block)
+                    .strip_prefix("[x] ")
+                    .unwrap(),
+            );
             result.push_str("\n\n")
         } else {
             result.push_str("* :white large square: ");
             result.push_str(render_link(&todo.source.page_id).as_str());
             result.push_str(": ");
-            result.push_str(render_block_flat(&todo.block).strip_prefix("[ ] ").unwrap());
+            result.push_str(
+                render_block_flat_as_string(&todo.block)
+                    .strip_prefix("[ ] ")
+                    .unwrap(),
+            );
             result.push_str("\n\n")
         }
     }

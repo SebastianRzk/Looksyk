@@ -133,7 +133,7 @@ impl Display for QueryDisplayType {
 mod tests {
     use crate::io::fs::media::MediaOnDisk;
     use crate::looksyk::builder::builder::user_page_id;
-    use crate::looksyk::builder::{page_name_str, text_token};
+    use crate::looksyk::builder::{page_name_str, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::builder::query_block_token;
     use crate::looksyk::model::{
@@ -289,7 +289,7 @@ mod tests {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("[ ] todo not done")],
+                            as_tokens: vec![text_token_str("[ ] todo not done")],
                             as_text: "[ ] todo not done".to_string(),
                         }],
                     },
@@ -303,7 +303,7 @@ mod tests {
                 TodoIndexEntry {
                     block: ParsedBlock {
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("[x] todo done")],
+                            as_tokens: vec![text_token_str("[x] todo done")],
                             as_text: "[x] todo done".to_string(),
                         }],
                         indentation: 0,
@@ -343,7 +343,7 @@ mod tests {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("[ ] todo not done")],
+                            as_tokens: vec![text_token_str("[ ] todo not done")],
                             as_text: "[ ] todo not done".to_string(),
                         }],
                     },
@@ -358,7 +358,7 @@ mod tests {
                     block: ParsedBlock {
                         indentation: 0,
                         content: vec![BlockContent {
-                            as_tokens: vec![text_token("[x] todo done")],
+                            as_tokens: vec![text_token_str("[x] todo done")],
                             as_text: "[x] todo done".to_string(),
                         }],
                     },

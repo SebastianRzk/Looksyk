@@ -43,7 +43,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   public pageName: Subject<string> = new BehaviorSubject("");
   public pageName$ = this.pageName.asObservable();
 
-  public renameOpen: Subject<boolean> = new BehaviorSubject(false);
+  public renameOpen: Subject<boolean> = new BehaviorSubject<boolean>(false);
   public renameOpen$ = this.renameOpen.asObservable();
 
   public data = combineLatest({

@@ -1,3 +1,17 @@
+### v1.1.0 (2025-01-21)
+
+Enhancements:
+
+* Added filesize and last modified date to the media detail view
+* Added a download button in media detail view
+* Removed "Media:" prefix in media detail view title
+* Add "reload" button that invalidates and reloads the complete backend- and frontend-state
+
+Bugfixes:
+
+* Names of file upload files get sanitized
+* Disable rich-text editor when copy/paste 
+
 ### v1.0.2 (2025-01-15)
 
 Enhancements:

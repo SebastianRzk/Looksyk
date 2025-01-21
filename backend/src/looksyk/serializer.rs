@@ -111,7 +111,7 @@ fn serialize_block_token(block_token: &BlockToken) -> String {
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::builder::any_page_id;
-    use crate::looksyk::builder::{journal_link_token, text_token};
+    use crate::looksyk::builder::{journal_link_token, text_token_str};
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, MarkdownReference, ParsedBlock,
         ParsedMarkdownFile, UpdateBlock,
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn should_serialize_text() {
-        let block_token = text_token("Text1");
+        let block_token = text_token_str("Text1");
 
         let result = serialize_block_token(&block_token);
 
@@ -231,7 +231,7 @@ mod tests {
                             as_text: "".to_string(),
                             as_tokens: vec![
                                 todo_block("x"),
-                                text_token("mytodo "),
+                                text_token_str("mytodo "),
                                 link_block("my link"),
                             ],
                         }],
@@ -264,11 +264,11 @@ mod tests {
                         content: vec![
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("my text")],
+                                as_tokens: vec![text_token_str("my text")],
                             },
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("2my text2")],
+                                as_tokens: vec![text_token_str("2my text2")],
                             },
                         ],
                     },
@@ -300,11 +300,11 @@ mod tests {
                         content: vec![
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("my text")],
+                                as_tokens: vec![text_token_str("my text")],
                             },
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("-2my text2")],
+                                as_tokens: vec![text_token_str("-2my text2")],
                             },
                         ],
                     },
@@ -340,7 +340,7 @@ mod tests {
                         indentation: 0,
                         content: vec![BlockContent {
                             as_text: "".to_string(),
-                            as_tokens: vec![text_token("")],
+                            as_tokens: vec![text_token_str("")],
                         }],
                     },
                     ParsedBlock {
@@ -348,11 +348,11 @@ mod tests {
                         content: vec![
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("my text")],
+                                as_tokens: vec![text_token_str("my text")],
                             },
                             BlockContent {
                                 as_text: "".to_string(),
-                                as_tokens: vec![text_token("-2my text2\n\n")],
+                                as_tokens: vec![text_token_str("-2my text2\n\n")],
                             },
                         ],
                     },
@@ -378,7 +378,7 @@ mod tests {
         ParsedBlock {
             content: vec![BlockContent {
                 as_text: "".to_string(),
-                as_tokens: vec![text_token(text)],
+                as_tokens: vec![text_token_str(text)],
             }],
             indentation,
         }

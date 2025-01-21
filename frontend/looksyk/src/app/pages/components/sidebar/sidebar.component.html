@@ -30,16 +30,18 @@
 </div>
 
 <mat-divider></mat-divider>
+<div>
+  <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+  <button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+  <button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
+    <mat-icon>delete</mat-icon>
+  </button>
 
-<button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
-  <mat-icon>navigate_before</mat-icon>
-</button>
-<button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
-  <mat-icon>navigate_next</mat-icon>
-</button>
-<button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
-  <mat-icon>delete</mat-icon>
-</button>
+</div>
 <div class="menu-button-list" *ngIf="history$ | async as historyEntry">
   @for (history of historyEntry; track history.title) {
     @if (history.title.length < 20) {
@@ -55,3 +57,7 @@
     }
   }
 </div>
+<button mat-button (click)="reload()" class="unimportant bottom">
+  <mat-icon>sync</mat-icon>
+  reload data from disk
+</button>

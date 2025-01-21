@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, map, Observable } from "rxjs";
-import { Block } from "../pages/model";
+import { Block, fromDto, MarkdownPage, MarkdownPageDto } from "../pages/model";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,10 @@ export class MediaService {
     return this.http.get<MediaPreviewDto>("/api/asset-preview/info/" + encodeURIComponent(filename)).pipe(map(this.mapMediaPreviewDtoToMediaPreview));
   }
 
+
+  getMediaMetadata(filename: string): Observable<MarkdownPage> {
+    return this.http.get<MarkdownPageDto>("/api/assets/metadata/" + encodeURIComponent(filename)).pipe(map((x: MarkdownPageDto) => fromDto(x, filename, filename)));
+  }
 
   private mapMediaPreviewDtoToMediaPreview(dto: MediaPreviewDto): MediaPreview {
     const preview: MediaPreview = {
@@ -65,7 +69,6 @@ interface MediaPreviewDto {
   markdownPreview?: string,
   htmlPreviewLink?: string,
   properties: MediaPropertiesDto
-
 }
 
 interface MediaPropertiesDto {

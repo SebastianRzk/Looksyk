@@ -17,12 +17,20 @@ pub mod test_builder {
     }
 }
 
-pub fn text_token(text: &str) -> BlockToken {
+pub fn text_token_str(text: &str) -> BlockToken {
     BlockToken {
         block_token_type: BlockTokenType::TEXT,
         payload: text.to_string(),
     }
 }
+
+pub fn text_token(payload: String) -> BlockToken {
+    BlockToken {
+        block_token_type: BlockTokenType::TEXT,
+        payload,
+    }
+}
+
 #[cfg(test)]
 pub fn page_name_str(name: &str) -> SimplePageName {
     SimplePageName {

@@ -1,13 +1,20 @@
-<h1>Media: {{ pageName$ | async }} </h1>
-<ng-container *ngIf="mediaInfo$ | async as mediaInfo">
-  <app-markdown *ngIf="mediaInfo.markdownPreview"
-                [markdown]="mediaInfo.markdownPreview"
-                [editable]="false"
-                [pageid]="'details/'+mediaInfo.properties.fullQualifiedPath"
-  ></app-markdown>
-  <iframe *ngIf="mediaInfo.htmlPreviewLink" [src]="bypass(mediaInfo.htmlPreviewLink)">
+  <div class="title">
+    <h1>{{ pageName$ | async }} </h1>
+    <button mat-mini-fab (click)="download()"><mat-icon>download</mat-icon></button>
+  </div>
+  <ng-container *ngIf="mediaInfo$ | async as mediaInfo">
+    <app-markdown *ngIf="mediaInfo.markdownPreview"
+                  [markdown]="mediaInfo.markdownPreview"
+                  [editable]="false"
+                  [pageid]="'details/'+mediaInfo.properties.fullQualifiedPath"
+    ></app-markdown>
+    <iframe *ngIf="mediaInfo.htmlPreviewLink" [src]="bypass(mediaInfo.htmlPreviewLink)">
 
-  </iframe>
-
-</ng-container>
-
+    </iframe>
+  </ng-container>
+  <ng-container *ngIf="mediaMetadata$ | async as mediaMetadata">
+    <app-markdown
+      [markdown]="mediaMetadata.blocks[0]"
+      [editable]="false"
+      [pageid]="'metadata'"></app-markdown>
+  </ng-container>

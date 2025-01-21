@@ -6,7 +6,7 @@ pub fn find_file(file_name: &String, media_index: &MediaIndex) -> Option<Indexed
             return Some(media.clone());
         }
     }
-    return None;
+    None
 }
 
 pub fn find_file_by_hash(file_hash: &String, media_index: &MediaIndex) -> Option<IndexedMedia> {
@@ -15,7 +15,7 @@ pub fn find_file_by_hash(file_hash: &String, media_index: &MediaIndex) -> Option
             return Some(media.clone());
         }
     }
-    return None;
+    None
 }
 
 #[derive(Deserialize, Serialize, Clone)]
