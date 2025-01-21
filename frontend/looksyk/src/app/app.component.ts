@@ -1,14 +1,24 @@
-import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
-import { UseractionService } from "./services/useraction.service";
-import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
-import { Title } from "@angular/platform-browser";
-import { TitleService } from "./services/title.service";
-import { Subscription } from "rxjs";
+import {Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
+import {UseractionService} from "./services/useraction.service";
+import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
+import {Title} from "@angular/platform-browser";
+import {TitleService} from "./services/title.service";
+import {Subscription} from "rxjs";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {ContentAssistPopupComponent} from "./pages/components/content-assist-popup/content-assist-popup.component";
+import {SidebarComponent} from "./pages/components/sidebar/sidebar.component";
+import {RouterModule} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  imports: [
+    ContentAssistPopupComponent,
+    MatSidenavModule,
+    SidebarComponent,
+    RouterModule
+  ]
 })
 export class AppComponent implements OnInit {
 

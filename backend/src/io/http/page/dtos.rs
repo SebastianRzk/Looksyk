@@ -39,7 +39,7 @@ pub struct PreparedMarkdownFileDto {
 }
 
 #[derive(Deserialize)]
-pub struct ToValidate {
+pub struct ToValidateDto {
     pub block: String,
 }
 

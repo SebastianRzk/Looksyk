@@ -24,12 +24,11 @@ import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, 
 import { MarkdownService } from "../../../services/markdown.service";
 
 @Component({
-  selector: 'app-referenced-markdown',
-  standalone: true,
-  imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, RouterLink],
-  templateUrl: './referenced-markdown.component.html',
-  styleUrls: ['./referenced-markdown.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-referenced-markdown',
+    imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, RouterLink],
+    templateUrl: './referenced-markdown.component.html',
+    styleUrls: ['./referenced-markdown.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {

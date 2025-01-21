@@ -28,23 +28,28 @@ impl Favourite {
 }
 
 #[cfg(test)]
-pub fn config_with_fav(fav: &str) -> Config {
-    Config {
-        design: empty_design(),
-        favourites: vec![Favourite {
-            name: SimplePageName {
-                name: fav.to_string(),
-            },
-        }],
-    }
-}
+pub mod builder {
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::config::config::{Config, Design, Favourite};
 
-#[cfg(test)]
-pub fn empty_design() -> Design {
-    Design {
-        primary_color: "".to_string(),
-        background_color: "".to_string(),
-        foreground_color: "".to_string(),
-        primary_shading: "".to_string(),
+    pub fn favourite_str(name: &str) -> Favourite {
+        Favourite {
+            name: page_name_str(name),
+        }
+    }
+
+    pub fn config_with_fav(fav: &str) -> Config {
+        Config {
+            design: empty_design(),
+            favourites: vec![favourite_str(fav)],
+        }
+    }
+    pub fn empty_design() -> Design {
+        Design {
+            primary_color: "".to_string(),
+            background_color: "".to_string(),
+            foreground_color: "".to_string(),
+            primary_shading: "".to_string(),
+        }
     }
 }

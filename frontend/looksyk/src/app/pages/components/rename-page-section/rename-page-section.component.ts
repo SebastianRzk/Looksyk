@@ -4,17 +4,16 @@ import { MatFormField, MatInput } from "@angular/material/input";
 import { MatDivider } from "@angular/material/divider";
 
 @Component({
-  selector: 'app-rename-page-section',
-  standalone: true,
-  imports: [
-    MatButton,
-    MatInput,
-    MatDivider,
-    MatFormField
-  ],
-  templateUrl: './rename-page-section.component.html',
-  styleUrl: './rename-page-section.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-rename-page-section',
+    imports: [
+        MatButton,
+        MatInput,
+        MatDivider,
+        MatFormField
+    ],
+    templateUrl: './rename-page-section.component.html',
+    styleUrl: './rename-page-section.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RenamePageSectionComponent {
 

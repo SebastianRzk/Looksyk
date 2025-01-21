@@ -22,8 +22,7 @@ async fn insert_favourite(
 
     *config_guard = new_config;
 
-    let dto = map_to_dto(config_guard);
-    Ok(web::Json(dto))
+    Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }
 
 #[delete("/api/favourites/{fav_name}")]
@@ -40,14 +39,14 @@ async fn delete_favourite(
 
     *config_guard = new_config;
 
-    Ok(web::Json(map_to_dto(config_guard)))
+    Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }
 
 #[get("/api/favourites")]
 async fn get_favourites(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let config_guard = data.g_config.lock().unwrap();
 
-    let favs = map_to_dto(config_guard);
+    let favs = map_to_dto(&config_guard.favourites);
     Ok(web::Json(favs))
 }
 
@@ -65,5 +64,5 @@ async fn update_favourites(
 
     *config_guard = new_config;
 
-    Ok(web::Json(map_to_dto(config_guard)))
+    Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }

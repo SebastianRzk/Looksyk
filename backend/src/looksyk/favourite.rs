@@ -7,7 +7,7 @@ pub fn is_favourite(name: &SimplePageName, config: &Config) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Config {
@@ -53,7 +53,8 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::config::config::{config_with_fav, empty_design, Config, Favourite};
+    use crate::looksyk::config::config::builder::{config_with_fav, empty_design};
+    use crate::looksyk::config::config::{Config, Favourite};
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };

@@ -4,12 +4,11 @@ import { Block } from "../../model";
 import { MarkdownComponent } from "../markdown/markdown.component";
 
 @Component({
-  selector: 'app-block',
-  standalone: true,
-  imports: [CommonModule, MarkdownComponent],
-  templateUrl: './block.component.html',
-  styleUrls: ['./block.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-block',
+    imports: [CommonModule, MarkdownComponent],
+    templateUrl: './block.component.html',
+    styleUrls: ['./block.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BlockComponent {
 

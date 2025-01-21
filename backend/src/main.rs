@@ -81,6 +81,7 @@ async fn main() -> std::io::Result<()> {
             .service(userpage::endpoints::get_overview_page)
             .service(journalpage::endpoints::get_journal)
             .service(journalpage::endpoints::update_journal)
+            .service(journalpage::endpoints::journal_overview)
             .service(userpage::endpoints::get_page)
             .service(userpage::endpoints::update_page)
             .service(userpage::endpoints::get_backlinks)

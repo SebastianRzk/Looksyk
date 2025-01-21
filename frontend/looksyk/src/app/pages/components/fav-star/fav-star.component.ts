@@ -5,16 +5,15 @@ import { MatIcon } from "@angular/material/icon";
 import { FavouriteService } from "../../../services/favourite.service";
 
 @Component({
-  selector: 'app-fav-star',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    NgIf,
-    MatIcon
-  ],
-  templateUrl: './fav-star.component.html',
-  styleUrl: './fav-star.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-fav-star',
+    imports: [
+        AsyncPipe,
+        NgIf,
+        MatIcon
+    ],
+    templateUrl: './fav-star.component.html',
+    styleUrl: './fav-star.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FavStarComponent implements OnChanges {
   @Input({required: true})

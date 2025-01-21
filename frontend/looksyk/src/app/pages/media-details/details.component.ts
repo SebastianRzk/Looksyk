@@ -11,12 +11,11 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-  selector: 'app-media-details-overview',
-  standalone: true,
-  imports: [CommonModule, MarkdownComponent, MatIconModule, MatButtonModule],
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-media-details-overview',
+    imports: [CommonModule, MarkdownComponent, MatIconModule, MatButtonModule],
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit {
 

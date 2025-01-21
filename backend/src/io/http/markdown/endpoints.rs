@@ -1,4 +1,4 @@
-use crate::io::http::page::dtos::ToValidate;
+use crate::io::http::page::dtos::ToValidateDto;
 use crate::io::http::page::mapper::map_to_block_dto;
 use crate::looksyk::model::RawBlock;
 use crate::looksyk::parser::parse_block;
@@ -9,10 +9,9 @@ use actix_web::{post, web, Responder};
 
 #[post("/api/parse")]
 async fn parse(
-    content: web::Json<ToValidate>,
+    content: web::Json<ToValidateDto>,
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
-    println!("on demand render block");
     let raw_block = RawBlock {
         indentation: 0,
         text_content: vec![content.block.clone()],

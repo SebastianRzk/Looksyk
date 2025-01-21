@@ -4,16 +4,15 @@ import { ShowPageComponent } from "../../show-page/show-page.component";
 import { AsyncPipe, NgIf } from "@angular/common";
 
 @Component({
-  selector: 'app-referenced-by',
-  standalone: true,
-  imports: [
-    ShowPageComponent,
-    AsyncPipe,
-    NgIf
-  ],
-  templateUrl: './referenced-by.component.html',
-  styleUrl: './referenced-by.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-referenced-by',
+    imports: [
+        ShowPageComponent,
+        AsyncPipe,
+        NgIf
+    ],
+    templateUrl: './referenced-by.component.html',
+    styleUrl: './referenced-by.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferencedByComponent implements OnChanges {
 

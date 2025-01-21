@@ -7,7 +7,7 @@ use crate::io::fs::media::{
     write_media_config, LoadedMedia, MediaOnDisk,
 };
 use crate::io::hash::hash_file_content;
-use crate::io::http::media::dtos::{FileUploadResult, UploadForm};
+use crate::io::http::media::dtos::{FileUploadResult, UploadFormDto};
 use crate::io::http::media::mapper::{map_to_asset_preview_dto, map_to_dto};
 use crate::io::http::page::mapper::map_markdown_file_to_dto;
 use crate::looksyk::builtinpage::asset_metainfo_table::get_asset_meta_info_table;
@@ -32,7 +32,7 @@ use std::str::FromStr;
 
 #[post("/api/media")]
 pub async fn upload_file(
-    MultipartForm(form): MultipartForm<UploadForm>,
+    MultipartForm(form): MultipartForm<UploadFormDto>,
     app_state: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let json_filename = form.json.name.clone();

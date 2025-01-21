@@ -7,3 +7,12 @@
   height: 80%;
   width: 100%;
 }
+
+.headline{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+.headline>* {
+  margin-right: 1ex;
+}

@@ -12,12 +12,11 @@ import { HistoryService } from "../../../services/history.service";
 import { StateService } from "../../../services/state.service";
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList],
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-sidebar',
+    imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList],
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);

@@ -1,4 +1,4 @@
-<h1>Journal</h1>
+<div class="headline"><h1>Journal</h1><button mat-mini-fab><mat-icon routerLink="/special-page/journal-overview">calendar_month</mat-icon></button></div>
 
 <cdk-virtual-scroll-viewport autosize class="journal-viewport">
   <app-journal-entry *cdkVirtualFor="let item of items; templateCacheSize: 0" [page]="item"></app-journal-entry>

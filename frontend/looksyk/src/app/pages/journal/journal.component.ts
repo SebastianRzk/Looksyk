@@ -6,14 +6,16 @@ import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
 import {MarkdownPage} from "../model";
 import {PageService} from "../../services/page.service";
+import {MatIconModule} from "@angular/material/icon";
+import {RouterLink} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
-  selector: 'app-journal',
-  standalone: true,
-  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent],
-  templateUrl: './journal.component.html',
-  styleUrls: ['./journal.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-journal',
+  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule],
+    templateUrl: './journal.component.html',
+    styleUrls: ['./journal.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalComponent {
   pageService = inject(PageService);

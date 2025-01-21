@@ -1,3 +1,16 @@
+### v1.2.0 (2025-01-21)
+
+Enhancements:
+
+* Add refresh button to the sidebar
+* Add journal overview page
+
+Internal:
+
+* Update angular frontend
+* Update electron application-wrapper
+* Update rust backend
+
 ### v1.1.0 (2025-01-21)
 
 Enhancements:

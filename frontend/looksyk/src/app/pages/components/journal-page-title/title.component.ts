@@ -5,12 +5,11 @@ import { RouterLink } from "@angular/router";
 import { HistoryService } from "../../../services/history.service";
 
 @Component({
-  selector: 'app-journal-page-title',
-  standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './title.component.html',
-  styleUrls: ['./title.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-journal-page-title',
+    imports: [CommonModule, RouterLink],
+    templateUrl: './title.component.html',
+    styleUrls: ['./title.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnChanges {
   @Input({required: true})
