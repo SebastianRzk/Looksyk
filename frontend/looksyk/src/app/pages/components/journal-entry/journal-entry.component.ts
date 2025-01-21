@@ -7,12 +7,11 @@ import { MatListModule } from "@angular/material/list";
 import { TitleComponent } from "../journal-page-title/title.component";
 
 @Component({
-  selector: 'app-journal-entry',
-  standalone: true,
-  imports: [CommonModule, ShowPageComponent, MatListModule, TitleComponent],
-  templateUrl: './journal-entry.component.html',
-  styleUrls: ['./journal-entry.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-journal-entry',
+    imports: [CommonModule, ShowPageComponent, MatListModule, TitleComponent],
+    templateUrl: './journal-entry.component.html',
+    styleUrls: ['./journal-entry.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalEntryComponent  {
 

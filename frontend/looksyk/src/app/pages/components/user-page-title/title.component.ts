@@ -5,12 +5,11 @@ import { RouterLink } from "@angular/router";
 import { HistoryService } from "../../../services/history.service";
 
 @Component({
-  selector: 'app-user-page-title',
-  standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './title.component.html',
-  styleUrls: ['./title.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-user-page-title',
+    imports: [CommonModule, RouterLink],
+    templateUrl: './title.component.html',
+    styleUrls: ['./title.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnChanges {
 

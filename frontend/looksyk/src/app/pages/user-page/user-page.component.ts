@@ -14,12 +14,11 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {RenamePageSectionComponent} from "../components/rename-page-section/rename-page-section.component";
 
 @Component({
-  selector: 'app-user-page',
-  standalone: true,
-  imports: [CommonModule, TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent],
-  templateUrl: './user-page.component.html',
-  styleUrls: ['./user-page.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-user-page',
+    imports: [CommonModule, TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent],
+    templateUrl: './user-page.component.html',
+    styleUrls: ['./user-page.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {

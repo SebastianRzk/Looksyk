@@ -15,8 +15,11 @@ npm install
 npm run package
 popd
 
+echo "delete old target"
+rm -rf target
+echo "old target deleted"
 
-
+echo "creating new target"
 mkdir -p target
 cp backend/target/release/looksyk target/
 mkdir -p target/static

@@ -27,12 +27,11 @@ import { PageService } from "../../../services/page.service";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 
 @Component({
-  selector: 'app-markdown',
-  standalone: true,
-  imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent],
-  templateUrl: './markdown.component.html',
-  styleUrls: ['./markdown.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-markdown',
+    imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent],
+    templateUrl: './markdown.component.html',
+    styleUrls: ['./markdown.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {

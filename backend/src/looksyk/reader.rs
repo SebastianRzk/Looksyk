@@ -9,7 +9,7 @@ pub fn calculate_indentation(string: &str) -> usize {
     let mut tab_count = 0;
     for char in string.chars() {
         if char != INDENTATION {
-            break;
+            return tab_count;
         }
         tab_count += 1;
     }
@@ -87,7 +87,6 @@ mod tests {
         let result = read_file_contents("- line1\nline2".to_string());
         assert_eq!(result.blocks.len(), 1);
         let block = result.blocks.get(0).unwrap();
-        //assert_eq!(block.children_blocks.len(), 0);
         assert_eq!(block.text_content, vec!["line1", "line2"]);
     }
 }

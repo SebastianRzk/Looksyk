@@ -21,7 +21,7 @@ pub struct Metadata {
 }
 
 #[derive(Debug, MultipartForm)]
-pub struct UploadForm {
+pub struct UploadFormDto {
     #[multipart(limit = "100MB")]
     pub file: TempFile,
     pub json: MPJson<Metadata>,

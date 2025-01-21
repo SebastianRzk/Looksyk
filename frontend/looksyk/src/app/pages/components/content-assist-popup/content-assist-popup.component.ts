@@ -16,16 +16,15 @@ import {
 } from "../../../services/search.service";
 
 @Component({
-  selector: 'app-content-assist-popup',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    NgIf,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './content-assist-popup.component.html',
-  styleUrl: './content-assist-popup.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-content-assist-popup',
+    imports: [
+        AsyncPipe,
+        NgIf,
+        ReactiveFormsModule,
+    ],
+    templateUrl: './content-assist-popup.component.html',
+    styleUrl: './content-assist-popup.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 

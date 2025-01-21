@@ -8,12 +8,11 @@ import {MarkdownPage} from "../model";
 import {PageService} from "../../services/page.service";
 
 @Component({
-  selector: 'app-journal',
-  standalone: true,
-  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent],
-  templateUrl: './journal.component.html',
-  styleUrls: ['./journal.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-journal',
+    imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent],
+    templateUrl: './journal.component.html',
+    styleUrls: ['./journal.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalComponent {
   pageService = inject(PageService);

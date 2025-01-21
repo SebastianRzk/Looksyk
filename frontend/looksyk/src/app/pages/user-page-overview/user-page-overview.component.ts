@@ -6,12 +6,11 @@ import {Observable} from "rxjs";
 import {MarkdownPage} from "../model";
 
 @Component({
-  selector: 'app-user-page-overview',
-  standalone: true,
-  imports: [CommonModule, ShowPageComponent],
-  templateUrl: './user-page-overview.component.html',
-  styleUrls: ['./user-page-overview.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-user-page-overview',
+    imports: [CommonModule, ShowPageComponent],
+    templateUrl: './user-page-overview.component.html',
+    styleUrls: ['./user-page-overview.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPageOverviewComponent implements OnInit {
 

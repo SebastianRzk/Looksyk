@@ -8,18 +8,17 @@ import {ShowPageComponent} from "../show-page/show-page.component";
 import {TitleComponent} from "../components/journal-page-title/title.component";
 
 @Component({
-  selector: 'app-journal-single-entry',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    NgIf,
-    ShowPageComponent,
-    TitleComponent,
-    TitleComponent
-  ],
-  templateUrl: './journal-single-entry.component.html',
-  styleUrl: './journal-single-entry.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-journal-single-entry',
+    imports: [
+        AsyncPipe,
+        NgIf,
+        ShowPageComponent,
+        TitleComponent,
+        TitleComponent
+    ],
+    templateUrl: './journal-single-entry.component.html',
+    styleUrl: './journal-single-entry.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalSingleEntryComponent implements OnInit{
 
