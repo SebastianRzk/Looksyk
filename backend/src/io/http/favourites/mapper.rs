@@ -39,6 +39,9 @@ mod tests {
             list: vec!["test1".to_string(), "test2".to_string()],
         });
 
-        assert_eq!(dto, vec![favourite_str("test1").name, favourite_str("test2").name]);
+        assert_eq!(
+            dto,
+            vec![favourite_str("test1").name, favourite_str("test2").name]
+        );
     }
 }

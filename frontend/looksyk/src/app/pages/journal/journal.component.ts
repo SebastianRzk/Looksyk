@@ -6,10 +6,13 @@ import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
 import {MarkdownPage} from "../model";
 import {PageService} from "../../services/page.service";
+import { MatIcon, MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+import { MatButtonModule, MatMiniFabButton } from "@angular/material/button";
 
 @Component({
     selector: 'app-journal',
-    imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent],
+  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule],
     templateUrl: './journal.component.html',
     styleUrls: ['./journal.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
