@@ -1,3 +1,15 @@
+### v1.3.0 (2025-01-22)
+
+Enhancements:
+
+* interpret *.sh extension as "code"-file
+* reduce min-width in journal view
+
+Bugfixes:
+
+* Fix horizontal scrolling in journal view
+
+
 ### v1.2.0 (2025-01-21)
 
 Enhancements:

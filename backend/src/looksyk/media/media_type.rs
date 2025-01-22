@@ -12,24 +12,6 @@ pub enum MediaType {
     Pdf,
 }
 
-pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> MediaType {
-    let extension = asset_descriptor.find_extension();
-    if extension.is_none() {
-        return MediaType::Other;
-    }
-
-    match extension.unwrap().to_lowercase().as_str() {
-        "mp4" | "webm" | "ogm" => MediaType::Video,
-        "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" => MediaType::Image,
-        "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
-        "txt" => MediaType::Text,
-        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" => MediaType::Code,
-        "html" | "htm" => MediaType::Html,
-        "pdf" => MediaType::Pdf,
-        _ => MediaType::Other,
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -75,5 +57,25 @@ mod tests {
         let result = get_media_type_from_extension(&asset_descriptor("file"));
 
         assert_eq!(result, MediaType::Other);
+    }
+}
+
+pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> MediaType {
+    let extension = asset_descriptor.find_extension();
+    if extension.is_none() {
+        return MediaType::Other;
+    }
+
+    match extension.unwrap().to_lowercase().as_str() {
+        "mp4" | "webm" | "ogm" => MediaType::Video,
+        "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" => MediaType::Image,
+        "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
+        "txt" => MediaType::Text,
+        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" | "sh" => {
+            MediaType::Code
+        }
+        "html" | "htm" => MediaType::Html,
+        "pdf" => MediaType::Pdf,
+        _ => MediaType::Other,
     }
 }

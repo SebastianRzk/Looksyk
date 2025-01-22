@@ -25,5 +25,5 @@ pub fn load_cachable_asset(
             content: read_file(abs_path),
         });
     }
-    return AssetState::NotFound;
+    AssetState::NotFound
 }

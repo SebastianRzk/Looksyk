@@ -78,11 +78,11 @@ page has issues.
 
 Tested browsers:
 
-| Browser                        | Compatibility |
-|--------------------------------|---------------| 
-| application-wrapper (Electron) | works         |
-| Chromium / Chrome              | works         |
-| Firefox                        | works         |
+| Browser                        | Compatibility                                                        |
+|--------------------------------|----------------------------------------------------------------------| 
+| application-wrapper (Electron) | works                                                                |
+| Chromium / Chrome              | works                                                                |
+| Firefox                        | works on nightly (Jan 2025), contenteditable=plaintext-only required |
 
 Tested operating systems
 

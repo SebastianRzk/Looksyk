@@ -1,6 +1,6 @@
 div[contenteditable] {
   width: 100%;
-  min-width: 150ex;
+  min-width: 100%;
 }
 
 .markdown {
