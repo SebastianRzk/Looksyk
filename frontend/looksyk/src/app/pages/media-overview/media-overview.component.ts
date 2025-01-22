@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
 import {MarkdownPage} from "../model";
 
 @Component({
-    selector: 'app-user-page-overview',
+    selector: 'app-media-page-overview',
     imports: [CommonModule, ShowPageComponent],
     templateUrl: './media-overview.component.html',
     styleUrls: ['./media-overview.component.css'],
