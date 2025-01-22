@@ -8,7 +8,7 @@ Enhancements:
 Bugfixes:
 
 * Fix horizontal scrolling in journal view
-* 
+
 
 ### v1.2.0 (2025-01-21)
 
