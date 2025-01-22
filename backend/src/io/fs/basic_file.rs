@@ -2,8 +2,6 @@ use std::fs;
 use std::fs::Metadata;
 use std::path::PathBuf;
 
-const NULL_BYTE: &str = "\0";
-
 pub fn read_file(path: PathBuf) -> String {
     println!("loading file {}", path.to_str().unwrap());
     fs::read_to_string::<PathBuf>(path).unwrap()
@@ -46,7 +44,7 @@ pub fn delete_file(path: PathBuf) {
 
 pub fn is_text_file(path: PathBuf) -> bool {
     let file_content = read_binary_file(path);
-    !file_content.contains(&NULL_BYTE.as_bytes()[0])
+    !(file_content.contains(&b'\x00') || file_content.contains(&b'\xff'))
 }
 
 pub fn delete_all_forbidden_chars_in_filename(filename: String) -> String {
