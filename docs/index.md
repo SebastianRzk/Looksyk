@@ -1,6 +1,10 @@
+---
+layout: default
+---
+
 # Looksyk
 
-![logo](icon/Looksyk-scaled.png)
+![logo](Looksyk-scaled.png)
 
 ![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main)
 
@@ -18,9 +22,11 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
 
-![intro animation](docs/intro_animation.gif)
+![intro animation](intro_animation.gif)
 
 ## Table of Contents
+
+### This page
 
 - [Introduction](#introduction)
 - [Key Selling Points](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
@@ -30,12 +36,12 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 
 ### Further Reading
 
-- [idea and technical concept](https://sebastianrzk.github.io/Looksyk/idea_and_technical_concept.html)
-- [Install + Run](https://sebastianrzk.github.io/Looksyk/installation.html)
-- [Migrate Your Existing Logseq Graph](https://sebastianrzk.github.io/Looksyk/migration_from_logseq.html)
-- [Configuration and Usage](https://sebastianrzk.github.io/Looksyk/usage.html)
-- [Development Guide and Contribution Guidelines](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)
-- [Changelog](https://sebastianrzk.github.io/Looksyk/changelog.html)
+- [idea and technical concept](idea_and_technical_concept.md)
+- [Install + Run](installation.md)
+- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
+- [Configuration and Usage](usage.md)
+- [Development Guide and Contribution Guidelines](development_and_contribution.md)
+- [Changelog](changelog.md)
 
 ## Introduction
 

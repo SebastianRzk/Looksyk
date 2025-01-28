@@ -82,7 +82,6 @@ export class UseractionService {
     firstValueFrom(this.pageService.getPage(event.target.fileTarget)).then(currentPage => {
       let newBlocks = currentPage.blocks;
       const index = newBlocks.findIndex(block => block.indentification == event.target.blockTarget);
-      console.log("index", index);
       if (index > 0) {
         const newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
         const newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
@@ -104,7 +103,6 @@ export class UseractionService {
         this.savePage.next({
           target: event.target
         });
-        console.log("currentpage", currentPage);
       }
     })
   });

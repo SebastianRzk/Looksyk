@@ -1,17 +1,18 @@
-mat-drawer-container {
+mat-sidenav-container {
   height: 100%;
-  width: 100vw;
+  width: 100%;
   padding: 0;
   margin: 0;
   position: inherit !important;
 }
 
-mat-drawer-content {
+mat-sidenav-content {
   padding: 5ex;
   display: flex;
 }
 
-mat-drawer {
+mat-sidenav {
+  padding-right: 1ex;
   width: 30ex;
 }
 
@@ -26,4 +27,22 @@ app-sidebar {
   height: 99%;
   display: flex;
   flex-direction: column;
+}
+
+.menu-trigger, .menu-trigger>*{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  font-size: xx-large;
+  background: var(--primary-shading);
+  color: var(--primary-shading);
+  box-shadow: none;
+  border-radius: 0  0.5ex 0.5ex 0;
+}
+
+.menu-trigger-text {
+  padding-bottom: 0.4ex;
 }

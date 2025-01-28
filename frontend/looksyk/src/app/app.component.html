@@ -1,11 +1,22 @@
-<mat-drawer-container [autosize]>
-  <mat-drawer mode="side" [disableClose]="true" opened><app-sidebar></app-sidebar></mat-drawer>
-  <mat-drawer-content #content>
+<mat-sidenav-container [autosize]>
+  <mat-sidenav mode="side" [disableClose]="true" opened #sidenav>
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+  <mat-sidenav-content #content>
+    @if (sidenav.opened) {
+      <button mat-mini-fab class="menu-trigger" (click)="sidenav.close()">
+        <div class="menu-trigger-text">«</div>
+      </button>
+    } @else {
+      <button mat-mini-fab class="menu-trigger" (click)="sidenav.open()">
+        <div class="menu-trigger-text">»</div>
+      </button>
+    }
     <app-content-assist-popup></app-content-assist-popup>
     <div class="content">
       <router-outlet></router-outlet>
     </div>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 
