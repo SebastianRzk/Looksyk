@@ -1,21 +1,24 @@
 .popuptext {
   background: var(--background-color);
   border: 2px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
   border-radius: 0.5ex;
   position: fixed;
   z-index: 2;
   overflow-x: clip;
-  overflow-y: auto;
+  overflow-y: unset;
   padding: 2ex;
   margin-right: 5ex;
   margin-bottom: 5ex;
   margin-left: -5ex;
+  max-height: 90vh;
   width: -moz-available;
   width: -webkit-fill-available;
 }
 
 @-moz-document url-prefix() {
-  .popuptext{
+  .popuptext {
     margin-left: 0 !important;
   }
 }
@@ -39,6 +42,9 @@
   padding: 0.2ex;
   border-radius: 0.2ex;
   border: 2px solid var(--primary-shading);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 @keyframes cursor-blink {
@@ -58,3 +64,10 @@
   animation: cursor-blink 1.5s steps(2) infinite;
 }
 
+.suggestions {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--primary-shading);
+  max-height: 100%;
+}

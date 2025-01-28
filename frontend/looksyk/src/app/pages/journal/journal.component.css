@@ -6,6 +6,8 @@
 .journal-viewport {
   height: 80%;
   width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--primary-shading);
 }
 
 .headline{
