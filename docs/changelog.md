@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.3.2](#v132-2025-01-28)
 - [v1.3.1](#v131-2025-01-27)
 - [v1.3.0](#v130-2025-01-22)
 - [v1.2.0](#v120-2025-01-21)
@@ -24,7 +25,15 @@ layout: default
 - [Changelog](changelog.md)
 
 
+### v1.3.2 (2025-01-28)
 
+Enhancements:
+
+* Make content assist suggestions scrollable
+* Improve design of scrollbars
+* Scroll into view on open markdown
+
+Bugfixes:
 
 ### v1.3.1 (2025-01-27)
 

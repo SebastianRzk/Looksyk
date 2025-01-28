@@ -25,6 +25,8 @@ div[contenteditable] {
 .active-markdown {
   padding-left: 1ex;
   min-height: 3ex;
+  scroll-margin-block-start:3ex;
+  scroll-margin-top: 3ex;
 }
 
 
@@ -38,6 +40,8 @@ div[contenteditable] {
   color: rgb(20, 20, 20);
   height: 0;
   min-height: 0;
+  scroll-margin-block-start:3ex;
+  scroll-margin-top: 3ex;
 }
 
 .flex-col {
