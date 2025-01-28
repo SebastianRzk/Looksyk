@@ -25,13 +25,14 @@ import { MarkdownService } from "../../../services/markdown.service";
 import { Router } from "@angular/router";
 import { PageService } from "../../../services/page.service";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
+import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
 
 @Component({
-    selector: 'app-markdown',
-    imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent],
-    templateUrl: './markdown.component.html',
-    styleUrls: ['./markdown.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-markdown',
+  imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent],
+  templateUrl: './markdown.component.html',
+  styleUrls: ['./markdown.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
@@ -46,6 +47,8 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   markdownService = inject(MarkdownService);
 
   userInteraction = inject(UseractionService);
+
+  contentAssist = inject(ContentAssistService);
 
   pageService = inject(PageService);
 
@@ -186,6 +189,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
     })
 
   }
+
   onClickAddBlockAfter() {
     this.userInteraction.newBlock.next({
       target: {
@@ -206,7 +210,15 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   }
 
 
-  onFocusOutEditor() {
+  onFocusOutEditor(event?: Event) {
+    if (this.contentAssist.stateRaw !=
+      ContentAssistMode.Closed) {
+      event?.stopPropagation();
+      event?.preventDefault();
+      event?.stopImmediatePropagation();
+      return;
+    }
+
     this.componentMode.next(MarkdownComponentState.LOADING);
     this.markdown.content.originalText = this.textareaRef.nativeElement.innerText;
     this.validatorService.validate(this.textareaRef.nativeElement.innerText).subscribe(

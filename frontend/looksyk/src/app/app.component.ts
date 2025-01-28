@@ -1,13 +1,14 @@
-import {Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
-import {UseractionService} from "./services/useraction.service";
-import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
-import {Title} from "@angular/platform-browser";
-import {TitleService} from "./services/title.service";
-import {Subscription} from "rxjs";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {ContentAssistPopupComponent} from "./pages/components/content-assist-popup/content-assist-popup.component";
-import {SidebarComponent} from "./pages/components/sidebar/sidebar.component";
-import {RouterModule} from "@angular/router";
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
+import { UseractionService } from "./services/useraction.service";
+import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
+import { Title } from "@angular/platform-browser";
+import { TitleService } from "./services/title.service";
+import { Subscription } from "rxjs";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { ContentAssistPopupComponent } from "./pages/components/content-assist-popup/content-assist-popup.component";
+import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
+import { RouterModule } from "@angular/router";
+import { MatMiniFabButton } from "@angular/material/button";
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ import {RouterModule} from "@angular/router";
     ContentAssistPopupComponent,
     MatSidenavModule,
     SidebarComponent,
-    RouterModule
+    RouterModule,
+    MatMiniFabButton
   ]
 })
 export class AppComponent implements OnInit {
@@ -58,6 +60,10 @@ export class AppComponent implements OnInit {
 
     if (event.key == 'Escape') {
       this.stopPropagation(event);
+      if (this.contentAssist.stateRaw != ContentAssistMode.Closed) {
+        this.contentAssist.registerKeyPress(event);
+        return;
+      }
       this.userAction.closeCurrentMarkdownBlock();
       return;
     }

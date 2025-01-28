@@ -41,7 +41,7 @@
     <div [innerHTML]="renderedMarkdown$ | async"
          [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"
          class="markdown" #markdownComponent></div>
-    <div (focusout)="onFocusOutEditor()"
+    <div (focusout)="onFocusOutEditor($event)"
          [className]="(editMode$ | async) ?'active' : 'inactive' "
          [innerText]="editText$ | async"
          #textarea contenteditable="plaintext-only" ></div>

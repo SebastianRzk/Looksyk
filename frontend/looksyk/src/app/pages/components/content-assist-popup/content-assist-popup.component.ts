@@ -1,11 +1,21 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {ContentAssistMode, ContentAssistService} from "../../../services/content-assist.service";
-import {AsyncPipe, NgIf} from "@angular/common";
-import {BehaviorSubject, combineLatest, debounce, filter, firstValueFrom, map, Observable, Subject, timer} from "rxjs";
-import {MetaInformation, MetaInfoService, Suggestions} from "../../../services/meta-info.service";
-import {ReactiveFormsModule} from "@angular/forms";
-import {Router} from "@angular/router";
-import {OpenMarkdownEvent, UseractionService} from "../../../services/useraction.service";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
+import { AsyncPipe, NgIf } from "@angular/common";
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounce,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  Subject,
+  timer
+} from "rxjs";
+import { MetaInformation, MetaInfoService, Suggestions } from "../../../services/meta-info.service";
+import { ReactiveFormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+import { OpenMarkdownEvent, UseractionService } from "../../../services/useraction.service";
 import {
   EMPTY_REFERENCE,
   MIN_FILTER_LENGTH,
@@ -16,15 +26,15 @@ import {
 } from "../../../services/search.service";
 
 @Component({
-    selector: 'app-content-assist-popup',
-    imports: [
-        AsyncPipe,
-        NgIf,
-        ReactiveFormsModule,
-    ],
-    templateUrl: './content-assist-popup.component.html',
-    styleUrl: './content-assist-popup.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-content-assist-popup',
+  imports: [
+    AsyncPipe,
+    NgIf,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './content-assist-popup.component.html',
+  styleUrl: './content-assist-popup.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
@@ -223,7 +233,10 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     }
   }
 
-  async onClickItem(item: Item, group: ContentAssistSection) {
+  async onClickItem(event: Event, item: Item, group: ContentAssistSection) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
     await this.handleAction(item, group);
     this.contentAssist.registerKeyPress(new KeyboardEvent("keydown", {key: "Escape"}))
   }

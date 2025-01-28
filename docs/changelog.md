@@ -1,3 +1,44 @@
+---
+layout: default
+---
+# Changelog
+
+## Table of Contents
+
+- [v1.3.1](#v131-2025-01-27)
+- [v1.3.0](#v130-2025-01-22)
+- [v1.2.0](#v120-2025-01-21)
+- [v1.1.0](#v110-2025-01-21)
+- [v1.0.2](#v102-2025-01-15)
+- [v1.0.1](#v101-2025-01-13)
+- [v1.0.0](#v100-2025-01-06)
+
+### Further Reading
+
+- [Overview](index.md)
+- [idea and technical concept](idea_and_technical_concept.md)
+- [Install + Run](installation.md)
+- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
+- [Configuration and Usage](usage.md)
+- [Development Guide and Contribution Guidelines](development_and_contribution.md)
+- [Changelog](changelog.md)
+
+
+
+
+### v1.3.1 (2025-01-27)
+
+Enhancements:
+
+* Add blinking cursor in content assist pop up
+* Improve content assist spacing
+* Add trigger to hide / show menu bar
+* Improve performance of content-assist filtering
+
+  Bugfixes:
+* Change sidebar to global sidenav
+* Fix clicking on item in content-assist
+
 ### v1.3.0 (2025-01-22)
 
 Enhancements:

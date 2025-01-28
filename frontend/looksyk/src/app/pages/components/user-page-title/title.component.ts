@@ -43,7 +43,6 @@ export class TitleComponent implements OnChanges {
     const cummulatedSegments = [];
     for (const segment of segments) {
       cummulatedSegments.push(segment);
-      console.log(cummulatedSegments)
       result.push({
         name: segment,
         viewName: segment.trim(),

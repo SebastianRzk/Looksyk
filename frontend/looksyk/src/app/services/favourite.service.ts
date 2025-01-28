@@ -34,7 +34,6 @@ export class FavouriteService {
   }
 
   updateFavList(new_fav_list: string[]){
-    console.log("save new favlist:", new_fav_list)
     this.httpClient.post<FavListDto>("/api/favourites/", { list: new_fav_list} ).subscribe(
       favs => this.favourites.next(favs.list)
     );

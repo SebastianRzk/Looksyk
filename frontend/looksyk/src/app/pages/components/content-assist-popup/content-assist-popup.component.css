@@ -6,7 +6,7 @@
   z-index: 2;
   overflow-x: clip;
   overflow-y: auto;
-  padding: 0 0 0 2ex;
+  padding: 2ex;
   margin-right: 5ex;
   margin-bottom: 5ex;
   margin-left: -5ex;
@@ -22,7 +22,7 @@
 
 .active {
   border: 3px solid var(--primary-color);
-  border-radius: 0.5ex;
+  border-radius: 0.2ex;
   padding-left: 2ex;
   font-size: large;
 }
@@ -34,4 +34,27 @@
 .insert-value-input {
   width: 100%;
   font-size: x-large;
+  background: white;
+  color: black;
+  padding: 0.2ex;
+  border-radius: 0.2ex;
+  border: 2px solid var(--primary-shading);
 }
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.text:after {
+  content: "";
+  width: 2px;
+  margin-bottom: -0.1rem;
+  margin-left: 0.2rem;
+  height: 1.2rem;
+  background: black;
+  display: inline-block;
+  animation: cursor-blink 1.5s steps(2) infinite;
+}
+
