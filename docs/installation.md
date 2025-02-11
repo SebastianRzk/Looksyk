@@ -9,9 +9,8 @@ layout: default
 ### This page
 
 - [Run Looksyk](#run-looksyk)
-  - [Production Build / Installation](#production-build--installation)
-  - [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
-
+	- [Production Build / Installation](#production-build--installation)
+	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
 
 ### Further Reading
 
@@ -41,4 +40,8 @@ layout: default
 You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or
 you can run the application with the arguments `--port`, `--graph-location` and `--title` manually.
 
+### Known issues with building the application-wrapper
 
+- [electron forge](https://www.electronforge.io/) is used to build the application-wrapper. Sometimes it has
+  incompatibilities with the current up-to-date node version. If you encounter problems, try to downgrade your node to
+  an older minor-version.

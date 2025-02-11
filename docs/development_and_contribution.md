@@ -12,7 +12,6 @@ layout: default
 - [Build electron app](#build-electron-app)
 - [Contribution Guidelines](#contribution-guidelines)
 
-
 ### Further Reading
 
 - [Overview](index.md)
@@ -23,13 +22,19 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
-
 ## Build backend and frontend
 
-1. Clone the repository
-2. Install frontend dependencies and run `cd frontend/looksyk`, `npm install`, `ng serve`
-3. Install backend dependencies and run `cd backend` and `cargo run`
-4. The application is now available at `http://localhost:4200` (frontend) and `http://localhost:8989` (backend)
+Build and start the backend in development mode. The frontend will reload automatically when changes are made, the
+backend will need to be restarted manually.
+
+1. Clone the repository.
+2. Navigate to the frontend directory: `cd frontend/looksyk`
+3. Install frontend dependencies: `npm install`
+4. Start the frontend server: `ng serve --proxy-config=proxy.config.json`
+5. Navigate to the backend directory: `cd backend`
+6. Install backend dependencies: `cargo run`
+7. The frontend will be available at `http://localhost:4200`
+8. The backend will be available at `http://localhost:8989`
 
 ## Build electron app
 
@@ -38,12 +43,18 @@ layout: default
 3. Build the electron app `npm run package`
 4. The application is now in the `out` folder e.g. `out/looksyk-linux-x64/looksyk`
 
-
 ## Contribution Guidelines
+
+Contributions are welcome! Here are the steps to contribute:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-branch`).
 3. Make your changes.
 4. Commit your changes (`git commit -am 'Add new feature'`).
 5. Push to the branch (`git push origin feature-branch`).
-6. Create a new Pull Request.
+6. Create a new Pull Request.6. Create a new Pull Request into the `dev` branch.
+
+
+## Troubleshooting
+
+- see [Install + Run](installation.md)

@@ -7,13 +7,13 @@ mat-sidenav-container {
 }
 
 mat-sidenav-content {
-  padding: 5ex;
+  padding: 4ex 5ex 5ex;
   display: flex;
 }
 
 mat-sidenav {
-  padding-right: 1ex;
   width: 30ex;
+  max-width: 30ex;
 }
 
 
@@ -46,3 +46,4 @@ app-sidebar {
 .menu-trigger-text {
   padding-bottom: 0.4ex;
 }
+

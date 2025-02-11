@@ -23,7 +23,7 @@
 <mat-divider></mat-divider>
 
 <div class="menu-button-list" *ngIf="favs$ | async as favs" cdkDropList (cdkDropListDropped)="drop($event)">
-  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" cdkDrag>
+  <button *ngFor="let fav of favs" mat-button [routerLink]="'/page/'+encodeURIComponent(fav)"  class="nav-fav" cdkDrag>
     <mat-icon>star</mat-icon>
     {{ fav }}
   </button>
