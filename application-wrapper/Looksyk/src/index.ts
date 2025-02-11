@@ -40,10 +40,10 @@ const args: Options = parse<Options>(argumentConfig, {argv: process.argv.slice(1
 console.log("args", args);
 const port: number = args.port ? args.port : 8989;
 
-
 const apiServerCmd = './looksyk';
 const apiServerArgs: string[] = optionsToArgs(args);
 const pwd = process.env["PWD"];
+const defaultZoomLevel = -0.6;
 console.log("apiServerArgs", apiServerArgs)
 console.log("pwd", pwd)
 
@@ -71,7 +71,6 @@ function pollServer() {
     }).catch(() => {
         setTimeout(() => pollServer(), 100)
     });
-
 }
 
 
@@ -117,6 +116,12 @@ const createWindow = async (): Promise<void> => {
         mainWindow.webContents.openDevTools();
     }
 
+    console.log("Starting with zoom level ", mainWindow.webContents.getZoomLevel())
+    if (mainWindow.webContents.getZoomLevel() == 0){
+        console.log("Setting zoom level to default zoom level", defaultZoomLevel)
+        mainWindow.webContents.setZoomLevel(defaultZoomLevel)
+    }
+
     globalShortcut.register('Alt+Left', () => {
         mainWindow.webContents.navigationHistory.goBack();
     });
@@ -127,7 +132,7 @@ const createWindow = async (): Promise<void> => {
         mainWindow.webContents.reload();
     });
     globalShortcut.register('Ctrl+0', () => {
-        mainWindow.webContents.setZoomLevel(1);
+        mainWindow.webContents.setZoomLevel(defaultZoomLevel);
     });
     globalShortcut.register('Ctrl+Plus', () => {
         mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() + 0.1);
@@ -139,6 +144,7 @@ const createWindow = async (): Promise<void> => {
         mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() + 0.1);
     });
     globalShortcut.register('Ctrl+-', () => {
+        console.log("Zooming out", mainWindow.webContents.getZoomLevel())
         mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() - 0.1);
     });
 };

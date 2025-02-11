@@ -1,1 +1,1 @@
-magick  -delay 300 animation_01.png animation_02.png animation_03.png animation_04.png animation_05.png animation_06.png animation_07.png animation_08.png animation_09.png animation_10.png animation_11.png animation_12.png animation_13.png animation_14.png intro_animation.gif
+magick  -delay 300 *.png intro_animation.gif

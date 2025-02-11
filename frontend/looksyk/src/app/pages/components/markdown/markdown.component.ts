@@ -128,7 +128,8 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   keyboadActionTrigger_ = this.userInteraction.openMarkdown$.pipe(filter(() => this.editable)).subscribe(openMarkdown => {
     if (openMarkdown.target.blockTarget == this.markdown.indentification) {
       this.openEditor();
-      this.markdownRef.nativeElement.scrollIntoView({behavior: 'smooth'});
+      this.markdownRef.nativeElement.scrollIntoView({behavior: 'smooth', block:'nearest'});
+
     } else {
       firstValueFrom(this.componentMode).then(
         state => {

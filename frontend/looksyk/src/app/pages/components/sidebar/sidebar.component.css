@@ -43,3 +43,7 @@ mat-divider {
   color: grey !important;
   font-size: x-small;
 }
+
+.nav-fav{
+  padding-right: 0.5ex;
+}

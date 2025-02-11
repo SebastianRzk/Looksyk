@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.3.3](#v133-2025-02-11)
 - [v1.3.2](#v132-2025-01-28)
 - [v1.3.1](#v131-2025-01-27)
 - [v1.3.0](#v130-2025-01-22)
@@ -16,7 +17,7 @@ layout: default
 
 ### Further Reading
 
-- [Overview](index.md)
+- [Overview](index.md)y
 - [idea and technical concept](idea_and_technical_concept.md)
 - [Install + Run](installation.md)
 - [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
@@ -24,6 +25,17 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.3.3 (2025-02-11)
+
+Enhancements:
+
+* Security updates (dependencies)
+
+Bugfixes:
+
+* Fix scolling out of bounds on "open markdown"
+* Fix horizontal scrolling in sidebar
+* Fix "hide sidebar" button-position on initial paint
 
 ### v1.3.2 (2025-01-28)
 

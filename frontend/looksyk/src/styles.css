@@ -4,6 +4,9 @@ html, body {
   scroll-behavior: smooth;
   font-family: 'EB Garamond';
   font-size: large;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--primary-shading);
 }
 
 body {
@@ -55,6 +58,10 @@ tr:hover, th:hover, td:hover {
   background-color: var(--background-color) !important;
 }
 
+.mat-drawer-inner-container {
+  overflow-x: hidden !important;
+}
+
 .mat-drawer {
   background-color: var(--primary-shading) !important;
 }
@@ -75,6 +82,10 @@ iframe {
 
 h1 > a {
   text-decoration: none;
+}
+
+h1 {
+  margin-top: 0.5ex;
 }
 
 [contenteditable] {
