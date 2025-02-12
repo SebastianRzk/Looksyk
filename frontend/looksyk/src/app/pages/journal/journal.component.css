@@ -4,13 +4,14 @@
 }
 
 .journal-viewport {
-  height: 80%;
+  height: 84%;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--primary-shading);
 }
 
 .headline{
+  margin-left: 2ex;
   display: flex;
   flex-direction: row;
   align-items: baseline;
