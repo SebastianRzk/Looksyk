@@ -33,7 +33,7 @@ app-sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 10;
   padding: 0;
   margin: 0;
   font-size: xx-large;

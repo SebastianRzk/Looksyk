@@ -17,13 +17,24 @@ layout: default
 
 ### Further Reading
 
-- [Overview](index.md)y
+- [Overview](index.md)
 - [idea and technical concept](idea_and_technical_concept.md)
 - [Install + Run](installation.md)
 - [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.3.4 (2025-02-12)
+
+Enhancements:
+
+* Reduce whitespace in journal-view
+
+Bugfixes:
+
+* Fix z-index on hide sidebar button
 
 ### v1.3.3 (2025-02-11)
 
