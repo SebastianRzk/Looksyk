@@ -7,7 +7,7 @@ a {
   color: #0c884c;
 }
 
-.wrapper, .wrapper>* {
+.wrapper, .wrapper > * {
   max-width: 1100px;
   width: 90%;
   min-width: 400px;
@@ -19,6 +19,19 @@ body {
 }
 
 header {
-    background: #355473;
-    color: white;
+  background: #355473;
+  color: white;
+}
+
+h2 {
+  margin-top: 6ex;
+}
+
+h3 {
+  margin-top: 4ex;
+}
+
+h4 {
+  margin-top: 4ex;
+  font-size: larger;
 }
