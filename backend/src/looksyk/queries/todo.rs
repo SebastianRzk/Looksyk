@@ -2,14 +2,15 @@ use std::collections::HashMap;
 use std::io::{Error, ErrorKind};
 
 use crate::looksyk::builder::page_name;
-use crate::looksyk::model::{MarkdownReference, QueryRenderResult, ReferencedMarkdown};
+use crate::looksyk::model::{QueryRenderResult, ReferencedMarkdown};
 use crate::looksyk::queries::args::{
-    parse_display_type_for_lists, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-    PARAM_STATE, PARAM_TAG,
+    parse_display_type, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_STATE,
+    PARAM_TAG,
 };
-use crate::looksyk::queries::unknown::render_display_unknown;
+use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::{render_block_flat_as_string, render_link};
+use crate::state::block::BlockReference;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
 pub const QUERY_NAME_TODOS: &str = "todos";
@@ -24,7 +25,7 @@ pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
         .trim();
     let query_root_opt = parse_property(query_content, PARAM_TAG)?;
     let query_state_opt = parse_property(query_root_opt.remaining_text.as_str(), PARAM_STATE)?;
-    let display_type1 = parse_display_type_for_lists(query_state_opt.remaining_text.clone())?;
+    let display_type1 = parse_display_type(query_state_opt.remaining_text.clone())?;
 
     let mut args1 = HashMap::new();
     args1.insert(PARAM_TAG.to_string(), query_root_opt.value);
@@ -82,9 +83,9 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
             .iter()
             .map(|x| ReferencedMarkdown {
                 content: x.block.clone(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     page_id: x.source.page_id.clone(),
-                    block_number: x.source.blocknumber,
+                    block_number: x.source.block_number,
                 },
             })
             .collect(),

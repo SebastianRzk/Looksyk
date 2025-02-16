@@ -8,11 +8,12 @@ use crate::io::http::page::dtos::UpdateBlockContentDto;
 use crate::io::http::page::mapper::{map_markdown_block_dto, map_to_block_dto};
 use crate::io::http::page_type::get_page_id_from_external_string;
 use crate::looksyk::index::index::update_index_for_file;
-use crate::looksyk::model::{MarkdownReference, PageType, RawBlock, RawMarkdownFile};
+use crate::looksyk::model::{PageType, RawBlock, RawMarkdownFile};
 use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::looksyk::serializer::update_and_serialize_page;
+use crate::state::block::BlockReference;
 use crate::state::state::{AppState, CurrentPageAssociatedState};
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
@@ -26,7 +27,7 @@ async fn update_block(
     let page_id = get_page_id_from_external_string(&file_id);
     let entity = map_markdown_block_dto(
         &request_body,
-        MarkdownReference {
+        BlockReference {
             block_number,
             page_id: page_id.clone(),
         },
@@ -88,6 +89,7 @@ async fn update_block(
         &parsed_block,
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_guard,
             tag_index: &tag_guard,
         },

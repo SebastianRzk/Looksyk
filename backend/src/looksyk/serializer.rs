@@ -113,10 +113,10 @@ mod tests {
     use crate::looksyk::builder::builder::any_page_id;
     use crate::looksyk::builder::{journal_link_token, text_token_str};
     use crate::looksyk::model::{
-        BlockContent, BlockToken, BlockTokenType, MarkdownReference, ParsedBlock,
-        ParsedMarkdownFile, UpdateBlock,
+        BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock,
     };
     use crate::looksyk::serializer::{serialize_block_token, update_and_serialize_page};
+    use crate::state::block::BlockReference;
 
     #[test]
     fn should_serialize_text() {
@@ -167,7 +167,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "this is a new content".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 1,
                     page_id: any_page_id(),
                 },
@@ -188,7 +188,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "this is a new content\nwith line 2".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 0,
                     page_id: any_page_id(),
                 },
@@ -217,7 +217,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "this is a new content".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 0,
                     page_id: any_page_id(),
                 },
@@ -251,7 +251,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "this is a new content".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 0,
                     page_id: any_page_id(),
                 },
@@ -287,7 +287,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "this is a new\n-content".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 0,
                     page_id: any_page_id(),
                 },
@@ -328,7 +328,7 @@ mod tests {
         let result = update_and_serialize_page(
             &UpdateBlock {
                 markdown: "update\n".to_string(),
-                reference: MarkdownReference {
+                reference: BlockReference {
                     block_number: 0,
                     page_id: any_page_id(),
                 },

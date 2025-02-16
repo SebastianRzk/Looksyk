@@ -57,4 +57,4 @@ Contributions are welcome! Here are the steps to contribute:
 
 ## Troubleshooting
 
-- see [Install + Run](installation.md)
+- see FAQ [Install + Run](installation.md)

@@ -10,21 +10,22 @@ layout: default
 
 - [Configuration](#configuration)
 - [Usage](#usage)
-  - [Data Storage](#data-storage)
-  - [Design](#design)
-    - [Dark Mode (default)](#dark-mode-default)
-    - [Light Mode / Solarized Light](#light-mode--solarized-light)
-    - [Extra Dark Mode](#extra-dark-mode)
-  - [Markdown Syntax and Features](#markdown-syntax-and-features)
-  - [Page names and hierarchy](#page-names-and-hierarchy)
-  - [Favorites](#favorites)
-  - [Code](#code)
-  - [Todos](#todos)
-  - [Queries](#queries)
-	- [Query Page Hierarchy](#query-page-hierarchy)
-	- [Query Todos](#query-todos)
-	- [Query Backlinks](#query-backlinks)
-	- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
+	- [Data Storage](#data-storage)
+	- [Design](#design)
+		- [Dark Mode (default)](#dark-mode-default)
+		- [Light Mode / Solarized Light](#light-mode--solarized-light)
+		- [Extra Dark Mode](#extra-dark-mode)
+	- [Markdown Syntax and Features](#markdown-syntax-and-features)
+	- [Page names and hierarchy](#page-names-and-hierarchy)
+	- [Favorites](#favorites)
+	- [Code](#code)
+	- [Todos](#todos)
+	- [Queries](#queries)
+		- [Query Page Hierarchy](#query-page-hierarchy)
+		- [Query Todos](#query-todos)
+		- [Query Backlinks](#query-backlinks)
+		- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
+        - [Query Blocks](#query-blocks)
 - [History](#history)
 
 ### Further Reading
@@ -37,7 +38,6 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
-
 ## Configuration
 
 The configuration is done in the `config.json` file in the directory `~/.local/share/looksyk`. This path can be changed
@@ -48,7 +48,6 @@ The default graph location is in `~/graph` (or the configured location in the `c
 The application port and the graph location can be provided by arguments ( `--port` and `--graph-location`).
 
 The application title can be modified with the argument `--title`.
-
 
 ## Usage
 
@@ -312,6 +311,42 @@ Display-types:
  Insert an audio file
  {query: insert-file-content target-file:"myFile.ogg" display:"audio" }
 ```
+
+#### Query Blocks
+
+* Inserts a blocks, that contain a certain tag
+
+* **paragraphs**
+	* Creates a section for every block in the markdown. The filename and block-index is rendered as headline (and
+	  link), the content of the block is rendered as paragraph. Paragraphs are separated by a horizontal line. Good for
+	  multi-line blocks
+	* Query
+
+	  ![paragraphs](queries/blocks/paragraphs-query.png)
+	* Result
+
+	  ![paragraphs](queries/blocks/paragraphs-result.png)
+* **inplace-list**
+
+	* Creates a list of the selected blocks in the markdown-block. Each item is prefixed with a list-icon. Best suited
+	  for single-line blocks.
+  * Query
+  		
+      ![inplace-list](queries/blocks/inplace-list-query.png)
+
+  * Result
+  		
+	  ![inplace-list](queries/blocks/inplace-list-result.png)
+
+* **referenced-list**
+	* Creates a list of the selected blocks at the end of the current block. Each item contains a link to
+	  the source file. Different query-results can be stacked. Good for multi-line blocks
+	* Query
+
+	  ![referenced-list](queries/blocks/referenced-list-query.png)
+	* Result
+
+	  ![referenced-list](queries/blocks/referenced-list-result.png)
 
 ### History
 

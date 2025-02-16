@@ -60,6 +60,8 @@ own client: Looksyk (name may need to be changed).
 	* Save and display backups of websites in your pages (with single-file-downloader)
 	* Insert videos, audio files, images, text files and PDFs.
 
+[Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage.html)
+
 ### Implemented Features
 
 * Pages
@@ -86,6 +88,10 @@ own client: Looksyk (name may need to be changed).
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
 * History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
+
+Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
+
+How can you get the most out of Looksyk with these features? Learn more in the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage.html) .
 
 ### Out of scope
 

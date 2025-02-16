@@ -48,6 +48,7 @@ async fn get_journal(
             parsed_page,
             &StaticRenderContext {
                 user_pages: &page_guard,
+                journal_pages: &journal_guard,
                 todo_index: &todo_index_guard,
                 tag_index: &data.d_tag_index.lock().unwrap(),
             },
@@ -61,6 +62,7 @@ async fn get_journal(
         &generate_page_not_found(),
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_index_guard,
             tag_index: &data.d_tag_index.lock().unwrap(),
         },
@@ -128,6 +130,7 @@ async fn update_journal(
         &updated_page,
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_guard,
             tag_index: &tag_guard,
         },

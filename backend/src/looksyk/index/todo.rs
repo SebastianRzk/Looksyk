@@ -1,7 +1,8 @@
 use crate::looksyk::index::hierachy::HierarchyParser;
 use crate::looksyk::model::{BlockTokenType, PageId, ParsedMarkdownFile, SimplePageName};
+use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
-use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoSourceReference, TodoState};
+use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 use crate::state::userpage::UserPageIndex;
 
 pub fn create_todo_index(
@@ -48,9 +49,9 @@ pub fn create_todo_index_file(
                 if first_token.block_token_type == BlockTokenType::TODO {
                     result.push(TodoIndexEntry {
                         block: block.clone(),
-                        source: TodoSourceReference {
+                        source: BlockReference {
                             page_id: page_id.clone(),
-                            blocknumber,
+                            block_number: blocknumber,
                         },
                         state: state_from_payload(&first_token.payload),
                         tags: hierarchy_index.get_current_tag_set(),
@@ -87,7 +88,8 @@ mod tests {
     use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{BlockContent, ParsedBlock, ParsedMarkdownFile};
-    use crate::state::todo::{TodoSourceReference, TodoState};
+    use crate::state::block::BlockReference;
+    use crate::state::todo::TodoState;
     use crate::state::userpage::UserPageIndex;
     use std::collections::HashMap;
 
@@ -143,9 +145,9 @@ mod tests {
         assert_eq!(entry.state, TodoState::Todo);
         assert_eq!(
             entry.source,
-            TodoSourceReference {
+            BlockReference {
                 page_id: user_page_id("testfile"),
-                blocknumber: 0,
+                block_number: 0,
             }
         )
     }
@@ -179,9 +181,9 @@ mod tests {
         assert_eq!(entry.state, TodoState::Done);
         assert_eq!(
             entry.source,
-            TodoSourceReference {
+            BlockReference {
                 page_id: user_page_id("testfile"),
-                blocknumber: 0,
+                block_number: 0,
             }
         )
     }

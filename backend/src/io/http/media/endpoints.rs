@@ -116,6 +116,7 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
     let file_sizes = read_file_sizes(&data.data_path);
 
     let user_page_guard = data.a_user_pages.lock().unwrap();
+    let journal_page_guard = data.b_journal_pages.lock().unwrap();
     let todo_guard = data.c_todo_index.lock().unwrap();
     let tag_index_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache_guard = data.e_asset_cache.lock().unwrap();
@@ -125,6 +126,7 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
 
     let render_context = StaticRenderContext {
         user_pages: &user_page_guard,
+        journal_pages: &journal_page_guard,
         todo_index: &todo_guard,
         tag_index: &tag_index_guard,
     };

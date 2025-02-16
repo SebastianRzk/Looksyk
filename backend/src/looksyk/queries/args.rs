@@ -6,6 +6,7 @@ pub const PARAM_DISPLAY: &str = "display";
 pub const PARAM_DISPLAY_INPLACE_LIST: &str = "inplace-list";
 pub const PARAM_DISPLAY_REFERENCED_LIST: &str = "referenced-list";
 pub const PARAM_DISPLAY_COUNT: &str = "count";
+pub const PARAM_DISPLAY_PARAGRAPH: &str = "paragraphs";
 pub const PARAM_DISPLAY_CODE_BLOCK: &str = "code-block";
 pub const PARAM_DISPLAY_INLINE_TEXT: &str = "inline-text";
 pub const PARAM_DISPLAY_VIDEO: &str = "video";
@@ -51,19 +52,13 @@ pub fn parse_property(
     })
 }
 
-pub fn parse_display_type_for_lists(input_string: String) -> Result<QueryDisplayType, Error> {
+pub fn parse_display_type(input_string: String) -> Result<QueryDisplayType, Error> {
     let opt = parse_property(input_string.as_str(), PARAM_DISPLAY);
     match opt?.value.as_str() {
         PARAM_DISPLAY_INPLACE_LIST => Ok(QueryDisplayType::InplaceList),
         PARAM_DISPLAY_REFERENCED_LIST => Ok(QueryDisplayType::ReferencedList),
         PARAM_DISPLAY_COUNT => Ok(QueryDisplayType::Count),
-        _ => Ok(QueryDisplayType::Unknown),
-    }
-}
-
-pub fn parse_display_type_for_inplace(input_string: String) -> Result<QueryDisplayType, Error> {
-    let opt = parse_property(input_string.as_str(), PARAM_DISPLAY);
-    match opt?.value.as_str() {
+        PARAM_DISPLAY_PARAGRAPH => Ok(QueryDisplayType::Paragraphs),
         PARAM_DISPLAY_CODE_BLOCK => Ok(QueryDisplayType::CodeBlock),
         PARAM_DISPLAY_INLINE_TEXT => Ok(QueryDisplayType::InlineText),
         PARAM_DISPLAY_VIDEO => Ok(QueryDisplayType::Video),

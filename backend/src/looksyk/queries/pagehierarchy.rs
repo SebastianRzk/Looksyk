@@ -3,9 +3,10 @@ use std::io::{Error, ErrorKind};
 
 use crate::looksyk::model::{QueryRenderResult, SimplePageName};
 use crate::looksyk::queries::args::{
-    parse_display_type_for_lists, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_ROOT,
+    parse_display_type, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_ROOT,
 };
-use crate::looksyk::queries::unknown::render_display_unknown;
+use crate::looksyk::queries::basic::count::render_as_count;
+use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::render_user_link;
 use crate::state::userpage::UserPageIndex;
@@ -21,7 +22,7 @@ pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
         ))?
         .trim();
     let query_root_opt = parse_property(query_content, PARAM_ROOT)?;
-    let display_type = parse_display_type_for_lists(query_root_opt.remaining_text.clone())?;
+    let display_type = parse_display_type(query_root_opt.remaining_text.clone())?;
 
     let mut args = HashMap::new();
     args.insert("root".to_string(), query_root_opt.value);
@@ -41,7 +42,7 @@ pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderR
 
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(root, result),
-        QueryDisplayType::Count => render_as_count(result),
+        QueryDisplayType::Count => render_as_count(&result),
         _ => render_display_unknown(
             query.display,
             vec![QueryDisplayType::InplaceList, QueryDisplayType::Count],
@@ -61,14 +62,6 @@ fn filter_pages_by_root<'a>(
         }
     }
     result
-}
-
-pub fn render_as_count(selected_pages: Vec<&SimplePageName>) -> QueryRenderResult {
-    QueryRenderResult {
-        referenced_markdown: vec![],
-        inplace_markdown: selected_pages.len().to_string(),
-        has_dynamic_content: false,
-    }
 }
 
 pub fn render_as_list(

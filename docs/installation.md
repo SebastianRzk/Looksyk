@@ -45,3 +45,7 @@ you can run the application with the arguments `--port`, `--graph-location` and 
 - [electron forge](https://www.electronforge.io/) is used to build the application-wrapper. Sometimes it has
   incompatibilities with the current up-to-date node version. If you encounter problems, try to downgrade your node to
   an older minor-version.
+
+Are you having problems installing or setting up? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues)!
+
+Or would you like to improve the documentation or provide alternative installation methods? Make a [pull request](development_and_contribution.md).

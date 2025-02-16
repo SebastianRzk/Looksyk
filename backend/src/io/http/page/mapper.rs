@@ -5,9 +5,10 @@ use crate::io::http::page::dtos::{
 };
 use crate::io::http::page_type::page_id_to_external_string;
 use crate::looksyk::model::{
-    MarkdownReference, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown,
-    RawBlock, UpdateBlock, UpdateMarkdownFile,
+    PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock,
+    UpdateBlock, UpdateMarkdownFile,
 };
+use crate::state::block::BlockReference;
 
 pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
     PreparedBlockDto {
@@ -40,7 +41,7 @@ pub fn map_to_prepared_reference_to(
     }
 }
 
-pub fn map_markdown_reference_to_dto(reference: &MarkdownReference) -> MarkdownReferenceDto {
+pub fn map_markdown_reference_to_dto(reference: &BlockReference) -> MarkdownReferenceDto {
     MarkdownReferenceDto {
         file_id: page_id_to_external_string(&reference.page_id),
         file_name: reference.page_id.name.name.clone(),
@@ -49,7 +50,7 @@ pub fn map_markdown_reference_to_dto(reference: &MarkdownReference) -> MarkdownR
     }
 }
 
-pub fn from_markdown_reference_to_link(markdown_reference: &MarkdownReference) -> String {
+pub fn from_markdown_reference_to_link(markdown_reference: &BlockReference) -> String {
     match markdown_reference.page_id.page_type {
         PageType::UserPage => {
             format!(
@@ -94,7 +95,7 @@ pub fn map_from_update_markdown_dto(
 
 pub fn map_markdown_block_dto(
     update_block_dto: &UpdateBlockContentDto,
-    reference: MarkdownReference,
+    reference: BlockReference,
 ) -> UpdateBlock {
     UpdateBlock {
         markdown: update_block_dto.markdown.clone(),
@@ -106,11 +107,11 @@ pub fn map_markdown_block_dto(
 mod tests {
     use crate::io::http::page::mapper::from_markdown_reference_to_link;
     use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
-    use crate::looksyk::model::MarkdownReference;
+    use crate::state::block::BlockReference;
 
     #[test]
     fn test_map_markdown_file_to_dto_journal() {
-        let markdown_reference = MarkdownReference {
+        let markdown_reference = BlockReference {
             page_id: journal_page_id("my-journal"),
             block_number: 0,
         };
@@ -121,7 +122,7 @@ mod tests {
     }
     #[test]
     fn test_map_markdown_file_to_dto_user_page() {
-        let markdown_reference = MarkdownReference {
+        let markdown_reference = BlockReference {
             page_id: user_page_id("my-page"),
             block_number: 0,
         };

@@ -5,6 +5,8 @@ layout: default
 
 ## Table of Contents
 
+- [v1.4.0](#v140-2025-02-16)
+- [v1.3.4](#v134-2025-02-12)
 - [v1.3.3](#v133-2025-02-11)
 - [v1.3.2](#v132-2025-01-28)
 - [v1.3.1](#v131-2025-01-27)
@@ -24,6 +26,15 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.4.0 (2025-02-16)
+
+Enhancements:
+
+* Add block-query
+* Insert filename in content assist input on select file
+
+Bugfixes:
 
 
 ### v1.3.4 (2025-02-12)

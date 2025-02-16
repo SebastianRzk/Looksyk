@@ -72,6 +72,7 @@ async fn update_page(
         &updated_page,
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_guard,
             tag_index: &tag_guard,
         },
@@ -96,6 +97,7 @@ async fn get_page(
     let simple_page_name = page_name(page_name_from_input);
 
     let page_guard = data.a_user_pages.lock().unwrap();
+    let journal_guard = data.b_journal_pages.lock().unwrap();
     let todo_index_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
@@ -110,6 +112,7 @@ async fn get_page(
             parsed_page,
             &StaticRenderContext {
                 user_pages: &page_guard,
+                journal_pages: &journal_guard,
                 todo_index: &todo_index_guard,
                 tag_index: &tag_guard,
             },
@@ -122,6 +125,7 @@ async fn get_page(
         &generate_page_not_found(),
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,
         },
@@ -145,6 +149,7 @@ async fn get_backlinks(
     let simple_page_name = page_name(input_page_name.into_inner());
 
     let page_guard = data.a_user_pages.lock().unwrap();
+    let journal_guard = data.b_journal_pages.lock().unwrap();
     let todo_index_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache_guard = data.e_asset_cache.lock().unwrap();
@@ -157,6 +162,7 @@ async fn get_backlinks(
         &result,
         &StaticRenderContext {
             user_pages: &page_guard,
+            journal_pages: &journal_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,
         },
@@ -175,6 +181,7 @@ async fn get_backlinks(
 #[get("/api/builtin-pages/user-page-overview")]
 async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let user_page_guard = data.a_user_pages.lock().unwrap();
+    let journal_page_guard = data.b_journal_pages.lock().unwrap();
     let todo_guard = data.c_todo_index.lock().unwrap();
     let tag_index_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
@@ -185,6 +192,7 @@ async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Respo
         &overview_page,
         &StaticRenderContext {
             user_pages: &user_page_guard,
+            journal_pages: &journal_page_guard,
             todo_index: &todo_guard,
             tag_index: &tag_index_guard,
         },
