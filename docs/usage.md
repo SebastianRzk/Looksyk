@@ -347,6 +347,8 @@ Display-types:
 	* Result
 
 	  ![referenced-list](queries/blocks/referenced-list-result.png)
+* **count**
+	* Creates a number of the selected blocks in the markdown-block.
 
 ### History
 
