@@ -3,10 +3,9 @@ use std::io::{Error, ErrorKind};
 
 use crate::looksyk::model::{PageId, QueryRenderResult, SimplePageName};
 use crate::looksyk::queries::args::{
-    parse_display_type_for_lists, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-    PARAM_TARGET,
+    parse_display_type, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET,
 };
-use crate::looksyk::queries::unknown::render_display_unknown;
+use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::{render_link_by_id, render_user_link};
 use crate::state::tag::TagIndex;
@@ -23,7 +22,7 @@ pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
         .trim();
     let query_target_opt = parse_property(query_content, PARAM_TARGET)?;
 
-    let display_type = parse_display_type_for_lists(query_target_opt.remaining_text.clone())?;
+    let display_type = parse_display_type(query_target_opt.remaining_text.clone())?;
 
     let mut args1 = HashMap::new();
     args1.insert(PARAM_TARGET.to_string(), query_target_opt.value);

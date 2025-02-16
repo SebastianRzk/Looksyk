@@ -1,4 +1,5 @@
-use crate::looksyk::model::{MarkdownReference, PageType, ParsedMarkdownFile, SimplePageName};
+use crate::looksyk::model::{PageType, ParsedMarkdownFile, SimplePageName};
+use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
 use crate::state::userpage::UserPageIndex;
 use std::collections::HashMap;
@@ -13,7 +14,7 @@ pub struct SearchResult {
 }
 
 pub struct SearchFinding {
-    pub reference: MarkdownReference,
+    pub reference: BlockReference,
     pub text_line: String,
 }
 
@@ -45,7 +46,7 @@ fn search_in_index(
             for block_content in &block.content {
                 if block_content.as_text.contains(&search_term.as_string) {
                     result.push(SearchFinding {
-                        reference: MarkdownReference {
+                        reference: BlockReference {
                             page_id: simple_page_name.as_page_id(&page_type),
                             block_number,
                         },

@@ -1,8 +1,8 @@
 use crate::io::http::page::search::dtos::{
     SearchFindingDto, SearchReferenceDto, SearchResultDto, SearchTermDto,
 };
-use crate::looksyk::model::MarkdownReference;
 use crate::looksyk::search::{SearchFinding, SearchResult, SearchTerm};
+use crate::state::block::BlockReference;
 
 pub fn search_result_to_dto(search_result: SearchResult) -> SearchResultDto {
     SearchResultDto {
@@ -26,7 +26,7 @@ fn search_finding_to_dto(search_finding: &SearchFinding) -> SearchFindingDto {
     }
 }
 
-fn to_search_reference(markdown_reference: &MarkdownReference) -> SearchReferenceDto {
+fn to_search_reference(markdown_reference: &BlockReference) -> SearchReferenceDto {
     SearchReferenceDto {
         file_name: markdown_reference.page_id.name.name.clone(),
         block_number: markdown_reference.block_number,
@@ -43,13 +43,13 @@ pub fn to_search_term(search_term_dto: SearchTermDto) -> SearchTerm {
 mod tests {
     use crate::io::http::page::search::mapper::{search_finding_to_dto, search_result_to_dto};
     use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
-    use crate::looksyk::model::MarkdownReference;
     use crate::looksyk::search::{SearchFinding, SearchResult};
+    use crate::state::block::BlockReference;
 
     #[test]
     fn test_search_finding_to_dto() {
         let search_finding = SearchFinding {
-            reference: MarkdownReference {
+            reference: BlockReference {
                 page_id: journal_page_id("page_id"),
                 block_number: 0,
             },
@@ -66,14 +66,14 @@ mod tests {
     fn test_search_result_to_dto() {
         let search_result = SearchResult {
             journal: vec![SearchFinding {
-                reference: MarkdownReference {
+                reference: BlockReference {
                     page_id: journal_page_id("page_id"),
                     block_number: 0,
                 },
                 text_line: "text_line".to_string(),
             }],
             page: vec![SearchFinding {
-                reference: MarkdownReference {
+                reference: BlockReference {
                     page_id: user_page_id("page_id"),
                     block_number: 0,
                 },

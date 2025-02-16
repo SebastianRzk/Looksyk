@@ -19,6 +19,7 @@ async fn parse(
     let parsed_block = parse_block(&raw_block);
 
     let user_page_guard = data.a_user_pages.lock().unwrap();
+    let journal_page_guard = data.b_journal_pages.lock().unwrap();
     let todo_index_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_guard = data.e_asset_cache.lock().unwrap();
@@ -26,6 +27,7 @@ async fn parse(
     let serialized_block = render_block(
         &parsed_block,
         &StaticRenderContext {
+            journal_pages: &journal_page_guard,
             user_pages: &user_page_guard,
             todo_index: &todo_index_guard,
             tag_index: &tag_guard,

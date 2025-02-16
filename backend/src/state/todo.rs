@@ -1,4 +1,5 @@
-use crate::looksyk::model::{PageId, ParsedBlock, SimplePageName};
+use crate::looksyk::model::{ParsedBlock, SimplePageName};
+use crate::state::block::BlockReference;
 
 #[derive(Clone)]
 pub struct TodoIndex {
@@ -8,15 +9,9 @@ pub struct TodoIndex {
 #[derive(Clone)]
 pub struct TodoIndexEntry {
     pub state: TodoState,
-    pub source: TodoSourceReference,
+    pub source: BlockReference,
     pub block: ParsedBlock,
     pub tags: Vec<SimplePageName>,
-}
-
-#[derive(PartialEq, Eq, Debug, Clone)]
-pub struct TodoSourceReference {
-    pub page_id: PageId,
-    pub blocknumber: usize,
 }
 
 #[derive(Clone, PartialEq, Debug)]

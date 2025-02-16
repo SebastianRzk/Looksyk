@@ -119,7 +119,6 @@ export class ContentAssistService {
     this.resetCursor();
   }
 
-
   public resetCursor(){
     this.cursorInContentAssist.next(0);
   }
@@ -136,7 +135,9 @@ export class ContentAssistService {
     return event.key == 'Escape' && this.stateRaw;
   }
 
-
+  overwriteText(text: string) {
+    this.textInContentAssist.next(text);
+  }
 }
 
 export enum KeypressResult {

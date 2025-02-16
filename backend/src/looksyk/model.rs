@@ -1,4 +1,6 @@
+use crate::state::block::BlockReference;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 
@@ -12,6 +14,17 @@ pub struct RawBlock {
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
+}
+
+impl ParsedBlock {
+    pub fn contains_reference(&self, reference: &SimplePageName) -> bool {
+        self.content.iter().any(|block_content| {
+            block_content.as_tokens.iter().any(|block_token| {
+                block_token.block_token_type == BlockTokenType::LINK
+                    && block_token.payload == reference.name
+            })
+        })
+    }
 }
 
 #[cfg(test)]
@@ -95,7 +108,7 @@ impl Display for RawMarkdownFile {
 
 pub struct UpdateBlock {
     pub markdown: String,
-    pub reference: MarkdownReference,
+    pub reference: BlockReference,
 }
 
 pub struct UpdateMarkdownFile {
@@ -111,19 +124,13 @@ pub struct QueryRenderResult {
 #[derive(Clone)]
 pub struct ReferencedMarkdown {
     pub content: ParsedBlock,
-    pub reference: MarkdownReference,
-}
-
-#[derive(Clone)]
-pub struct MarkdownReference {
-    pub page_id: PageId,
-    pub block_number: usize,
+    pub reference: BlockReference,
 }
 
 #[derive(Clone)]
 pub struct PreparedReferencedMarkdown {
     pub content: PreparedBlockContent,
-    pub reference: MarkdownReference,
+    pub reference: BlockReference,
 }
 
 #[derive(PartialEq, Eq, Debug, Clone)]
@@ -196,10 +203,23 @@ impl PageId {
     }
 }
 
+impl PartialOrd<Self> for PageId {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for PageId {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.name.name.cmp(&other.name.name)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::page_name_str;
-    use crate::looksyk::model::{PageId, PageType};
+    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
+    use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock};
 
     #[test]
     fn test_journal_page_id_should_be_a_journal_page() {
@@ -228,5 +248,77 @@ mod tests {
     fn test_as_user_page_id_should_be_user_page_id() {
         let page_id = page_name_str("my-page").as_user_page();
         assert_eq!(page_id.page_type, PageType::UserPage);
+    }
+
+    #[test]
+    fn test_as_page_id_should_be_page_id() {
+        let page_id = page_name_str("my-page").as_page_id(&PageType::UserPage);
+        assert_eq!(page_id.page_type, PageType::UserPage);
+    }
+
+    #[test]
+    fn test_page_id_should_be_equal() {
+        let page_id1 = user_page_id("my-page");
+        let page_id2 = user_page_id("my-page");
+        assert_eq!(page_id1, page_id2);
+    }
+
+    #[test]
+    fn test_page_id_should_not_be_equal() {
+        let page_id1 = user_page_id("my-page");
+        let page_id2 = user_page_id("my-page2");
+        assert_ne!(page_id1, page_id2);
+    }
+
+    #[test]
+    fn test_page_id_sort_should_work() {
+        let page_id1 = user_page_id("my-page");
+        let page_id2 = user_page_id("my-page2");
+        let page_id3 = user_page_id("my-page3");
+        let mut vec = vec![page_id3.clone(), page_id1.clone(), page_id2.clone()];
+        vec.sort();
+        assert_eq!(vec, vec![page_id1, page_id2, page_id3]);
+    }
+
+    #[test]
+    fn test_parsed_block_contains_reference_with_empty_block_return_false() {
+        let page_id = user_page_id("my-page");
+
+        let block = ParsedBlock {
+            indentation: 0,
+            content: vec![],
+        };
+
+        assert!(!block.contains_reference(&page_id.name));
+    }
+
+    #[test]
+    fn test_parsed_block_contains_reference_with_block_without_link_return_false() {
+        let page_id = user_page_id("my-page");
+
+        let block = ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: "my text".to_string(),
+                as_tokens: vec![text_token_str("my-page")],
+            }],
+        };
+
+        assert!(!block.contains_reference(&page_id.name));
+    }
+
+    #[test]
+    fn test_parsed_block_contains_reference_with_block_with_link_return_true() {
+        let page_id = user_page_id("my-page");
+
+        let block = ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: "my text".to_string(),
+                as_tokens: vec![link_token("my-page")],
+            }],
+        };
+
+        assert!(block.contains_reference(&page_id.name));
     }
 }

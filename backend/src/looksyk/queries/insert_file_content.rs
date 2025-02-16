@@ -7,10 +7,9 @@ use crate::io::http::media::config::create_media_location;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::model::QueryRenderResult;
 use crate::looksyk::queries::args::{
-    parse_display_type_for_inplace, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-    PARAM_TARGET_FILE,
+    parse_display_type, parse_property, ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX, PARAM_TARGET_FILE,
 };
-use crate::looksyk::queries::unknown::render_display_unknown;
+use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::syntax::markdown::{
     render_as_audio, render_as_code_block, render_as_link, render_as_video,
@@ -58,7 +57,7 @@ pub fn parse_query_insert_file_content(query_str: &str) -> Result<Query, Error> 
         .trim();
     let query_target_opt = parse_property(query_content, PARAM_TARGET_FILE)?;
 
-    let display_type = parse_display_type_for_inplace(query_target_opt.remaining_text.clone())?;
+    let display_type = parse_display_type(query_target_opt.remaining_text.clone())?;
 
     let mut args1 = HashMap::new();
     args1.insert(PARAM_TARGET_FILE.to_string(), query_target_opt.value);
