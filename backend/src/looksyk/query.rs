@@ -225,7 +225,7 @@ mod tests {
     #[test]
     pub fn should_parse_query() {
         let result =
-            parse_query(&"page-hierarchy root:\"parent\" display:\"inplace-list\" ".to_string())
+            parse_query("page-hierarchy root:\"parent\" display:\"inplace-list\" ")
                 .unwrap();
 
         assert_eq!(result.query_type, QueryType::PageHierarchy);
@@ -236,7 +236,7 @@ mod tests {
 
     #[test]
     pub fn should_catch_error_on_parsing_error() {
-        let result = parse_query(&"page-hierarchy asdf:\"asd\" display:\"\"\" ".to_string());
+        let result = parse_query("page-hierarchy asdf:\"asd\" display:\"\"\" ");
         assert!(result.is_err());
     }
 

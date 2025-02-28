@@ -26,7 +26,7 @@ mod tests {
 
     #[test]
     fn test_map_to_dto() {
-        let dto = super::map_to_dto(&vec![favourite_str("test1"), favourite_str("test2")]);
+        let dto = super::map_to_dto(&[favourite_str("test1"), favourite_str("test2")]);
 
         assert_eq!(dto.list.len(), 2);
         assert_eq!(dto.list[0], "test1");
