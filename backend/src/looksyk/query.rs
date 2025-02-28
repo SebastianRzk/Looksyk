@@ -225,8 +225,7 @@ mod tests {
     #[test]
     pub fn should_parse_query() {
         let result =
-            parse_query("page-hierarchy root:\"parent\" display:\"inplace-list\" ")
-                .unwrap();
+            parse_query("page-hierarchy root:\"parent\" display:\"inplace-list\" ").unwrap();
 
         assert_eq!(result.query_type, QueryType::PageHierarchy);
         assert_eq!(result.display, QueryDisplayType::InplaceList);
