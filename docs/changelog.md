@@ -38,6 +38,7 @@ Internal:
 
 * Replace `ngIf` directive with `@if`
 * Fix clippy warnings
+* Update angular
 
 ### v1.4.0 (2025-02-16)
 
@@ -90,7 +91,9 @@ Enhancements:
 * Add trigger to hide / show menu bar
 * Improve performance of content-assist filtering
 
-  Bugfixes:
+
+Bugfixes:
+
 * Change sidebar to global sidenav
 * Fix clicking on item in content-assist
 
