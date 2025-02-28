@@ -20,7 +20,7 @@ pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
 }
 
 pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &MediaIndex) {
-    let config_file_content_as_str = serde_json::to_string(&media_index.media).unwrap();
+    let config_file_content_as_str = serde_json::to_string_pretty(&media_index.media).unwrap();
     std::fs::write(
         media_config_path(&data_root_location),
         config_file_content_as_str,

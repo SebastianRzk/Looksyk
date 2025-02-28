@@ -11,7 +11,7 @@ pub fn read_config_from_file(data_path: &DataRootLocation) -> Config {
 }
 
 pub fn save_config_to_file(data_path: &DataRootLocation, config: &Config) {
-    let config_file_content_as_str = serde_json::to_string(config).unwrap();
+    let config_file_content_as_str = serde_json::to_string_pretty(config).unwrap();
     std::fs::write(config_path(data_path), config_file_content_as_str).unwrap();
 }
 
