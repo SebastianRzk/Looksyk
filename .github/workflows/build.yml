@@ -15,7 +15,6 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo test --all-features
         working-directory: ./backend
-
   backend-formatting:
     name: backend cargo fmt
     runs-on: ubuntu-latest
@@ -29,7 +28,7 @@ jobs:
         run: cargo fmt --all -- --check
         working-directory: ./backend
   backend-clippy:
-    name: backend cargo fmt
+    name: backend cargo clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
