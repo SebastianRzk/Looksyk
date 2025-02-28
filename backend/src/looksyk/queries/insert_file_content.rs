@@ -14,8 +14,8 @@ use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::syntax::markdown::{
     render_as_audio, render_as_code_block, render_as_link, render_as_video,
 };
+use crate::state::application_state::DataRootLocation;
 use crate::state::asset_cache::{AssetCache, AssetState};
-use crate::state::state::DataRootLocation;
 
 pub const QUERY_NAME_INSERT_FILE_CONTENT: &str = "insert-file-content";
 
@@ -116,7 +116,7 @@ pub fn render_code_block(
     cache: &mut AssetCache,
     data_root_location: &DataRootLocation,
 ) -> QueryRenderResult {
-    let mut cache_item = cache.get(&file_name);
+    let mut cache_item = cache.get(file_name);
     if AssetState::Miss == cache_item {
         cache_item = load_cachable_asset(file_name, data_root_location);
         cache.insert(file_name, cache_item.clone());
@@ -125,7 +125,7 @@ pub fn render_code_block(
         AssetState::Found(content) => {
             QueryRenderResult {
                 has_dynamic_content: false,
-                inplace_markdown: render_as_code_block(infer_language(&file_name), &content.content),
+                inplace_markdown: render_as_code_block(infer_language(file_name), &content.content),
                 referenced_markdown: vec![],
             }
         }
@@ -183,7 +183,7 @@ fn render_inline(
     cache: &mut AssetCache,
     data_root_location: &DataRootLocation,
 ) -> QueryRenderResult {
-    let mut cache_item = cache.get(&file_name);
+    let mut cache_item = cache.get(file_name);
     if AssetState::Miss == cache_item {
         cache_item = load_cachable_asset(file_name, data_root_location);
         cache.insert(file_name, cache_item.clone());

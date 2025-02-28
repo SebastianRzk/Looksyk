@@ -4,7 +4,7 @@ use std::path::Path;
 use crate::io::fs::basic_file::{delete_file, read_file};
 use crate::io::fs::paths::path_for_page_type;
 use crate::looksyk::model::{PageType, SimplePageName};
-use crate::state::state::DataRootLocation;
+use crate::state::application_state::DataRootLocation;
 
 pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
     let page_path = data_root_location

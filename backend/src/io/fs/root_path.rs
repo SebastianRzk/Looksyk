@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::io::fs::basic_file::{create_folder, exists_file, exists_folder, read_file};
 use crate::io::fs::basic_folder::home_directory;
-use crate::state::state::DataRootLocation;
+use crate::state::application_state::DataRootLocation;
 
 const CONFIG_FILE_NAME: &str = "config.json";
 const INITIAL_GRAPH_NAME: &str = "MyFirstGraph";

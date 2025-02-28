@@ -9,7 +9,9 @@ use crate::looksyk::builder::page_name;
 use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
 use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
 use crate::looksyk::favourite::is_favourite;
-use crate::looksyk::index::index::{remove_page_from_internal_state, update_index_for_file};
+use crate::looksyk::index::index_operations::{
+    remove_page_from_internal_state, update_index_for_file,
+};
 use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
 use crate::looksyk::index::tag::render_tag_index_for_page;
 use crate::looksyk::model::{PageType, RawMarkdownFile};
@@ -17,7 +19,9 @@ use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_file, StaticRenderContext};
 use crate::looksyk::serializer::serialize_page;
-use crate::state::state::{AppState, CurrentPageAssociatedState, CurrentPageOnDiskState};
+use crate::state::application_state::{
+    AppState, CurrentPageAssociatedState, CurrentPageOnDiskState,
+};
 
 #[post("/api/pages/{page_name}")]
 async fn update_page(
@@ -242,15 +246,10 @@ async fn rename_page(
     *journal_guard = rename_tag_result.new_page_associated_state.journal_pages;
 
     for file_to_save in rename_tag_result.file_changes.changed_files {
-        let page;
-        match file_to_save.page_type {
-            PageType::UserPage => {
-                page = page_guard.entries.get(&file_to_save.name).unwrap();
-            }
-            PageType::JournalPage => {
-                page = journal_guard.entries.get(&file_to_save.name).unwrap();
-            }
-        }
+        let page = match file_to_save.page_type {
+            PageType::UserPage => page_guard.entries.get(&file_to_save.name).unwrap(),
+            PageType::JournalPage => journal_guard.entries.get(&file_to_save.name).unwrap(),
+        };
 
         let current_page_associated_state = CurrentPageAssociatedState {
             user_pages: &page_guard,
@@ -259,7 +258,7 @@ async fn rename_page(
             tag_index: &tag_guard,
         };
 
-        let serialized_page = serialize_page(&page);
+        let serialized_page = serialize_page(page);
         write_page(
             PageOnDisk {
                 name: file_to_save.name.name.clone(),
@@ -270,7 +269,7 @@ async fn rename_page(
         );
 
         let new_page_associated_state =
-            update_index_for_file(file_to_save, &page, current_page_associated_state);
+            update_index_for_file(file_to_save, page, current_page_associated_state);
 
         *todo_guard = new_page_associated_state.todo_index;
         *tag_guard = new_page_associated_state.tag_index;

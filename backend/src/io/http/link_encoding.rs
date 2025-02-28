@@ -1,10 +1,10 @@
-pub fn encode_link_component(link: &String) -> String {
+pub fn encode_link_component(link: &str) -> String {
     link.replace(" ", "%20")
         .replace("#", "%23")
         .replace("/", "%2F")
 }
 
-pub fn decode_link_component(link: &String) -> String {
+pub fn decode_link_component(link: &str) -> String {
     link.replace("%20", " ")
         .replace("%23", "#")
         .replace("%2F", "/")

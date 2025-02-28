@@ -11,14 +11,14 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
         .map(|j| NaiveDate::parse_from_str(&j.name, "%Y_%m_%d").unwrap())
         .collect::<Vec<NaiveDate>>();
     sorted_journals.sort();
-    if sorted_journals.len() == 0 {
+    if sorted_journals.is_empty() {
         return ParsedMarkdownFile {
             blocks: vec![ParsedBlock {
                 indentation: 0,
                 content: vec![BlockContent {
                     as_text: "No journal entries found.".to_string(),
                     as_tokens: vec![BlockToken {
-                        block_token_type: BlockTokenType::TEXT,
+                        block_token_type: BlockTokenType::Text,
                         payload: "No journal entries found.".to_string(),
                     }],
                 }],
@@ -45,7 +45,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
                     content: vec![BlockContent {
                         as_text: as_text.clone(),
                         as_tokens: vec![BlockToken {
-                            block_token_type: BlockTokenType::TEXT,
+                            block_token_type: BlockTokenType::Text,
                             payload: as_text,
                         }],
                     }],
@@ -89,7 +89,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
         content: vec![BlockContent {
             as_text: as_text.clone(),
             as_tokens: vec![BlockToken {
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
                 payload: as_text,
             }],
         }],
@@ -100,7 +100,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
             content: vec![BlockContent {
                 as_text: format!("## {}\n\n", max_date.format("%Y")),
                 as_tokens: vec![BlockToken {
-                    block_token_type: BlockTokenType::TEXT,
+                    block_token_type: BlockTokenType::Text,
                     payload: format!("## {}\n\n", max_date.format("%Y")),
                 }],
             }],

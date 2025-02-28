@@ -2,8 +2,8 @@ use std::path::PathBuf;
 
 use crate::io::fs::basic_file::read_file;
 use crate::io::fs::paths::REL_CONFIG_PATH;
-use crate::looksyk::config::config::Config;
-use crate::state::state::DataRootLocation;
+use crate::looksyk::config::runtime_graph_configuration::Config;
+use crate::state::application_state::DataRootLocation;
 
 pub fn read_config_from_file(data_path: &DataRootLocation) -> Config {
     let config_file_content_as_str = read_file(config_path(data_path));

@@ -58,7 +58,7 @@ fn table_headline() -> BlockToken {
     BlockToken {
         payload: "| pagename | number of backlinks | page has content |\n| :-- | :-- | :-- |\n"
             .to_string(),
-        block_token_type: BlockTokenType::TEXT,
+        block_token_type: BlockTokenType::Text,
     }
 }
 
@@ -69,15 +69,15 @@ fn render_table_line(
     references: &HashSet<PageId>,
 ) {
     result_table.push(BlockToken {
-        block_token_type: BlockTokenType::TEXT,
+        block_token_type: BlockTokenType::Text,
         payload: "| ".to_string(),
     });
     result_table.push(BlockToken {
-        block_token_type: BlockTokenType::LINK,
+        block_token_type: BlockTokenType::Link,
         payload: tag.name.clone(),
     });
     result_table.push(BlockToken {
-        block_token_type: BlockTokenType::TEXT,
+        block_token_type: BlockTokenType::Text,
         payload: format!(
             " | {} | {} |\n",
             references.len(),
@@ -121,7 +121,7 @@ mod tests {
         assert_eq!(result.blocks.len(), 2);
 
         block_contains_markdown_text(
-            result.blocks.get(0).unwrap(),
+            result.blocks.first().unwrap(),
             "Overview over all user-created files",
             0,
         );
@@ -144,7 +144,7 @@ mod tests {
         assert_eq!(result.blocks.len(), 2);
 
         block_contains_markdown_text(
-            result.blocks.get(0).unwrap(),
+            result.blocks.first().unwrap(),
             "Overview over all user-created files",
             0,
         );
@@ -152,24 +152,24 @@ mod tests {
         let second_block = result.blocks.get(1).unwrap();
         assert_eq!(second_block.indentation, 1);
         assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.get(0).unwrap();
+        let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {
                 payload: "| pagename | number of backlinks | page has content |\n| :-- | :-- | :-- |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "| ".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "target".to_string(),
-                block_token_type: BlockTokenType::LINK,
+                block_token_type: BlockTokenType::Link,
             },
             BlockToken {
                 payload: " | 1 | not yet |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
         ]);
     }
@@ -191,7 +191,7 @@ mod tests {
         assert_eq!(result.blocks.len(), 2);
 
         block_contains_markdown_text(
-            result.blocks.get(0).unwrap(),
+            result.blocks.first().unwrap(),
             "Overview over all user-created files",
             0,
         );
@@ -199,24 +199,24 @@ mod tests {
         let second_block = result.blocks.get(1).unwrap();
         assert_eq!(second_block.indentation, 1);
         assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.get(0).unwrap();
+        let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {
                 payload: "| pagename | number of backlinks | page has content |\n| :-- | :-- | :-- |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "| ".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "target".to_string(),
-                block_token_type: BlockTokenType::LINK,
+                block_token_type: BlockTokenType::Link,
             },
             BlockToken {
                 payload: " | 1 | yes |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
         ]);
     }
@@ -238,24 +238,24 @@ mod tests {
         let second_block = result.blocks.get(1).unwrap();
         assert_eq!(second_block.indentation, 1);
         assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.get(0).unwrap();
+        let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {
                 payload: "| pagename | number of backlinks | page has content |\n| :-- | :-- | :-- |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "| ".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
             BlockToken {
                 payload: "MyPage".to_string(),
-                block_token_type: BlockTokenType::LINK,
+                block_token_type: BlockTokenType::Link,
             },
             BlockToken {
                 payload: " | 0 | yes |\n".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             },
         ]);
     }
@@ -263,11 +263,11 @@ mod tests {
     fn block_contains_markdown_text(block: &ParsedBlock, markdown_text: &str, indentation: usize) {
         assert_eq!(block.indentation, indentation);
         assert_eq!(block.content.len(), 1);
-        let first_content = block.content.get(0).unwrap();
+        let first_content = block.content.first().unwrap();
         assert_eq!(first_content.as_text, "");
         assert_eq!(first_content.as_tokens.len(), 1);
-        let first_token = first_content.as_tokens.get(0).unwrap();
-        assert_eq!(first_token.block_token_type, BlockTokenType::TEXT);
+        let first_token = first_content.as_tokens.first().unwrap();
+        assert_eq!(first_token.block_token_type, BlockTokenType::Text);
         assert_eq!(first_token.payload, markdown_text);
     }
 }

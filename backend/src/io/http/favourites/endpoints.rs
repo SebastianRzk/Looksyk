@@ -6,7 +6,7 @@ use crate::io::http::favourites::dtos::FavListDto;
 use crate::io::http::favourites::mapper::{map_from_dto, map_to_dto};
 use crate::looksyk::builder::page_name;
 use crate::looksyk::favourite::{add_favourite, remove_favourite, set_favourites};
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 
 #[post("/api/favourites/{fav_name}")]
 async fn insert_favourite(

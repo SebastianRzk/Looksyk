@@ -9,12 +9,12 @@ pub fn search_result_to_dto(search_result: SearchResult) -> SearchResultDto {
         journal: search_result
             .journal
             .iter()
-            .map(|x| search_finding_to_dto(x))
+            .map(search_finding_to_dto)
             .collect(),
         page: search_result
             .page
             .iter()
-            .map(|x| search_finding_to_dto(x))
+            .map(search_finding_to_dto)
             .collect(),
     }
 }

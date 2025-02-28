@@ -17,13 +17,13 @@ pub fn create_tag_index(
     for simple_page_name in data_state.entries.keys() {
         let page = data_state.entries.get(simple_page_name).unwrap();
         let id = simple_page_name.as_user_page();
-        create_tag_index_file(&mut result, &id, &page);
+        create_tag_index_file(&mut result, &id, page);
     }
 
     for simple_page_name in journal_page_index.entries.keys() {
         let page = journal_page_index.entries.get(simple_page_name).unwrap();
         let id = simple_page_name.as_journal_page();
-        create_tag_index_file(&mut result, &id, &page);
+        create_tag_index_file(&mut result, &id, page);
     }
 
     TagIndex { entries: result }
@@ -37,7 +37,7 @@ pub fn create_tag_index_file(
     for block in &file.blocks {
         for content in &block.content {
             for token in &content.as_tokens {
-                if token.block_token_type != BlockTokenType::LINK {
+                if token.block_token_type != BlockTokenType::Link {
                     continue;
                 }
                 let payload = token.payload.clone();
@@ -66,7 +66,7 @@ pub fn remove_file_from_tag_index(tag_index: &TagIndex, page_id: &PageId) -> Tag
     let mut result = HashMap::new();
     for key in tag_index.entries.keys() {
         let current_list = tag_index.entries.get(key);
-        let referenced_tags = filter_tag(current_list.unwrap(), &page_id);
+        let referenced_tags = filter_tag(current_list.unwrap(), page_id);
         result.insert(key.clone(), referenced_tags);
     }
     TagIndex { entries: result }
@@ -74,11 +74,7 @@ pub fn remove_file_from_tag_index(tag_index: &TagIndex, page_id: &PageId) -> Tag
 
 pub fn render_tag_index_for_page(page_id: PageId, tag_index: &TagIndex) -> ParsedMarkdownFile {
     let empty_set = HashSet::new();
-    let tags_for_page = tag_index
-        .entries
-        .get(&page_id)
-        .or_else(|| Some(&empty_set))
-        .unwrap();
+    let tags_for_page = tag_index.entries.get(&page_id).unwrap_or(&empty_set);
 
     if tags_for_page.is_empty() {
         return ParsedMarkdownFile {
@@ -113,7 +109,7 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
         content: vec![BlockContent {
             as_tokens: vec![BlockToken {
                 payload: format!("{} that reference this page", name),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             }],
             as_text: format!("{} that reference this page", name),
         }],
@@ -121,8 +117,8 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
 
     for tag in page_references {
         match tag.page_type {
-            PageType::JournalPage => blocks.push(to_block_token(tag, BlockTokenType::JOURNALLINK)),
-            PageType::UserPage => blocks.push(to_block_token(tag, BlockTokenType::LINK)),
+            PageType::JournalPage => blocks.push(to_block_token(tag, BlockTokenType::JournalLink)),
+            PageType::UserPage => blocks.push(to_block_token(tag, BlockTokenType::Link)),
         }
     }
     if page_references.is_empty() {
@@ -150,7 +146,7 @@ fn no_references_found_text(indentation: usize) -> ParsedBlock {
         content: vec![BlockContent {
             as_tokens: vec![BlockToken {
                 payload: "No references found".to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             }],
             as_text: "No references found".to_string(),
         }],
@@ -204,7 +200,7 @@ mod tests {
                     content: vec![BlockContent {
                         as_tokens: vec![BlockToken {
                             payload: "target-page".to_string(),
-                            block_token_type: BlockTokenType::LINK,
+                            block_token_type: BlockTokenType::Link,
                         }],
                         as_text: "".to_string(),
                     }],
@@ -245,7 +241,7 @@ mod tests {
                     content: vec![BlockContent {
                         as_tokens: vec![BlockToken {
                             payload: "target-page".to_string(),
-                            block_token_type: BlockTokenType::LINK,
+                            block_token_type: BlockTokenType::Link,
                         }],
                         as_text: "".to_string(),
                     }],
@@ -284,9 +280,9 @@ mod tests {
         let result = super::render_tag_index_for_page(user_page_id("testpage"), &tag_index);
 
         assert_eq!(result.blocks.len(), 1);
-        let block = result.blocks.get(0).unwrap();
+        let block = result.blocks.first().unwrap();
         assert_eq!(block.content.len(), 1);
-        let content = block.content.get(0).unwrap();
+        let content = block.content.first().unwrap();
         assert_eq!(content.as_text, "No references found");
     }
 
@@ -304,7 +300,7 @@ mod tests {
                             any_text_token(),
                             BlockToken {
                                 payload: "MyTag".to_string(),
-                                block_token_type: BlockTokenType::LINK,
+                                block_token_type: BlockTokenType::Link,
                             },
                         ],
                         as_text: "".to_string(),
@@ -321,7 +317,7 @@ mod tests {
         );
 
         assert_eq!(result.entries.len(), 1);
-        let entry = result.entries.get(0).unwrap();
+        let entry = result.entries.first().unwrap();
         assert_eq!(
             entry.tags,
             vec![page_name_str("testfile"), page_name_str("MyTag")]

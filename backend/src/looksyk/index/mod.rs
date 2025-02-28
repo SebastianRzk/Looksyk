@@ -1,6 +1,6 @@
 pub mod asset;
 mod hierachy;
-pub mod index;
+pub mod index_operations;
 pub mod media;
 pub mod rename;
 pub mod tag;

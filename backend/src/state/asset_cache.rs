@@ -38,7 +38,7 @@ impl AssetCache {
             return element.clone();
         }
         println!("Cache miss for {}", media_on_disk.name);
-        return AssetState::Miss;
+        AssetState::Miss
     }
 
     pub fn insert(&mut self, file_name: &MediaOnDisk, asset_state: AssetState) {

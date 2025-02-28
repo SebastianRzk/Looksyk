@@ -12,17 +12,13 @@ pub fn create_todo_index(
     let mut result = vec![];
 
     for simple_page_name in data_state.entries.keys() {
-        if let Some(file) = (&data_state.entries).get(simple_page_name) {
-            create_todo_index_file(&mut (&mut result), &simple_page_name.as_user_page(), file);
+        if let Some(file) = data_state.entries.get(simple_page_name) {
+            create_todo_index_file(&mut result, &simple_page_name.as_user_page(), file);
         }
     }
     for simple_page_name in journal_state.entries.keys() {
         if let Some(file) = &journal_state.entries.get(simple_page_name) {
-            create_todo_index_file(
-                &mut (&mut result),
-                &simple_page_name.as_journal_page(),
-                file,
-            );
+            create_todo_index_file(&mut result, &simple_page_name.as_journal_page(), file);
         }
     }
 
@@ -39,19 +35,18 @@ pub fn create_todo_index_file(
         current_hierarchy: vec![],
     };
 
-    let mut blocknumber: usize = 0;
-    for block in &file.blocks {
+    for (block_number, block) in file.blocks.iter().enumerate() {
         hierarchy_index.feed(block);
-        if block.content.len() > 0 {
-            let content_line = block.content.get(0).unwrap();
-            if content_line.as_tokens.len() > 0 {
-                let first_token = content_line.as_tokens.get(0).unwrap();
-                if first_token.block_token_type == BlockTokenType::TODO {
+        if !block.content.is_empty() {
+            let content_line = block.content.first().unwrap();
+            if !content_line.as_tokens.is_empty() {
+                let first_token = content_line.as_tokens.first().unwrap();
+                if first_token.block_token_type == BlockTokenType::Todo {
                     result.push(TodoIndexEntry {
                         block: block.clone(),
                         source: BlockReference {
                             page_id: page_id.clone(),
-                            block_number: blocknumber,
+                            block_number,
                         },
                         state: state_from_payload(&first_token.payload),
                         tags: hierarchy_index.get_current_tag_set(),
@@ -59,7 +54,6 @@ pub fn create_todo_index_file(
                 }
             }
         }
-        blocknumber += 1;
     }
 }
 
@@ -140,7 +134,7 @@ mod tests {
         );
 
         assert_eq!(result.entries.len(), 1);
-        let entry = result.entries.get(0).unwrap();
+        let entry = result.entries.first().unwrap();
         assert_eq!(entry.tags, vec![page_name_str("testfile")]);
         assert_eq!(entry.state, TodoState::Todo);
         assert_eq!(
@@ -176,7 +170,7 @@ mod tests {
         );
 
         assert_eq!(result.entries.len(), 1);
-        let entry = result.entries.get(0).unwrap();
+        let entry = result.entries.first().unwrap();
         assert_eq!(entry.tags, vec![page_name_str("testfile")]);
         assert_eq!(entry.state, TodoState::Done);
         assert_eq!(

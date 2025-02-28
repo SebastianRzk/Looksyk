@@ -4,10 +4,12 @@ use std::io::Write;
 
 pub fn hash_file_content(loaded_media: LoadedMedia) -> String {
     let mut hasher = Sha3_256::new();
-    hasher.write(&loaded_media.content).unwrap();
+    hasher.write_all(&loaded_media.content).unwrap();
+    let mut result = String::new();
+
     hasher.finalize()[..]
         .to_ascii_lowercase()
         .iter()
-        .map(|b| format!("{:02x}", b))
-        .collect::<String>()
+        .for_each(|b| result.push_str(&format!("{:02x}", b)));
+    result
 }

@@ -46,10 +46,8 @@ pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
     let mut result = vec![];
 
     for todo in &data.entries {
-        if todo.state == expected_state {
-            if todo.tags.contains(&expected_tag_page) {
-                result.push(todo);
-            }
+        if todo.state == expected_state && todo.tags.contains(&expected_tag_page) {
+            result.push(todo);
         }
     }
 
@@ -68,7 +66,7 @@ pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
     }
 }
 
-fn state_from_string(state: &String) -> TodoState {
+fn state_from_string(state: &str) -> TodoState {
     if state.to_lowercase() == "done" {
         return TodoState::Done;
     }

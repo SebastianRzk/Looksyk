@@ -29,10 +29,10 @@ pub fn generate_assets_overview_page(
 }
 
 fn render_table(asset_type_name: &str, assets: Vec<AssetDescription>) -> ParsedBlock {
-    let mut result = String::from(format!(
+    let mut result = format!(
         "### {} \n \n | name | size |\n| :-- | :-- |\n",
         asset_type_name
-    ));
+    );
     for asset in assets {
         result.push_str(&format!(
             "| {} | {} |\n",
@@ -59,7 +59,7 @@ fn sort_assets(media_index: &&MediaIndex, sizes: HashMap<String, u64>) -> Sorted
     for media in &media_index.media {
         let indexed_media = AssetDescriptor::new(media.file_name.clone());
         let media_type = get_media_type_from_extension(&indexed_media);
-        let file_size = sizes.get(&media.file_name).unwrap_or(&0).clone();
+        let file_size = *sizes.get(&media.file_name).unwrap_or(&0);
         let asset_description = AssetDescription {
             indexed_media,
             file_size,
@@ -100,7 +100,7 @@ fn sort_assets(media_index: &&MediaIndex, sizes: HashMap<String, u64>) -> Sorted
     htmls.sort_by(sort_by_filesize);
     pdfs.sort_by(sort_by_filesize);
 
-    let sorted_assets = SortedAssets {
+    SortedAssets {
         images,
         videos,
         audios,
@@ -109,8 +109,7 @@ fn sort_assets(media_index: &&MediaIndex, sizes: HashMap<String, u64>) -> Sorted
         texts,
         htmls,
         pdfs,
-    };
-    sorted_assets
+    }
 }
 
 fn sort_by_filesize(a: &AssetDescription, b: &AssetDescription) -> Ordering {
@@ -203,10 +202,10 @@ mod tests {
     fn get_first_text_payload(result: &ParsedBlock) -> String {
         result
             .content
-            .get(0)
+            .first()
             .unwrap()
             .as_tokens
-            .get(0)
+            .first()
             .unwrap()
             .payload
             .clone()

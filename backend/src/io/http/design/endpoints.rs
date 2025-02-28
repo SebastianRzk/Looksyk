@@ -2,7 +2,7 @@ use actix_web::http::header::ContentType;
 use actix_web::web::Data;
 use actix_web::{get, HttpResponse};
 
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 
 #[get("/api/design")]
 pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {

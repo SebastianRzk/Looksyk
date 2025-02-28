@@ -6,7 +6,7 @@ pub fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
         content: vec![BlockContent {
             as_tokens: vec![BlockToken {
                 payload: text.to_string(),
-                block_token_type: BlockTokenType::TEXT,
+                block_token_type: BlockTokenType::Text,
             }],
             as_text: "".to_string(),
         }],

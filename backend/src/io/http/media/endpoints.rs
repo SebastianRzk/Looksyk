@@ -18,7 +18,7 @@ use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
 use crate::looksyk::renderer::{render_file, render_file_flat, StaticRenderContext};
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 use actix_files::NamedFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::http::header::{ContentDisposition, DispositionType};

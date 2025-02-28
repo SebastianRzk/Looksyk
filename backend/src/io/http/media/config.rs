@@ -2,7 +2,7 @@ use crate::looksyk::syntax::markdown::encode_uri_component;
 
 pub const REL_MEDIA_LOCATION: &str = "assets";
 
-pub fn create_media_location(file_name: &String) -> String {
+pub fn create_media_location(file_name: &str) -> String {
     format!(
         "/{}/{}",
         REL_MEDIA_LOCATION,

@@ -46,7 +46,7 @@ pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderR
         .unwrap_or(&empty_set);
 
     match query.display {
-        QueryDisplayType::InplaceList => render_as_list(&target, &references),
+        QueryDisplayType::InplaceList => render_as_list(&target, references),
         QueryDisplayType::Count => render_as_count(references),
         _ => render_display_unknown(
             query.display,
@@ -64,9 +64,9 @@ pub fn render_as_count(refs: &HashSet<PageId>) -> QueryRenderResult {
 }
 
 fn render_as_list(page_name: &SimplePageName, refs: &HashSet<PageId>) -> QueryRenderResult {
-    let mut result = format!("Pages that reference {}\n", render_user_link(&page_name));
+    let mut result = format!("Pages that reference {}\n", render_user_link(page_name));
     for r in refs.iter() {
-        result.push_str(format!("* {}\n", render_link_by_id(&r)).as_str());
+        result.push_str(format!("* {}\n", render_link_by_id(r)).as_str());
     }
     if refs.is_empty() {
         result.push_str("* No references found!\n");

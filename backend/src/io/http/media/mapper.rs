@@ -9,7 +9,7 @@ pub fn map_to_dto(suggestions: Suggestions) -> SuggestionsDto {
         suggestions: suggestions
             .suggestions
             .iter()
-            .map(|x| map_to_suggestion_dto(x))
+            .map(map_to_suggestion_dto)
             .collect(),
     }
 }

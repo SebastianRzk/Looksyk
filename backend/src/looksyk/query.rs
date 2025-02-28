@@ -17,8 +17,8 @@ use crate::looksyk::queries::references_to::{
 };
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query, QUERY_NAME_TODOS};
 use crate::looksyk::renderer::StaticRenderContext;
+use crate::state::application_state::DataRootLocation;
 use crate::state::asset_cache::AssetCache;
-use crate::state::state::DataRootLocation;
 
 pub fn render_query(
     block: &BlockToken,
@@ -31,7 +31,7 @@ pub fn render_query(
         let error = query.err().unwrap();
         println!("Error on parsing query {}", &error);
         return QueryRenderResult {
-            inplace_markdown: format!("\n\nError on parsing query: {}\n\n", error.to_string()),
+            inplace_markdown: format!("\n\nError on parsing query: {}\n\n", error),
             referenced_markdown: vec![],
             has_dynamic_content: false,
         };
@@ -44,7 +44,7 @@ pub fn render_query(
     )
 }
 
-pub fn parse_query(payload: &String) -> Result<Query, Error> {
+pub fn parse_query(payload: &str) -> Result<Query, Error> {
     let query_str = payload.trim();
     if query_str.starts_with(QUERY_NAME_PAGE_HIERARCHY) {
         return parse_query_page_hierarchy(query_str);
@@ -71,7 +71,7 @@ pub fn render_parsed_query(
     data_root_location: &DataRootLocation,
 ) -> QueryRenderResult {
     match query.query_type {
-        QueryType::PageHierarchy => render_page_hierarchy(query, &render_context.user_pages),
+        QueryType::PageHierarchy => render_page_hierarchy(query, render_context.user_pages),
         QueryType::Todo => render_todo_query(query, render_context.todo_index),
         QueryType::ReferencesTo => render_references_of_query(query, render_context.tag_index),
         QueryType::InsertFileContent => {
@@ -80,8 +80,8 @@ pub fn render_parsed_query(
         QueryType::Blocks => render_blocks_query(
             query,
             render_context.tag_index,
-            &render_context.user_pages,
-            &render_context.journal_pages,
+            render_context.user_pages,
+            render_context.journal_pages,
         ),
         QueryType::Unknown => QueryRenderResult {
             inplace_markdown: format!(
@@ -156,9 +156,9 @@ mod tests {
         create_empty_render_context, create_render_context, create_render_context_with_tag_index,
         create_render_context_with_todo_index, create_render_context_with_user_page_index,
     };
+    use crate::state::application_state::builder::empty_data_root_location;
     use crate::state::asset_cache::{AssetFileContent, AssetState, FileSizeViolation};
     use crate::state::block::BlockReference;
-    use crate::state::state::builder::empty_data_root_location;
     use crate::state::tag::builder::empty_tag_index;
     use crate::state::tag::TagIndex;
     use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
@@ -170,7 +170,7 @@ mod tests {
     pub fn should_render_unknown_query_on_unknown_query() {
         let result = render_query(
             &BlockToken {
-                block_token_type: BlockTokenType::QUERY,
+                block_token_type: BlockTokenType::Query,
                 payload: "unknown asdf".to_string(),
             },
             &create_empty_render_context().to_static(),
@@ -237,7 +237,7 @@ mod tests {
     #[test]
     pub fn should_catch_error_on_parsing_error() {
         let result = parse_query(&"page-hierarchy asdf:\"asd\" display:\"\"\" ".to_string());
-        assert_eq!(result.is_err(), true);
+        assert!(result.is_err());
     }
 
     #[test]
@@ -448,13 +448,13 @@ mod tests {
 
         assert_eq!(result.inplace_markdown, "");
         assert_eq!(result.referenced_markdown.len(), 1);
-        let reference = result.referenced_markdown.get(0).unwrap();
+        let reference = result.referenced_markdown.first().unwrap();
         assert_eq!(reference.reference.page_id.name.name, "testfile2");
         assert_eq!(reference.reference.block_number, 0);
         assert_eq!(reference.content.content.len(), 1);
-        assert_eq!(reference.content.content.get(0).unwrap().as_tokens, vec![]);
+        assert_eq!(reference.content.content.first().unwrap().as_tokens, vec![]);
         assert_eq!(
-            reference.content.content.get(0).unwrap().as_text,
+            reference.content.content.first().unwrap().as_text,
             "todo done"
         );
     }

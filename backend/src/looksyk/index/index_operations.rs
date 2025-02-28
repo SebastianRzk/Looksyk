@@ -4,7 +4,7 @@ use crate::looksyk::index::userpage::{
     remove_file_from_journal_index, remove_file_from_page_index,
 };
 use crate::looksyk::model::{PageId, PageType, ParsedMarkdownFile};
-use crate::state::state::{CurrentPageAssociatedState, NewPageAssociatedState};
+use crate::state::application_state::{CurrentPageAssociatedState, NewPageAssociatedState};
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
 
@@ -57,16 +57,16 @@ pub fn remove_page_from_internal_state(
     let new_journal_index;
     if let PageType::UserPage = page_id.page_type {
         new_page_index =
-            remove_file_from_page_index(&page_associated_state.user_pages, &page_id.name);
+            remove_file_from_page_index(page_associated_state.user_pages, &page_id.name);
         new_journal_index = page_associated_state.journal_pages.clone();
     } else {
         new_journal_index =
-            remove_file_from_journal_index(&page_associated_state.journal_pages, &page_id.name);
+            remove_file_from_journal_index(page_associated_state.journal_pages, &page_id.name);
         new_page_index = page_associated_state.user_pages.clone();
     }
-    let new_tag_index = remove_file_from_tag_index(&page_associated_state.tag_index, &page_id);
+    let new_tag_index = remove_file_from_tag_index(page_associated_state.tag_index, page_id);
     let new_todo_index =
-        remove_file_from_todo_index(&page_associated_state.todo_index, &page_id.name);
+        remove_file_from_todo_index(page_associated_state.todo_index, &page_id.name);
 
     NewPageAssociatedState {
         user_pages: new_page_index,
@@ -79,11 +79,11 @@ pub fn remove_page_from_internal_state(
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::builder::user_page_id;
-    use crate::looksyk::index::index::update_index_for_file;
+    use crate::looksyk::index::index_operations::update_index_for_file;
     use crate::looksyk::model::{ParsedMarkdownFile, RawBlock};
     use crate::looksyk::parser::parse_block;
+    use crate::state::application_state::CurrentPageAssociatedState;
     use crate::state::journal::JournalPageIndex;
-    use crate::state::state::CurrentPageAssociatedState;
     use crate::state::tag::TagIndex;
     use crate::state::todo::TodoIndex;
     use crate::state::userpage::UserPageIndex;

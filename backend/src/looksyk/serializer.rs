@@ -7,8 +7,7 @@ pub fn update_and_serialize_page(
     parsed_markdown_file: &ParsedMarkdownFile,
 ) -> Vec<String> {
     let mut result = vec![];
-    let mut block_number: usize = 0;
-    for block in &parsed_markdown_file.blocks {
+    for (block_number, block) in parsed_markdown_file.blocks.iter().enumerate() {
         if block_number == update_block.reference.block_number {
             let indentation = block.indentation;
 
@@ -28,16 +27,15 @@ pub fn update_and_serialize_page(
         } else {
             serialize_block_content(&mut result, &block);
         }
-        block_number += 1;
     }
-    return result;
+    result
 }
 pub fn serialize_page(parsed_markdown_file: &ParsedMarkdownFile) -> Vec<String> {
     let mut result = vec![];
     for block in &parsed_markdown_file.blocks {
         serialize_block_content(&mut result, &block);
     }
-    return result;
+    result
 }
 
 fn serialize_block_content(result: &mut Vec<String>, block: &&ParsedBlock) {
@@ -45,7 +43,7 @@ fn serialize_block_content(result: &mut Vec<String>, block: &&ParsedBlock) {
     for block_content in &block.content {
         let mut block_content_token = vec![];
         for block_token in &block_content.as_tokens {
-            block_content_token.push(serialize_block_token(&block_token));
+            block_content_token.push(serialize_block_token(block_token));
         }
         serialized_block_content.push(block_content_token.join(""));
     }
@@ -85,27 +83,27 @@ fn sanitize_prefix(line: &str) -> String {
 fn generate_indentation(depth: usize) -> String {
     let mut result = "".to_string();
     for _ in 0..depth {
-        result.push_str("\t");
+        result.push('\t');
     }
-    return result;
+    result
 }
 
 fn serialize_block_token(block_token: &BlockToken) -> String {
-    return match block_token.block_token_type {
-        BlockTokenType::TEXT => block_token.payload.clone(),
-        BlockTokenType::LINK => {
+    match block_token.block_token_type {
+        BlockTokenType::Text => block_token.payload.clone(),
+        BlockTokenType::Link => {
             format!("[[{}]]", block_token.payload.clone())
         }
-        BlockTokenType::JOURNALLINK => {
+        BlockTokenType::JournalLink => {
             format!("[[journal::{}]]", block_token.payload.clone())
         }
-        BlockTokenType::QUERY => {
+        BlockTokenType::Query => {
             format!("{{query: {} }}", block_token.payload.clone())
         }
-        BlockTokenType::TODO => {
+        BlockTokenType::Todo => {
             format!("[{}] ", block_token.payload.clone())
         }
-    };
+    }
 }
 
 #[cfg(test)]
@@ -386,21 +384,21 @@ mod tests {
 
     fn todo_block(text: &str) -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::TODO,
+            block_token_type: BlockTokenType::Todo,
             payload: text.to_string(),
         }
     }
 
     fn link_block(text: &str) -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::LINK,
+            block_token_type: BlockTokenType::Link,
             payload: text.to_string(),
         }
     }
 
     fn query_block(text: &str) -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::QUERY,
+            block_token_type: BlockTokenType::Query,
             payload: text.to_string(),
         }
     }
