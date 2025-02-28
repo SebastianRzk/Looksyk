@@ -60,7 +60,7 @@ mod tests {
     #[test]
     fn test_null_byte_is_len_1() {
         let null_byte = "\0";
-        assert_eq!(null_byte.as_bytes().len(), 1);
+        assert_eq!(null_byte.len(), 1);
     }
 
     #[test]

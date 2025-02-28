@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.4.1.](#v141-2025-03-01)
 - [v1.4.0](#v140-2025-02-16)
 - [v1.3.4](#v134-2025-02-12)
 - [v1.3.3](#v133-2025-02-11)
@@ -26,6 +27,18 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.4.1. (2025-03-01)
+
+Enhancements:
+
+* Save `config.json` and `media.json` in pretty-json format
+
+Internal:
+
+* Replace `ngIf` directive with `@if`
+* Fix clippy warnings
+* Update angular
 
 ### v1.4.0 (2025-02-16)
 
@@ -78,7 +91,9 @@ Enhancements:
 * Add trigger to hide / show menu bar
 * Improve performance of content-assist filtering
 
-  Bugfixes:
+
+Bugfixes:
+
 * Change sidebar to global sidenav
 * Fix clicking on item in content-assist
 

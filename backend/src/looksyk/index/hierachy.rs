@@ -20,7 +20,7 @@ impl HierarchyParser {
         let mut tags = vec![];
         for content in &block.content {
             for token in &content.as_tokens {
-                if token.block_token_type == BlockTokenType::LINK {
+                if token.block_token_type == BlockTokenType::Link {
                     tags.push(page_name(token.payload.clone()));
                 }
             }
@@ -32,13 +32,11 @@ impl HierarchyParser {
     }
 
     fn last_depth(&self) -> usize {
-        return self
-            .current_hierarchy
+        self.current_hierarchy
             .iter()
             .last()
             .map(|x| x.depth)
-            .or(Some(0))
-            .unwrap();
+            .unwrap_or(0)
     }
 
     pub fn get_current_tag_set(&self) -> Vec<SimplePageName> {
@@ -84,7 +82,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],
@@ -108,7 +106,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],
@@ -119,7 +117,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag2".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],
@@ -147,7 +145,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],
@@ -158,7 +156,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag2".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],
@@ -169,7 +167,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: "mytag3".to_string(),
-                    block_token_type: BlockTokenType::LINK,
+                    block_token_type: BlockTokenType::Link,
                 }],
                 as_text: "".to_string(),
             }],

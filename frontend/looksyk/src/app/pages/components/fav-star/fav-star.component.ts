@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
 import { FavouriteService } from "../../../services/favourite.service";
 
 @Component({
     selector: 'app-fav-star',
-    imports: [
-        AsyncPipe,
-        NgIf,
-        MatIcon
-    ],
+  imports: [
+    AsyncPipe,
+    MatIcon
+  ],
     templateUrl: './fav-star.component.html',
     styleUrl: './fav-star.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush

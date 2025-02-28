@@ -1,7 +1,7 @@
 use crate::io::http::page::search::dtos::SearchTermDto;
 use crate::io::http::page::search::mapper::{search_result_to_dto, to_search_term};
 use crate::looksyk::search;
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{post, web, Responder, Result};
 

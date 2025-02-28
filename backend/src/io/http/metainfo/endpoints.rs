@@ -1,5 +1,5 @@
 use crate::io::http::metainfo::dtos::{MetaInfoDto, TitleDto};
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{get, web, Responder};
 use std::collections::HashSet;
@@ -17,17 +17,11 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
     let tag_guard = data.d_tag_index.lock().unwrap();
     let media_guard = data.f_media_index.lock().unwrap();
 
-    let mut tags: Vec<String> = page_guard
-        .entries
-        .keys()
-        .into_iter()
-        .map(|x| x.name.clone())
-        .collect();
+    let mut tags: Vec<String> = page_guard.entries.keys().map(|x| x.name.clone()).collect();
     tags.extend(
         tag_guard
             .entries
             .keys()
-            .into_iter()
             .filter(|x| x.is_user_page())
             .map(|x| x.name.name.clone()),
     );
@@ -37,7 +31,7 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
         .collect::<Vec<String>>();
     let tags_set: HashSet<String> = HashSet::from_iter(tags.into_iter());
     tags = Vec::from_iter(tags_set.into_iter());
-    tags.sort_by(|a, b| a.len().cmp(&b.len()));
+    tags.sort_by_key(|a| a.len());
     tags.dedup();
 
     let mut media: Vec<String> = media_guard
@@ -45,7 +39,7 @@ async fn get_metainfo(data: Data<AppState>) -> actix_web::Result<impl Responder>
         .iter()
         .map(|x| x.file_name.clone())
         .collect();
-    media.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+    media.sort_by_key(|a| a.to_lowercase());
 
     drop(page_guard);
     drop(tag_guard);

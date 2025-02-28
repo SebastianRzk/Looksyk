@@ -23,40 +23,40 @@ pub fn get_suggestion_for_file(asset_descriptor: &AssetDescriptor) -> Suggestion
     match file_type {
         MediaType::Image => Suggestions {
             suggestions: vec![
-                suggest_as_markdown_preview_supported(&asset_descriptor),
-                suggest_as_link(&asset_descriptor),
+                suggest_as_markdown_preview_supported(asset_descriptor),
+                suggest_as_link(asset_descriptor),
             ],
         },
         MediaType::Video => Suggestions {
             suggestions: vec![
-                suggest_as_video_query(&asset_descriptor),
-                suggest_as_video_html(&asset_descriptor),
-                suggest_as_link(&asset_descriptor),
-                suggest_as_markdown_preview_not_supported(&asset_descriptor),
+                suggest_as_video_query(asset_descriptor),
+                suggest_as_video_html(asset_descriptor),
+                suggest_as_link(asset_descriptor),
+                suggest_as_markdown_preview_not_supported(asset_descriptor),
             ],
         },
         MediaType::Audio => Suggestions {
             suggestions: vec![
-                suggest_as_audio_query(&asset_descriptor),
-                suggest_as_audio_html(&asset_descriptor),
-                suggest_as_link(&asset_descriptor),
-                suggest_as_markdown_preview_not_supported(&asset_descriptor),
+                suggest_as_audio_query(asset_descriptor),
+                suggest_as_audio_html(asset_descriptor),
+                suggest_as_link(asset_descriptor),
+                suggest_as_markdown_preview_not_supported(asset_descriptor),
             ],
         },
         MediaType::Other | MediaType::Html | MediaType::Pdf => Suggestions {
-            suggestions: vec![suggest_as_link(&asset_descriptor)],
+            suggestions: vec![suggest_as_link(asset_descriptor)],
         },
         MediaType::Code => Suggestions {
             suggestions: vec![
-                suggest_as_code_query(&asset_descriptor),
-                suggest_as_text_query(&asset_descriptor),
-                suggest_as_link(&asset_descriptor),
+                suggest_as_code_query(asset_descriptor),
+                suggest_as_text_query(asset_descriptor),
+                suggest_as_link(asset_descriptor),
             ],
         },
         MediaType::Text => Suggestions {
             suggestions: vec![
-                suggest_as_text_query(&asset_descriptor),
-                suggest_as_link(&asset_descriptor),
+                suggest_as_text_query(asset_descriptor),
+                suggest_as_link(asset_descriptor),
             ],
         },
     }

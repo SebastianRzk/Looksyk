@@ -60,7 +60,7 @@ pub fn render_blocks_query(
         .collect();
     references.sort();
 
-    let resolved_blocks = resolve_blocks(&target, references, user_page_index, journal_page_index);
+    let resolved_blocks = resolve_blocks(&target, &references, user_page_index, journal_page_index);
 
     match query.display {
         QueryDisplayType::InplaceList => render_as_list(&target, &resolved_blocks),
@@ -81,7 +81,7 @@ pub fn render_blocks_query(
 
 fn resolve_blocks(
     target: &SimplePageName,
-    page_ids: Vec<&PageId>,
+    page_ids: &[&PageId],
     user_page_index: &UserPageIndex,
     journal_page_index: &JournalPageIndex,
 ) -> Vec<BlockQueryResult> {
@@ -90,13 +90,13 @@ fn resolve_blocks(
     for page_id in page_ids.iter() {
         let blocks = match page_id.page_type {
             PageType::UserPage => resolve_blocks_in_page(
-                &target,
-                &page_id,
+                target,
+                page_id,
                 user_page_index.entries.get(&page_id.name).unwrap(),
             ),
             PageType::JournalPage => resolve_blocks_in_page(
-                &target,
-                &page_id,
+                target,
+                page_id,
                 journal_page_index.entries.get(&page_id.name).unwrap(),
             ),
         };
@@ -112,10 +112,8 @@ fn resolve_blocks_in_page(
     page: &ParsedMarkdownFile,
 ) -> Vec<BlockQueryResult> {
     let mut result = vec![];
-    let mut index = 0;
-    for block in page.blocks.iter() {
-        index += 1;
-        if block.contains_reference(&target) {
+    for (index, block) in page.blocks.iter().enumerate() {
+        if block.contains_reference(target) {
             result.push(BlockQueryResult {
                 block_reference: BlockReference {
                     page_id: page_id.clone(),
@@ -133,8 +131,8 @@ struct BlockQueryResult {
     block_reference: BlockReference,
 }
 
-fn render_as_list(tag: &SimplePageName, refs: &Vec<BlockQueryResult>) -> QueryRenderResult {
-    let mut result = format!("Blocks that reference {}:\n\n", render_user_link(&tag));
+fn render_as_list(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+    let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
     for r in refs.iter() {
         result.push_str(
             format!(
@@ -156,8 +154,8 @@ fn render_as_list(tag: &SimplePageName, refs: &Vec<BlockQueryResult>) -> QueryRe
     }
 }
 
-fn render_as_paragraph(tag: &SimplePageName, refs: &Vec<BlockQueryResult>) -> QueryRenderResult {
-    let mut result = format!("Blocks that reference {}:\n\n", render_user_link(&tag));
+fn render_as_paragraph(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+    let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
     for r in refs.iter() {
         result.push_str(
             format!(
@@ -179,7 +177,7 @@ fn render_as_paragraph(tag: &SimplePageName, refs: &Vec<BlockQueryResult>) -> Qu
     }
 }
 
-fn render_as_referenced_list(refs: &Vec<BlockQueryResult>) -> QueryRenderResult {
+fn render_as_referenced_list(refs: &[BlockQueryResult]) -> QueryRenderResult {
     let mut result = vec![];
     for r in refs.iter() {
         result.push(ReferencedMarkdown {
@@ -275,7 +273,7 @@ mod tests {
             &user_page_index_with_existing_page(),
             &empty_journal_index(),
         );
-        assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n* [referencing:1](page/referencing):before [foo](page/foo) after\n");
+        assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n* [referencing:0](page/referencing):before [foo](page/foo) after\n");
     }
 
     #[test]
@@ -286,7 +284,7 @@ mod tests {
             &user_page_index_with_existing_page(),
             &empty_journal_index(),
         );
-        assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n### [referencing:1](page/referencing)\n\nbefore [foo](page/foo) after\n\n---\n\n");
+        assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n### [referencing:0](page/referencing)\n\nbefore [foo](page/foo) after\n\n---\n\n");
     }
 
     fn tag_index_with_existing_tag() -> TagIndex {
@@ -295,8 +293,7 @@ mod tests {
         refs.insert(page_name_str("referencing").as_user_page());
         entries.insert(page_name_str("foo").as_user_page(), refs);
 
-        let tag_index = TagIndex { entries };
-        tag_index
+        TagIndex { entries }
     }
 
     fn user_page_index_with_existing_page() -> UserPageIndex {
@@ -307,8 +304,8 @@ mod tests {
                 blocks: vec![matching_text_block()],
             },
         );
-        let user_page_index = UserPageIndex { entries };
-        user_page_index
+
+        UserPageIndex { entries }
     }
 
     #[test]
@@ -331,7 +328,7 @@ mod tests {
             result.referenced_markdown[0].reference,
             crate::state::block::BlockReference {
                 page_id: page_name_str("referencing").as_user_page(),
-                block_number: 1,
+                block_number: 0,
             }
         );
     }

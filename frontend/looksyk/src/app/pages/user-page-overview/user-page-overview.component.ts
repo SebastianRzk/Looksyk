@@ -1,16 +1,16 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ShowPageComponent} from "../show-page/show-page.component";
-import {PageService} from "../../services/page.service";
-import {Observable} from "rxjs";
-import {MarkdownPage} from "../model";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ShowPageComponent } from "../show-page/show-page.component";
+import { PageService } from "../../services/page.service";
+import { Observable } from "rxjs";
+import { MarkdownPage } from "../model";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-user-page-overview',
-    imports: [CommonModule, ShowPageComponent],
-    templateUrl: './user-page-overview.component.html',
-    styleUrls: ['./user-page-overview.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-user-page-overview',
+  imports: [ShowPageComponent, AsyncPipe],
+  templateUrl: './user-page-overview.component.html',
+  styleUrls: ['./user-page-overview.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPageOverviewComponent implements OnInit {
 

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
@@ -10,13 +9,14 @@ import { firstValueFrom, map, Observable } from "rxjs";
 import { TitleService } from "../../../services/title.service";
 import { HistoryService } from "../../../services/history.service";
 import { StateService } from "../../../services/state.service";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-sidebar',
-    imports: [CommonModule, MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList],
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-sidebar',
+  imports: [MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList, AsyncPipe],
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);
@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit {
     this.favoriteService.updateFavList(favList);
   }
 
-  reload(){
+  reload() {
     this.state.invalidateAndReload();
   }
 

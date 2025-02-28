@@ -9,7 +9,7 @@ use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
-use crate::state::state::DataRootLocation;
+use crate::state::application_state::DataRootLocation;
 
 pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
     let media_config_path = media_config_path(data_root_location);
@@ -20,9 +20,9 @@ pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
 }
 
 pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &MediaIndex) {
-    let config_file_content_as_str = serde_json::to_string(&media_index.media).unwrap();
+    let config_file_content_as_str = serde_json::to_string_pretty(&media_index.media).unwrap();
     std::fs::write(
-        media_config_path(&data_root_location),
+        media_config_path(data_root_location),
         config_file_content_as_str,
     )
     .unwrap();
@@ -125,9 +125,11 @@ pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> 
     })
 }
 
-pub fn read_media_file(name: &String, location: &DataRootLocation) -> std::io::Result<NamedFile> {
+pub fn read_media_file(name: &str, location: &DataRootLocation) -> std::io::Result<NamedFile> {
     NamedFile::open(create_absolute_media_path(
-        &MediaOnDisk { name: name.clone() },
+        &MediaOnDisk {
+            name: name.to_owned(),
+        },
         location,
     ))
 }

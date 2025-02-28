@@ -5,21 +5,20 @@ use crate::looksyk::builder::page_name;
 use crate::looksyk::builtinpage::journal_overview::generate_journal_overview;
 use crate::looksyk::builtinpage::page_not_found::generate_page_not_found;
 use crate::looksyk::favourite::is_favourite;
-use crate::looksyk::index::index::update_index_for_file;
+use crate::looksyk::index::index_operations::update_index_for_file;
 use crate::looksyk::model::{PageType, RawMarkdownFile};
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_file, render_file_flat, StaticRenderContext};
 use crate::looksyk::serializer::serialize_page;
-use crate::state::state::{AppState, CurrentPageAssociatedState};
+use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use actix_web::web::{Data, Path};
 use actix_web::{get, post, web, Responder};
 
 #[get("/api/builtin-pages/journal-overview")]
 async fn journal_overview(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let journals = data.b_journal_pages.lock().unwrap();
-    let journal_overview =
-        generate_journal_overview(journals.entries.keys().map(|x| x.clone()).collect());
+    let journal_overview = generate_journal_overview(journals.entries.keys().cloned().collect());
     Ok(web::Json(map_markdown_file_to_dto(
         render_file_flat(&journal_overview),
         false,

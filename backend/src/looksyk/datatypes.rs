@@ -38,7 +38,7 @@ impl AssetDescriptor {
     }
 }
 
-fn encode_uri_component(file_name: &String) -> String {
+fn encode_uri_component(file_name: &str) -> String {
     file_name.replace(" ", "%20").replace("#", "%23")
 }
 

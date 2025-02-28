@@ -1,6 +1,6 @@
 use crate::looksyk::datatypes::AssetDescriptor;
 
-pub fn render_as_link(filename: &String, path: &String) -> String {
+pub fn render_as_link(filename: &String, path: &str) -> String {
     format!("[{}]({})", filename, path)
 }
 
@@ -49,7 +49,7 @@ pub fn render_as_code_block(language: String, content: &String) -> String {
     )
 }
 
-pub fn encode_uri_component(file_name: &String) -> String {
+pub fn encode_uri_component(file_name: &str) -> String {
     file_name.replace(" ", "%20").replace("#", "%23")
 }
 

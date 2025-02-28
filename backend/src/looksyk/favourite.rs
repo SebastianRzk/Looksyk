@@ -1,9 +1,9 @@
-use crate::looksyk::config::config::{Config, Favourite};
+use crate::looksyk::config::runtime_graph_configuration::{Config, Favourite};
 use crate::looksyk::model::SimplePageName;
 
 pub fn is_favourite(name: &SimplePageName, config: &Config) -> bool {
     for favourite in &config.favourites {
-        if favourite.equals_simple_name(&name) {
+        if favourite.equals_simple_name(name) {
             return true;
         }
     }
@@ -53,8 +53,10 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::config::config::builder::{config_with_fav, empty_design};
-    use crate::looksyk::config::config::{Config, Favourite};
+    use crate::looksyk::config::runtime_graph_configuration::builder::{
+        config_with_fav, empty_design,
+    };
+    use crate::looksyk::config::runtime_graph_configuration::{Config, Favourite};
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };
@@ -71,7 +73,7 @@ mod tests {
             &config,
         );
 
-        assert_eq!(result, true);
+        assert!(result);
     }
 
     #[test]
@@ -88,7 +90,7 @@ mod tests {
             &config,
         );
 
-        assert_eq!(result, false);
+        assert!(!result);
     }
 
     #[test]
@@ -132,7 +134,7 @@ mod tests {
         );
 
         assert_eq!(result.favourites.len(), 1);
-        assert_eq!(result.favourites.get(0).unwrap().name.name, "MySite2");
+        assert_eq!(result.favourites.first().unwrap().name.name, "MySite2");
     }
 
     #[test]
@@ -146,6 +148,6 @@ mod tests {
         );
 
         assert_eq!(result.favourites.len(), 1);
-        assert_eq!(result.favourites.get(0).unwrap().name.name, "MyNewSite");
+        assert_eq!(result.favourites.first().unwrap().name.name, "MyNewSite");
     }
 }

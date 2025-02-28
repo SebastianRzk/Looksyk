@@ -7,10 +7,10 @@ use crate::looksyk::model::{
     SimplePageName,
 };
 use crate::looksyk::query::render_query;
+use crate::state::application_state::DataRootLocation;
 use crate::state::asset_cache::AssetCache;
 use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
-use crate::state::state::DataRootLocation;
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
@@ -222,23 +222,23 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
     let mut inline_markdown_result_list = vec![];
     for token in tokens {
         match token.block_token_type {
-            BlockTokenType::TEXT => {
+            BlockTokenType::Text => {
                 inline_markdown_result_list.push(token.payload.clone());
             }
-            BlockTokenType::LINK => {
+            BlockTokenType::Link => {
                 inline_markdown_result_list.push(render_user_link(&SimplePageName {
                     name: token.payload.clone(),
                 }));
             }
-            BlockTokenType::JOURNALLINK => {
+            BlockTokenType::JournalLink => {
                 inline_markdown_result_list.push(render_journal_link(&SimplePageName {
                     name: token.payload.clone(),
                 }));
             }
-            BlockTokenType::QUERY => {
+            BlockTokenType::Query => {
                 inline_markdown_result_list.push("query hidden".to_string());
             }
-            BlockTokenType::TODO => {
+            BlockTokenType::Todo => {
                 inline_markdown_result_list.push(format!("[{}]", token.payload).to_string());
             }
         }
@@ -257,20 +257,20 @@ pub fn render_tokens_deep(
     let mut has_dynamic_content = false;
     for token in tokens {
         match token.block_token_type {
-            BlockTokenType::TEXT => {
+            BlockTokenType::Text => {
                 inline_markdown_result_list.push(token.payload.clone());
             }
-            BlockTokenType::LINK => {
+            BlockTokenType::Link => {
                 inline_markdown_result_list.push(render_user_link(&SimplePageName {
                     name: token.payload.clone(),
                 }));
             }
-            BlockTokenType::JOURNALLINK => {
+            BlockTokenType::JournalLink => {
                 inline_markdown_result_list.push(render_journal_link(&SimplePageName {
                     name: token.payload.clone(),
                 }));
             }
-            BlockTokenType::QUERY => {
+            BlockTokenType::Query => {
                 let render_result =
                     render_query(token, render_context, asset_cache, data_root_location);
                 has_dynamic_content = render_result.has_dynamic_content;
@@ -279,7 +279,7 @@ pub fn render_tokens_deep(
                 }
                 inline_markdown_result_list.push(render_result.inplace_markdown);
             }
-            BlockTokenType::TODO => {
+            BlockTokenType::Todo => {
                 inline_markdown_result_list.push(format!("[{}]", token.payload));
             }
         }
@@ -318,7 +318,7 @@ pub fn render_user_link(destination: &SimplePageName) -> String {
     )
 }
 
-fn decode_destination(destination: &String) -> String {
+fn decode_destination(destination: &str) -> String {
     destination.replace("%2F", "/")
 }
 
@@ -361,7 +361,7 @@ mod tests {
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::renderer::builder::create_empty_render_context;
     use crate::looksyk::renderer::render_block;
-    use crate::state::state::builder::empty_data_root_location;
+    use crate::state::application_state::builder::empty_data_root_location;
 
     #[test]
     fn should_serialize_original_text() {
@@ -500,15 +500,15 @@ mod tests {
                 as_tokens: vec![
                     BlockToken {
                         payload: does_not_matter(),
-                        block_token_type: BlockTokenType::LINK,
+                        block_token_type: BlockTokenType::Link,
                     },
                     BlockToken {
                         payload: does_not_matter(),
-                        block_token_type: BlockTokenType::TEXT,
+                        block_token_type: BlockTokenType::Text,
                     },
                     BlockToken {
                         payload: does_not_matter(),
-                        block_token_type: BlockTokenType::TODO,
+                        block_token_type: BlockTokenType::Todo,
                     },
                 ],
                 as_text: does_not_matter(),
@@ -522,7 +522,7 @@ mod tests {
             &empty_data_root_location(),
         );
 
-        assert_eq!(result.has_dynamic_content, false);
+        assert!(!result.has_dynamic_content);
     }
 
     #[test]
@@ -532,7 +532,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![BlockToken {
                     payload: does_not_matter(),
-                    block_token_type: BlockTokenType::QUERY,
+                    block_token_type: BlockTokenType::Query,
                 }],
                 as_text: does_not_matter(),
             }],
@@ -545,7 +545,7 @@ mod tests {
             &empty_data_root_location(),
         );
 
-        assert_eq!(result.has_dynamic_content, false);
+        assert!(!result.has_dynamic_content);
     }
 
     #[test]
@@ -556,7 +556,7 @@ mod tests {
                 as_tokens: vec![BlockToken {
                     payload: "todos tag:\"myTag\" state:\"todo\" display:\"referenced-list\"}"
                         .to_string(),
-                    block_token_type: BlockTokenType::QUERY,
+                    block_token_type: BlockTokenType::Query,
                 }],
                 as_text: does_not_matter(),
             }],
@@ -569,7 +569,7 @@ mod tests {
             &empty_data_root_location(),
         );
 
-        assert_eq!(result.has_dynamic_content, true);
+        assert!(result.has_dynamic_content);
     }
 
     fn does_not_matter() -> String {
@@ -584,7 +584,7 @@ mod tests {
                 as_tokens: vec![
                     BlockToken {
                         payload: " ".to_string(),
-                        block_token_type: BlockTokenType::TODO,
+                        block_token_type: BlockTokenType::Todo,
                     },
                     text_token_str("Mein Todo"),
                 ],
@@ -611,11 +611,11 @@ mod tests {
                 as_tokens: vec![
                     BlockToken {
                         payload: "x".to_string(),
-                        block_token_type: BlockTokenType::TODO,
+                        block_token_type: BlockTokenType::Todo,
                     },
                     BlockToken {
                         payload: "Mein Todo".to_string(),
-                        block_token_type: BlockTokenType::TEXT,
+                        block_token_type: BlockTokenType::Text,
                     },
                 ],
                 as_text: "[x] Mein Todo".to_string(),

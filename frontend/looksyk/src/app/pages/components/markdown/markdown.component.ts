@@ -9,7 +9,6 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Block, RefecencedBlockContent } from "../../model";
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, Subject } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -26,10 +25,11 @@ import { Router } from "@angular/router";
 import { PageService } from "../../../services/page.service";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: 'app-markdown',
-  imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent, AsyncPipe],
   templateUrl: './markdown.component.html',
   styleUrls: ['./markdown.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -128,7 +128,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   keyboadActionTrigger_ = this.userInteraction.openMarkdown$.pipe(filter(() => this.editable)).subscribe(openMarkdown => {
     if (openMarkdown.target.blockTarget == this.markdown.indentification) {
       this.openEditor();
-      this.markdownRef.nativeElement.scrollIntoView({behavior: 'smooth', block:'nearest'});
+      this.markdownRef.nativeElement.scrollIntoView({behavior: 'smooth', block: 'nearest'});
 
     } else {
       firstValueFrom(this.componentMode).then(

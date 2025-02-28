@@ -3,7 +3,7 @@ use crate::io::http::page::mapper::map_to_block_dto;
 use crate::looksyk::model::RawBlock;
 use crate::looksyk::parser::parse_block;
 use crate::looksyk::renderer::{render_block, StaticRenderContext};
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{post, web, Responder};
 

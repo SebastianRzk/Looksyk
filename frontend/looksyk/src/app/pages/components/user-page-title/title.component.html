@@ -1,3 +1,5 @@
 <h1>
-<a class="title" *ngFor="let title of parsedTitle$ | async" [routerLink]="rootPath + title.link">{{title.viewName}}</a>
+  @for (title of parsedTitle$ | async; track title.link) {
+    <a class="title" [routerLink]="rootPath + title.link">{{ title.viewName }}</a>
+  }
 </h1>

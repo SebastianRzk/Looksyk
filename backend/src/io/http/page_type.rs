@@ -4,7 +4,7 @@ use crate::looksyk::model::{PageId, PageType, SimplePageName};
 pub const USER_PAGE_PREFIX: &str = "%%user-page/";
 pub const JOURNAL_PAGE_PREFIX: &str = "%%journal-page/";
 
-pub fn get_page_id_from_external_string(external_string: &String) -> PageId {
+pub fn get_page_id_from_external_string(external_string: &str) -> PageId {
     if external_string.starts_with(USER_PAGE_PREFIX) {
         PageId {
             name: SimplePageName {
@@ -48,14 +48,14 @@ mod tests {
 
     #[test]
     fn test_get_page_id_from_external_string_with_user_page() {
-        let page_id = super::get_page_id_from_external_string(&"%%user-page/test".to_string());
+        let page_id = super::get_page_id_from_external_string("%%user-page/test");
         assert_eq!(page_id.page_type, super::PageType::UserPage);
         assert_eq!(page_id.name.name, "test");
     }
 
     #[test]
     fn test_get_page_id_from_external_string_with_journal_page() {
-        let page_id = super::get_page_id_from_external_string(&"%%journal-page/test".to_string());
+        let page_id = super::get_page_id_from_external_string("%%journal-page/test");
         assert_eq!(page_id.page_type, super::PageType::JournalPage);
         assert_eq!(page_id.name.name, "test");
     }

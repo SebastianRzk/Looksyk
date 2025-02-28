@@ -20,7 +20,7 @@ impl ParsedBlock {
     pub fn contains_reference(&self, reference: &SimplePageName) -> bool {
         self.content.iter().any(|block_content| {
             block_content.as_tokens.iter().any(|block_token| {
-                block_token.block_token_type == BlockTokenType::LINK
+                block_token.block_token_type == BlockTokenType::Link
                     && block_token.payload == reference.name
             })
         })
@@ -44,7 +44,7 @@ pub mod builder {
 
     pub fn query_block_token(query_payload: &str) -> BlockToken {
         BlockToken {
-            block_token_type: super::BlockTokenType::QUERY,
+            block_token_type: super::BlockTokenType::Query,
             payload: query_payload.to_string(),
         }
     }
@@ -72,11 +72,11 @@ pub struct BlockContent {
 
 #[derive(Clone, PartialEq, Debug, Hash, Eq)]
 pub enum BlockTokenType {
-    TEXT,
-    LINK,
-    JOURNALLINK,
-    QUERY,
-    TODO,
+    Text,
+    Link,
+    JournalLink,
+    Query,
+    Todo,
 }
 
 #[derive(Clone, Debug, PartialEq)]

@@ -1,7 +1,7 @@
 use std::cmp::max;
 use std::string::ToString;
 
-use crate::looksyk::model::BlockTokenType::TEXT;
+use crate::looksyk::model::BlockTokenType::Text;
 use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, RawBlock,
     RawMarkdownFile, UpdateMarkdownFile,
@@ -25,8 +25,8 @@ fn feed_inactive(c: char, state: MatcherState, start_sequence: &str) -> MatcherS
 
 fn feed_active(c: char, state: &MatcherState, stop_sequence: &str) -> MatcherState {
     let mut new_inner_text = state.inner_text.clone();
-    let new_index;
-    new_index = feed_pattern(c, stop_sequence, state);
+
+    let new_index = feed_pattern(c, stop_sequence, state);
     new_inner_text.push(c);
     if new_index == stop_sequence.len() {
         let additional_chars_to_remove = stop_sequence.len() - 1;
@@ -116,15 +116,15 @@ fn create_inactive_matcher_state() -> MatcherState {
     }
 }
 
-pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
+pub fn parse_text_content(text_content: &str) -> Vec<BlockToken> {
     let mut parsed_tokens = vec![];
 
-    let mut remaining_text_content = text_content.clone();
+    let mut remaining_text_content = text_content.to_string();
 
     if text_content.starts_with("[ ] ") {
         parsed_tokens.push(BlockToken {
             payload: " ".to_string(),
-            block_token_type: BlockTokenType::TODO,
+            block_token_type: BlockTokenType::Todo,
         });
         remaining_text_content = remaining_text_content
             .strip_prefix("[ ] ")
@@ -134,7 +134,7 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
     if text_content.starts_with("[x] ") {
         parsed_tokens.push(BlockToken {
             payload: "x".to_string(),
-            block_token_type: BlockTokenType::TODO,
+            block_token_type: BlockTokenType::Todo,
         });
         remaining_text_content = remaining_text_content
             .strip_prefix("[x] ")
@@ -150,7 +150,7 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
     let mut end_matching_index = 0;
 
     for char in remaining_text_content.chars() {
-        current_index = current_index + char.len_utf8();
+        current_index += char.len_utf8();
         if current_matcher.is_none() {
             link_matcher = feed_inactive(char, link_matcher, LINK_START);
             if link_matcher.active {
@@ -158,9 +158,9 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
                 parsed_tokens.push(BlockToken {
                     payload: remaining_text_content[end_matching_index..start_matching_index]
                         .to_string(),
-                    block_token_type: TEXT,
+                    block_token_type: Text,
                 });
-                current_matcher = Some(BlockTokenType::LINK);
+                current_matcher = Some(BlockTokenType::Link);
             }
 
             query_matcher = feed_inactive(char, query_matcher, QUERY_START);
@@ -169,20 +169,20 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
                 parsed_tokens.push(BlockToken {
                     payload: remaining_text_content[end_matching_index..start_matching_index]
                         .to_string(),
-                    block_token_type: TEXT,
+                    block_token_type: Text,
                 });
-                current_matcher = Some(BlockTokenType::QUERY);
+                current_matcher = Some(BlockTokenType::Query);
             }
         } else {
             match current_matcher {
-                Some(BlockTokenType::LINK) => {
+                Some(BlockTokenType::Link) => {
                     link_matcher = feed_active(char, &link_matcher, LINK_END);
                     if !link_matcher.active {
                         let end_index = current_index - LINK_END.len();
                         let start_index = start_matching_index + LINK_START.len();
                         parsed_tokens.push(BlockToken {
                             payload: remaining_text_content[start_index..end_index].to_string(),
-                            block_token_type: BlockTokenType::LINK,
+                            block_token_type: BlockTokenType::Link,
                         });
                         current_matcher = None;
                         end_matching_index = current_index;
@@ -190,14 +190,14 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
                         query_matcher = create_inactive_matcher_state();
                     }
                 }
-                Some(BlockTokenType::QUERY) => {
+                Some(BlockTokenType::Query) => {
                     query_matcher = feed_active(char, &query_matcher, QUERY_END);
                     if !query_matcher.active {
                         let end_index = current_index - QUERY_END.len();
                         let start_index = start_matching_index + QUERY_START.len();
                         parsed_tokens.push(BlockToken {
                             payload: remaining_text_content[start_index..end_index].to_string(),
-                            block_token_type: BlockTokenType::QUERY,
+                            block_token_type: BlockTokenType::Query,
                         });
                         current_matcher = None;
                         end_matching_index = current_index;
@@ -213,7 +213,7 @@ pub fn parse_text_content(text_content: &String) -> Vec<BlockToken> {
     parsed_tokens.push(BlockToken {
         payload: remaining_text_content[max(start_matching_index, end_matching_index)..]
             .to_string(),
-        block_token_type: TEXT,
+        block_token_type: Text,
     });
     parsed_tokens
 }
@@ -230,7 +230,7 @@ mod tests {
         assert_eq!(result.len(), 2);
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "[[link");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -238,9 +238,9 @@ mod tests {
         let input_text = "das ist ein kleiner test".to_string();
         let result = parse_text_content(&input_text);
         assert_eq!(result.len(), 1);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, input_text);
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -249,17 +249,17 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 3);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, "davor ");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
 
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "link");
-        assert_eq!(element.block_token_type, BlockTokenType::LINK);
+        assert_eq!(element.block_token_type, BlockTokenType::Link);
 
         let element = result.get(2).unwrap();
         assert_eq!(element.payload, " dahinter");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -268,17 +268,17 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 3);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, "davor ");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
 
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "länk");
-        assert_eq!(element.block_token_type, BlockTokenType::LINK);
+        assert_eq!(element.block_token_type, BlockTokenType::Link);
 
         let element = result.get(2).unwrap();
         assert_eq!(element.payload, " dahinter");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -287,17 +287,17 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 3);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, "davor ");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
 
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "querycontent");
-        assert_eq!(element.block_token_type, BlockTokenType::QUERY);
+        assert_eq!(element.block_token_type, BlockTokenType::Query);
 
         let element = result.get(2).unwrap();
         assert_eq!(element.payload, " dahinter");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -306,13 +306,13 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 2);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, " ");
-        assert_eq!(element.block_token_type, BlockTokenType::TODO);
+        assert_eq!(element.block_token_type, BlockTokenType::Todo);
 
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "Ein kleines TODO");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -321,13 +321,13 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 2);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, "x");
-        assert_eq!(element.block_token_type, BlockTokenType::TODO);
+        assert_eq!(element.block_token_type, BlockTokenType::Todo);
 
         let element = result.get(1).unwrap();
         assert_eq!(element.payload, "Ein kleines TODO");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 
     #[test]
@@ -336,8 +336,8 @@ mod tests {
         let result = parse_text_content(&input_text);
 
         assert_eq!(result.len(), 1);
-        let element = result.get(0).unwrap();
+        let element = result.first().unwrap();
         assert_eq!(element.payload, "davor [123[link]]");
-        assert_eq!(element.block_token_type, BlockTokenType::TEXT);
+        assert_eq!(element.block_token_type, BlockTokenType::Text);
     }
 }

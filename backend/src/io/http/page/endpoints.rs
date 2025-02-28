@@ -7,14 +7,14 @@ use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::dtos::UpdateBlockContentDto;
 use crate::io::http::page::mapper::{map_markdown_block_dto, map_to_block_dto};
 use crate::io::http::page_type::get_page_id_from_external_string;
-use crate::looksyk::index::index::update_index_for_file;
+use crate::looksyk::index::index_operations::update_index_for_file;
 use crate::looksyk::model::{PageType, RawBlock, RawMarkdownFile};
 use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_block, StaticRenderContext};
 use crate::looksyk::serializer::update_and_serialize_page;
+use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::state::block::BlockReference;
-use crate::state::state::{AppState, CurrentPageAssociatedState};
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
 async fn update_block(
@@ -32,7 +32,6 @@ async fn update_block(
             page_id: page_id.clone(),
         },
     );
-    let selected_page;
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
@@ -40,15 +39,13 @@ async fn update_block(
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
 
-    match page_id.page_type {
-        PageType::JournalPage => {
-            selected_page = journal_guard.entries.get(&page_id.name).unwrap().clone();
-        }
+    let selected_page = match page_id.page_type {
+        PageType::JournalPage => journal_guard.entries.get(&page_id.name).unwrap().clone(),
         PageType::UserPage => {
             println!("Simple page {:?}", page_id);
-            selected_page = page_guard.entries.get(&page_id.name).unwrap().clone();
+            page_guard.entries.get(&page_id.name).unwrap().clone()
         }
-    }
+    };
 
     let serialized_page = update_and_serialize_page(&entity, &selected_page);
     let parsed_lines = parse_lines(serialized_page.join("\n").lines());

@@ -3,7 +3,7 @@ use crate::looksyk::model::{
 };
 use crate::looksyk::parser::parse_text_content;
 use crate::looksyk::syntax::looksyk_markdown::render_as_tag;
-use crate::state::state::{CurrentPageOnDiskState, NewPageOnDiskState};
+use crate::state::application_state::{CurrentPageOnDiskState, NewPageOnDiskState};
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
 use std::collections::HashSet;
@@ -74,8 +74,8 @@ pub fn rename_page_across_all_files(
 }
 
 fn rename_tag_across_all_files(
-    old: &String,
-    new: &String,
+    old: &str,
+    new: &str,
     old_page_name: &OldPageName,
     tag_index: &TagIndex,
     current_page_associated_state: CurrentPageOnDiskState,
@@ -124,8 +124,8 @@ fn rename_tag_across_all_files(
 }
 
 fn rename_tag_in_file(
-    old: &String,
-    new: &String,
+    old: &str,
+    new: &str,
     parsed_markdown_file: &ParsedMarkdownFile,
 ) -> ParsedMarkdownFile {
     let mut new_blocks = vec![];
@@ -136,7 +136,7 @@ fn rename_tag_in_file(
     ParsedMarkdownFile { blocks: new_blocks }
 }
 
-fn rename_tag_in_block(old: &String, new: &String, parsed_block: &ParsedBlock) -> ParsedBlock {
+fn rename_tag_in_block(old: &str, new: &str, parsed_block: &ParsedBlock) -> ParsedBlock {
     let mut new_content = vec![];
     for line in &parsed_block.content {
         let new_line = rename_tag_in_line(old, new, line);
@@ -148,7 +148,7 @@ fn rename_tag_in_block(old: &String, new: &String, parsed_block: &ParsedBlock) -
     }
 }
 
-fn rename_tag_in_line(old: &String, new: &String, p2: &BlockContent) -> BlockContent {
+fn rename_tag_in_line(old: &str, new: &str, p2: &BlockContent) -> BlockContent {
     let new_text = p2.as_text.replace(old, new);
 
     BlockContent {
@@ -214,8 +214,8 @@ mod tests {
     use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
     use crate::looksyk::model::builder::block_with_text_content;
     use crate::looksyk::model::{PageId, ParsedMarkdownFile, SimplePageName};
+    use crate::state::application_state::CurrentPageOnDiskState;
     use crate::state::journal::JournalPageIndex;
-    use crate::state::state::CurrentPageOnDiskState;
     use crate::state::tag::TagIndex;
     use crate::state::userpage::UserPageIndex;
     use std::collections::{HashMap, HashSet};
@@ -286,37 +286,25 @@ mod tests {
         );
 
         assert_eq!(result.file_changes.file_to_delete.len(), 1);
-        assert_eq!(
-            result
-                .file_changes
-                .file_to_delete
-                .contains(&old_page_name.as_user_page()),
-            true
-        );
+        assert!(result
+            .file_changes
+            .file_to_delete
+            .contains(&old_page_name.as_user_page()));
         assert_eq!(result.file_changes.changed_files.len(), 3);
-        assert_eq!(
-            result
-                .file_changes
-                .changed_files
-                .contains(&new_page_name.as_user_page()),
-            true
-        );
-        assert_eq!(
-            result
-                .file_changes
-                .changed_files
-                .contains(&referencing_page_name_user.as_user_page()),
-            true
-        );
-        assert_eq!(
-            result
-                .file_changes
-                .changed_files
-                .contains(&referencing_page_name_journal.as_journal_page()),
-            true
-        );
+        assert!(result
+            .file_changes
+            .changed_files
+            .contains(&new_page_name.as_user_page()));
+        assert!(result
+            .file_changes
+            .changed_files
+            .contains(&referencing_page_name_user.as_user_page()));
+        assert!(result
+            .file_changes
+            .changed_files
+            .contains(&referencing_page_name_journal.as_journal_page()));
         let new_user_pages = result.new_page_associated_state.user_pages.entries;
-        assert_eq!(new_user_pages.contains_key(&old_page_name), true);
+        assert!(new_user_pages.contains_key(&old_page_name));
         let new_page = new_user_pages.get(&new_page_name).unwrap();
         assert_eq!(new_page.blocks.len(), 2);
         assert_eq!(new_page.blocks[0].content[0].as_text, "new page content");

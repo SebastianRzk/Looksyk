@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from "rxjs";
 import { RouterLink } from "@angular/router";
 import { HistoryService } from "../../../services/history.service";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-user-page-title',
-    imports: [CommonModule, RouterLink],
-    templateUrl: './title.component.html',
-    styleUrls: ['./title.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-user-page-title',
+  imports: [RouterLink, AsyncPipe],
+  templateUrl: './title.component.html',
+  styleUrls: ['./title.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnChanges {
 

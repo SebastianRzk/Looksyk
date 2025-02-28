@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use crate::looksyk::config::config::Config;
+use crate::looksyk::config::runtime_graph_configuration::Config;
 use crate::looksyk::index::media::MediaIndex;
 use crate::state::asset_cache::AssetCache;
 use crate::state::journal::JournalPageIndex;
@@ -40,7 +40,7 @@ pub struct DataRootLocation {
 
 #[cfg(test)]
 pub mod builder {
-    use crate::state::state::DataRootLocation;
+    use crate::state::application_state::DataRootLocation;
     use std::path::Path;
 
     pub fn empty_data_root_location() -> DataRootLocation {

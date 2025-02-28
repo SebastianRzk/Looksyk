@@ -20,7 +20,7 @@ pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
         referenced_content: prepared_block
             .referenced_markdown
             .iter()
-            .map(|x| map_to_prepared_reference_to(x))
+            .map(map_to_prepared_reference_to)
             .collect(),
         has_dynamic_content: prepared_block.has_dynamic_content,
     }
@@ -46,7 +46,7 @@ pub fn map_markdown_reference_to_dto(reference: &BlockReference) -> MarkdownRefe
         file_id: page_id_to_external_string(&reference.page_id),
         file_name: reference.page_id.name.name.clone(),
         block_number: reference.block_number,
-        link: from_markdown_reference_to_link(&reference),
+        link: from_markdown_reference_to_link(reference),
     }
 }
 
@@ -73,7 +73,7 @@ pub fn map_markdown_file_to_dto(
         blocks: prepared_markdown_file
             .blocks
             .iter()
-            .map(|x| map_to_block_dto(x))
+            .map(map_to_block_dto)
             .collect(),
     }
 }

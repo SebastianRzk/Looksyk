@@ -31,7 +31,7 @@ pub fn parse_lines(lines: Lines) -> Vec<RawBlock> {
         let mut rest_of_line = line.trim_start_matches(INDENTATION);
 
         if rest_of_line.starts_with(BULLET) {
-            if current_block.len() > 0 {
+            if !current_block.is_empty() {
                 result.push(RawBlock {
                     indentation,
                     text_content: current_block,
@@ -43,7 +43,7 @@ pub fn parse_lines(lines: Lines) -> Vec<RawBlock> {
         }
         current_block.push(rest_of_line.to_string());
     }
-    if current_block.len() > 0 {
+    if !current_block.is_empty() {
         result.push(RawBlock {
             indentation,
             text_content: current_block,
@@ -60,10 +60,10 @@ mod tests {
     fn should_parse_two_lines_as_blocks() {
         let result = read_file_contents("- line 1\n- line 2".to_string());
         assert_eq!(result.blocks.len(), 2);
-        let block1 = result.blocks.get(0).unwrap();
+        let block1 = result.blocks.first().unwrap();
         assert_eq!(block1.text_content, vec!["line 1"]);
         assert_eq!(block1.indentation, 0);
-        let block2 = result.blocks.get(0).unwrap();
+        let block2 = result.blocks.first().unwrap();
         assert_eq!(block2.text_content, vec!["line 1"]);
         assert_eq!(block2.indentation, 0);
     }
@@ -73,7 +73,7 @@ mod tests {
         let result = read_file_contents("- parent\n\t- child".to_string());
 
         assert_eq!(result.blocks.len(), 2);
-        let parent = result.blocks.get(0).unwrap();
+        let parent = result.blocks.first().unwrap();
         assert_eq!(parent.text_content, vec!["parent"]);
         assert_eq!(parent.indentation, 0);
 
@@ -86,7 +86,7 @@ mod tests {
     fn should_add_following_line_to_block() {
         let result = read_file_contents("- line1\nline2".to_string());
         assert_eq!(result.blocks.len(), 1);
-        let block = result.blocks.get(0).unwrap();
+        let block = result.blocks.first().unwrap();
         assert_eq!(block.text_content, vec!["line1", "line2"]);
     }
 }

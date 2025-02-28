@@ -35,7 +35,7 @@ pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
 
 pub fn render_page_hierarchy(query: Query, data: &UserPageIndex) -> QueryRenderResult {
     let root = query.args.get(PARAM_ROOT).unwrap();
-    let keys: Vec<&SimplePageName> = data.entries.keys().into_iter().collect();
+    let keys: Vec<&SimplePageName> = data.entries.keys().collect();
 
     let mut result = filter_pages_by_root(root, keys);
     result.sort_unstable_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
@@ -71,8 +71,8 @@ pub fn render_as_list(
     let mut result = format!("{}:\n", root_name);
     for page in selected_pages {
         result.push_str("- ");
-        result.push_str(render_user_link(&page).as_str());
-        result.push_str("\n")
+        result.push_str(render_user_link(page).as_str());
+        result.push('\n')
     }
 
     QueryRenderResult {

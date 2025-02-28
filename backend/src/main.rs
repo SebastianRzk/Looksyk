@@ -2,7 +2,8 @@ use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 use std::sync::Mutex;
 
-use crate::configuration::APPLICATION_HOST;
+use self::looksyk::config::startup_configuration;
+use self::looksyk::config::startup_configuration::APPLICATION_HOST;
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_file::{create_folder, exists_folder, folder_empty};
 use crate::io::fs::basic_folder::home_directory;
@@ -22,18 +23,17 @@ use crate::io::http::page::journalpage;
 use crate::io::http::page::search;
 use crate::io::http::page::userpage;
 use crate::io::http::r#static;
-use crate::looksyk::config::config::{Config, Design};
+use crate::looksyk::config::runtime_graph_configuration::{Config, Design};
 use crate::looksyk::index::asset::create_empty_asset_cache;
 use crate::looksyk::index::media::MediaIndex;
 use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
-use crate::state::state::{AppState, DataRootLocation, PureAppState};
+use crate::state::application_state::{AppState, DataRootLocation, PureAppState};
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 
-mod configuration;
 mod io;
 mod looksyk;
 mod state;
@@ -41,7 +41,7 @@ mod state;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    let default_config = configuration::get_default_configuration();
+    let default_config = startup_configuration::get_default_configuration();
     let config = default_config.overwrite(get_cli_args());
 
     let data_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
@@ -126,9 +126,9 @@ async fn main() -> std::io::Result<()> {
 fn init_empty_graph(data_root_location: &DataRootLocation) {
     create_folder(data_root_location.path.join("assets"));
     create_folder(data_root_location.path.join("config"));
-    write_media_config(&data_root_location, &MediaIndex { media: vec![] });
+    write_media_config(data_root_location, &MediaIndex { media: vec![] });
     save_config_to_file(
-        &data_root_location,
+        data_root_location,
         &Config {
             favourites: vec![],
             design: Design {

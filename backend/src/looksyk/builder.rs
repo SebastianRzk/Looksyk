@@ -3,7 +3,7 @@ use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 #[cfg(test)]
 pub mod test_builder {
     use crate::looksyk::datatypes::AssetDescriptor;
-    use crate::state::state::DataRootLocation;
+    use crate::state::application_state::DataRootLocation;
     use std::path::PathBuf;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
@@ -19,14 +19,14 @@ pub mod test_builder {
 
 pub fn text_token_str(text: &str) -> BlockToken {
     BlockToken {
-        block_token_type: BlockTokenType::TEXT,
+        block_token_type: BlockTokenType::Text,
         payload: text.to_string(),
     }
 }
 
 pub fn text_token(payload: String) -> BlockToken {
     BlockToken {
-        block_token_type: BlockTokenType::TEXT,
+        block_token_type: BlockTokenType::Text,
         payload,
     }
 }
@@ -42,7 +42,7 @@ pub fn page_name_str(name: &str) -> SimplePageName {
 pub fn link_token(link: &str) -> BlockToken {
     BlockToken {
         payload: link.to_string(),
-        block_token_type: BlockTokenType::LINK,
+        block_token_type: BlockTokenType::Link,
     }
 }
 
@@ -50,7 +50,7 @@ pub fn link_token(link: &str) -> BlockToken {
 pub fn journal_link_token(link: &str) -> BlockToken {
     BlockToken {
         payload: link.to_string(),
-        block_token_type: BlockTokenType::JOURNALLINK,
+        block_token_type: BlockTokenType::JournalLink,
     }
 }
 
@@ -74,19 +74,19 @@ pub mod builder {
 
     pub fn todo_token() -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::TODO,
+            block_token_type: BlockTokenType::Todo,
             payload: " ".to_string(),
         }
     }
     pub fn done_token() -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::TODO,
+            block_token_type: BlockTokenType::Todo,
             payload: "x".to_string(),
         }
     }
     pub fn any_text_token() -> BlockToken {
         BlockToken {
-            block_token_type: BlockTokenType::TEXT,
+            block_token_type: BlockTokenType::Text,
             payload: "my todo".to_string(),
         }
     }

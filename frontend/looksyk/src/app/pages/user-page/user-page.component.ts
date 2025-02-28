@@ -1,24 +1,24 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {PageService} from "../../services/page.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription} from "rxjs";
-import {MarkdownPage} from "../model";
-import {TitleComponent} from "../components/user-page-title/title.component";
-import {ShowPageComponent} from "../show-page/show-page.component";
-import {FavStarComponent} from "../components/fav-star/fav-star.component";
-import {ReferencedByComponent} from "../components/referenced-by/referenced-by.component";
-import {MatDivider} from "@angular/material/divider";
-import {MatIcon} from "@angular/material/icon";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {RenamePageSectionComponent} from "../components/rename-page-section/rename-page-section.component";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { PageService } from "../../services/page.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from "rxjs";
+import { MarkdownPage } from "../model";
+import { TitleComponent } from "../components/user-page-title/title.component";
+import { ShowPageComponent } from "../show-page/show-page.component";
+import { FavStarComponent } from "../components/fav-star/fav-star.component";
+import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
+import { MatDivider } from "@angular/material/divider";
+import { MatIcon } from "@angular/material/icon";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { RenamePageSectionComponent } from "../components/rename-page-section/rename-page-section.component";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-user-page',
-    imports: [CommonModule, TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent],
-    templateUrl: './user-page.component.html',
-    styleUrls: ['./user-page.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-user-page',
+  imports: [TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent, AsyncPipe],
+  templateUrl: './user-page.component.html',
+  styleUrls: ['./user-page.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {

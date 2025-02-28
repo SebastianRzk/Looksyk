@@ -1,6 +1,6 @@
 use crate::init_data;
 use crate::io::http::state::dtos::state_refreshed;
-use crate::state::state::AppState;
+use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{post, web, Responder};
 

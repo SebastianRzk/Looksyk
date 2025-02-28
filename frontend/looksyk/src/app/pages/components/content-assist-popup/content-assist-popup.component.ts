@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import {
   BehaviorSubject,
   combineLatest,
@@ -29,7 +29,6 @@ import {
   selector: 'app-content-assist-popup',
   imports: [
     AsyncPipe,
-    NgIf,
     ReactiveFormsModule,
   ],
   templateUrl: './content-assist-popup.component.html',

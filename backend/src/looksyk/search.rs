@@ -41,8 +41,7 @@ fn search_in_index(
     let mut result = vec![];
 
     for (simple_page_name, parsed_markdown_file) in pages.iter() {
-        let mut block_number = 0;
-        for block in parsed_markdown_file.blocks.iter() {
+        for (block_number, block) in parsed_markdown_file.blocks.iter().enumerate() {
             for block_content in &block.content {
                 if block_content.as_text.contains(&search_term.as_string) {
                     result.push(SearchFinding {
@@ -54,7 +53,6 @@ fn search_in_index(
                     });
                 }
             }
-            block_number += 1;
         }
     }
 
