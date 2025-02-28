@@ -16,7 +16,6 @@ jobs:
       - run: cargo test --all-features
         working-directory: ./backend
 
-  # Check formatting with rustfmt
   backend-formatting:
     name: backend cargo fmt
     runs-on: ubuntu-latest
@@ -28,6 +27,17 @@ jobs:
           components: rustfmt
       - name:  Check
         run: cargo fmt --all -- --check
+        working-directory: ./backend
+  backend-clippy:
+    name: backend cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Check
+        run: cargo clippy --all-features -- -D warnings
         working-directory: ./backend
   frontend:
     name: frontend build

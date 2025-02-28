@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.4.1.](#v141-2025-03-01)
 - [v1.4.0](#v140-2025-02-16)
 - [v1.3.4](#v134-2025-02-12)
 - [v1.3.3](#v133-2025-02-11)
@@ -36,6 +37,7 @@ Enhancements:
 Internal:
 
 * Replace `ngIf` directive with `@if`
+* Fix clippy warnings
 
 ### v1.4.0 (2025-02-16)
 
