@@ -27,6 +27,16 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.4.1. (2025-03-01)
+
+Enhancements:
+
+* Save `config.json` and `media.json` in pretty-json format
+
+Internal:
+
+* Replace `ngIf` directive with `@if`
+
 ### v1.4.0 (2025-02-16)
 
 Enhancements:
