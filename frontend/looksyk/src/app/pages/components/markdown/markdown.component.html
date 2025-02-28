@@ -29,14 +29,18 @@
       </button>
     </mat-menu>
   </div>
-  <ng-container *ngIf="todo$ | async as t">
-    <div *ngIf="t.isTodo" class="checkbox-container">
-      <mat-checkbox [checked]="t.isChecked" (click)="clickCheckbox()">
-      </mat-checkbox>
-    </div>
-  </ng-container>
+  @if (todo$ | async; as t) {
+    @if (t.isTodo) {
+      <div class="checkbox-container">
+        <mat-checkbox [checked]="t.isChecked" (click)="clickCheckbox()">
+        </mat-checkbox>
+      </div>
+    }
+  }
   <div class="full-width">
-    <div class="auto-update" *ngIf="autoUpdate$| async">autoupdate</div>
+    @if (autoUpdate$| async) {
+      <div class="auto-update">autoupdate</div>
+    }
     <!-- eslint-disable-next-line -->
     <div [innerHTML]="renderedMarkdown$ | async"
          [className]="(viewMode$ | async) ?'active-markdown' : 'inactive' " (click)="onClickMarkdown()"
@@ -44,23 +48,20 @@
     <div (focusout)="onFocusOutEditor($event)"
          [className]="(editMode$ | async) ?'active' : 'inactive' "
          [innerText]="editText$ | async"
-         #textarea contenteditable="plaintext-only" ></div>
-    <div *ngIf="editMode$ | async">
-    </div>
-    <div *ngIf="loadingMode$ | async">
+         #textarea contenteditable="plaintext-only"></div>
+    @if (loadingMode$ | async) {
       <div class="loading">Loading...</div>
-    </div>
+    }
   </div>
 </div>
 <div class="flex-col">
-  <ng-container *ngIf="referencedMarkdown$ | async as refs">
-    <ng-container *ngFor="let reference of refs">
+  @if (referencedMarkdown$ | async; as refs) {
+    @for (reference of refs; track reference.reference.link) {
       <div class="flex-row">
         <div class="indentation"></div>
         <app-referenced-markdown [markdown]="reference" [parentId]="markdown.indentification"
         ></app-referenced-markdown>
       </div>
-
-    </ng-container>
-  </ng-container>
+    }
+  }
 </div>

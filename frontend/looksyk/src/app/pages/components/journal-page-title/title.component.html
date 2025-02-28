@@ -1,3 +1,5 @@
 <h1 class="title" >
-<a class="title-segment" *ngIf="parsedTitle$ | async as p" [routerLink]="p.link">{{p.name}}</a>
+  @if(parsedTitle$ | async; as p){
+    <a class="title-segment" [routerLink]="p.link">{{p.name}}</a>
+  }
 </h1>

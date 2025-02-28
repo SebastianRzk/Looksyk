@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { BacklinkService } from "../../../services/backlink.service";
 import { ShowPageComponent } from "../../show-page/show-page.component";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
     selector: 'app-referenced-by',
-    imports: [
-        ShowPageComponent,
-        AsyncPipe,
-        NgIf
-    ],
+  imports: [
+    ShowPageComponent,
+    AsyncPipe
+  ],
     templateUrl: './referenced-by.component.html',
     styleUrl: './referenced-by.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush

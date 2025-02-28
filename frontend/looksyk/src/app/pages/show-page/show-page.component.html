@@ -1,3 +1,3 @@
-<ng-container *ngFor="let block of page.blocks">
+@for (block of page.blocks; track $index) {
   <app-block [block]="block" [editable]="editable" [pageid]="page.pageid"></app-block>
-</ng-container>
+}

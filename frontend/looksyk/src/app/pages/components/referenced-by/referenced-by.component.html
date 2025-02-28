@@ -1,3 +1,4 @@
 <h3>References</h3>
-<app-show-page *ngIf="backlinks$ | async as backlinks" [editable]="false"
-               [page]="backlinks"></app-show-page>
+@if (backlinks$ | async; as backlinks) {
+  <app-show-page [editable]="false" [page]="backlinks"></app-show-page>
+}

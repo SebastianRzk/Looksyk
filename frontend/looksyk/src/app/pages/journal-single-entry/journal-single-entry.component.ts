@@ -1,21 +1,20 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
-import {PageService} from "../../services/page.service";
-import {ActivatedRoute} from "@angular/router";
-import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from "rxjs";
-import {MarkdownPage} from "../model";
-import {AsyncPipe, NgIf} from "@angular/common";
-import {ShowPageComponent} from "../show-page/show-page.component";
-import {TitleComponent} from "../components/journal-page-title/title.component";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { PageService } from "../../services/page.service";
+import { ActivatedRoute } from "@angular/router";
+import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
+import { MarkdownPage } from "../model";
+import { AsyncPipe } from "@angular/common";
+import { ShowPageComponent } from "../show-page/show-page.component";
+import { TitleComponent } from "../components/journal-page-title/title.component";
 
 @Component({
     selector: 'app-journal-single-entry',
-    imports: [
-        AsyncPipe,
-        NgIf,
-        ShowPageComponent,
-        TitleComponent,
-        TitleComponent
-    ],
+  imports: [
+    AsyncPipe,
+    ShowPageComponent,
+    TitleComponent,
+    TitleComponent
+  ],
     templateUrl: './journal-single-entry.component.html',
     styleUrl: './journal-single-entry.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush

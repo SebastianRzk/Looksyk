@@ -1,2 +1,5 @@
 <h1 class="headline">Journal Overview</h1>
-<app-show-page *ngIf="page | async as p" [page]="p" [editable]="false"></app-show-page>
+@if (page | async; as p) {
+  <app-show-page [page]="p" [editable]="false"></app-show-page>
+}
+

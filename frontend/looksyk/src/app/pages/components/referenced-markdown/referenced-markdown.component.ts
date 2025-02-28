@@ -8,7 +8,6 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RefecencedBlockContent } from "../../model";
 import * as marked from 'marked';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from "rxjs";
@@ -22,13 +21,14 @@ import { PageService } from "../../../services/page.service";
 import { Router, RouterLink } from "@angular/router";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 import { MarkdownService } from "../../../services/markdown.service";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-referenced-markdown',
-    imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, RouterLink],
-    templateUrl: './referenced-markdown.component.html',
-    styleUrls: ['./referenced-markdown.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-referenced-markdown',
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, RouterLink, AsyncPipe],
+  templateUrl: './referenced-markdown.component.html',
+  styleUrls: ['./referenced-markdown.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BehaviorSubject, firstValueFrom, Subject } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { MediaPreview, MediaService } from "../../services/media.service";
@@ -9,13 +8,14 @@ import { HistoryService } from "../../services/history.service";
 import { MarkdownPage } from "../model";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
-    selector: 'app-media-details-overview',
-    imports: [CommonModule, MarkdownComponent, MatIconModule, MatButtonModule],
-    templateUrl: './details.component.html',
-    styleUrls: ['./details.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-media-details-overview',
+  imports: [MarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe],
+  templateUrl: './details.component.html',
+  styleUrls: ['./details.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit {
 

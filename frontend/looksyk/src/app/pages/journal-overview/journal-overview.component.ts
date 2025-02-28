@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { PageService } from "../../services/page.service";
 import { Observable } from "rxjs";
 import { MarkdownPage } from "../model";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ShowPageComponent } from "../show-page/show-page.component";
 
 @Component({
     selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
-    NgIf,
     ShowPageComponent
   ],
     templateUrl: './journal-overview.component.html',

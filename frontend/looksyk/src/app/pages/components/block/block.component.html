@@ -1,6 +1,8 @@
 <div class="line">
-  <ng-container *ngIf="block.indentation$ | async as i">
-    <div *ngFor="let _ of [].constructor(i)" class="indentation"></div>
-  </ng-container>
+  @if (block.indentation$ | async; as i) {
+    @for (_ of [].constructor(i); track $index) {
+      <div class="indentation"></div>
+    }
+  }
   <app-markdown [markdown]="block" [editable]="editable" [pageid]="pageid"></app-markdown>
 </div>
