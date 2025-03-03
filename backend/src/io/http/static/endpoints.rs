@@ -1,35 +1,35 @@
 use std::path::{Path, PathBuf};
 
+use crate::state::application_state::AppState;
 use actix_files::NamedFile;
 use actix_web::http::header::{ContentDisposition, DispositionType};
 use actix_web::web;
+use actix_web::web::Data;
 use actix_web::{get, Error};
 
-const STATIC_PATH: &str = "./static";
-
 #[get("/")]
-async fn index_html() -> Result<NamedFile, Error> {
-    index_html_response()
+async fn index_html(state: Data<AppState>) -> Result<NamedFile, Error> {
+    index_html_response(&state)
 }
 
 #[get("page/{p}")]
-async fn catch_all_pages() -> Result<NamedFile, Error> {
-    index_html_response()
+async fn catch_all_pages(state: Data<AppState>) -> Result<NamedFile, Error> {
+    index_html_response(&state)
 }
 
 #[get("journal/{j}")]
-async fn catch_all_journals() -> Result<NamedFile, Error> {
-    index_html_response()
+async fn catch_all_journals(state: Data<AppState>) -> Result<NamedFile, Error> {
+    index_html_response(&state)
 }
 
 #[get("journal")]
-async fn catch_all_journal() -> Result<NamedFile, Error> {
-    index_html_response()
+async fn catch_all_journal(state: Data<AppState>) -> Result<NamedFile, Error> {
+    index_html_response(&state)
 }
 
-fn index_html_response() -> Result<NamedFile, Error> {
+fn index_html_response(state: &Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = "index.html";
-    let complete_path = to_static_path(static_file_name);
+    let complete_path = to_static_path(&state.static_path, static_file_name);
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -39,9 +39,9 @@ fn index_html_response() -> Result<NamedFile, Error> {
 }
 
 #[get("/{filename}.js")]
-async fn js(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.js", path.into_inner());
-    let complete_path = to_static_path(static_file_name.as_str());
+    let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -51,9 +51,9 @@ async fn js(path: web::Path<String>) -> Result<NamedFile, Error> {
 }
 
 #[get("/{filename}.css")]
-async fn css(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
-    let complete_path = to_static_path(static_file_name.as_str());
+    let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -63,9 +63,9 @@ async fn css(path: web::Path<String>) -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/fonts/{filename}.css")]
-async fn font_css(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn font_css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
-    let complete_path = to_static_asset_fonts(static_file_name.as_str());
+    let complete_path = to_static_asset_fonts(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -75,9 +75,9 @@ async fn font_css(path: web::Path<String>) -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/fav.png")]
-async fn fav() -> Result<NamedFile, Error> {
+async fn fav(state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = "fav.png";
-    let complete_path = to_static_assets(static_file_name);
+    let complete_path = to_static_assets(&state.static_path, static_file_name);
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -87,9 +87,9 @@ async fn fav() -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/fonts/ebgaramond/{filename}.ttf")]
-async fn font_garamond(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn font_garamond(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.ttf", path.into_inner());
-    let complete_path = to_garamond(static_file_name.as_str());
+    let complete_path = to_garamond(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -99,8 +99,9 @@ async fn font_garamond(path: web::Path<String>) -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/fonts/material-icons/material.woff2")]
-async fn font_material() -> Result<NamedFile, Error> {
-    let complete_path = to_static_asset_fonts("material-icons").join("material.woff2");
+async fn font_material(state: Data<AppState>) -> Result<NamedFile, Error> {
+    let complete_path =
+        to_static_asset_fonts(&state.static_path, "material-icons").join("material.woff2");
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -110,10 +111,11 @@ async fn font_material() -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/emoji/{filename}.svg")]
-async fn emoji(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn emoji(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.svg", path.into_inner());
     println!("serving emoji {}", static_file_name.as_str());
-    let complete_path = to_static_assets("emoji").join(static_file_name.as_str());
+    let complete_path =
+        to_static_assets(&state.static_path, "emoji").join(static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -123,9 +125,9 @@ async fn emoji(path: web::Path<String>) -> Result<NamedFile, Error> {
 }
 
 #[get("/assets/js/{filename}.js")]
-async fn asset_js(path: web::Path<String>) -> Result<NamedFile, Error> {
+async fn asset_js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.js", path.into_inner());
-    let complete_path = to_static_assets("js").join(static_file_name.as_str());
+    let complete_path = to_static_assets(&state.static_path, "js").join(static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -134,22 +136,23 @@ async fn asset_js(path: web::Path<String>) -> Result<NamedFile, Error> {
         }))
 }
 
-fn to_static_path(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH).join(static_file_name)
+fn to_static_path(static_path: &str, static_file_name: &str) -> PathBuf {
+    Path::new(static_path).join(static_file_name)
 }
 
-fn to_static_assets(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH).join("assets").join(static_file_name)
+fn to_static_assets(static_path: &String, static_file_name: &str) -> PathBuf {
+    Path::new(static_path).join("assets").join(static_file_name)
 }
 
-fn to_static_asset_fonts(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH)
+fn to_static_asset_fonts(static_path: &String, static_file_name: &str) -> PathBuf {
+    Path::new(static_path)
         .join("assets")
         .join("fonts")
         .join(static_file_name)
 }
-fn to_garamond(static_file_name: &str) -> PathBuf {
-    Path::new(STATIC_PATH)
+fn to_garamond(static_path: &String, static_file_name: &str) -> PathBuf {
+    Path::new(static_path)
+        .join("assets")
         .join("assets")
         .join("fonts")
         .join("ebgaramond")

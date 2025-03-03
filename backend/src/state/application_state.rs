@@ -11,6 +11,7 @@ use crate::state::userpage::UserPageIndex;
 
 pub struct AppState {
     pub data_path: DataRootLocation,
+    pub static_path: String,
     pub a_user_pages: Mutex<UserPageIndex>,
     pub b_journal_pages: Mutex<JournalPageIndex>,
     pub c_todo_index: Mutex<TodoIndex>,

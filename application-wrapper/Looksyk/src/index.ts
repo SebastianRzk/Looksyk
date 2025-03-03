@@ -23,6 +23,9 @@ function optionsToArgs(options: Options): string[] {
     if (options["graph-location"]) {
         args.push(`--graph-location=${options["graph-location"]}`);
     }
+    if(options.installed){
+        args.push("--static-path=/usr/share/looksyk/static");
+    }
     return args;
 }
 

@@ -65,7 +65,7 @@ async fn main() -> std::io::Result<()> {
         init_empty_graph(&data_root_location);
     }
 
-    let app_state = convert_to_app_state(init_data(data_root_location));
+    let app_state = convert_to_app_state(init_data(data_root_location), &config.static_path);
 
     println!(
         "Starting Looksyk on  http://{}:{}",
@@ -173,9 +173,10 @@ fn init_data(data_root_location: DataRootLocation) -> PureAppState {
     }
 }
 
-fn convert_to_app_state(state: PureAppState) -> Data<AppState> {
+fn convert_to_app_state(state: PureAppState, static_path: &str) -> Data<AppState> {
     Data::new(AppState {
         data_path: state.data_path,
+        static_path: static_path.to_owned(),
         a_user_pages: Mutex::new(state.a_user_pages),
         b_journal_pages: Mutex::new(state.b_journal_pages),
         c_todo_index: Mutex::new(state.c_todo_index),
