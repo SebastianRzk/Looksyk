@@ -19,6 +19,7 @@ pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Confi
     Config {
         favourites: new_favourites,
         design: config.design.clone(),
+        title: config.title.clone(),
     }
 }
 
@@ -32,6 +33,7 @@ pub fn set_favourites(new_favourites: Vec<SimplePageName>, config: &Config) -> C
     Config {
         favourites: result,
         design: config.design.clone(),
+        title: config.title.clone(),
     }
 }
 
@@ -48,6 +50,7 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
     Config {
         favourites: new_favourites,
         design: config.design.clone(),
+        title: config.title.clone(),
     }
 }
 
@@ -81,6 +84,7 @@ mod tests {
         let config: Config = Config {
             favourites: vec![],
             design: empty_design(),
+            title: None,
         };
 
         let result = is_favourite(
@@ -124,6 +128,7 @@ mod tests {
                 },
             ],
             design: empty_design(),
+            title: None,
         };
 
         let result = remove_favourite(

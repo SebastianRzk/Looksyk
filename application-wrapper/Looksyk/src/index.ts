@@ -10,21 +10,18 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 interface Options {
     "graph-location"?: string
-    port?: number
-    title?: string,
-    devtools?: boolean
+    port?: number,
+    devtools?: boolean,
+    installed?: boolean
 }
 
-function optionsToArgs(options: Options): string[]{
+function optionsToArgs(options: Options): string[] {
     const args: string[] = [];
-    if(options.port){
+    if (options.port) {
         args.push(`--port=${options.port}`);
     }
-    if(options["graph-location"]){
+    if (options["graph-location"]) {
         args.push(`--graph-location=${options["graph-location"]}`);
-    }
-    if(options.title){
-        args.push(`--title=${options.title}`);
     }
     return args;
 }
@@ -32,15 +29,15 @@ function optionsToArgs(options: Options): string[]{
 const argumentConfig: ArgumentConfig<Options> = {
     port: {type: Number, optional: true},
     "graph-location": {type: String, optional: true},
-    title: {type: String, optional: true},
-    devtools: {type: Boolean, optional: true}
+    devtools: {type: Boolean, optional: true},
+    installed: {type: Boolean, optional: true}
 }
 
 const args: Options = parse<Options>(argumentConfig, {argv: process.argv.slice(1), partial: true});
 console.log("args", args);
-const port: number = args.port ? args.port : 8989;
+const port: number = args.port ? args.port : 11000;
 
-const apiServerCmd = './looksyk';
+const apiServerCmd = args.installed ? "looksyk-backend" : './looksyk';
 const apiServerArgs: string[] = optionsToArgs(args);
 const pwd = process.env["PWD"];
 const defaultZoomLevel = -0.6;
@@ -112,12 +109,12 @@ const createWindow = async (): Promise<void> => {
     // and load the index.html of the app.
     mainWindow.loadURL(`http://localhost:${port}/`);
     // Open the DevTools.
-    if(args.devtools){
+    if (args.devtools) {
         mainWindow.webContents.openDevTools();
     }
 
     console.log("Starting with zoom level ", mainWindow.webContents.getZoomLevel())
-    if (mainWindow.webContents.getZoomLevel() == 0){
+    if (mainWindow.webContents.getZoomLevel() == 0) {
         console.log("Setting zoom level to default zoom level", defaultZoomLevel)
         mainWindow.webContents.setZoomLevel(defaultZoomLevel)
     }
@@ -163,7 +160,7 @@ app.on('window-all-closed', () => {
     }
 });
 
-app.on('activate',async () => {
+app.on('activate', async () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
