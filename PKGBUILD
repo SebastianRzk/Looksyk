@@ -18,12 +18,11 @@ checkdepends=(cargo)
 provides=(looksyk looksyk-backend)
 install="$pkgname.install"
 changelog=
-source=("git+https://github.com/sebastianrzk/looksyk")
+source=("git+https://github.com/sebastianrzk/looksyk#tag=v$pkgver")
 sha256sums=('SKIP')
 
 prepare() {
 	cd "$pkgname"
-	ls -lah
 	#nvm install 23.5
 	cd frontend/looksyk
 	npm install
@@ -31,13 +30,10 @@ prepare() {
 	cd application-wrapper/Looksyk
 	npm install
 	cd ../..
-	ls -lah
 }
 
 build() {
-	ls -lah
 	cd "$pkgname"
-	ls -lah
 	cd backend
 	CFLAGS+=' -ffat-lto-objects' cargo build --release
 	cd ..
@@ -47,7 +43,6 @@ build() {
 	cd application-wrapper/Looksyk
 	npm run package
 	cd ..
-	ls -lah
 }
 
 check() {
@@ -59,12 +54,13 @@ check() {
 package() {
 	cd "$pkgname"
 	mkdir -p "${pkgdir}/usr/share/${pkgname}"
+	install -d "${pkgdir}/usr/share/" "${pkgdir}/usr/bin/"
 	install -D -m644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -D -m644 "application-wrapper/Looksyk/out/looksyk-linux-x64/resources/app.asar" "${pkgdir}/usr/share/${pkgname}/app.asar"
 	install -D -m644 "backend/target/release/looksyk" "${pkgdir}/usr/share/${pkgname}/looksyk-backend"
 	install -D -m644 "application-wrapper/looksyk" "${pkgdir}/usr/share/${pkgname}/looksyk"
 	cp -r "frontend/looksyk/dist/looksyk/browser/" "${pkgdir}/usr/share/${pkgname}/static/"
 	
-	ln -s "${pkgdir}/usr/share/${pkgname}/looksyk-backend" ${pkgdir}/usr/bin/looksyk-backend
-	ln -s "${pkgdir}/usr/share/${pkgname}/looksyk" ${pkgdir}/usr/bin/looksyk
+	ln -s "/usr/share/${pkgname}/looksyk-backend" "${pkgdir}/usr/bin/looksyk-backend"
+	ln -s "/usr/share/${pkgname}/looksyk" "${pkgdir}/usr/bin/looksyk"
 }
