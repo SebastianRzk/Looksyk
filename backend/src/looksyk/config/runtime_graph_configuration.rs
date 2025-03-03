@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub favourites: Vec<Favourite>,
     pub design: Design,
+    pub title: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -42,6 +43,7 @@ pub mod builder {
         Config {
             design: empty_design(),
             favourites: vec![favourite_str(fav)],
+            title: None,
         }
     }
     pub fn empty_design() -> Design {

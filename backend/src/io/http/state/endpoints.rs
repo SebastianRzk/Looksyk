@@ -6,7 +6,7 @@ use actix_web::{post, web, Responder};
 
 #[post("/api/state/refresh")]
 async fn update_block(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    let new_state = init_data(data.data_path.clone(), data.title.clone());
+    let new_state = init_data(data.data_path.clone());
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();

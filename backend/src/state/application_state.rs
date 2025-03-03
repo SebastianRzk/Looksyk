@@ -10,7 +10,6 @@ use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
 
 pub struct AppState {
-    pub title: String,
     pub data_path: DataRootLocation,
     pub a_user_pages: Mutex<UserPageIndex>,
     pub b_journal_pages: Mutex<JournalPageIndex>,
@@ -22,7 +21,6 @@ pub struct AppState {
 }
 
 pub struct PureAppState {
-    pub title: String,
     pub data_path: DataRootLocation,
     pub a_user_pages: UserPageIndex,
     pub b_journal_pages: JournalPageIndex,

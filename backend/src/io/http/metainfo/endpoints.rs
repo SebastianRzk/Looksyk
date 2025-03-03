@@ -7,7 +7,13 @@ use std::collections::HashSet;
 #[get("/api/title")]
 async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     Ok(web::Json(TitleDto {
-        title: data.title.clone(),
+        title: data
+            .g_config
+            .lock()
+            .unwrap()
+            .clone()
+            .title
+            .unwrap_or("No Graph Title".to_string()),
     }))
 }
 

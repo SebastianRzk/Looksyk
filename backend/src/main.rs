@@ -65,7 +65,7 @@ async fn main() -> std::io::Result<()> {
         init_empty_graph(&data_root_location);
     }
 
-    let app_state = convert_to_app_state(init_data(data_root_location, config.application_title));
+    let app_state = convert_to_app_state(init_data(data_root_location));
 
     println!(
         "Starting Looksyk on  http://{}:{}",
@@ -137,6 +137,7 @@ fn init_empty_graph(data_root_location: &DataRootLocation) {
                 foreground_color: "white".to_string(),
                 primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
             },
+            title: Some("No Graph Title".to_string()),
         },
     );
 
@@ -144,7 +145,7 @@ fn init_empty_graph(data_root_location: &DataRootLocation) {
     create_folder(data_root_location.path.join("pages"));
 }
 
-fn init_data(data_root_location: DataRootLocation, title: String) -> PureAppState {
+fn init_data(data_root_location: DataRootLocation) -> PureAppState {
     let mut media_index = read_media_config(&data_root_location);
     media_index = init_media(&data_root_location, &media_index);
     write_media_config(&data_root_location, &media_index);
@@ -161,7 +162,6 @@ fn init_data(data_root_location: DataRootLocation, title: String) -> PureAppStat
     println!("all data refreshed");
 
     PureAppState {
-        title,
         data_path: data_root_location,
         a_user_pages: user_page_index,
         b_journal_pages: journal_index,
@@ -175,7 +175,6 @@ fn init_data(data_root_location: DataRootLocation, title: String) -> PureAppStat
 
 fn convert_to_app_state(state: PureAppState) -> Data<AppState> {
     Data::new(AppState {
-        title: state.title,
         data_path: state.data_path,
         a_user_pages: Mutex::new(state.a_user_pages),
         b_journal_pages: Mutex::new(state.b_journal_pages),
