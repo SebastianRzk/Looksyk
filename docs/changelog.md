@@ -5,7 +5,8 @@ layout: default
 
 ## Table of Contents
 
-- [v1.4.1.](#v141-2025-03-01)
+- [v1.4.2](#v142-2025-03-03)
+- [v1.4.1](#v141-2025-03-01)
 - [v1.4.0](#v140-2025-02-16)
 - [v1.3.4](#v134-2025-02-12)
 - [v1.3.3](#v133-2025-02-11)
@@ -27,6 +28,17 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.4.2 (2025-03-03)
+
+Enhancements:
+
+* Move `title` option into the `config.json`
+
+Internal:
+
+* Prepare pkgbuild
+
 
 ### v1.4.1. (2025-03-01)
 
