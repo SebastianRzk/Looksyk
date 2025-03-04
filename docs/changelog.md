@@ -29,6 +29,12 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.4.3 (2025-03-04)
+
+Enhancements:
+
+* Add PKGBUILD for arch linux
+
 ### v1.4.2 (2025-03-03)
 
 Enhancements:

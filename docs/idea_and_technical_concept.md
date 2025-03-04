@@ -51,11 +51,13 @@ Tested browsers:
 
 Tested operating systems
 
-| OS      | Compatibility                                                                                                                                                                                                                                                                       |
-|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Linux   | works                                                                                                                                                                                                                                                                               |
-| Windows | Not tested. The build script certainly doesn't work (at least not without WSL). In addition, the resolution of the home directory may fail (please specify `--graph-location`) and the desktop shortcut doesn't work. Otherwise, Looksyk should be programmed platform independent. |
-| MacOs   | Not tested. Keyboard shortcuts are currently only designed for a Windows keyboard layout, but this can be changed via a pull request. There are also likely to be challenges in the build script. Otherwise, Looksyk is programmed to be platform-independent.                      |
+| OS                           | Compatibility                                                                                                                                                                                                                                                                       |
+|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Arch Linux (AUR)             | work in progress (AUR package: `looksyk-desktop-git`)                                                                                                                                                                                                                               |
+| Arch Linux manual (PKGBUILD) | works                                                                                                                                                                                                                                                                               |
+| Linux (any)                  | works                                                                                                                                                                                                                                                                               |
+| Windows                      | Not tested. The build script certainly doesn't work (at least not without WSL). In addition, the resolution of the home directory may fail (please specify `--graph-location`) and the desktop shortcut doesn't work. Otherwise, Looksyk should be programmed platform independent. |
+| MacOs                        | Not tested. Keyboard shortcuts are currently only designed for a Windows keyboard layout, but this can be changed via a pull request. There are also likely to be challenges in the build script. Otherwise, Looksyk is programmed to be platform-independent.                      |
 
 ## Project work and future
 
