@@ -9,8 +9,10 @@ layout: default
 ### This page
 
 - [Run Looksyk](#run-looksyk)
-	- [Production Build / Installation](#production-build--installation)
-	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+  - [Arch Linux / AUR](#arch-linux--aur)
+  - [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
+  - [Production Build / Manual Installation](#production-build--manual-installation)
+  - [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
 
 ### Further Reading
 
@@ -24,7 +26,20 @@ layout: default
 
 ## Run Looksyk
 
-### Production Build / Installation
+### Arch Linux / AUR
+
+You can install Looksyk from the AUR. The package is called `looksyk-desktop-git` (currently work in progress).
+
+You can run the application with the command `looksyk`.
+
+### Arch Linux / PKGBUILD
+
+You can build the application with the PKGBUILD. Run `makepkg` and install the package with
+`pacman -U ./looksyk-desktop-git-<version>.tar.zst`.
+
+You can run the application with the command `looksyk`.
+
+### Production Build / Manual Installation
 
 1. Run the script `bash build.sh` (this will build the frontend and backend, and requires `npm` and `cargo`)
 2. The application is now in the `target` folder
@@ -48,4 +63,5 @@ you can run the application with the arguments `--port`, `--graph-location` and 
 
 Are you having problems installing or setting up? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues)!
 
-Or would you like to improve the documentation or provide alternative installation methods? Make a [pull request](development_and_contribution.md).
+Or would you like to improve the documentation or provide alternative installation methods? Make
+a [pull request](development_and_contribution.md).

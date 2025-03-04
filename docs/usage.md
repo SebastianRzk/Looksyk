@@ -43,11 +43,9 @@ layout: default
 The configuration is done in the `config.json` file in the directory `~/.local/share/looksyk`. This path can be changed
 with the environment variable `LOOKSYK_CONFIG_PATH`.
 
-The default graph location is in `~/graph` (or the configured location in the `config.json`).
+The default graph location is in `~/graph` (or the configured location in the `~/.local/share/looksyk/config.json`).
 
 The application port and the graph location can be provided by arguments ( `--port` and `--graph-location`).
-
-The application title can be modified with the argument `--title`.
 
 ## Usage
 
