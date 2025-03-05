@@ -6,16 +6,16 @@
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=looksyk-desktop-git
 _pkgnameshort=looksyk
-pkgver=1.4.2
+pkgver=1.4.4
 pkgrel=1
 pkgdesc="A markdown centric, fast and local personal knowledge platform"
 arch=("x86_64")
 url="https://sebastianrzk.github.io/Looksyk"
-license=('AGPL')
+license=('AGPL-3.0-or-later')
 groups=()
-depends=(electron)
-makedepends=(git nvm npm cargo)
-checkdepends=(cargo)
+depends=(electron glibc bash gcc-libs)
+makedepends=(git nvm npm cargo glibc bash gcc-libs)
+checkdepends=(cargo glibc gcc-libs)
 provides=(looksyk looksyk-backend)
 changelog=
 source=("git+https://github.com/sebastianrzk/looksyk#tag=v$pkgver")
@@ -54,13 +54,18 @@ check() {
 package() {
 	cd "$_pkgnameshort"
 	mkdir -p "${pkgdir}/usr/share/${_pkgnameshort}"
-	install -d "${pkgdir}/usr/share/" "${pkgdir}/usr/bin/"
+	install -d "${pkgdir}/usr/share/" "${pkgdir}/usr/bin/" "${pkgdir}/usr/lib/"
 	install -D -m644 "LICENSE" "${pkgdir}/usr/share/licenses/${_pkgnameshort}/LICENSE"
-	install -D -m644 "application-wrapper/Looksyk/out/looksyk-linux-x64/resources/app.asar" "${pkgdir}/usr/share/${_pkgnameshort}/app.asar"
-	install -D -m755 "backend/target/release/looksyk" "${pkgdir}/usr/share/${_pkgnameshort}/looksyk-backend"
-	install -D -m755 "application-wrapper/looksyk" "${pkgdir}/usr/share/${_pkgnameshort}/looksyk"
+
 	cp -r "frontend/looksyk/dist/looksyk/browser/" "${pkgdir}/usr/share/${_pkgnameshort}/static/"
+	install -D -m644 "application-wrapper/Looksyk/out/looksyk-linux-x64/resources/app.asar" "${pkgdir}/usr/share/${_pkgnameshort}/app.asar"
+	install -D -m644 "icon/Looksyk-scaled.png" "${pkgdir}/usr/share/${_pkgnameshort}/icon.png"
+
+    install -D -m644 "application-wrapper/Looksyk.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+	install -D -m755 "backend/target/release/looksyk" "${pkgdir}/usr/lib/${_pkgnameshort}/looksyk-backend"
+	install -D -m755 "application-wrapper/looksyk" "${pkgdir}/usr/lib/${_pkgnameshort}/looksyk"
 	
-	ln -s "/usr/share/${_pkgnameshort}/looksyk-backend" "${pkgdir}/usr/bin/looksyk-backend"
-	ln -s "/usr/share/${_pkgnameshort}/looksyk" "${pkgdir}/usr/bin/looksyk"
+	ln -s "/usr/lib/${_pkgnameshort}/looksyk-backend" "${pkgdir}/usr/bin/looksyk-backend"
+	ln -s "/usr/lib/${_pkgnameshort}/looksyk" "${pkgdir}/usr/bin/looksyk"
 }
