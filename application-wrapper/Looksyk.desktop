@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Looksyk
+GenericName=A markdown centric, fast and local personal knowledge platform
+Icon=/usr/share/looksyk/icon.png
+Terminal=false
+Exec=looksyk

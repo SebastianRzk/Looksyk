@@ -5,6 +5,9 @@ layout: default
 
 ## Table of Contents
 
+
+- [v1.4.4](#v144-2025-03-05)
+- [v1.4.3](#v143-2025-03-04)
 - [v1.4.2](#v142-2025-03-03)
 - [v1.4.1](#v141-2025-03-01)
 - [v1.4.0](#v140-2025-02-16)
@@ -28,6 +31,13 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.4.4 (2025-03-05)
+
+Enhancements:
+
+* Improve PKGBUILD
 
 ### v1.4.3 (2025-03-04)
 
