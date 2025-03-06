@@ -33,6 +33,14 @@ layout: default
 - [Changelog](changelog.md)
 
 
+### v.1.4.5 (2025-03-06)
+
+Enhancements:
+
+* Change create desktop icons to use installed looksyk version
+* Rename package and remove "-git"
+* Update frontend dependencies
+
 ### v1.4.4 (2025-03-05)
 
 Enhancements:
