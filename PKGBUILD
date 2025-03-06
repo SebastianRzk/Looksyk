@@ -4,7 +4,7 @@
 # then please put 'unknown'.
 
 # Maintainer: Your Name <youremail@domain.com>
-pkgname=looksyk-desktop-git
+pkgname=looksyk-desktop
 _pkgnameshort=looksyk
 pkgver=1.4.4
 pkgrel=1
