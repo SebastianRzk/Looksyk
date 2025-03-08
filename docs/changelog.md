@@ -5,7 +5,8 @@ layout: default
 
 ## Table of Contents
 
-
+- [v.1.4.6 (2025-03-08)](#v146-2025-03-08)
+- [v.1.4.5 (2025-03-06)](#v145-2025-03-06)
 - [v1.4.4](#v144-2025-03-05)
 - [v1.4.3](#v143-2025-03-04)
 - [v1.4.2](#v142-2025-03-03)
@@ -32,6 +33,13 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v.1.4.6 (2025-03-08)
+
+Enhancements:
+
+* Update backend dependencies
+* Update PKGBUILD
 
 ### v.1.4.5 (2025-03-06)
 
