@@ -7,7 +7,7 @@ use crate::looksyk::model::{
     SimplePageName,
 };
 use crate::looksyk::query::render_query;
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
@@ -95,7 +95,7 @@ pub mod builder {
         }
     }
 
-    pub fn create_empty_render_context<'a>() -> TestRenderContext {
+    pub fn create_empty_render_context() -> TestRenderContext {
         TestRenderContext {
             user_pages: empty_user_page_index(),
             journal_pages: empty_journal_index(),
@@ -109,7 +109,7 @@ pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
@@ -139,7 +139,7 @@ pub fn render_block(
     block: &ParsedBlock,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
@@ -250,7 +250,7 @@ pub fn render_tokens_deep(
     tokens: &Vec<BlockToken>,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];

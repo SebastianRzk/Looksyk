@@ -14,7 +14,7 @@ use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::syntax::markdown::{
     render_as_audio, render_as_code_block, render_as_link, render_as_video,
 };
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::{AssetCache, AssetState};
 
 pub const QUERY_NAME_INSERT_FILE_CONTENT: &str = "insert-file-content";
@@ -72,7 +72,7 @@ pub fn parse_query_insert_file_content(query_str: &str) -> Result<Query, Error> 
 pub fn render_query_insert_file_content(
     query: Query,
     data: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> QueryRenderResult {
     let media_on_disk = MediaOnDisk {
         name: query.args.get(PARAM_TARGET_FILE).unwrap().clone(),
@@ -114,7 +114,7 @@ pub fn render_query_insert_file_content(
 pub fn render_code_block(
     file_name: &MediaOnDisk,
     cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> QueryRenderResult {
     let mut cache_item = cache.get(file_name);
     if AssetState::Miss == cache_item {
@@ -181,7 +181,7 @@ fn infer_language(file_name: &MediaOnDisk) -> String {
 fn render_inline(
     file_name: &MediaOnDisk,
     cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> QueryRenderResult {
     let mut cache_item = cache.get(file_name);
     if AssetState::Miss == cache_item {

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use crate::looksyk::config::runtime_graph_configuration::Config;
+use crate::looksyk::data::config::runtime_graph_configuration::Config;
 use crate::looksyk::index::media::MediaIndex;
 use crate::state::asset_cache::AssetCache;
 use crate::state::journal::JournalPageIndex;
@@ -10,7 +10,7 @@ use crate::state::todo::TodoIndex;
 use crate::state::userpage::UserPageIndex;
 
 pub struct AppState {
-    pub data_path: DataRootLocation,
+    pub data_path: GraphRootLocation,
     pub static_path: String,
     pub a_user_pages: Mutex<UserPageIndex>,
     pub b_journal_pages: Mutex<JournalPageIndex>,
@@ -22,7 +22,7 @@ pub struct AppState {
 }
 
 pub struct PureAppState {
-    pub data_path: DataRootLocation,
+    pub data_path: GraphRootLocation,
     pub a_user_pages: UserPageIndex,
     pub b_journal_pages: JournalPageIndex,
     pub c_todo_index: TodoIndex,
@@ -32,18 +32,18 @@ pub struct PureAppState {
     pub g_config: Config,
 }
 
-#[derive(Clone)]
-pub struct DataRootLocation {
+#[derive(Clone, Debug)]
+pub struct GraphRootLocation {
     pub path: PathBuf,
 }
 
 #[cfg(test)]
 pub mod builder {
-    use crate::state::application_state::DataRootLocation;
+    use crate::state::application_state::GraphRootLocation;
     use std::path::Path;
 
-    pub fn empty_data_root_location() -> DataRootLocation {
-        DataRootLocation {
+    pub fn empty_data_root_location() -> GraphRootLocation {
+        GraphRootLocation {
             path: Path::new("").to_path_buf(),
         }
     }

@@ -1,4 +1,4 @@
-use crate::looksyk::config::runtime_graph_configuration::{Config, Favourite};
+use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
 use crate::looksyk::model::SimplePageName;
 
 pub fn is_favourite(name: &SimplePageName, config: &Config) -> bool {
@@ -56,10 +56,10 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::config::runtime_graph_configuration::builder::{
+    use crate::looksyk::data::config::runtime_graph_configuration::builder::{
         config_with_fav, empty_design,
     };
-    use crate::looksyk::config::runtime_graph_configuration::{Config, Favourite};
+    use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };

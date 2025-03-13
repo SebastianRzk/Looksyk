@@ -1,0 +1,9 @@
+version: '3'
+services:
+  looksyk:
+    build: .
+    ports:
+      - "11000:11000"
+    restart: unless-stopped
+    volumes:
+      - ./graph:/app/graph

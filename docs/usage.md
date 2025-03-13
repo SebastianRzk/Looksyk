@@ -25,7 +25,7 @@ layout: default
 		- [Query Todos](#query-todos)
 		- [Query Backlinks](#query-backlinks)
 		- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
-        - [Query Blocks](#query-blocks)
+		- [Query Blocks](#query-blocks)
 - [History](#history)
 
 ### Further Reading
@@ -62,8 +62,13 @@ The `graph` folder in the home directory contains all data.
 
 ### Design
 
-The design is based on the [Material Design](https://material.io/design) guidelines. All colors can be configured in the
-`config.json` file.
+The design is based on the [Material Design](https://material.io/design) guidelines.
+
+There are two ways to customize the design:
+
+* Changing predefined color variables in the `config/config.json` file (see description below)
+* Adding custom CSS in the `config/user-theme.css` file.
+
 
 The following color values are supported:
 
@@ -328,12 +333,12 @@ Display-types:
 
 	* Creates a list of the selected blocks in the markdown-block. Each item is prefixed with a list-icon. Best suited
 	  for single-line blocks.
-  * Query
-  		
-      ![inplace-list](queries/blocks/inplace-list-query.png)
+	* Query
 
-  * Result
-  		
+	  ![inplace-list](queries/blocks/inplace-list-query.png)
+
+	* Result
+
 	  ![inplace-list](queries/blocks/inplace-list-result.png)
 
 * **referenced-list**

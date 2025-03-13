@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use crate::looksyk::data::config::theme::custom_user_theme_path;
 use crate::state::application_state::AppState;
 use actix_files::NamedFile;
 use actix_web::http::header::{ContentDisposition, DispositionType};
@@ -54,6 +55,17 @@ async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile,
 async fn css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
+    Ok(NamedFile::open(complete_path)?
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Inline,
+            parameters: vec![],
+        }))
+}
+
+#[get("custom/user-theme.css")]
+async fn user_css(state: Data<AppState>) -> Result<NamedFile, Error> {
+    let complete_path = custom_user_theme_path(&state.data_path);
     Ok(NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
@@ -152,7 +164,6 @@ fn to_static_asset_fonts(static_path: &String, static_file_name: &str) -> PathBu
 }
 fn to_garamond(static_path: &String, static_file_name: &str) -> PathBuf {
     Path::new(static_path)
-        .join("assets")
         .join("assets")
         .join("fonts")
         .join("ebgaramond")

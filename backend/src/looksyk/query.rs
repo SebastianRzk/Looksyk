@@ -17,14 +17,14 @@ use crate::looksyk::queries::references_to::{
 };
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query, QUERY_NAME_TODOS};
 use crate::looksyk::renderer::StaticRenderContext;
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
 pub fn render_query(
     block: &BlockToken,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> QueryRenderResult {
     let query = parse_query(&block.payload);
     if query.is_err() {
@@ -68,7 +68,7 @@ pub fn render_parsed_query(
     query: Query,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> QueryRenderResult {
     match query.query_type {
         QueryType::PageHierarchy => render_page_hierarchy(query, render_context.user_pages),
@@ -230,7 +230,7 @@ mod tests {
         assert_eq!(result.query_type, QueryType::PageHierarchy);
         assert_eq!(result.display, QueryDisplayType::InplaceList);
         assert_eq!(result.args.keys().len(), 1);
-        assert_eq!(result.args.get(&"root".to_string()).unwrap(), "parent");
+        assert_eq!(result.args.get("root").unwrap(), "parent");
     }
 
     #[test]

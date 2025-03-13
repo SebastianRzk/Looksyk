@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::io::fs::basic_file::{create_folder, exists_file, exists_folder, read_file};
 use crate::io::fs::basic_folder::home_directory;
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 
 const CONFIG_FILE_NAME: &str = "config.json";
 const INITIAL_GRAPH_NAME: &str = "MyFirstGraph";
@@ -14,7 +14,7 @@ const INITIAL_GRAPH_PATH: &str = "graph";
 
 pub fn get_current_active_data_root_location(
     config_location: &InitialConfigLocation,
-) -> DataRootLocation {
+) -> GraphRootLocation {
     let path = Path::new(config_location.path.as_str()).to_path_buf();
     if !exists_folder(path.clone()) {
         create_folder(path.clone());
@@ -37,7 +37,7 @@ pub fn get_current_active_data_root_location(
 
     let config_content = read_file(file);
     let root_path_config: RootPathConfig = serde_json::from_str(&config_content).unwrap();
-    DataRootLocation {
+    GraphRootLocation {
         path: root_path_config.current_active.path,
     }
 }

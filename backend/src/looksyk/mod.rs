@@ -1,6 +1,6 @@
 pub mod builder;
 pub mod builtinpage;
-pub mod config;
+pub mod data;
 pub mod datatypes;
 pub mod favourite;
 pub mod index;

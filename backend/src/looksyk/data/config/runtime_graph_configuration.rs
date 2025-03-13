@@ -31,7 +31,7 @@ impl Favourite {
 #[cfg(test)]
 pub mod builder {
     use crate::looksyk::builder::page_name_str;
-    use crate::looksyk::config::runtime_graph_configuration::{Config, Design, Favourite};
+    use crate::looksyk::data::config::runtime_graph_configuration::{Config, Design, Favourite};
 
     pub fn favourite_str(name: &str) -> Favourite {
         Favourite {

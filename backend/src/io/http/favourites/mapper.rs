@@ -1,5 +1,5 @@
 use crate::io::http::favourites::dtos::FavListDto;
-use crate::looksyk::config::runtime_graph_configuration::Favourite;
+use crate::looksyk::data::config::runtime_graph_configuration::Favourite;
 use crate::looksyk::model::SimplePageName;
 
 pub fn map_from_dto(fav_list_dto: FavListDto) -> Vec<SimplePageName> {
@@ -22,7 +22,7 @@ pub fn map_to_dto(favourites: &[Favourite]) -> FavListDto {
 #[cfg(test)]
 mod tests {
     use crate::io::http::favourites::dtos::FavListDto;
-    use crate::looksyk::config::runtime_graph_configuration::builder::favourite_str;
+    use crate::looksyk::data::config::runtime_graph_configuration::builder::favourite_str;
 
     #[test]
     fn test_map_to_dto() {

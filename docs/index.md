@@ -4,7 +4,7 @@ layout: default
 
 # Looksyk
 
-![logo](Looksyk-scaled.png)
+![banner](banner.png)
 
 ![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main)
 
@@ -68,6 +68,8 @@ own client: Looksyk (name may need to be changed).
 
 [Check out screenshots to see how each feature can be used!](usage.md)
 
+Install it and try it out! [Installation Guide](installation.md)
+
 ### Implemented Features
 
 * Pages
@@ -98,6 +100,8 @@ own client: Looksyk (name may need to be changed).
 Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or a [pull request](development_and_contribution.md)!
 
 How can you get the most out of Looksyk with these features? Learn more in the [Configuration and Usage page](usage.md) .
+
+Install it and try it out! [Installation Guide](installation.md)
 
 ### Out of scope
 
