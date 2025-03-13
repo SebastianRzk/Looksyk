@@ -4,9 +4,9 @@ use std::path::Path;
 use crate::io::fs::basic_file::{delete_file, read_file};
 use crate::io::fs::paths::path_for_page_type;
 use crate::looksyk::model::{PageType, SimplePageName};
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 
-pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
+pub fn read_all_user_files(data_root_location: &GraphRootLocation) -> Vec<PageOnDisk> {
     let page_path = data_root_location
         .path
         .clone()
@@ -14,7 +14,7 @@ pub fn read_all_user_files(data_root_location: &DataRootLocation) -> Vec<PageOnD
     read_all_files(page_path.to_str().unwrap())
 }
 
-pub fn delete_user_file(data_root_location: &DataRootLocation, simple_page_name: SimplePageName) {
+pub fn delete_user_file(data_root_location: &GraphRootLocation, simple_page_name: SimplePageName) {
     let page_path = data_root_location
         .path
         .clone()
@@ -25,7 +25,7 @@ pub fn delete_user_file(data_root_location: &DataRootLocation, simple_page_name:
     delete_file(destination);
 }
 
-pub fn read_all_journal_files(data_root_location: &DataRootLocation) -> Vec<PageOnDisk> {
+pub fn read_all_journal_files(data_root_location: &GraphRootLocation) -> Vec<PageOnDisk> {
     let journal_path = data_root_location
         .path
         .clone()
@@ -52,7 +52,7 @@ fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
     all_files
 }
 
-pub fn write_page(page: PageOnDisk, data_path: &DataRootLocation, page_type: &PageType) {
+pub fn write_page(page: PageOnDisk, data_path: &GraphRootLocation, page_type: &PageType) {
     let page_name = page.name;
     let encoded_page_name = escape_page_name(&page_name);
     let destination = data_path

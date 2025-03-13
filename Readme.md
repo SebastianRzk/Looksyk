@@ -1,6 +1,6 @@
 # Looksyk
 
-![logo](icon/Looksyk-scaled.png)
+![banner](docs/banner.png)
 
 ![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main)
 
@@ -62,6 +62,8 @@ own client: Looksyk (name may need to be changed).
 
 [Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage.html)
 
+Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation.html)
+
 ### Implemented Features
 
 * Pages
@@ -92,6 +94,9 @@ own client: Looksyk (name may need to be changed).
 Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
 
 How can you get the most out of Looksyk with these features? Learn more in the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage.html) .
+
+
+Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation.html)
 
 ### Out of scope
 

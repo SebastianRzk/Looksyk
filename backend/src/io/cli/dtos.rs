@@ -8,4 +8,6 @@ pub struct CliArgsDto {
     pub port: Option<u16>,
     #[arg(long, value_name = "static-path")]
     pub static_path: Option<String>,
+    #[arg(long, value_name = "external-app")]
+    pub external_app: Option<bool>,
 }

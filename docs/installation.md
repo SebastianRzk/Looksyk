@@ -9,10 +9,10 @@ layout: default
 ### This page
 
 - [Run Looksyk](#run-looksyk)
-  - [Arch Linux / AUR](#arch-linux--aur)
-  - [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
-  - [Production Build / Manual Installation](#production-build--manual-installation)
-  - [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+	- [Arch Linux / AUR](#arch-linux--aur)
+	- [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
+	- [Production Build / Manual Installation](#production-build--manual-installation)
+	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
 
 ### Further Reading
 
@@ -26,6 +26,15 @@ layout: default
 
 ## Run Looksyk
 
+| Operation System    | Installation Method     | Status                                                         |
+|---------------------|-------------------------|----------------------------------------------------------------|
+| Arch Linux          | AUR                     | ✅ [Installation Guide](#arch-linux--aur)                       |
+| Arch Linux          | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
+| Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
+| Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
+| Windows native      | manual build            | untested / not working out of the box                          |
+| Mac native          | manual build            | untested / not working out of the box                          |
+
 ### Arch Linux / AUR
 
 You can install Looksyk from the AUR. The package is called `looksyk-desktop` (currently work in progress).
@@ -38,6 +47,15 @@ You can build the application with the PKGBUILD. Run `makepkg` and install the p
 `pacman -U ./looksyk-desktop-<version>.tar.zst`.
 
 You can run the application with the command `looksyk`.
+
+### Docker / docker-compose
+
+The repository contains two docker-compose.yml's:
+
+* `docker-compose.yml` start the app with a prebuild image from docker-hub
+* `docker-compose.local-build.yml` build the app locally
+
+Just run `docker compose up -d` to start Looksyk and visit with Chrome / Chromium the URL `http://localhost:11000`.
 
 ### Production Build / Manual Installation
 

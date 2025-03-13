@@ -3,7 +3,7 @@ use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::media::media_type::{get_media_type_from_extension, MediaType};
 use crate::looksyk::queries::insert_file_content::render_code_block;
 use crate::looksyk::syntax::markdown::{render_as_audio, render_as_image, render_as_video};
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 use humansize::{format_size, DECIMAL};
 
@@ -22,7 +22,7 @@ pub fn generate_asset_preview(
     asset_descriptor: AssetDescriptor,
     file_size: u64,
     cache: &mut AssetCache,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> AssetPreview {
     let media_type = get_media_type_from_extension(&asset_descriptor);
     match media_type {

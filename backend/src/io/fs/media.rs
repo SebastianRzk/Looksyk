@@ -9,9 +9,9 @@ use crate::io::fs::paths::{REL_MEDIA_CONFIG_PATH, REL_MEDIA_LOCATION};
 use crate::io::hash::hash_file_content;
 use crate::looksyk::datatypes::AssetDescriptor;
 use crate::looksyk::index::media::{find_file, IndexedMedia, MediaIndex};
-use crate::state::application_state::DataRootLocation;
+use crate::state::application_state::GraphRootLocation;
 
-pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
+pub fn read_media_config(data_root_location: &GraphRootLocation) -> MediaIndex {
     let media_config_path = media_config_path(data_root_location);
     let config_file_content_as_str = read_file(media_config_path);
     let json: Vec<IndexedMedia> =
@@ -19,7 +19,7 @@ pub fn read_media_config(data_root_location: &DataRootLocation) -> MediaIndex {
     MediaIndex { media: json }
 }
 
-pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &MediaIndex) {
+pub fn write_media_config(data_root_location: &GraphRootLocation, media_index: &MediaIndex) {
     let config_file_content_as_str = serde_json::to_string_pretty(&media_index.media).unwrap();
     std::fs::write(
         media_config_path(data_root_location),
@@ -28,12 +28,12 @@ pub fn write_media_config(data_root_location: &DataRootLocation, media_index: &M
     .unwrap();
 }
 
-fn media_config_path(data_path: &DataRootLocation) -> PathBuf {
+fn media_config_path(data_path: &GraphRootLocation) -> PathBuf {
     data_path.path.clone().join(REL_MEDIA_CONFIG_PATH)
 }
 
 pub fn init_media(
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
     current_media_index: &MediaIndex,
 ) -> MediaIndex {
     let all_files_in_folder = read_all_media_files(data_root_location);
@@ -57,7 +57,7 @@ pub fn init_media(
     }
 }
 
-pub fn read_file_sizes(data_root_location: &DataRootLocation) -> HashMap<String, u64> {
+pub fn read_file_sizes(data_root_location: &GraphRootLocation) -> HashMap<String, u64> {
     let all_files_in_folder = read_all_media_files(data_root_location);
 
     let mut result: HashMap<String, u64> = HashMap::new();
@@ -71,7 +71,7 @@ pub fn read_file_sizes(data_root_location: &DataRootLocation) -> HashMap<String,
     result
 }
 
-pub fn destination_path(filename: &str, data_root_location: &DataRootLocation) -> PathBuf {
+pub fn destination_path(filename: &str, data_root_location: &GraphRootLocation) -> PathBuf {
     let timestamp = Utc::now().format("%Y%m%d_%H%M%S").to_string();
 
     let parsed_file_name = parse_name(filename);
@@ -109,7 +109,7 @@ fn parse_name(filename: &str) -> ParsedFilenName {
 
 pub fn create_absolute_media_path(
     file: &MediaOnDisk,
-    data_root_location: &DataRootLocation,
+    data_root_location: &GraphRootLocation,
 ) -> PathBuf {
     data_root_location
         .path
@@ -118,14 +118,14 @@ pub fn create_absolute_media_path(
         .join(file.name.clone())
 }
 
-pub fn create_hash(file: MediaOnDisk, data_root_location: &DataRootLocation) -> String {
+pub fn create_hash(file: MediaOnDisk, data_root_location: &GraphRootLocation) -> String {
     let file_conent = read_binary_file(create_absolute_media_path(&file, data_root_location));
     hash_file_content(LoadedMedia {
         content: file_conent,
     })
 }
 
-pub fn read_media_file(name: &str, location: &DataRootLocation) -> std::io::Result<NamedFile> {
+pub fn read_media_file(name: &str, location: &GraphRootLocation) -> std::io::Result<NamedFile> {
     NamedFile::open(create_absolute_media_path(
         &MediaOnDisk {
             name: name.to_owned(),
@@ -134,7 +134,7 @@ pub fn read_media_file(name: &str, location: &DataRootLocation) -> std::io::Resu
     ))
 }
 
-pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation) -> MediaState {
+pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &GraphRootLocation) -> MediaState {
     let media_path = create_absolute_media_path(media_on_disk, location);
     println!("Checking media path: {}", media_path.to_str().unwrap());
     if !exists_file(media_path.clone()) {
@@ -145,7 +145,7 @@ pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &DataRootLocation
     MediaState::Found(MediaSize { size })
 }
 
-pub fn read_all_media_files(data_root_location: &DataRootLocation) -> Vec<MediaOnDisk> {
+pub fn read_all_media_files(data_root_location: &GraphRootLocation) -> Vec<MediaOnDisk> {
     let media_path = data_root_location.path.clone().join(REL_MEDIA_LOCATION);
     let mut result = vec![];
     for file in media_path.read_dir().unwrap() {
