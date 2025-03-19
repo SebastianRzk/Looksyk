@@ -37,7 +37,7 @@ layout: default
 
 ### Arch Linux / AUR
 
-You can install Looksyk from the AUR. The package is called `looksyk-desktop` (currently work in progress).
+You can install Looksyk from the AUR. The package is called [looksyk-desktop](https://aur.archlinux.org/packages/looksyk-desktop).
 
 You can run the application with the command `looksyk`.
 
