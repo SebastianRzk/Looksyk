@@ -1220,7 +1220,7 @@ checksum = "30bde2b3dc3671ae49d8e2e9f044c7c005836e7a023ee57cffa25ab82764bb9e"
 
 [[package]]
 name = "looksyk"
-version = "1.5.0"
+version = "1.5.1"
 dependencies = [
  "actix-files",
  "actix-multipart",

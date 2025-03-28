@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.5.1](#v151-2025-03-27)
 - [v1.5.0](#v150-2025-03-14)
 - [v1.4.6](#v146-2025-03-08)
 - [v1.4.5](#v145-2025-03-06)
@@ -33,6 +34,17 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.5.1 (2025-03-28)
+
+Enhancements:
+
+* Add block query in docs
+
+Bugfixes:
+
+* Fix WM_CLASS in desktop file (windows are now grouped in the taskbar)
 
 ### v1.5.0 (2025-03-14)
 

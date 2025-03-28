@@ -82,9 +82,10 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 	* Code (with highlighting)
 	* Text files
 * Queries (placeholders for dynamic content)
+	* Query blocks
 	* Query todos
-	* Page hierarchy
-	* References
+	* Query page hierarchy
+	* Query references
 	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
