@@ -87,10 +87,11 @@ Install it and try it out! [Installation Guide](installation.md)
 	* Audio (html5 audio player)
 	* Code (with highlighting)
 	* Text files
-* Queries (placeholders for dynamic content)
-	* Query todos
-	* Page hierarchy
-	* References
+* Queries (placeholders for dynamic content):
+	* Query blocks
+    * Query todos
+	* Query page hierarchy
+	* Query references
 	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)

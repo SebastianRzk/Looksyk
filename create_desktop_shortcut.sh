@@ -9,6 +9,7 @@ echo "creating [Desktop Entry] for $graphname"
 
 echo "[Desktop Entry]
 Type=Application
+StartupWMClass=looksyk
 Name=Looksyk - $graphname
 GenericName=Markdown knowledge platform
 Icon=/usr/share/looksyk/icon.png
