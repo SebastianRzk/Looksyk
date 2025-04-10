@@ -35,6 +35,11 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.5.2 (2025-04-10)
+
+Enhancements:
+
+* Dependency updates in frontend, backend and application-wrapper
 
 ### v1.5.1 (2025-03-28)
 
