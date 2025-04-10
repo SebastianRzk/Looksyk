@@ -76,10 +76,10 @@ fn state_from_payload(payload: &String) -> TodoState {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::builder::{
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::{
         any_text_token, done_token, empty_journal_index, todo_token, user_page_id,
     };
-    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{BlockContent, ParsedBlock, ParsedMarkdownFile};
     use crate::state::block::BlockReference;

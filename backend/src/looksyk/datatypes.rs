@@ -22,7 +22,7 @@ impl AssetDescriptor {
     }
 
     pub fn get_extension(&self, default: &str) -> String {
-        let result = self.display_name.split('.').last().unwrap();
+        let result = self.display_name.split('.').next_back().unwrap();
         if result.eq(&self.display_name) {
             return default.to_string();
         }
@@ -30,7 +30,7 @@ impl AssetDescriptor {
     }
 
     pub fn find_extension(&self) -> Option<String> {
-        let result = self.display_name.split('.').last().unwrap();
+        let result = self.display_name.split('.').next_back().unwrap();
         if result.eq(&self.display_name) {
             return None;
         }

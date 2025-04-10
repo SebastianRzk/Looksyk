@@ -175,7 +175,7 @@ fn infer_language(file_name: &MediaOnDisk) -> String {
     if file_name_str.ends_with(".hpp") {
         return "cpp".to_string();
     }
-    file_name_str.split('.').last().unwrap().to_string()
+    file_name_str.split('.').next_back().unwrap().to_string()
 }
 
 fn render_inline(

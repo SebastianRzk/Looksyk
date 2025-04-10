@@ -25,7 +25,7 @@ pub struct StaticRenderContext<'a> {
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::builder::builder::empty_journal_index;
+    use crate::looksyk::builder::test_builder::empty_journal_index;
     use crate::looksyk::renderer::StaticRenderContext;
     use crate::state::journal::JournalPageIndex;
     use crate::state::tag::builder::empty_tag_index;

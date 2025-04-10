@@ -217,7 +217,7 @@ impl Ord for PageId {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
     use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock};
 

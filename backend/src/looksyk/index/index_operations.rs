@@ -78,7 +78,7 @@ pub fn remove_page_from_internal_state(
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::builder::user_page_id;
+    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::index::index_operations::update_index_for_file;
     use crate::looksyk::model::{ParsedMarkdownFile, RawBlock};
     use crate::looksyk::parser::parse_block;

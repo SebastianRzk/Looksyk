@@ -2,8 +2,11 @@ use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 
 #[cfg(test)]
 pub mod test_builder {
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::datatypes::AssetDescriptor;
+    use crate::looksyk::model::{BlockToken, BlockTokenType, PageId};
     use crate::state::application_state::GraphRootLocation;
+    use crate::state::journal::JournalPageIndex;
     use std::path::PathBuf;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
@@ -13,6 +16,41 @@ pub mod test_builder {
     pub fn data_root_location(location: &str) -> GraphRootLocation {
         GraphRootLocation {
             path: PathBuf::from(location),
+        }
+    }
+
+    pub fn user_page_id(id: &str) -> PageId {
+        page_name_str(id).as_user_page()
+    }
+
+    pub fn journal_page_id(id: &str) -> PageId {
+        page_name_str(id).as_journal_page()
+    }
+
+    pub fn todo_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::Todo,
+            payload: " ".to_string(),
+        }
+    }
+    pub fn done_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::Todo,
+            payload: "x".to_string(),
+        }
+    }
+    pub fn any_text_token() -> BlockToken {
+        BlockToken {
+            block_token_type: BlockTokenType::Text,
+            payload: "my todo".to_string(),
+        }
+    }
+    pub fn any_page_id() -> PageId {
+        user_page_id("")
+    }
+    pub fn empty_journal_index() -> JournalPageIndex {
+        JournalPageIndex {
+            entries: std::collections::HashMap::new(),
         }
     }
 }
@@ -56,46 +94,4 @@ pub fn journal_link_token(link: &str) -> BlockToken {
 
 pub fn page_name(name: String) -> SimplePageName {
     SimplePageName { name }
-}
-
-#[cfg(test)]
-pub mod builder {
-    use crate::looksyk::builder::page_name_str;
-    use crate::looksyk::model::{BlockToken, BlockTokenType, PageId};
-    use crate::state::journal::JournalPageIndex;
-
-    pub fn user_page_id(id: &str) -> PageId {
-        page_name_str(id).as_user_page()
-    }
-
-    pub fn journal_page_id(id: &str) -> PageId {
-        page_name_str(id).as_journal_page()
-    }
-
-    pub fn todo_token() -> BlockToken {
-        BlockToken {
-            block_token_type: BlockTokenType::Todo,
-            payload: " ".to_string(),
-        }
-    }
-    pub fn done_token() -> BlockToken {
-        BlockToken {
-            block_token_type: BlockTokenType::Todo,
-            payload: "x".to_string(),
-        }
-    }
-    pub fn any_text_token() -> BlockToken {
-        BlockToken {
-            block_token_type: BlockTokenType::Text,
-            payload: "my todo".to_string(),
-        }
-    }
-    pub fn any_page_id() -> PageId {
-        user_page_id("")
-    }
-    pub fn empty_journal_index() -> JournalPageIndex {
-        JournalPageIndex {
-            entries: std::collections::HashMap::new(),
-        }
-    }
 }

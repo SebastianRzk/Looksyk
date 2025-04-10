@@ -196,7 +196,7 @@ fn render_as_referenced_list(refs: &[BlockQueryResult]) -> QueryRenderResult {
 #[cfg(test)]
 mod tests {
     use super::render_blocks_query;
-    use crate::looksyk::builder::builder::empty_journal_index;
+    use crate::looksyk::builder::test_builder::empty_journal_index;
     use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
     use crate::looksyk::model::{BlockContent, ParsedBlock};
     use crate::looksyk::queries::args::PARAM_TARGET;

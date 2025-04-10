@@ -108,7 +108,7 @@ fn serialize_block_token(block_token: &BlockToken) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::builder::any_page_id;
+    use crate::looksyk::builder::test_builder::any_page_id;
     use crate::looksyk::builder::{journal_link_token, text_token_str};
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock,

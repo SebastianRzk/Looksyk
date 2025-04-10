@@ -42,7 +42,7 @@ pub fn to_search_term(search_term_dto: SearchTermDto) -> SearchTerm {
 #[cfg(test)]
 mod tests {
     use crate::io::http::page::search::mapper::{search_finding_to_dto, search_result_to_dto};
-    use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
+    use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
     use crate::looksyk::search::{SearchFinding, SearchResult};
     use crate::state::block::BlockReference;
 
