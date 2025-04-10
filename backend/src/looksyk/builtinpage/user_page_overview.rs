@@ -101,8 +101,8 @@ fn get_display_text_page_created(
 mod tests {
     use std::collections::HashMap;
 
-    use crate::looksyk::builder::builder::user_page_id;
     use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::builtinpage::user_page_overview::generate_overview_page;
     use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile};
     use crate::state::tag::TagIndex;

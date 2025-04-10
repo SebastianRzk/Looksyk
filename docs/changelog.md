@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.5.2](#v152-2025-04-10)
 - [v1.5.1](#v151-2025-03-27)
 - [v1.5.0](#v150-2025-03-14)
 - [v1.4.6](#v146-2025-03-08)
@@ -35,6 +36,11 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.5.2 (2025-04-10)
+
+Enhancements:
+
+* Dependency updates in frontend, backend and application-wrapper
 
 ### v1.5.1 (2025-03-28)
 

@@ -161,10 +161,10 @@ fn filter_tag(current_list: &HashSet<PageId>, page_to_remove: &PageId) -> HashSe
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::builder::{
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::{
         any_text_token, done_token, journal_page_id, user_page_id,
     };
-    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::tag::create_tag_index;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{

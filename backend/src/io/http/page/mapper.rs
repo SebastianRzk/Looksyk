@@ -106,7 +106,7 @@ pub fn map_markdown_block_dto(
 #[cfg(test)]
 mod tests {
     use crate::io::http::page::mapper::from_markdown_reference_to_link;
-    use crate::looksyk::builder::builder::{journal_page_id, user_page_id};
+    use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
     use crate::state::block::BlockReference;
 
     #[test]
