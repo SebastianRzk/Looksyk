@@ -1,10 +1,10 @@
 [package]
 name = "looksyk"
-version = "1.5.2"
+version = "1.5.3"
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
+actix-web = "4.10"
 actix-multipart = "0.7.2"
 actix-files = "0.6.6"
 sha3 = "0.10.8"
