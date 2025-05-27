@@ -1,4 +1,4 @@
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 
 use crate::looksyk::query::QueryDisplayType;
 
@@ -29,21 +29,18 @@ pub fn parse_property(
     let prefix = format!("{}:\"", expected_property_name);
     let chop = input_string
         .strip_prefix(prefix.as_str())
-        .ok_or(Error::new(
-            ErrorKind::Other,
-            format!(
-                "Parse error, expected tag '{}', got '{}'",
-                prefix, input_string
-            ),
-        ))?;
+        .ok_or(Error::other(format!(
+            "Parse error, expected tag '{}', got '{}'",
+            prefix, input_string
+        )))?;
     let mut splittet = chop.splitn(2, "\"");
     let value = splittet
         .next()
-        .ok_or(Error::new(ErrorKind::Other, "Decode error"))?
+        .ok_or(Error::other("Decode error"))?
         .to_string();
     let remaining_text = splittet
         .last()
-        .ok_or(Error::new(ErrorKind::Other, "Decode error"))?
+        .ok_or(Error::other("Decode error"))?
         .trim()
         .to_string();
     Ok(PropertyParsed {

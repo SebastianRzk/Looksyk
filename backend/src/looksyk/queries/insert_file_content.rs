@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 
 use crate::io::fs::asset_cache_loader::load_cachable_asset;
 use crate::io::fs::media::MediaOnDisk;
@@ -50,10 +50,7 @@ pub fn query_insert_file_content_as_audio(asset_descriptor: &AssetDescriptor) ->
 pub fn parse_query_insert_file_content(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str
         .strip_prefix(QUERY_NAME_INSERT_FILE_CONTENT)
-        .ok_or(Error::new(
-            ErrorKind::Other,
-            ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-        ))?
+        .ok_or(Error::other(ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?
         .trim();
     let query_target_opt = parse_property(query_content, PARAM_TARGET_FILE)?;
 

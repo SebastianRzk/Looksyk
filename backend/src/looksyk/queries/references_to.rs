@@ -1,5 +1,5 @@
 use std::collections::{HashMap, HashSet};
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 
 use crate::looksyk::model::{PageId, QueryRenderResult, SimplePageName};
 use crate::looksyk::queries::args::{
@@ -15,10 +15,7 @@ pub const QUERY_NAME_REFERENCES_TO: &str = "references-to";
 pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str
         .strip_prefix(QUERY_NAME_REFERENCES_TO)
-        .ok_or(Error::new(
-            ErrorKind::Other,
-            ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-        ))?
+        .ok_or(Error::other(ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?
         .trim();
     let query_target_opt = parse_property(query_content, PARAM_TARGET)?;
 

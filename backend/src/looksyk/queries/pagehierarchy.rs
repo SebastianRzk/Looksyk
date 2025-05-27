@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 
 use crate::looksyk::model::{QueryRenderResult, SimplePageName};
 use crate::looksyk::queries::args::{
@@ -16,10 +16,7 @@ pub const QUERY_NAME_PAGE_HIERARCHY: &str = "page-hierarchy";
 pub fn parse_query_page_hierarchy(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str
         .strip_prefix(QUERY_NAME_PAGE_HIERARCHY)
-        .ok_or(Error::new(
-            ErrorKind::Other,
-            ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-        ))?
+        .ok_or(Error::other(ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?
         .trim();
     let query_root_opt = parse_property(query_content, PARAM_ROOT)?;
     let display_type = parse_display_type(query_root_opt.remaining_text.clone())?;
