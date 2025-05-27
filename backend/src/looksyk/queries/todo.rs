@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 
 use crate::looksyk::builder::page_name;
 use crate::looksyk::model::{QueryRenderResult, ReferencedMarkdown};
@@ -18,10 +18,7 @@ pub const QUERY_NAME_TODOS: &str = "todos";
 pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
     let query_content = query_str
         .strip_prefix(QUERY_NAME_TODOS)
-        .ok_or(Error::new(
-            ErrorKind::Other,
-            ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX,
-        ))?
+        .ok_or(Error::other(ERROR_CAN_NOT_STRIP_QUERY_NAME_PREFIX))?
         .trim();
     let query_root_opt = parse_property(query_content, PARAM_TAG)?;
     let query_state_opt = parse_property(query_root_opt.remaining_text.as_str(), PARAM_STATE)?;
