@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.5.4](#v154-2025-05-27)
 - [v1.5.3](#v153-2025-04-30)
 - [v1.5.2](#v152-2025-04-10)
 - [v1.5.1](#v151-2025-03-27)
@@ -37,6 +38,16 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.5.4 (2025-05-27)
+
+
+Enhancements:
+
+* Add parameter `window-height`, `ẁindow-width` and `window-zoom` as command `args`
+* Update documentation
+* Update backend dependencies
+* Update application-wrapper dependencies
 
 ### v1.5.3 (2025-04-30)
 

@@ -9,10 +9,10 @@ layout: default
 ### This page
 
 - [Run Looksyk](#run-looksyk)
-	- [Arch Linux / AUR](#arch-linux--aur)
-	- [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
-	- [Production Build / Manual Installation](#production-build--manual-installation)
-	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+    - [Arch Linux / AUR](#arch-linux--aur)
+    - [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
+    - [Production Build / Manual Installation](#production-build--manual-installation)
+    - [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
 
 ### Further Reading
 
@@ -37,7 +37,8 @@ layout: default
 
 ### Arch Linux / AUR
 
-You can install Looksyk from the AUR. The package is called [looksyk-desktop](https://aur.archlinux.org/packages/looksyk-desktop).
+You can install Looksyk from the AUR. The package is
+called [looksyk-desktop](https://aur.archlinux.org/packages/looksyk-desktop).
 
 You can run the application with the command `looksyk`.
 
@@ -63,15 +64,14 @@ Just run `docker compose up -d` to start Looksyk and visit with Chrome / Chromiu
 2. The application is now in the `target` folder
 3. (Optional) Create a shortcut icon `sh create_desktop_shortcut.sh`
 4. Start the application. Use the created shortcut or run `./application-wrapper/looksyk` in the `target` folder. You
-   can instrument the
-   application with the arguments `--port` and `--graph-location` to change the port and the graph location, and with
-   `--title` to change the title. With the argument `--devtools true` the electron devtools are opened as default.
-5. The application is now available at `http://localhost:8989` (or the configured port)
+   can instrument the application with the arguments `--port` and `--graph-location` to change the port and the graph
+   location. With the argument `--devtools true` the electron devtools are opened as default.
+5. The application is now available at `http://localhost:11000` (or the configured port)
 
 ### Running different looksyk graphs at the same time (with different ports)
 
 You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or
-you can run the application with the arguments `--port`, `--graph-location` and `--title` manually.
+you can run the application with the arguments `--port` and `--graph-location` manually.
 
 ### Known issues with building the application-wrapper
 

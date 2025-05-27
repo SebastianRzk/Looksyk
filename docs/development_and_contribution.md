@@ -34,7 +34,7 @@ backend will need to be restarted manually.
 5. Navigate to the backend directory: `cd backend`
 6. Install backend dependencies: `cargo run`
 7. The frontend will be available at `http://localhost:4200`
-8. The backend will be available at `http://localhost:8989`
+8. The backend will be available at `http://localhost:11000`
 
 ## Build electron app
 
