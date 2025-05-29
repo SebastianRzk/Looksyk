@@ -61,7 +61,7 @@ export class JournalSingleEntryComponent implements OnInit {
         this.page_ = this.pageSerivce.getJournalPageAsUserPage(iso_page_date).subscribe(
           value => this.pageState.next(value)
         );
-        let localeString = this.dateService.convertDateToLocaleString(iso_page_date);
+        const localeString = this.dateService.convertDateToLocaleString(iso_page_date);
         this.pageName.next({
           iso_date: iso_page_date,
           locale_string: localeString

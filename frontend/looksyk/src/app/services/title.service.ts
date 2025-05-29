@@ -1,8 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, combineLatestAll, combineLatestWith, lastValueFrom, map, Subject} from "rxjs";
+import {BehaviorSubject, combineLatestWith, lastValueFrom, map, Subject} from "rxjs";
 import {Title} from "@angular/platform-browser";
-import {combineLatest} from "rxjs/internal/operators/combineLatest";
 
 @Injectable({
     providedIn: 'root'

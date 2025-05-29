@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
-import { BehaviorSubject, Subject } from "rxjs";
-import { RouterLink } from "@angular/router";
-import { HistoryService } from "../../../services/history.service";
-import { AsyncPipe } from "@angular/common";
-import {TitleService} from "../../../services/title.service";
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {BehaviorSubject, Subject} from "rxjs";
+import {RouterLink} from "@angular/router";
+import {AsyncPipe} from "@angular/common";
 import {JournalPageName} from "../../journal-single-entry/journal-single-entry.component";
 
 @Component({
