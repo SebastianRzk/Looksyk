@@ -9,6 +9,7 @@ import {PageService} from "../../services/page.service";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
+import {TitleService} from "../../services/title.service";
 
 @Component({
     selector: 'app-journal',
@@ -20,6 +21,11 @@ import {MatButtonModule} from "@angular/material/button";
 export class JournalComponent {
   pageService = inject(PageService);
   items = new MyDataSource(this.pageService)
+  title = inject(TitleService);
+
+  constructor() {
+    this.title.pushCurrentPageTitle("Journal");
+  }
 
 }
 

@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.5.5](#v155-2025-05-29)
 - [v1.5.4](#v154-2025-05-27)
 - [v1.5.3](#v153-2025-04-30)
 - [v1.5.2](#v152-2025-04-10)
@@ -38,6 +39,13 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.5.5 (2025-05-29)
+
+Enhancements:
+
+* Update frontend dependencies
+* Update page title
 
 ### v1.5.4 (2025-05-27)
 

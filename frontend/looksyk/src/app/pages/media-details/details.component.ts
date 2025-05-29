@@ -9,6 +9,7 @@ import { MarkdownPage } from "../model";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { AsyncPipe } from "@angular/common";
+import {TitleService} from "../../services/title.service";
 
 @Component({
   selector: 'app-media-details-overview',
@@ -21,6 +22,7 @@ export class DetailsComponent implements OnInit {
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private mediaService: MediaService = inject(MediaService);
+  private titleService = inject(TitleService);
   public sanitizer: DomSanitizer = inject(DomSanitizer);
 
   public pageName: Subject<string> = new BehaviorSubject("");
@@ -62,6 +64,7 @@ export class DetailsComponent implements OnInit {
           metadata =>
             this.mediaMetadata.next(metadata)
         )
+        this.titleService.pushCurrentPageTitle(pageName);
         this.historyService.pushEntry(pageName, ["/assets/", pageName]);
       });
   }

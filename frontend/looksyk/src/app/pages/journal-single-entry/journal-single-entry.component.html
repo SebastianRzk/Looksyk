@@ -1,6 +1,6 @@
 <div class="top">
   @if (pageName$ | async; as p) {
-    <app-journal-page-title [title_date]="p" [push_history]="true"></app-journal-page-title>
+    <app-journal-page-title [title]="p"></app-journal-page-title>
   }
 </div>
 @if(page$ | async; as page) {
