@@ -8,7 +8,7 @@ RUN ls -la /app/target/release
 
 
 # Stage 1
-FROM node:18-slim as build-step-angular
+FROM node:22-slim as build-step-angular
 RUN mkdir -p /app
 WORKDIR /app
 COPY frontend/looksyk/package.json /app
