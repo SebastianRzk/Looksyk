@@ -8,7 +8,7 @@ export class DateService {
   public convertDateToLocaleString(date_as_iso: string): string {
     const splitted_date = date_as_iso.split("_");
 
-    let localeString = splitted_date[2] + "." + splitted_date[1] + "." + splitted_date[0];
+    const localeString = splitted_date[2] + "." + splitted_date[1] + "." + splitted_date[0];
     return this.appendDescription(splitted_date, localeString);
   }
 
