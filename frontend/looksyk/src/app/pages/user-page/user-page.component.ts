@@ -12,6 +12,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { RenamePageSectionComponent } from "../components/rename-page-section/rename-page-section.component";
 import { AsyncPipe } from "@angular/common";
+import {TitleService} from "../../services/title.service";
 
 @Component({
   selector: 'app-user-page',
@@ -28,6 +29,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
 
   public pageSerivce: PageService = inject(PageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
+  private titleService = inject(TitleService);
   private router: Router = inject(Router);
 
   private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
@@ -61,6 +63,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
           value => this.pageState.next(value)
         );
         this.pageName.next(pageName);
+        this.titleService.pushCurrentPageTitle(pageName);
         this.pageSerivce.loadUserPage(
           pageName
         )

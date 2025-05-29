@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
   titleService = inject(TitleService);
-  title_: Subscription = this.titleService.title$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
+  title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
 
   @ViewChild('content')
   content!: ElementRef;
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.titleService.update();
+    this.titleService.fetchGraphTitle();
   }
 
   @HostListener('window:keyup', ['$event'])

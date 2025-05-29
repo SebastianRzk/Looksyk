@@ -1,6 +1,6 @@
 {
   "name": "looksyk",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,17 +11,17 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.2.8",
-    "@angular/cdk": "^19.2.11",
-    "@angular/cdk-experimental": "^19.2.11",
-    "@angular/common": "^19.2.8",
-    "@angular/compiler": "^19.2.8",
-    "@angular/core": "^19.2.8",
-    "@angular/forms": "^19.2.8",
-    "@angular/material": "^19.2.11",
-    "@angular/platform-browser": "^19.2.8",
-    "@angular/platform-browser-dynamic": "^19.2.8",
-    "@angular/router": "^19.2.8",
+    "@angular/animations": "^20.0.0",
+    "@angular/cdk": "^20.0.1",
+    "@angular/cdk-experimental": "^20.0.1",
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/material": "^20.0.1",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/platform-browser-dynamic": "^20.0.0",
+    "@angular/router": "^20.0.0",
     "highlight.js": "^11.11.1",
     "marked": "^13.0.3",
     "marked-highlight": "^2.2.1",
@@ -30,11 +30,11 @@
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.9",
-    "@angular/cli": "~19.2.9",
-    "@angular/compiler-cli": "^19.2.8",
+    "@angular/build": "^20.0.0",
+    "@angular/cli": "~20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
     "@types/jasmine": "~4.3.0",
-    "angular-eslint": "19.0.2",
+    "angular-eslint": "19.6.0",
     "eslint": "^9.24.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
@@ -42,7 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.3",
-    "typescript-eslint": "8.21.0"
+    "typescript": "~5.8.3",
+    "typescript-eslint": "8.33.0"
   }
 }

@@ -17,7 +17,7 @@ body {
 
 :root {
   --mat-sidenav-content-text-color: var(--foreground-color);
-  --mdc-text-button-label-text-color: var(--foreground-color);
+  --mat-button-text-label-text-color: var(--foreground-color);
   --mat-sidenav-container-text-color: var(--foreground-color);
 }
 
