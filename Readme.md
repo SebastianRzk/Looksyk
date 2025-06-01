@@ -9,11 +9,12 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 ## Key Features
 
 - **Local Storage**: Your information is always exclusively in Markdown files.
-- **Fast and Efficient**: Scans and indexes large graphs in under a second.
-- **Developer-Centric**: Insert code blocks with syntax highlighting, save and display existing code files. Save and display backups of websites in your pages.
+- **Fast and Efficient**: Scans and indexes large knowledge bases in under a second.
+- **Developer-Centric**: Insert code blocks with syntax highlighting, save and display existing code files. Save and
+  display backups of websites in your pages.
 - **Simple Queries**: Use case based query language.
-- **Customizable Design**: Supports dark mode, light mode, and extra dark mode.
-
+- **Customizable Design**: Configure your own design or choose from three themes: light mode, dark mode (default), and
+  extra dark mode.
 
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
@@ -53,7 +54,7 @@ own client: Looksyk (name may need to be changed).
   be easily synchronized with other sync tools.
 * Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
 * Simple, use case based query language.
-* Multiple instances of Looksyk with different graphs can be opened in parallel.
+* Multiple instances of Looksyk with different knowledge bases can be opened in parallel.
 * Developer-centric file support:
 	* Insert code blocks with syntax highlighting
 	* Save and display existing code files in your pages with syntax highlighting
@@ -81,7 +82,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 	* Audio (html5 audio player)
 	* Code (with highlighting)
 	* Text files
-* Queries (placeholders for dynamic content)
+* Queries (placeholders for dynamic content):
 	* Query blocks
 	* Query todos
 	* Query page hierarchy
@@ -108,7 +109,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * i18n
 * Sync with other devices. Please use other tools
   like [Nextcloud](https://nextcloud.com/install/), [git](https://git-scm.com/)
-  or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your graph
+  or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your knowledge base
 
 ## License
 
