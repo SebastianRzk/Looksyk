@@ -23,7 +23,7 @@
     "@electron/fuses": "^1.8.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vercel/webpack-asset-relocator-loader": "^1.7.4",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.11.0",
     "electron": "35.5.0",
     "eslint": "^8.57.1",
