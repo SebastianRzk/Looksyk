@@ -5,11 +5,12 @@ layout: default
 
 ## Table of Contents
 
+- [v1.5.6](#v156-2025-06-01)
 - [v1.5.5](#v155-2025-05-29)
 - [v1.5.4](#v154-2025-05-27)
 - [v1.5.3](#v153-2025-04-30)
 - [v1.5.2](#v152-2025-04-10)
-- [v1.5.1](#v151-2025-03-27)
+- [v1.5.1](#v151-2025-03-28)
 - [v1.5.0](#v150-2025-03-14)
 - [v1.4.6](#v146-2025-03-08)
 - [v1.4.5](#v145-2025-03-06)
@@ -39,6 +40,14 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+###  v1.5.6 (2025-06-01)
+
+Enhancements:
+
+* Update application-wrapper dependencies
+* Update backend dependencies
+* Update docs
 
 ### v1.5.5 (2025-05-29)
 

@@ -22,6 +22,7 @@ use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
 use actix_web::{App, HttpServer};
+use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 
 mod io;
 mod looksyk;
@@ -38,7 +39,7 @@ async fn main() -> std::io::Result<()> {
 
     let data_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
         let initial_config_path = env::get_or_default(
-            "LOOKSYK_CONFIG_PATH",
+            LOOKSYK_CONFIG_PATH,
             home_directory()
                 .join(".local")
                 .join("share")

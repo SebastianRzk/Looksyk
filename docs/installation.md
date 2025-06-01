@@ -9,10 +9,10 @@ layout: default
 ### This page
 
 - [Run Looksyk](#run-looksyk)
-    - [Arch Linux / AUR](#arch-linux--aur)
-    - [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
-    - [Production Build / Manual Installation](#production-build--manual-installation)
-    - [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
+	- [Arch Linux / AUR](#arch-linux--aur)
+	- [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
+	- [Production Build / Manual Installation](#production-build--manual-installation)
+	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
 
 ### Further Reading
 
@@ -32,8 +32,12 @@ layout: default
 | Arch Linux          | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
 | Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
 | Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
-| Windows native      | manual build            | untested / not working out of the box                          |
-| Mac native          | manual build            | untested / not working out of the box                          |
+| Windows native      | manual build  *)        | untested / not working out of the box   *)                     |
+| Mac native          | manual build  *)        | untested / not working out of the box   *)                     |
+
+*) The application is programmed to be platform independent, but the build script and the installation process are not
+yet implemented on Windows and Mac. Mainly because I have no knowledge of packaging for Windows and Mac, and because I
+don't have a test environment. If you want to help, please create an issue or a pull request.
 
 ### Arch Linux / AUR
 
