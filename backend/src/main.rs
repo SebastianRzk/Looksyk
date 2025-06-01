@@ -6,6 +6,7 @@ use self::looksyk::data::config::startup_configuration;
 use crate::io::cli::endpoints::get_cli_args;
 use crate::io::fs::basic_folder::home_directory;
 use crate::io::fs::env;
+use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http;
 use crate::io::http::design;
@@ -22,7 +23,6 @@ use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
 use actix_web::{App, HttpServer};
-use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 
 mod io;
 mod looksyk;
