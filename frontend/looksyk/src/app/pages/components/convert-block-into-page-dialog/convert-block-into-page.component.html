@@ -1,0 +1,12 @@
+<h3>Convert block into page</h3>
+<mat-dialog-content>
+  <div class="small-description">(If the name matches an existing page, the pages will be merged.)</div>
+  <mat-form-field>
+    <input matInput [(ngModel)]="newPageName" placeholder="New page name" cdkFokusInitial>
+  </mat-form-field>
+  <div class="actions">
+    <button matButton (click)="onNoClick()">Skip</button>
+    <button matButton [mat-dialog-close]="newPageName()">Convert</button>
+  </div>
+</mat-dialog-content>
+

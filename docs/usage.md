@@ -56,6 +56,14 @@ The command `looksyk` accepts the following command line arguments:
 
 ## Usage
 
+![The Looksyk startup page explained](journal_overview.png)
+
+Overview of Looksyk's basic features in the Journal view.
+
+![The Looksyk page explained](page_overview.png)
+
+Overview of Looksyk's basic features in the Page view.
+
 ### Data Storage
 
 The `graph` folder in the home directory contains all data.

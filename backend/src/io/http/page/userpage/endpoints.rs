@@ -14,7 +14,7 @@ use crate::looksyk::index::index_operations::{
 };
 use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
 use crate::looksyk::index::tag::render_tag_index_for_page;
-use crate::looksyk::model::{PageType, RawMarkdownFile};
+use crate::looksyk::model::{PageType, ParsedMarkdownFile, RawMarkdownFile};
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::{render_file, StaticRenderContext};
@@ -210,6 +210,63 @@ async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Respo
     drop(asset_cache);
 
     Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
+}
+
+#[post("/api/append-page/{page_name}")]
+async fn append_page(
+    body: Json<UpdateMarkdownFileDto>,
+    data: Data<AppState>,
+    page_name_from_path: Path<String>,
+) -> actix_web::Result<impl Responder> {
+    let request_body = body.into_inner();
+    let page_name = page_name(page_name_from_path.into_inner());
+
+    let page_appendix = parse_markdown_update_file(map_from_update_markdown_dto(request_body));
+    let current_page = data
+        .a_user_pages
+        .lock()
+        .unwrap()
+        .entries
+        .get(&page_name)
+        .cloned();
+
+    let merged_page = if let Some(current_page) = &current_page {
+        let mut new_blocks = current_page.blocks.clone();
+        new_blocks.extend(page_appendix.blocks);
+        ParsedMarkdownFile { blocks: new_blocks }
+    } else {
+        page_appendix
+    };
+
+    write_page(
+        PageOnDisk {
+            name: page_name.name.clone(),
+            content: serialize_page(&merged_page).join("\n"),
+        },
+        &data.data_path,
+        &PageType::UserPage,
+    );
+
+    let mut page_guard = data.a_user_pages.lock().unwrap();
+    let mut journal_guard = data.b_journal_pages.lock().unwrap();
+    let mut todo_guard = data.c_todo_index.lock().unwrap();
+    let mut tag_guard = data.d_tag_index.lock().unwrap();
+
+    let page_id = page_name.as_user_page();
+    let current_page_associated_state = CurrentPageAssociatedState {
+        user_pages: &page_guard,
+        journal_pages: &journal_guard,
+        todo_index: &todo_guard,
+        tag_index: &tag_guard,
+    };
+    let new_page_associated_state =
+        update_index_for_file(page_id, &merged_page, current_page_associated_state);
+    *todo_guard = new_page_associated_state.todo_index;
+    *tag_guard = new_page_associated_state.tag_index;
+    *page_guard = new_page_associated_state.user_pages;
+    *journal_guard = new_page_associated_state.journal_pages;
+
+    Ok("")
 }
 
 #[post("/api/rename-page")]

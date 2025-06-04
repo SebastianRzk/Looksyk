@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.6.0](#v160-2025-06-04)
 - [v1.5.6](#v156-2025-06-01)
 - [v1.5.5](#v155-2025-05-29)
 - [v1.5.4](#v154-2025-05-27)
@@ -40,6 +41,14 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.6.0 (2025-06-04)
+
+Enhancements:
+
+* Add "Convert block to page" button in block context menu
+* Enhance documentation with more example screenshots
+* Change "rename page" dialog to pop-up dialog
 
 ###  v1.5.6 (2025-06-01)
 

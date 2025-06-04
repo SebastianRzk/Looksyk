@@ -1,0 +1,25 @@
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+mat-dialog-content > * {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.actions > * {
+  width: 30%;
+}
+
+
+h3 {
+  margin-left: 20px;
+}
