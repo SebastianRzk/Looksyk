@@ -15,10 +15,6 @@
     </button>
   </mat-menu>
 </div>
-@if (renameOpen$ | async) {
-  <app-rename-page-section (closeRenamePageSection)="renameOpen.next(false)"
-                           (submitRenamePageSection)="submitRename($event)"></app-rename-page-section>
-}
 @if (page$ | async; as p) {
   <app-show-page [page]="p"></app-show-page>
 }

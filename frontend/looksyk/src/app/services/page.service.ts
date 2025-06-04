@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, firstValueFrom, map, Observable, Subject, tap } from "rxjs";
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject, firstValueFrom, lastValueFrom, map, Observable, Subject, tap} from "rxjs";
 import {
   BlockContent,
   BlockDto,
@@ -173,9 +173,21 @@ export class PageService {
       newPageName: newName
     }).pipe(map(x => x.newPageName)));
   }
+
+  appendPage(pageName: string, content: BasicPageContent) {
+    this.savingState.next(SavingState.Saving);
+    const url = "/api/append-page/" + encodeURIComponent(pageName).toString();
+    return lastValueFrom(this.httpClient.post(url, {blocks: [content]}).pipe(
+      tap(() => {
+        this.savingState.next(SavingState.Saved);
+        this.somethingHasChanged.next({
+          blockId: this.userpageId(pageName)
+        });
+      })));
+  }
 }
 
-interface RenameResultDto{
+interface RenameResultDto {
   newPageName: string
 }
 

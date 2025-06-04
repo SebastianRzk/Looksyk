@@ -76,6 +76,7 @@ async fn main() -> std::io::Result<()> {
             .service(userpage::endpoints::get_backlinks)
             .service(userpage::endpoints::delete_page)
             .service(userpage::endpoints::rename_page)
+            .service(userpage::endpoints::append_page)
             .service(favourites::endpoints::insert_favourite)
             .service(favourites::endpoints::delete_favourite)
             .service(favourites::endpoints::get_favourites)

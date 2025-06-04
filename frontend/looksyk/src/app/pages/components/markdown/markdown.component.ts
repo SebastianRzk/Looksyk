@@ -9,23 +9,25 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Block, RefecencedBlockContent } from "../../model";
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, Subject } from "rxjs";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { ReactiveFormsModule } from "@angular/forms";
-import { MarkdownValidatorService } from "../../../services/markdown-validator.service";
-import { InsertMode, UseractionService } from "../../../services/useraction.service";
-import { MatButtonModule } from "@angular/material/button";
-import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
-import { MatIconModule } from "@angular/material/icon";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { ReferencedMarkdownComponent } from "../referenced-markdown/referenced-markdown.component";
-import { MarkdownService } from "../../../services/markdown.service";
-import { Router } from "@angular/router";
-import { PageService } from "../../../services/page.service";
-import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
-import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
-import { AsyncPipe } from "@angular/common";
+import {Block, RefecencedBlockContent} from "../../model";
+import {BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, Subject} from "rxjs";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MarkdownValidatorService} from "../../../services/markdown-validator.service";
+import {InsertMode, UseractionService} from "../../../services/useraction.service";
+import {MatButtonModule} from "@angular/material/button";
+import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ReferencedMarkdownComponent} from "../referenced-markdown/referenced-markdown.component";
+import {MarkdownService} from "../../../services/markdown.service";
+import {Router} from "@angular/router";
+import {PageService} from "../../../services/page.service";
+import {chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO} from "../todo";
+import {ContentAssistMode, ContentAssistService} from "../../../services/content-assist.service";
+import {AsyncPipe} from "@angular/common";
+import {DialogService} from "../../../services/dialog.service";
+import {ConvertBlockIntoPageComponent} from "../convert-block-into-page-dialog/convert-block-into-page.component";
 
 @Component({
   selector: 'app-markdown',
@@ -49,6 +51,8 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   userInteraction = inject(UseractionService);
 
   contentAssist = inject(ContentAssistService);
+
+  dialogService = inject(DialogService);
 
   pageService = inject(PageService);
 
@@ -228,16 +232,20 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
         this.updateContent(newBlockInfo);
       }
     )
-    this.userInteraction.savePage.next({
-      target: {
-        blockTarget: this.markdown.indentification,
-        fileTarget: this.pageid
-      }
-    });
+    this.saveThisBlock();
     this.userInteraction.openMarkdown.next({
       target: {
         blockTarget: "",
         fileTarget: ""
+      }
+    });
+  }
+
+  private saveThisBlock() {
+    this.userInteraction.savePage.next({
+      target: {
+        blockTarget: this.markdown.indentification,
+        fileTarget: this.pageid
       }
     });
   }
@@ -297,6 +305,31 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
         fileTarget: this.pageid,
         blockTarget: this.markdown.indentification
       }
+    })
+  }
+
+  async clickConvertBlockIntoPage() {
+    const indentation = await firstValueFrom(this.markdown.indentation$);
+    this.dialogService.openDialog(ConvertBlockIntoPageComponent, {}, (pageName: string) => {
+      if (!pageName || pageName.trim().length === 0) {
+        console.log("no page name given, aborting");
+        return;
+      }
+      this.pageService.appendPage(pageName, {
+        markdown: this.markdown.content.originalText,
+        indentation: indentation
+      }).then(
+        () => {
+          const newText = "[[" + pageName + "]]";
+          this.textareaRef.nativeElement.innerText = newText;
+          this.markdown.content.originalText = newText;
+          this.validatorService.validate(newText).subscribe(
+            newBlockInfo => {
+              this.updateContent(newBlockInfo);
+              this.saveThisBlock();
+            });
+        }
+      )
     })
   }
 

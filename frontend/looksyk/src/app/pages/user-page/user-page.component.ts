@@ -1,22 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { PageService } from "../../services/page.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from "rxjs";
-import { MarkdownPage } from "../model";
-import { TitleComponent } from "../components/user-page-title/title.component";
-import { ShowPageComponent } from "../show-page/show-page.component";
-import { FavStarComponent } from "../components/fav-star/fav-star.component";
-import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
-import { MatDivider } from "@angular/material/divider";
-import { MatIcon } from "@angular/material/icon";
-import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { RenamePageSectionComponent } from "../components/rename-page-section/rename-page-section.component";
-import { AsyncPipe } from "@angular/common";
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {PageService} from "../../services/page.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription} from "rxjs";
+import {MarkdownPage} from "../model";
+import {TitleComponent} from "../components/user-page-title/title.component";
+import {ShowPageComponent} from "../show-page/show-page.component";
+import {FavStarComponent} from "../components/fav-star/fav-star.component";
+import {ReferencedByComponent} from "../components/referenced-by/referenced-by.component";
+import {MatDivider} from "@angular/material/divider";
+import {MatIcon} from "@angular/material/icon";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {RenamePageSectionComponent} from "../components/rename-page-dialog/rename-page-section.component";
+import {AsyncPipe} from "@angular/common";
 import {TitleService} from "../../services/title.service";
+import {DialogService} from "../../services/dialog.service";
 
 @Component({
   selector: 'app-user-page',
-  imports: [TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, RenamePageSectionComponent, AsyncPipe],
+  imports: [TitleComponent, ShowPageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, AsyncPipe],
   templateUrl: './user-page.component.html',
   styleUrls: ['./user-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,7 +30,8 @@ export class UserPageComponent implements OnInit, OnDestroy {
 
   public pageSerivce: PageService = inject(PageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private titleService = inject(TitleService);
+  private titleService: TitleService = inject(TitleService);
+  private dialogService: DialogService = inject(DialogService);
   private router: Router = inject(Router);
 
   private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
@@ -43,9 +45,6 @@ export class UserPageComponent implements OnInit, OnDestroy {
   public page_: Subscription = new Subscription();
   public pageName: Subject<string> = new BehaviorSubject("");
   public pageName$ = this.pageName.asObservable();
-
-  public renameOpen: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  public renameOpen$ = this.renameOpen.asObservable();
 
   public data = combineLatest({
     pageName: this.pageName$,
@@ -70,15 +69,24 @@ export class UserPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  rename() {
-    this.renameOpen.next(true);
+  async rename() {
+    const pageName = await firstValueFrom(this.pageName$);
+    this.dialogService.openDialog(
+      RenamePageSectionComponent,
+      {
+        newPageName: pageName
+      },
+      (newName: string) => this.submitRename(newName),
+    )
   }
 
   async submitRename(newName: string) {
+    if (!newName || newName.trim().length === 0) {
+      return;
+    }
     const pageName = await firstValueFrom(this.pageName$);
     await this.pageSerivce.renameUserPage(pageName, newName).then(
       name => {
-        this.renameOpen.next(false);
         this.router.navigate(["page", encodeURIComponent(name)])
       }
     );

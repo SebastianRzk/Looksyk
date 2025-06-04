@@ -2,9 +2,9 @@
   <div>
     <button #other mat-raised-button [matMenuTriggerFor]="menu" class="dot-button" [disabled]="!editable">o</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>
+      <button mat-menu-item (click)="clickConvertBlockIntoPage()">
         <mat-icon>note_add</mat-icon>
-        <span>Convert into page (todo)</span>
+        <span>Convert into page</span>
       </button>
       <button mat-menu-item (click)="clickOnMergeWithPrevPage()">
         <mat-icon>call_merge</mat-icon>
