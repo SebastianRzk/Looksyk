@@ -1,4 +1,4 @@
-import {app, BrowserWindow, globalShortcut} from 'electron';
+import {app, shell, BrowserWindow, globalShortcut} from 'electron';
 import {spawn} from 'child_process';
 import {BehaviorSubject, filter, firstValueFrom} from "rxjs";
 import {ArgumentConfig, parse} from "ts-command-line-args";
@@ -182,7 +182,7 @@ const createWindow = async (): Promise<void> => {
         if (!url.startsWith(`http://localhost:${config.port}/`)) {
             e.preventDefault();
             mainWindow.webContents.stop();
-            require('electron').shell.openExternal(url);
+            shell.openExternal(url);
         }
     });
     await load;
