@@ -1,4 +1,4 @@
 <h3>References</h3>
 @if (backlinks$ | async; as backlinks) {
-  <app-show-page [editable]="false" [page]="backlinks"></app-show-page>
+  <app-display-markdown-page [page]="backlinks"></app-display-markdown-page>
 }

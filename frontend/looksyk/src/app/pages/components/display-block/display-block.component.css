@@ -7,7 +7,6 @@
   width: 3ex;
   min-width: 3ex;
   min-height: 3ex;
-  border-right: 1px solid grey;
 }
 
 .line {
@@ -16,6 +15,6 @@
   width: 100%;
 }
 
-app-markdown {
+app-display-markdown {
   width: 100%;
 }

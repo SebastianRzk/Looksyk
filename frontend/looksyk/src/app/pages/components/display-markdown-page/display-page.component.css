@@ -4,11 +4,7 @@ app-block:hover{
   background: var(--primary-shading);
 }
 
-app-block {
+app-display-block {
   padding: 1px;
-}
-
-
-app-block {
   overflow: hidden;
 }

@@ -9,9 +9,7 @@
   overflow-x: clip;
   overflow-y: unset;
   padding: 2ex;
-  margin-right: 5ex;
-  margin-bottom: 5ex;
-  margin-left: -5ex;
+  margin: 2ex;
   max-height: 90vh;
   width: -moz-available;
   width: -webkit-fill-available;

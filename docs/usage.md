@@ -370,8 +370,6 @@ Display-types:
 
 ### History
 
-![history](history.png)
-
 Looksyk has a history feature that allows you to navigate to the previous and next page. The history is stored in the
 local storage of the browser and is not synchronized with other devices.
 

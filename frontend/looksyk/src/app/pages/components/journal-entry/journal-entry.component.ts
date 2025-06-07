@@ -1,16 +1,16 @@
-import {ChangeDetectionStrategy, Component, inject, Input, OnChanges} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, Subscription} from "rxjs";
-import {MarkdownPage} from "../../model";
-import {ShowPageComponent} from "../../show-page/show-page.component";
-import {MatListModule} from "@angular/material/list";
-import {JournalTitleComponent} from "../journal-page-title/journal-title.component";
-import {AsyncPipe} from "@angular/common";
-import {JournalPageName} from "../../journal-single-entry/journal-single-entry.component";
-import {DateService} from "../../../services/date.service";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+import { MarkdownPage } from "../../model";
+import { MatListModule } from "@angular/material/list";
+import { JournalTitleComponent } from "../journal-page-title/journal-title.component";
+import { AsyncPipe } from "@angular/common";
+import { JournalPageName } from "../../journal-single-entry/journal-single-entry.component";
+import { DateService } from "../../../services/date.service";
+import { EditablePageComponent } from "../editable-markdown-page/editable-page.component";
 
 @Component({
   selector: 'app-journal-entry',
-  imports: [ShowPageComponent, MatListModule, JournalTitleComponent, AsyncPipe],
+  imports: [EditablePageComponent, MatListModule, JournalTitleComponent, AsyncPipe],
   templateUrl: './journal-entry.component.html',
   styleUrls: ['./journal-entry.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

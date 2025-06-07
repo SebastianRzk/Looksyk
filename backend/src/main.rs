@@ -22,7 +22,7 @@ use crate::io::http::r#static;
 use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
-use actix_web::{App, HttpServer};
+use actix_web::{error, web, App, HttpResponse, HttpServer};
 
 mod io;
 mod looksyk;
@@ -62,9 +62,15 @@ async fn main() -> std::io::Result<()> {
     );
 
     HttpServer::new(move || {
+        let json_cfg = web::FormConfig::default()
+            .limit(40000 * 1000 * 1000)
+            .error_handler(|err, _req| {
+                error::InternalError::from_response(err, HttpResponse::Conflict().into()).into()
+            });
         App::new()
             .wrap(Logger::default())
             .app_data(app_state.clone())
+            .app_data(json_cfg)
             .service(markdown::endpoints::parse)
             .service(page::endpoints::update_block)
             .service(userpage::endpoints::get_overview_page)
@@ -101,10 +107,8 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::get_asset_preview)
             .service(media::endpoints::get_metadata)
             .service(search::endpoints::search_in_files)
-            .service(r#static::endpoints::catch_all_journal)
-            .service(r#static::endpoints::catch_all_journals)
-            .service(r#static::endpoints::catch_all_pages)
             .service(http::state::endpoints::update_block)
+            .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(
         IpAddr::from_str(config.application_host).unwrap(),
@@ -113,3 +117,6 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+
+
+

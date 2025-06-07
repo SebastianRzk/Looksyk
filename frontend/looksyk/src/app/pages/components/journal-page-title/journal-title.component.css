@@ -3,8 +3,7 @@ h1 {
 }
 
 .title-segment:hover {
-  border: 2px solid var(--primary-shading);
-  padding: 0;
+  border-bottom: 2px solid var(--primary-shading);
   border-radius: 0.2ex;
 }
 

@@ -1,0 +1,8 @@
+<div class="line">
+  @if (block.indentation$ | async; as i) {
+    @for (_ of [].constructor(i); track $index) {
+      <div class="indentation"></div>
+    }
+  }
+  <app-display-markdown [markdown]="block"></app-display-markdown>
+</div>

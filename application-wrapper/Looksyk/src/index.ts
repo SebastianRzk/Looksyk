@@ -176,6 +176,15 @@ const createWindow = async (): Promise<void> => {
         console.log("Zooming out", mainWindow.webContents.getZoomLevel())
         mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() - 0.1);
     });
+
+    mainWindow.webContents.addListener('will-navigate', (e: any) => {
+        const url: string = e.url;
+        if (!url.startsWith(`http://localhost:${config.port}/`)) {
+            e.preventDefault();
+            mainWindow.webContents.stop();
+            require('electron').shell.openExternal(url);
+        }
+    });
     await load;
 };
 

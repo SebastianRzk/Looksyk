@@ -2,18 +2,18 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { BehaviorSubject, firstValueFrom, Subject } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { MediaPreview, MediaService } from "../../services/media.service";
-import { MarkdownComponent } from "../components/markdown/markdown.component";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { HistoryService } from "../../services/history.service";
 import { MarkdownPage } from "../model";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { AsyncPipe } from "@angular/common";
-import {TitleService} from "../../services/title.service";
+import { TitleService } from "../../services/title.service";
+import { DisplayMarkdownComponent } from "../components/display-markdown/display-markdown.component";
 
 @Component({
   selector: 'app-media-details-overview',
-  imports: [MarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe],
+  imports: [DisplayMarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

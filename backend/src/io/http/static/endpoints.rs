@@ -13,21 +13,6 @@ async fn index_html(state: Data<AppState>) -> Result<NamedFile, Error> {
     index_html_response(&state)
 }
 
-#[get("page/{p}")]
-async fn catch_all_pages(state: Data<AppState>) -> Result<NamedFile, Error> {
-    index_html_response(&state)
-}
-
-#[get("journal/{j}")]
-async fn catch_all_journals(state: Data<AppState>) -> Result<NamedFile, Error> {
-    index_html_response(&state)
-}
-
-#[get("journal")]
-async fn catch_all_journal(state: Data<AppState>) -> Result<NamedFile, Error> {
-    index_html_response(&state)
-}
-
 fn index_html_response(state: &Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = "index.html";
     let complete_path = to_static_path(&state.static_path, static_file_name);
@@ -37,6 +22,10 @@ fn index_html_response(state: &Data<AppState>) -> Result<NamedFile, Error> {
             disposition: DispositionType::Inline,
             parameters: vec![],
         }))
+}
+
+pub async fn index(state: Data<AppState>) -> Result<NamedFile, Error> {
+    index_html_response(&state)
 }
 
 #[get("/{filename}.js")]

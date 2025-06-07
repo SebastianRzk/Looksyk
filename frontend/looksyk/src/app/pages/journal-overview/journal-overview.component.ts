@@ -3,14 +3,14 @@ import { PageService } from "../../services/page.service";
 import { Observable } from "rxjs";
 import { MarkdownPage } from "../model";
 import { AsyncPipe } from "@angular/common";
-import { ShowPageComponent } from "../show-page/show-page.component";
-import {TitleService} from "../../services/title.service";
+import { TitleService } from "../../services/title.service";
+import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
 
 @Component({
     selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
-    ShowPageComponent
+    DisplayPageComponent
   ],
     templateUrl: './journal-overview.component.html',
     styleUrl: './journal-overview.component.css',

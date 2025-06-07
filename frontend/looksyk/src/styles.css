@@ -50,8 +50,12 @@ table, tr, td, th {
   padding: 1ex;
 }
 
-tr:hover, th:hover, td:hover {
+tr:hover, th:hover {
   background: var(--primary-shading);
+}
+
+td:hover {
+  background: var(--backround-color);
 }
 
 .mat-drawer-container {
@@ -74,7 +78,7 @@ img {
 iframe {
   max-width: 93vw;
   max-height: 93vh;
-  width: 80vw;
+  width: 100%;
   height: 80vh;
   overflow: scroll;
   background-color: white;

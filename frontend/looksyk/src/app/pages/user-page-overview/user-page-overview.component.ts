@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { ShowPageComponent } from "../show-page/show-page.component";
 import { PageService } from "../../services/page.service";
 import { Observable } from "rxjs";
 import { MarkdownPage } from "../model";
 import { AsyncPipe } from "@angular/common";
-import {TitleService} from "../../services/title.service";
+import { TitleService } from "../../services/title.service";
+import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
 
 @Component({
   selector: 'app-user-page-overview',
-  imports: [ShowPageComponent, AsyncPipe],
+  imports: [DisplayPageComponent, AsyncPipe],
   templateUrl: './user-page-overview.component.html',
   styleUrls: ['./user-page-overview.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

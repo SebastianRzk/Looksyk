@@ -1,5 +1,5 @@
 <h1> All media files </h1>
-@if (page | async; as p) {
-  <app-show-page [page]="p" [editable]="false"></app-show-page>
+@if (page$ | async; as page) {
+  <app-display-markdown-page [page]="page"></app-display-markdown-page>
 }
 
