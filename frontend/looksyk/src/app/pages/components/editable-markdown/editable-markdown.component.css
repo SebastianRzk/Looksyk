@@ -14,6 +14,8 @@ div[contenteditable] {
   overflow: auto;
   padding: 1ex;
   outline: 0;
+  border: 1px solid var(--primary-shading);
+  box-sizing: border-box;
 }
 
 .inactive {
@@ -54,12 +56,6 @@ div[contenteditable] {
   flex-direction: row;
 }
 
-.indentation {
-  width: 3ex;
-  min-width: 3ex;
-  min-height: 3ex;
-  border-right: 1px solid grey;
-}
 
 .inactive:hover {
   background: rgb(20, 20, 20);;

@@ -12,6 +12,10 @@ export class HistoryService {
 
   public async pushEntry(title: string, url: string[]): Promise<void> {
     const history = [...await firstValueFrom(this.history$)];
+    if (history.length > 0 && history[history.length - 1].url == url) {
+      // If the last entry is the same, do not add a new one
+      return;
+    }
     if (history.length >= this.MAX_HISTORY) {
       history.shift();
     }

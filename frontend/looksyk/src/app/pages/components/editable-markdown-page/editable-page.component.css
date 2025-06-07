@@ -1,0 +1,14 @@
+app-block:hover{
+  border: 1px solid var(--primary-shading);
+  padding: 0;
+  background: var(--primary-shading);
+}
+
+app-editable-block {
+  padding: 1px;
+}
+
+
+app-editable-block {
+  overflow: hidden;
+}

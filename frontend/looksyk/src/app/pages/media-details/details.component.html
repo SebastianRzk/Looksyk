@@ -6,11 +6,9 @@
 </div>
 @if (mediaInfo$ | async; as mediaInfo) {
   @if (mediaInfo.markdownPreview) {
-    <app-markdown
+    <app-display-markdown
       [markdown]="mediaInfo.markdownPreview"
-      [editable]="false"
-      [pageid]="'details/'+mediaInfo.properties.fullQualifiedPath"
-    ></app-markdown>
+    ></app-display-markdown>
   }
   @if (mediaInfo.htmlPreviewLink) {
     <iframe [src]="bypass(mediaInfo.htmlPreviewLink)">
@@ -18,8 +16,6 @@
   }
 }
 @if (mediaMetadata$ | async; as mediaMetadata) {
-  <app-markdown
-    [markdown]="mediaMetadata.blocks[0]"
-    [editable]="false"
-    [pageid]="'metadata'"></app-markdown>
+  <app-display-markdown
+    [markdown]="mediaMetadata.blocks[0]"></app-display-markdown>
 }

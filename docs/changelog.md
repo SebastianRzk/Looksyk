@@ -42,6 +42,17 @@ layout: default
 - [Changelog](changelog.md)
 
 
+### v1.7.0 (2025-06-07)
+
+Enhancements:
+
+* Design rework
+* History shows only unique consecutive entries
+* Show "/" in title on user pages
+* Fix out of bound scrolling
+* Increase max filesize for single pages
+* Fix forced page reload on special pages
+
 ### v1.6.0 (2025-06-04)
 
 Enhancements:

@@ -16,7 +16,7 @@ pub fn generate_overview_page(
     result.push(create_textblock(text, 0));
 
     if all_tags.entries.is_empty() && all_pages.entries.is_empty() {
-        result.push(create_textblock("No tags found!", 1));
+        result.push(create_textblock("No tags found!", 0));
     } else {
         let mut result_table = vec![table_headline()];
 
@@ -47,7 +47,7 @@ pub fn generate_overview_page(
                 as_tokens: result_table,
                 as_text: "".to_string(),
             }],
-            indentation: 1,
+            indentation: 0,
         })
     }
 
@@ -125,7 +125,7 @@ mod tests {
             "Overview over all user-created files",
             0,
         );
-        block_contains_markdown_text(result.blocks.get(1).unwrap(), "No tags found!", 1);
+        block_contains_markdown_text(result.blocks.get(1).unwrap(), "No tags found!", 0);
     }
 
     #[test]
@@ -150,7 +150,7 @@ mod tests {
         );
 
         let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 1);
+        assert_eq!(second_block.indentation, 0);
         assert_eq!(second_block.content.len(), 1);
         let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
@@ -197,7 +197,7 @@ mod tests {
         );
 
         let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 1);
+        assert_eq!(second_block.indentation, 0);
         assert_eq!(second_block.content.len(), 1);
         let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
@@ -236,7 +236,7 @@ mod tests {
         assert_eq!(result.blocks.len(), 2);
 
         let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 1);
+        assert_eq!(second_block.indentation, 0);
         assert_eq!(second_block.content.len(), 1);
         let second_block_content = second_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");

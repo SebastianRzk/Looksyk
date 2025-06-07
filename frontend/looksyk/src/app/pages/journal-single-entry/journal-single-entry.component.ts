@@ -1,20 +1,20 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
-import {PageService} from "../../services/page.service";
-import {ActivatedRoute} from "@angular/router";
-import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from "rxjs";
-import {MarkdownPage} from "../model";
-import {AsyncPipe} from "@angular/common";
-import {ShowPageComponent} from "../show-page/show-page.component";
-import {JournalTitleComponent} from "../components/journal-page-title/journal-title.component";
-import {HistoryService} from "../../services/history.service";
-import {TitleService} from "../../services/title.service";
-import {DateService} from "../../services/date.service";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { PageService } from "../../services/page.service";
+import { ActivatedRoute } from "@angular/router";
+import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
+import { MarkdownPage } from "../model";
+import { AsyncPipe } from "@angular/common";
+import { JournalTitleComponent } from "../components/journal-page-title/journal-title.component";
+import { HistoryService } from "../../services/history.service";
+import { TitleService } from "../../services/title.service";
+import { DateService } from "../../services/date.service";
+import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
 
 @Component({
   selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
-    ShowPageComponent,
+    EditablePageComponent,
     JournalTitleComponent,
     JournalTitleComponent
   ],

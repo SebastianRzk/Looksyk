@@ -16,7 +16,7 @@
   </mat-menu>
 </div>
 @if (page$ | async; as p) {
-  <app-show-page [page]="p"></app-show-page>
+  <app-editable-markdown-page [page]="p"></app-editable-markdown-page>
 }
 <mat-divider></mat-divider>
 @if (pageName$ | async; as p) {

@@ -30,13 +30,13 @@ import {DialogService} from "../../../services/dialog.service";
 import {ConvertBlockIntoPageComponent} from "../convert-block-into-page-dialog/convert-block-into-page.component";
 
 @Component({
-  selector: 'app-markdown',
+  selector: 'app-editable-markdown',
   imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, ReferencedMarkdownComponent, AsyncPipe],
-  templateUrl: './markdown.component.html',
-  styleUrls: ['./markdown.component.css'],
+  templateUrl: './editable-markdown.component.html',
+  styleUrls: ['./editable-markdown.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownComponent implements OnChanges, OnDestroy {
+export class EditableMarkdownComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.keyboadActionTrigger_.unsubscribe();
     this.renderedMarkdown_.unsubscribe();
@@ -84,9 +84,6 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   markdown!: Block;
 
   @Input({required: true})
-  public editable!: boolean;
-
-  @Input({required: true})
   public pageid!: string;
 
   componentMode: Subject<MarkdownComponentState> = new BehaviorSubject<MarkdownComponentState>(MarkdownComponentState.PRESENTING);
@@ -129,7 +126,7 @@ export class MarkdownComponent implements OnChanges, OnDestroy {
   })
 
 
-  keyboadActionTrigger_ = this.userInteraction.openMarkdown$.pipe(filter(() => this.editable)).subscribe(openMarkdown => {
+  keyboadActionTrigger_ = this.userInteraction.openMarkdown$.subscribe(openMarkdown => {
     if (openMarkdown.target.blockTarget == this.markdown.indentification) {
       this.openEditor();
       this.markdownRef.nativeElement.scrollIntoView({behavior: 'smooth', block: 'nearest'});

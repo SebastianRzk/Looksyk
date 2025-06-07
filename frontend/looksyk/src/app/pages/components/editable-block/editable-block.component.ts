@@ -1,24 +1,21 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Block } from "../../model";
-import { MarkdownComponent } from "../markdown/markdown.component";
 import { AsyncPipe } from "@angular/common";
+import { EditableMarkdownComponent } from "../editable-markdown/editable-markdown.component";
 
 @Component({
-  selector: 'app-block',
-  imports: [MarkdownComponent, AsyncPipe],
-  templateUrl: './block.component.html',
-  styleUrls: ['./block.component.css'],
+  selector: 'app-editable-block',
+  imports: [EditableMarkdownComponent, AsyncPipe],
+  templateUrl: './editable-block.component.html',
+  styleUrls: ['./editable-block.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BlockComponent {
+export class EditableBlockComponent {
 
   @Input({required: true})
   block!: Block;
 
   @Input({required: true})
   pageid!: string;
-
-  @Input({required: true})
-  public editable!: boolean;
 
 }

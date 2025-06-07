@@ -3,12 +3,11 @@ h1 {
 }
 
 .title:hover {
-  border: 2px solid var(--primary-shading);
-  padding: 0 0.5ex 0 0.5ex;
+  border-bottom: 2px solid var(--primary-shading);
   border-radius: 0.2ex;
 }
 
-.title{
-  border: 2px solid rgba(0,0,0,0);
+.title {
+  border-bottom: 2px solid rgba(0, 0, 0, 0);
   padding: 0 0.5ex 0 0.5ex;
 }

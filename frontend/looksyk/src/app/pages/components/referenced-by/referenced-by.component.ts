@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
 import { BacklinkService } from "../../../services/backlink.service";
-import { ShowPageComponent } from "../../show-page/show-page.component";
 import { AsyncPipe } from "@angular/common";
+import { DisplayPageComponent } from "../display-markdown-page/display-page.component";
 
 @Component({
     selector: 'app-referenced-by',
   imports: [
-    ShowPageComponent,
+    DisplayPageComponent,
     AsyncPipe
   ],
     templateUrl: './referenced-by.component.html',

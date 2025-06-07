@@ -1,5 +1,9 @@
 <h1>
   @for (title of parsedTitle$ | async; track title.link) {
-    <a class="title" [routerLink]="rootPath + title.link">{{ title.viewName }}</a>
+    <a class="title" [routerLink]="rootPath + title.link">
+      @if (!$first){
+        /
+      }
+      {{ title.viewName }}</a>
   }
 </h1>
