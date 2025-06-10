@@ -109,6 +109,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * i18n
 * Sync with other devices. Please use other tools to sync your knowledge base such as
 	* [Nextcloud](https://nextcloud.com/install/)
+	* [Syncthing](https://syncthing.net/)
 	* [git](https://git-scm.com/)
 	* [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage)
 
