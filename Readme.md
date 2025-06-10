@@ -107,9 +107,10 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Dynamic backend plugins
 * Server version / multi user / rcs
 * i18n
-* Sync with other devices. Please use other tools
-  like [Nextcloud](https://nextcloud.com/install/), [git](https://git-scm.com/)
-  or [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage) to sync your knowledge base
+* Sync with other devices. Please use other tools to sync your knowledge base such as
+	* [Nextcloud](https://nextcloud.com/install/)
+	* [git](https://git-scm.com/)
+	* [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage)
 
 ## License
 
