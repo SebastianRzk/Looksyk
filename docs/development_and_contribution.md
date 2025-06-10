@@ -38,7 +38,7 @@ backend will need to be restarted manually.
 
 ## Build electron app
 
-1. Change into the application-wrapper directory `cd application-wrapper`
+1. Change into the application-wrapper directory `cd application-wrapper/Looksyk/`
 2. Install electron dependencies `npm install`
 3. Build the electron app `npm run package`
 4. The application is now in the `out` folder e.g. `out/looksyk-linux-x64/looksyk`
