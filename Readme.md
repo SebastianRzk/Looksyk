@@ -108,10 +108,11 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Server version / multi user / rcs
 * i18n
 * Sync with other devices. Please use other tools to sync your knowledge base such as
-	* [Nextcloud](https://nextcloud.com/install/)
+	* [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/)
+	* [Dropbox](https://www.dropbox.com/)
+	* [Nextcloud](https://nextcloud.com/)
 	* [Syncthing](https://syncthing.net/)
 	* [git](https://git-scm.com/)
-	* [OneDrive](https://www.microsoft.com/de-de/microsoft-365/onedrive/online-cloud-storage)
 
 ## License
 
