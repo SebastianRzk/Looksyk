@@ -30,7 +30,7 @@ backend will need to be restarted manually.
 1. Clone the repository.
 2. Navigate to the frontend directory: `cd frontend/looksyk`
 3. Install frontend dependencies: `npm install`
-4. Start the frontend server: `ng serve --proxy-config=proxy.config.json`
+4. Start the frontend server: `npm run ng serve --proxy-config=proxy.config.json`
 5. Navigate to the backend directory: `cd backend`
 6. Install backend dependencies: `cargo run`
 7. The frontend will be available at `http://localhost:4200`
