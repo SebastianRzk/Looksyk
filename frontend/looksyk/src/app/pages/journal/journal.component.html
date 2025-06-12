@@ -1,5 +1,24 @@
-<div class="headline"><h1>Journal</h1><button mat-mini-fab><mat-icon routerLink="/special-page/journal-overview">calendar_month</mat-icon></button></div>
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
 
-<cdk-virtual-scroll-viewport autosize class="journal-viewport">
-  <app-journal-entry *cdkVirtualFor="let item of items; templateCacheSize: 0" [page]="item"></app-journal-entry>
-</cdk-virtual-scroll-viewport>
+  <mat-divider vertical="true"></mat-divider>
+  <h1 class="header-text">Journal</h1>
+  <button mat-mini-fab>
+    <mat-icon routerLink="/special-page/journal-overview">calendar_month</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<div class="global-content">
+  <cdk-virtual-scroll-viewport autosize class="journal-viewport">
+    <app-journal-entry *cdkVirtualFor="let item of items; templateCacheSize: 0" [page]="item"></app-journal-entry>
+  </cdk-virtual-scroll-viewport>
+</div>

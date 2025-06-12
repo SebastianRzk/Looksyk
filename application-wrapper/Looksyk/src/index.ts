@@ -176,7 +176,7 @@ const createWindow = async (): Promise<void> => {
         console.log("Zooming out", mainWindow.webContents.getZoomLevel())
         mainWindow.webContents.setZoomLevel(mainWindow.webContents.getZoomLevel() - 0.1);
     });
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mainWindow.webContents.addListener('will-navigate', (e: any) => {
         const url: string = e.url;
         if (!url.startsWith(`http://localhost:${config.port}/`)) {

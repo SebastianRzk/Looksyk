@@ -6,7 +6,7 @@ import { BehaviorSubject, firstValueFrom, Subject } from "rxjs";
 })
 export class HistoryService {
 
-  private readonly MAX_HISTORY: number = 7;
+  private readonly MAX_HISTORY: number = 5;
   private history: Subject<HistoryEntry[]> = new BehaviorSubject<HistoryEntry[]>([]);
   public history$ = this.history.asObservable();
 

@@ -1,21 +1,35 @@
-<div class="title">
-  <h1>{{ pageName$ | async }} </h1>
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
+  <mat-divider vertical="true"></mat-divider>
+  <h1 class="header-text">{{ pageName$ | async }} </h1>
   <button mat-mini-fab (click)="download()">
     <mat-icon>download</mat-icon>
   </button>
 </div>
-@if (mediaInfo$ | async; as mediaInfo) {
-  @if (mediaInfo.markdownPreview) {
+<mat-divider></mat-divider>
+<div class="global-content">
+  @if (mediaInfo$ | async; as mediaInfo) {
+    @if (mediaInfo.markdownPreview) {
+      <app-display-markdown
+        [markdown]="mediaInfo.markdownPreview"
+      ></app-display-markdown>
+    }
+    @if (mediaInfo.htmlPreviewLink) {
+      <iframe [src]="bypass(mediaInfo.htmlPreviewLink)">
+      </iframe>
+    }
+  }
+  @if (mediaMetadata$ | async; as mediaMetadata) {
     <app-display-markdown
-      [markdown]="mediaInfo.markdownPreview"
-    ></app-display-markdown>
+      [markdown]="mediaMetadata.blocks[0]"></app-display-markdown>
   }
-  @if (mediaInfo.htmlPreviewLink) {
-    <iframe [src]="bypass(mediaInfo.htmlPreviewLink)">
-    </iframe>
-  }
-}
-@if (mediaMetadata$ | async; as mediaMetadata) {
-  <app-display-markdown
-    [markdown]="mediaMetadata.blocks[0]"></app-display-markdown>
-}
+</div>

@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.menu-element {
+  margin-top: 5ex;
+}
+
 .menu-button-list > button {
   width: 100%;
   justify-content: start;
@@ -50,5 +54,11 @@ mat-divider {
 
 
 .title-h1 {
-  margin-top: 2.5ex;
+  margin: 1ex;
+}
+
+.graph-title{
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  margin: 0.5ex;
 }

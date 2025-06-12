@@ -4,11 +4,12 @@ import { ContentAssistMode, ContentAssistService, KeypressResult } from "./servi
 import { Title } from "@angular/platform-browser";
 import { TitleService } from "./services/title.service";
 import { Subscription } from "rxjs";
-import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { ContentAssistPopupComponent } from "./pages/components/content-assist-popup/content-assist-popup.component";
 import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
 import { RouterModule } from "@angular/router";
-import { MatMiniFabButton } from "@angular/material/button";
+import { MatIconRegistry } from "@angular/material/icon";
+import { SidenavService } from "./services/sidenav.service";
 
 @Component({
   selector: 'app-root',
@@ -19,20 +20,35 @@ import { MatMiniFabButton } from "@angular/material/button";
     MatSidenavModule,
     SidebarComponent,
     RouterModule,
-    MatMiniFabButton
+
   ]
 })
 export class AppComponent implements OnInit {
-
-
   userAction = inject(UseractionService);
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
   titleService = inject(TitleService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
 
+  @ViewChild('sidenav')
+  sidenav!: MatSidenav;
+
+  sidenav_ = inject(SidenavService).opened$.subscribe(
+    (opened: boolean) => {
+      if (opened) {
+         this.sidenav.open();
+      } else {
+         this.sidenav.close();
+      }
+    }
+  )
+
   @ViewChild('content')
   content!: ElementRef;
+
+  constructor(iconRegistry: MatIconRegistry) {
+    iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+  }
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {

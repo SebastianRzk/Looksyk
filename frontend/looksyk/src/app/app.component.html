@@ -3,17 +3,8 @@
     <app-sidebar></app-sidebar>
   </mat-sidenav>
   <mat-sidenav-content #content>
-    @if (sidenav.opened) {
-      <button mat-mini-fab class="menu-trigger" (click)="sidenav.close()">
-        <div class="menu-trigger-text">«</div>
-      </button>
-    } @else {
-      <button mat-mini-fab class="menu-trigger" (click)="sidenav.open()">
-        <div class="menu-trigger-text">»</div>
-      </button>
-    }
     <app-content-assist-popup></app-content-assist-popup>
-    <div class="content">
+    <div class="main-window-content">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

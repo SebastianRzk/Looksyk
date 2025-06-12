@@ -1,8 +1,23 @@
-<div class="top">
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
+
+  <mat-divider vertical="true"></mat-divider>
   @if (pageName$ | async; as p) {
     <app-journal-page-title [title]="p"></app-journal-page-title>
   }
 </div>
-@if(page$ | async; as page) {
-  <app-editable-markdown-page [page]="page"></app-editable-markdown-page>
-}
+<mat-divider></mat-divider>
+<div class="global-content">
+  @if(page$ | async; as page) {
+    <app-editable-markdown-page [page]="page"></app-editable-markdown-page>
+  }
+</div>

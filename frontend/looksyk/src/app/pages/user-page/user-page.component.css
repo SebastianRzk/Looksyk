@@ -1,18 +1,41 @@
-.top {
+.header {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  vertical-align: middle;
 }
+
+.header > mat-divider {
+  margin: 2ex 0;
+}
+
+.header > h1 {
+  margin: 0.5ex;
+}
+
+.menu-toggle {
+  width: auto;
+  margin: 0 0.5ex;
+}
+
+.header > button {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 
 app-fav-star {
   margin-left: 3ex;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 100%
 }
 
-mat-divider {
-  margin: 5ex 1ex;
+.reference-mat-divider {
+  margin: 7ex 4ex 5ex 0;
 }
-
 
 .page-edit-icon {
   margin-left: 1ex;
+  margin-top: auto;
+  margin-bottom: auto;
 }

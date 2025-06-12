@@ -6,3 +6,7 @@ app-editable-markdown-page {
   display:flex;
   flex-direction: column;
 }
+
+app-journal-page-title {
+  margin: 5ex 0 2.5ex -4ex;
+}

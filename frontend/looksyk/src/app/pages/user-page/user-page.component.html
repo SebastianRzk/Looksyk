@@ -1,4 +1,16 @@
-<div class="top">
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
+
+  <mat-divider vertical="true"></mat-divider>
   <app-user-page-title [title]="pageName$ | async"></app-user-page-title>
   @if (data | async; as d) {
     <app-fav-star [isFavInitial]="d.page.isFavourite" [pageName]="d.pageName"></app-fav-star>
@@ -15,11 +27,20 @@
     </button>
   </mat-menu>
 </div>
-@if (page$ | async; as p) {
-  <app-editable-markdown-page [page]="p"></app-editable-markdown-page>
-}
-<mat-divider></mat-divider>
-@if (pageName$ | async; as p) {
-  <app-referenced-by [pageName]="p"></app-referenced-by>
-}
+<mat-divider ></mat-divider>
+<div class="global-content">
+  @if (page$ | async; as p) {
+    <app-editable-markdown-page [page]="p"></app-editable-markdown-page>
+  }
+  <mat-divider class="reference-mat-divider"></mat-divider>
+  @if (pageName$ | async; as p) {
+    <app-referenced-by [pageName]="p"></app-referenced-by>
+  }
+</div>
+
+
+
+
+
+
 

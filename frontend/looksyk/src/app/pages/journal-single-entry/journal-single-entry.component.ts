@@ -9,6 +9,9 @@ import { HistoryService } from "../../services/history.service";
 import { TitleService } from "../../services/title.service";
 import { DateService } from "../../services/date.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
+import { MatDivider } from "@angular/material/divider";
+import { MatIcon } from "@angular/material/icon";
+import { SidenavService } from "../../services/sidenav.service";
 
 @Component({
   selector: 'app-journal-single-entry',
@@ -16,7 +19,9 @@ import { EditablePageComponent } from "../components/editable-markdown-page/edit
     AsyncPipe,
     EditablePageComponent,
     JournalTitleComponent,
-    JournalTitleComponent
+    JournalTitleComponent,
+    MatDivider,
+    MatIcon,
   ],
   templateUrl: './journal-single-entry.component.html',
   styleUrl: './journal-single-entry.component.css',
@@ -25,6 +30,7 @@ import { EditablePageComponent } from "../components/editable-markdown-page/edit
 export class JournalSingleEntryComponent implements OnInit {
 
   public pageSerivce: PageService = inject(PageService);
+  public sidenav = inject(SidenavService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private historyService = inject(HistoryService);
   private titleService = inject(TitleService);

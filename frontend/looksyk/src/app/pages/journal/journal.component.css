@@ -1,21 +1,41 @@
 :host {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 .journal-viewport {
-  height: 84%;
+  height: 100%;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--primary-shading);
 }
 
-.headline{
-  margin-left: 2ex;
+.header {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  vertical-align: middle;
 }
-.headline>* {
-  margin-right: 1ex;
+
+.header > mat-divider {
+  margin: 2ex 0;
+}
+
+.header > h1 {
+  margin: 0.5ex;
+}
+
+.header-text {
+  margin-left: 1.5ex !important;
+}
+
+.menu-toggle {
+  width: auto;
+  margin: 0 0.5ex;
+}
+
+.header > button{
+  margin-top: auto;
+  margin-bottom: auto;
 }

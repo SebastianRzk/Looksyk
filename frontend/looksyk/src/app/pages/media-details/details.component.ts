@@ -10,10 +10,12 @@ import { MatButtonModule } from "@angular/material/button";
 import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
 import { DisplayMarkdownComponent } from "../components/display-markdown/display-markdown.component";
+import { MatDivider } from "@angular/material/divider";
+import { SidenavService } from "../../services/sidenav.service";
 
 @Component({
   selector: 'app-media-details-overview',
-  imports: [DisplayMarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe],
+  imports: [DisplayMarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe, MatDivider],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +26,7 @@ export class DetailsComponent implements OnInit {
   private mediaService: MediaService = inject(MediaService);
   private titleService = inject(TitleService);
   public sanitizer: DomSanitizer = inject(DomSanitizer);
+  public sidenav = inject(SidenavService);
 
   public pageName: Subject<string> = new BehaviorSubject("");
   public pageName$ = this.pageName.asObservable();

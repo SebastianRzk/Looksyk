@@ -10,16 +10,20 @@ import {MatIconModule} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {TitleService} from "../../services/title.service";
+import { MatDivider } from "@angular/material/divider";
+import { SidenavService } from "../../services/sidenav.service";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
     selector: 'app-journal',
-  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule],
+  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule, MatDivider, AsyncPipe],
     templateUrl: './journal.component.html',
     styleUrls: ['./journal.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalComponent {
   pageService = inject(PageService);
+  sidenav: SidenavService = inject(SidenavService);
   items = new MyDataSource(this.pageService)
   title = inject(TitleService);
 
