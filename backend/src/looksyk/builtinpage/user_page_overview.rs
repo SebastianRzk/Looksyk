@@ -12,25 +12,31 @@ pub fn generate_overview_page(
     all_pages: &UserPageIndex,
 ) -> ParsedMarkdownFile {
     let mut result = vec![];
-    let text = "Overview over all user-created files";
-    result.push(create_textblock(text, 0));
 
     if all_tags.entries.is_empty() && all_pages.entries.is_empty() {
-        result.push(create_textblock("No tags found!", 0));
+        result.push(create_textblock("No tags or pages found!", 0));
     } else {
         let mut result_table = vec![table_headline()];
 
         let mut visited_pages = HashSet::new();
 
-        for (tag, references) in &all_tags.entries {
+        let entries = get_sorted(all_tags);
+        for tag in entries {
             if tag.page_type == PageType::JournalPage {
                 continue;
             }
-            render_table_line(all_pages, &mut result_table, &tag.name, references);
+            render_table_line(
+                all_pages,
+                &mut result_table,
+                &tag.name,
+                all_tags.entries.get(tag).unwrap(),
+            );
             visited_pages.insert(tag);
         }
 
-        for simple_page_name in all_pages.entries.keys() {
+        let mut keys: Vec<&SimplePageName> = all_pages.entries.keys().clone().collect();
+        keys.sort_by(|a, b| a.name.cmp(&b.name));
+        for simple_page_name in keys {
             let id = simple_page_name.as_user_page();
             if !visited_pages.contains(&id) {
                 render_table_line(
@@ -52,6 +58,12 @@ pub fn generate_overview_page(
     }
 
     ParsedMarkdownFile { blocks: result }
+}
+
+fn get_sorted(all_tags: &TagIndex) -> Vec<&PageId> {
+    let mut entries: Vec<&PageId> = all_tags.entries.keys().clone().collect();
+    entries.sort_by(|a, b| a.name.name.cmp(&b.name.name));
+    entries
 }
 
 fn table_headline() -> BlockToken {
@@ -118,14 +130,9 @@ mod tests {
                 entries: HashMap::new(),
             },
         );
-        assert_eq!(result.blocks.len(), 2);
+        assert_eq!(result.blocks.len(), 1);
 
-        block_contains_markdown_text(
-            result.blocks.first().unwrap(),
-            "Overview over all user-created files",
-            0,
-        );
-        block_contains_markdown_text(result.blocks.get(1).unwrap(), "No tags found!", 0);
+        block_contains_markdown_text(result.blocks.get(0).unwrap(), "No tags or pages found!", 0);
     }
 
     #[test]
@@ -141,18 +148,12 @@ mod tests {
                 entries: HashMap::new(),
             },
         );
-        assert_eq!(result.blocks.len(), 2);
+        assert_eq!(result.blocks.len(), 1);
 
-        block_contains_markdown_text(
-            result.blocks.first().unwrap(),
-            "Overview over all user-created files",
-            0,
-        );
-
-        let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 0);
-        assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.first().unwrap();
+        let first_block = result.blocks.get(0).unwrap();
+        assert_eq!(first_block.indentation, 0);
+        assert_eq!(first_block.content.len(), 1);
+        let second_block_content = first_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {
@@ -188,18 +189,12 @@ mod tests {
         );
         let result =
             generate_overview_page(&TagIndex { entries }, &UserPageIndex { entries: data });
-        assert_eq!(result.blocks.len(), 2);
+        assert_eq!(result.blocks.len(), 1);
 
-        block_contains_markdown_text(
-            result.blocks.first().unwrap(),
-            "Overview over all user-created files",
-            0,
-        );
-
-        let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 0);
-        assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.first().unwrap();
+        let first_block = result.blocks.get(0).unwrap();
+        assert_eq!(first_block.indentation, 0);
+        assert_eq!(first_block.content.len(), 1);
+        let second_block_content = first_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {
@@ -233,12 +228,12 @@ mod tests {
             },
             &UserPageIndex { entries: all_pages },
         );
-        assert_eq!(result.blocks.len(), 2);
+        assert_eq!(result.blocks.len(), 1);
 
-        let second_block = result.blocks.get(1).unwrap();
-        assert_eq!(second_block.indentation, 0);
-        assert_eq!(second_block.content.len(), 1);
-        let second_block_content = second_block.content.first().unwrap();
+        let first_block = result.blocks.get(0).unwrap();
+        assert_eq!(first_block.indentation, 0);
+        assert_eq!(first_block.content.len(), 1);
+        let second_block_content = first_block.content.first().unwrap();
         assert_eq!(second_block_content.as_text, "");
         assert_eq!(second_block_content.as_tokens, vec![
             BlockToken {

@@ -1,11 +1,10 @@
 <div class="title">
   <h1 class="title-h1">Looksyk</h1>
-  <p>{{ titleService.graphTitle$ | async }}</p>
+  <p class="graph-title">{{ titleService.graphTitle$ | async }}</p>
 </div>
 
-<mat-divider></mat-divider>
 
-<div class="menu-button-list">
+<div class="menu-button-list menu-element">
   <button mat-button routerLink="/journal">
     <mat-icon>today</mat-icon>
     Journal
@@ -20,48 +19,47 @@
   </button>
 </div>
 
-<mat-divider></mat-divider>
-
 @if (favs$ | async; as favs) {
-  <div class="menu-button-list" cdkDropList (cdkDropListDropped)="drop($event)">
+  <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
     @for (fav of favs; track fav) {
       <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
-        <mat-icon>star</mat-icon>
+        <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
         {{ fav }}
       </button>
     }
   </div>
 }
 
-<mat-divider></mat-divider>
-<div>
-  <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
-    <mat-icon>navigate_before</mat-icon>
-  </button>
-  <button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
-    <mat-icon>navigate_next</mat-icon>
-  </button>
-  <button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
-    <mat-icon>delete</mat-icon>
-  </button>
 
-</div>
-@if(history$ | async; as historyEntry){
-  <div class="menu-button-list">
-    @for (history of historyEntry; track history.title) {
-      @if (history.title.length < 20) {
-        <button mat-button [routerLink]="history.url">
-          <mat-icon>history</mat-icon>
-          {{ history.title }}
-        </button>
-      } @else {
-        <button mat-button [routerLink]="history.url">
-          <mat-icon>history</mat-icon>
-          <div class="small-history-item">{{ history.title }}</div>
-        </button>
+@if (history$ | async; as historyEntry) {
+  @if (historyEntry.length !== 0) {
+    <div class="menu-element">
+      <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
+        <mat-icon>navigate_before</mat-icon>
+      </button>
+      <button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
+        <mat-icon>navigate_next</mat-icon>
+      </button>
+      <button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="menu-button-list">
+      @for (history of historyEntry; track history.title) {
+        @if (history.title.length < 20) {
+          <button mat-button [routerLink]="history.url">
+            <mat-icon>history</mat-icon>
+            {{ history.title }}
+          </button>
+        } @else {
+          <button mat-button [routerLink]="history.url">
+            <mat-icon>history</mat-icon>
+            <div class="small-history-item">{{ history.title }}</div>
+          </button>
+        }
       }
-    }
-  </div>
+    </div>
+  }
 }
 <button mat-button (click)="reload()" class="unimportant bottom">
   <mat-icon>sync</mat-icon>

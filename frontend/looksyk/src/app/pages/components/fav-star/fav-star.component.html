@@ -1,7 +1,9 @@
-@if(isFav$ | async; as f){
-  @if(f.isFav){
-    <mat-icon class="star" (click)="onUnStar()">star</mat-icon>
-  } @else {
-    <mat-icon class="star" (click)="onStar()">star_outline</mat-icon>
+<h1>
+  @if (isFav$ | async; as f) {
+    @if (f.isFav) {
+      <mat-icon class="star material-symbols-rounded-filled" (click)="onUnStar()">star</mat-icon>
+    } @else {
+      <mat-icon class="star" (click)="onStar()">star</mat-icon>
+    }
   }
-}
+</h1>

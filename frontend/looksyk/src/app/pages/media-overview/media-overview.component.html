@@ -1,5 +1,20 @@
-<h1> All media files </h1>
-@if (page$ | async; as page) {
-  <app-display-markdown-page [page]="page"></app-display-markdown-page>
-}
-
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
+  <mat-divider vertical="true"></mat-divider>
+  <h1 class="header-text">All media files</h1>
+</div>
+<mat-divider></mat-divider>
+<div class="global-content">
+  @if (page$ | async; as page) {
+    <app-display-markdown-page [page]="page"></app-display-markdown-page>
+  }
+</div>

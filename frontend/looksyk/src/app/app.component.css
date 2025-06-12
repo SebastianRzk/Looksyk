@@ -8,20 +8,12 @@ mat-sidenav-container {
 
 mat-sidenav-content {
   display: flex;
+  flex: 1;
 }
 
 mat-sidenav {
   width: 30ex;
   max-width: 30ex;
-}
-
-
-.content {
-  box-sizing: border-box;
-  display: flex;
-  padding: 4ex 5ex 5ex;
-  flex-direction: column;
-  width: 100%;
 }
 
 app-sidebar {
@@ -30,21 +22,31 @@ app-sidebar {
   flex-direction: column;
 }
 
-.menu-trigger, .menu-trigger>*{
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  padding: 0;
-  margin: 0;
-  font-size: xx-large;
-  background: var(--primary-shading);
-  color: var(--primary-shading);
-  box-shadow: none;
-  border-radius: 0  0.5ex 0.5ex 0;
+.main-window-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.menu-trigger-text {
-  padding-bottom: 0.4ex;
+.header {
+  display: flex;
+  flex-direction: row;
+  vertical-align: middle;
+}
+
+.header > mat-divider {
+  margin: 2ex 0;
+}
+
+.header > h1 {
+  margin: 0.5ex;
+}
+
+.header-text{
+  margin-left: 1.5ex !important;
+}
+.menu-toggle {
+  width: auto;
+  margin: 0 0.5ex;
 }
 

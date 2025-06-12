@@ -5,6 +5,8 @@ layout: default
 
 ## Table of Contents
 
+-[v1.8.0](#v180-2025-06-12)
+- [v1.7.0](#v170-2025-06-07)
 - [v1.6.0](#v160-2025-06-04)
 - [v1.5.6](#v156-2025-06-01)
 - [v1.5.5](#v155-2025-05-29)
@@ -41,6 +43,13 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.8.0 (2025-06-12)
+
+Enhancements:
+
+* Improve overall design in frontend
+* Improve rendered `special-pages` in backend
 
 ### v1.7.0 (2025-06-07)
 

@@ -14,6 +14,7 @@ import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
 import { DialogService } from "../../services/dialog.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
+import { SidenavService } from "../../services/sidenav.service";
 
 @Component({
   selector: 'app-user-page',
@@ -32,6 +33,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private titleService: TitleService = inject(TitleService);
   private dialogService: DialogService = inject(DialogService);
+  public sidenav = inject(SidenavService);
   private router: Router = inject(Router);
 
   private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
@@ -95,6 +97,5 @@ export class UserPageComponent implements OnInit, OnDestroy {
   async delete() {
     const pageName = await firstValueFrom(this.pageName$);
     await this.pageSerivce.deleteUserPage(pageName);
-    await this.router.navigate(["/"]);
   }
 }

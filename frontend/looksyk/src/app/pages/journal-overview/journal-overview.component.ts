@@ -5,12 +5,21 @@ import { MarkdownPage } from "../model";
 import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
 import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
+import { MatDivider } from "@angular/material/divider";
+import { MatMiniFabButton } from "@angular/material/button";
+import { RouterLink } from "@angular/router";
+import { MatIcon } from "@angular/material/icon";
+import { SidenavService } from "../../services/sidenav.service";
 
 @Component({
     selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
-    DisplayPageComponent
+    DisplayPageComponent,
+    MatDivider,
+    MatIcon,
+    MatMiniFabButton,
+    RouterLink
   ],
     templateUrl: './journal-overview.component.html',
     styleUrl: './journal-overview.component.css',
@@ -19,6 +28,7 @@ import { DisplayPageComponent } from "../components/display-markdown-page/displa
 export class JournalOverviewComponent implements OnInit{
 
   private pageSerivce: PageService = inject(PageService);
+  sidenav = inject(SidenavService);
   public page: Observable<MarkdownPage> = this.pageSerivce.getBuildInPage("journal-overview");
   private titleService = inject(TitleService);
 

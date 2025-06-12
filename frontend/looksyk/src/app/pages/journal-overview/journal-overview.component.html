@@ -1,5 +1,25 @@
-<h1 class="headline">Journal Overview</h1>
-@if (page | async; as p) {
-  <app-display-markdown-page [page]="p"></app-display-markdown-page>
-}
+<div class="header">
+  @if (sidenav.opened$ | async; as opened) {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      </mat-icon>
+    </h1>
+  } @else {
+    <h1>
+      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+    </h1>
+  }
+
+  <mat-divider vertical="true"></mat-divider>
+  <h1 class="header-text">Journal Overview</h1>
+  <button mat-mini-fab>
+    <mat-icon routerLink="/journal">post</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<div class="global-content">
+  @if (page | async; as p) {
+    <app-display-markdown-page [page]="p"></app-display-markdown-page>
+  }
+</div>
 

@@ -1,4 +1,35 @@
-.title{
+.header {
   display: flex;
   flex-direction: row;
+  vertical-align: middle;
+  max-width: 95%;
+}
+
+.header > mat-divider {
+  margin: 2ex 0;
+}
+
+.header > h1 {
+  margin: 0.5ex;
+}
+
+.header-text {
+  margin-left: 1.5ex !important;
+}
+
+.menu-toggle {
+  width: auto;
+  margin: 0 0.5ex;
+}
+
+.header > button{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.global-content{
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  height: 100%;
 }
