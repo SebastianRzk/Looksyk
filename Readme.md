@@ -6,6 +6,8 @@
 
 A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
 
+## Find the complete documentation at [sebastianrzk.github.io/Looksyk](https://sebastianrzk.github.io/Looksyk/)
+
 ## Key Features
 
 - **Local Storage**: Your information is always exclusively in Markdown files.
