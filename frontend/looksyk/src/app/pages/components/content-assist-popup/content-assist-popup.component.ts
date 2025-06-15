@@ -10,6 +10,7 @@ import {
   map,
   Observable,
   Subject,
+  tap,
   timer
 } from "rxjs";
 import { MetaInformation, MetaInfoService, Suggestions } from "../../../services/meta-info.service";
@@ -24,6 +25,8 @@ import {
   SearchService,
   TEXT_TO_SHORT_NAME
 } from "../../../services/search.service";
+import { TemplateList, TemplateService } from "../../../services/template.service";
+import { PageService } from "../../../services/page.service";
 
 @Component({
   selector: 'app-content-assist-popup',
@@ -47,25 +50,26 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   contentAssist = inject(ContentAssistService);
   metaInfoFromBackend = inject(MetaInfoService);
+  templatesFromBackend = inject(TemplateService);
   useraction = inject(UseractionService);
+  pageService = inject(PageService);
   searchService = inject(SearchService);
   router = inject(Router);
 
-  subMenuState = new BehaviorSubject<Suggestions>({
-    suggestions: []
+
+  subMenuState: Subject<ContentAssistSection> = new BehaviorSubject<ContentAssistSection>({
+    items: [],
+    title: "",
   });
-  subMenuState$: Observable<ContentAssistSection> = this.subMenuState.asObservable().pipe(map(s => s.suggestions.map(s => {
-      return {
-        name: s.explanation,
-        highlight: false
-      };
-    }
-  ))).pipe(map(s => {
-    return {
-      title: ADD_SUGGESTED_MEDIA,
-      items: s
-    }
-  }));
+  subMenuState$: Observable<ContentAssistSection> = this.subMenuState.asObservable();
+
+  currentSuggestions: Suggestions = {
+    suggestions: []
+  }
+
+  currentTemplates: TemplateList = {
+    templates: []
+  };
 
   text$ = this.contentAssist.textInContentAssist$
 
@@ -81,7 +85,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     } else if (mode == ContentAssistMode.Search) {
       return "Search";
     } else {
-      return "Insert link";
+      return "Insert";
     }
   }));
 
@@ -133,27 +137,70 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
   private async handleElseActions(group: ContentAssistSection, item: Item) {
     const target: OpenMarkdownEvent = await firstValueFrom(this.useraction.currentOpenMarkdown$);
-    let text_to_insert = "unknown";
+    let text_to_insert = "unknown action " + JSON.stringify(group) + " " + JSON.stringify(item);
     if (group.title === this.INSERT_REFERENCE_TITLE) {
       text_to_insert = `[[${item.name}]] `
     } else if (group.title === this.INSERT_MEDIA_TITLE) {
-      this.metaInfoFromBackend.getSuggestionsForFile(item.name).subscribe(
-        (data) => {
-          this.subMenuState.next(data);
+      this.metaInfoFromBackend.getSuggestionsForFile(item.name).pipe(tap(
+        x => this.currentSuggestions = x
+      )).pipe(map(s => s.suggestions.map(s => {
+          return {
+            name: s.explanation,
+            highlight: false
+          };
         }
-      )
+      ))).pipe(map(s => {
+        return {
+          title: ADD_SUGGESTED_MEDIA,
+          items: s
+        }
+      })).subscribe(x => this.subMenuState.next(x));
       this.contentAssist.overwriteText(item.name);
       this.contentAssist.openSubmenu();
       this.contentAssist.resetCursor();
       return Result.StayOpened;
     } else if (group.title === "Actions") {
-      this.useraction.closeCurrentMarkdownBlock();
       if (item.name === "Delete block") {
+        this.useraction.closeCurrentMarkdownBlock();
         this.useraction.deleteBlock.next({
           target: target.target
         })
       } else if (item.name === "Delete page") {
+        this.useraction.closeCurrentMarkdownBlock();
         text_to_insert = "not yet implemented";
+      } else if (item.name === "Insert block after current block") {
+        this.useraction.newBlockAfterCurrentOpenBlock.next({
+          id: Math.random() + "",
+        });
+        return Result.Close;
+      } else if (item.name === "Insert template") {
+        this.templatesFromBackend.fetchList().pipe(tap(x => this.currentTemplates = x)).pipe(map(s => s.templates.map(s => {
+            return {
+              name: s.title,
+              highlight: false
+            };
+          }
+        ))).pipe(map(s => {
+          return {
+            title: INSERT_TEMPLATE,
+            items: s
+          }
+        })).pipe(map(x => {
+          if (x.items.length == 0) {
+            return {
+              title: INSERT_TEMPLATE,
+              items: [{
+                name: NO_TEMPLATES_FOUND,
+                highlight: false
+              }]
+            }
+          }
+          return x;
+        })).subscribe(x => this.subMenuState.next(x));
+        this.contentAssist.overwriteText("");
+        this.contentAssist.openSubmenu();
+        this.contentAssist.resetCursor();
+        return Result.StayOpened;
       }
     } else if (group.title == this.ADD_LINK) {
       const target_text = await firstValueFrom(this.contentAssist.textInContentAssist$);
@@ -171,12 +218,38 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         text_to_insert = "{query: blocks tag:\"myTag\" display:\"paragraphs\" }"
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
-      const allValues = await firstValueFrom(this.subMenuState);
-      for (const value of allValues.suggestions) {
+      for (const value of this.currentSuggestions.suggestions) {
         if (value.explanation == item.name) {
           text_to_insert = value.inplaceMarkdown
           break;
         }
+      }
+    } else if (group.title == INSERT_TEMPLATE) {
+      let templateId = "";
+      for (const value of this.currentTemplates.templates) {
+        if (value.title == item.name) {
+          templateId = value.id;
+          break;
+        }
+      }
+      const currentOpenMarkdown = await firstValueFrom(this.useraction.currentOpenMarkdown$);
+      const blockNumber = await this.pageService.getBlockIndex(currentOpenMarkdown.target.fileTarget, currentOpenMarkdown.target.blockTarget);
+      if (templateId.length > 0) {
+        const updatedPage = await firstValueFrom(this.templatesFromBackend.insertTemplate({
+            templateId: templateId,
+            pageId: currentOpenMarkdown.target.fileTarget,
+            blockNumber: blockNumber
+          },
+          currentOpenMarkdown.target.fileTarget, currentOpenMarkdown.target.fileTarget));
+        this.useraction.closeCurrentMarkdownBlock();
+        await this.pageService.patchPageInInternalState(
+          currentOpenMarkdown.target.fileTarget,
+          updatedPage
+        );
+        return Result.Close;
+      } else {
+        console.warn(`No template found for name: ${item.name}`);
+        return Result.Close;
       }
     }
     this.useraction.insertText.next({
@@ -474,6 +547,10 @@ function CONTENT_ASSIST_ACTIONS_EDIT(): ContentAssistSection {
       {
         name: "Insert block after current block",
         highlight: false,
+      },
+      {
+        name: "Insert template",
+        highlight: false
       }
     ]
   }
@@ -481,7 +558,11 @@ function CONTENT_ASSIST_ACTIONS_EDIT(): ContentAssistSection {
 
 const ADD_SUGGESTED_MEDIA = "Submenu: Insert media";
 
-const ADD_QUERY = "Queries";
+const INSERT_TEMPLATE = "Submenu: Insert template";
+
+const NO_TEMPLATES_FOUND = "No templates found. Press enter or esc to close this menu";
+
+const ADD_QUERY = "Insert Query";
 
 const ADD_QUERY_PAGE_HIERARCHY = "query page hierarchy";
 

@@ -15,9 +15,9 @@ use crate::io::http::markdown;
 use crate::io::http::media;
 use crate::io::http::metainfo;
 use crate::io::http::page;
-use crate::io::http::page::journalpage;
 use crate::io::http::page::search;
 use crate::io::http::page::userpage;
+use crate::io::http::page::{journalpage, templates};
 use crate::io::http::r#static;
 use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
@@ -106,6 +106,8 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::generate_assets_overview)
             .service(media::endpoints::get_asset_preview)
             .service(media::endpoints::get_metadata)
+            .service(templates::endpoints::list_all_templates)
+            .service(templates::endpoints::insert_template_into_page)
             .service(search::endpoints::search_in_files)
             .service(http::state::endpoints::update_block)
             .default_service(web::get().to(r#static::endpoints::index))

@@ -98,9 +98,7 @@ export class PageService {
     if (!pageId) {
       throw new Error("pageId is undefined")
     }
-    console.log("requesting page state ", pageId)
     if (!this.pageState.has(pageId)) {
-      console.log("initializing page " + pageId)
       this.pageState.set(pageId, new BehaviorSubject<MarkdownPage>({
         name: "",
         blocks: [],
@@ -159,7 +157,6 @@ export class PageService {
         const pageName = reference.fileId.substring(USER_ID_PREFIX.length);
         this.loadUserPageById(pageName, reference.fileId);
       } else {
-        console.log("loading journal page")
         const pageName = reference.fileId.substring(JOURNAL_ID_PREFIX.length);
         this.loadJournalPageById(pageName, reference.fileId);
       }
@@ -184,6 +181,27 @@ export class PageService {
           blockId: this.userpageId(pageName)
         });
       })));
+  }
+  async getBlockIndex(pageId: string, blockId: string) : Promise<number> {
+    const pageSubj = this.pageState.get(pageId);
+    if (!pageSubj) {
+      return -1;
+    }
+    const page = await firstValueFrom(pageSubj);
+    const blocks = page.blocks;
+    return blocks.findIndex(block => block.indentification === blockId);
+  }
+
+  async patchPageInInternalState(pageId: string, page: MarkdownPage) {
+    const pageSubj = this.pageState.get(pageId);
+    if (pageSubj) {
+      const currentState = await firstValueFrom(pageSubj);
+      page.pageid = currentState.pageid;
+      page.name = currentState.name;
+      pageSubj.next(page);
+    } else {
+      console.warn("Tried to patch page in internal state, but no subject found for pageId: " + pageId);
+    }
   }
 }
 

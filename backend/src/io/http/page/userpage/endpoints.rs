@@ -110,7 +110,7 @@ async fn get_page(
     let page = page_guard.entries.get(&simple_page_name);
 
     let data_root_location = &data.data_path;
-    if page.is_some() {
+    if page.is_some() && !page.unwrap().blocks.is_empty() {
         let parsed_page = page.unwrap();
         let prepared_page = render_file(
             parsed_page,

@@ -41,7 +41,7 @@ async fn get_journal(
 
     let fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
 
-    if page.is_some() {
+    if page.is_some() && !page.unwrap().blocks.is_empty() {
         let parsed_page = page.unwrap();
         let prepared_page = render_file(
             parsed_page,

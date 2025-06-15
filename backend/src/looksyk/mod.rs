@@ -14,3 +14,4 @@ pub mod renderer;
 pub mod search;
 pub mod serializer;
 pub mod syntax;
+pub mod templates;

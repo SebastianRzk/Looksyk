@@ -52,6 +52,7 @@ capability, or the general performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
 
+
 ### What are the key selling points compared to other knowledge platforms?
 
 * Runs local on your computer.
@@ -76,7 +77,7 @@ Install it and try it out! [Installation Guide](installation.md)
 * Journal (infinite scrolling page, single day page, journal overview page)
 * Todos
 * Content assist
-	* Creating links, inserting queries, tags and media
+	* Creating links, inserting queries, tags, templates and media
 * View (and link) media
 	* Images
 	* PDFs
@@ -87,6 +88,7 @@ Install it and try it out! [Installation Guide](installation.md)
 	* Audio (html5 audio player)
 	* Code (with highlighting)
 	* Text files
+* Templates
 * Queries (placeholders for dynamic content):
 	* Query blocks
 	* Query todos

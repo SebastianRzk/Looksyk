@@ -29,15 +29,17 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 - [Key Selling Points](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
 - [Implemented Features](#implemented-features)
 - [Out of Scope](#out-of-scope)
+- [Development](#development)
 - [License](#license)
 
 ### Further Reading
 
-- [idea and technical concept](docs/idea_and_technical_concept.md)
-- [Install + Run](docs/installation.md)
-- [Migrate Your Existing Logseq Graph](docs/migration_from_logseq.md)
-- [Configuration and Usage](docs/usage.md)
-- [Changelog](docs/changelog.md)
+- [idea and technical concept](idea_and_technical_concept.md)
+- [Install + Run](installation.md)
+- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
+- [Configuration and Usage](usage.md)
+- [Development Guide and Contribution Guidelines](development_and_contribution.md)
+- [Changelog](changelog.md)
 
 ## Introduction
 
@@ -72,7 +74,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Journal (infinite scrolling page, single day page, journal overview page)
 * Todos
 * Content assist
-	* Creating links, inserting queries, tags and media
+	* Creating links, inserting queries, tags, templates and media
 * View (and link) media
 	* Images
 	* PDFs

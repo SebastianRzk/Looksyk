@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::looksyk::builder::page_name;
+use crate::looksyk::builder::{page_name, text_token_str};
 use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
 };
@@ -115,28 +115,44 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
         }],
     }];
 
+    let mut references_block = ParsedBlock {
+        indentation: 1,
+        content: vec![],
+    };
+
     for tag in page_references {
         match tag.page_type {
-            PageType::JournalPage => blocks.push(to_block_token(tag, BlockTokenType::JournalLink)),
-            PageType::UserPage => blocks.push(to_block_token(tag, BlockTokenType::Link)),
+            PageType::JournalPage => references_block
+                .content
+                .push(to_block_content(tag, BlockTokenType::JournalLink)),
+            PageType::UserPage => references_block
+                .content
+                .push(to_block_content(tag, BlockTokenType::Link)),
         }
+        references_block.content.push(empty_line())
     }
     if page_references.is_empty() {
         blocks.push(no_references_found_text(1));
+    } else {
+        blocks.push(references_block);
     }
     blocks
 }
 
-fn to_block_token(tag: &PageId, token_type: BlockTokenType) -> ParsedBlock {
-    ParsedBlock {
-        indentation: 1,
-        content: vec![BlockContent {
-            as_tokens: vec![BlockToken {
-                payload: tag.name.name.clone(),
-                block_token_type: token_type,
-            }],
-            as_text: tag.name.name.clone(),
+fn to_block_content(tag: &PageId, token_type: BlockTokenType) -> BlockContent {
+    BlockContent {
+        as_tokens: vec![BlockToken {
+            payload: tag.name.name.clone(),
+            block_token_type: token_type,
         }],
+        as_text: tag.name.name.clone(),
+    }
+}
+
+fn empty_line() -> BlockContent {
+    BlockContent {
+        as_tokens: vec![text_token_str("")],
+        as_text: "".to_string(),
     }
 }
 
@@ -161,16 +177,19 @@ fn filter_tag(current_list: &HashSet<PageId>, page_to_remove: &PageId) -> HashSe
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::page_name_str;
+    use super::{empty_line, render_tag_index_for_page};
     use crate::looksyk::builder::test_builder::{
         any_text_token, done_token, journal_page_id, user_page_id,
     };
+    use crate::looksyk::builder::{journal_link_token, link_token, page_name_str};
     use crate::looksyk::index::tag::create_tag_index;
     use crate::looksyk::index::todo::create_todo_index;
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
     use crate::state::journal::JournalPageIndex;
+    use crate::state::tag::TagIndex;
+    use crate::state::userpage::builder::empty_user_page_index;
     use crate::state::userpage::UserPageIndex;
     use std::collections::{HashMap, HashSet};
 
@@ -277,7 +296,7 @@ mod tests {
             &empty_journal_index(),
         );
 
-        let result = super::render_tag_index_for_page(user_page_id("testpage"), &tag_index);
+        let result = render_tag_index_for_page(user_page_id("testpage"), &tag_index);
 
         assert_eq!(result.blocks.len(), 1);
         let block = result.blocks.first().unwrap();
@@ -322,5 +341,85 @@ mod tests {
             entry.tags,
             vec![page_name_str("testfile"), page_name_str("MyTag")]
         );
+    }
+
+    #[test]
+    fn should_render_tag_index_for_page_with_no_tags_should_render_empty_page() {
+        let tag_index = create_tag_index(&empty_user_page_index(), &empty_journal_index());
+
+        let result = render_tag_index_for_page(user_page_id("testpage"), &tag_index);
+
+        assert_eq!(result.blocks.len(), 1);
+        let block = result.blocks.first().unwrap();
+        assert_eq!(block.content.len(), 1);
+        let content = block.content.first().unwrap();
+        assert_eq!(content.as_text, "No references found");
+    }
+
+    #[test]
+    fn should_render_tag_index_for_page_with_user_page_refernece() {
+        let mut tag_index = HashMap::new();
+        tag_index.insert(
+            user_page_id("testpage"),
+            vec![user_page_id("referenced-page")].into_iter().collect(),
+        );
+
+        let result =
+            render_tag_index_for_page(user_page_id("testpage"), &TagIndex { entries: tag_index });
+
+        assert_eq!(result.blocks.len(), 4);
+        assert_eq!(result.blocks[0].content.len(), 1);
+        assert_eq!(
+            result.blocks[0].content[0].as_text,
+            "Wiki-Pages that reference this page"
+        );
+        assert_eq!(result.blocks[1].content.len(), 2);
+        assert_eq!(result.blocks[1].content[0].as_text, "referenced-page");
+        assert_eq!(
+            result.blocks[1].content[0].as_tokens,
+            vec![link_token("referenced-page")]
+        );
+        assert_eq!(result.blocks[1].content[1], empty_line());
+        assert_eq!(result.blocks[2].content.len(), 1);
+        assert_eq!(
+            result.blocks[2].content[0].as_text,
+            "Journal-Pages that reference this page"
+        );
+        assert_eq!(result.blocks[3].content.len(), 1);
+        assert_eq!(result.blocks[3].content[0].as_text, "No references found");
+    }
+
+    #[test]
+    fn should_render_tag_index_for_page_with_journal_page_refernece() {
+        let mut tag_index = HashMap::new();
+        tag_index.insert(
+            user_page_id("testpage"),
+            vec![journal_page_id("2011_10_09")].into_iter().collect(),
+        );
+
+        let result =
+            render_tag_index_for_page(user_page_id("testpage"), &TagIndex { entries: tag_index });
+
+        assert_eq!(result.blocks.len(), 4);
+        assert_eq!(result.blocks[0].content.len(), 1);
+        assert_eq!(
+            result.blocks[0].content[0].as_text,
+            "Wiki-Pages that reference this page"
+        );
+        assert_eq!(result.blocks[1].content.len(), 1);
+        assert_eq!(result.blocks[1].content[0].as_text, "No references found");
+
+        assert_eq!(result.blocks[2].content.len(), 1);
+        assert_eq!(
+            result.blocks[2].content[0].as_text,
+            "Journal-Pages that reference this page"
+        );
+        assert_eq!(result.blocks[3].content.len(), 2);
+        assert_eq!(result.blocks[3].content[0].as_text, "2011_10_09");
+        assert_eq!(
+            result.blocks[3].content[0].as_tokens,
+            vec![journal_link_token("2011_10_09")],
+        );
+        assert_eq!(result.blocks[3].content[1], empty_line());
     }
 }

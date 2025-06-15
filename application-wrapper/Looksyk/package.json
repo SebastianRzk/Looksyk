@@ -1,7 +1,7 @@
 {
   "name": "looksyk",
   "productName": "looksyk",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {

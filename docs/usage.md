@@ -53,7 +53,6 @@ The command `looksyk` accepts the following command line arguments:
 * `--window-height` to specify the height of the window (default: `800`)
 * `--window-zoom` to specify the zoom level of the window (default: `-0.6`)
 
-
 ## Usage
 
 ![The Looksyk startup page explained](journal_overview.png)
@@ -83,7 +82,6 @@ There are two ways to customize the design:
 
 * Changing predefined color variables in the `config/config.json` file (see description below)
 * Adding custom CSS in the `config/user-theme.css` file.
-
 
 The following color values are supported:
 
@@ -206,6 +204,20 @@ Configuration:
 	* Furthermore, the todo can be tagged with a custom tag. All tags that are in the todo block are associated with the
 	  todo.
 	* All tags in previous blocks that have a lower indentation will also be associated with the todo.
+
+### Templates
+
+Pages that start with the prefix `Template /` are treated as templates. Templates can easily inserted by the
+content-assist when editing a page.
+
+The first block of a template is appendet to the current block in edit, all following blocks are inserted as new blocks.
+This allows you to create templates with multiple blocks, which are inserted as new blocks in the current page.
+Templates can be used to create reusable content, such as checklists, meeting notes, or project plans.
+
+The indentation of the blocks in the template is preserved, so you can create nested blocks. The initial block in edit
+is considered as starting-point, the template is inserted at the same indentation level and the following blocks are
+inserted with the relative indentation to the first block.
+
 
 ### Queries
 
