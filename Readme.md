@@ -34,12 +34,12 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 
 ### Further Reading
 
-- [idea and technical concept](idea_and_technical_concept.md)
-- [Install + Run](installation.md)
-- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
-- [Configuration and Usage](usage.md)
-- [Development Guide and Contribution Guidelines](development_and_contribution.md)
-- [Changelog](changelog.md)
+- [idea and technical concept](docs/idea_and_technical_concept.md)
+- [Install + Run](docs/installation.md)
+- [Migrate Your Existing Logseq Graph](docs/migration_from_logseq.md)
+- [Configuration and Usage](docs/usage.md)
+- [Development Guide and Contribution Guidelines](docs/development_and_contribution.md)
+- [Changelog](docs/changelog.md)
 
 ## Introduction
 
