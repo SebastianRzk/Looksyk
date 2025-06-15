@@ -34,7 +34,6 @@ export class UseractionService {
   newBlockAfterCurrentOpenBlock: Subject<UniqueEvent> = new Subject<UniqueEvent>();
   newBlockAfterCurrentOpenBlock$: Observable<UniqueEvent> = this.newBlockAfterCurrentOpenBlock.asObservable();
 
-
   newBlock: Subject<NewBlockEvent> = new Subject<NewBlockEvent>();
   newBlock$: Observable<NewBlockEvent> = this.newBlock.asObservable();
 
@@ -292,7 +291,6 @@ export class UseractionService {
 
   closeCurrentMarkdownBlock() {
     this.openMarkdown.next(NO_OPEN_MARKDOWN)
-
   }
 }
 

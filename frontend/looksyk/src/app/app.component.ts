@@ -35,10 +35,14 @@ export class AppComponent implements OnInit {
 
   sidenav_ = inject(SidenavService).opened$.subscribe(
     (opened: boolean) => {
+      if (!this.sidenav) {
+        console.warn("Sidenav not initialized yet, cannot open/close it.");
+        return;
+      }
       if (opened) {
-         this.sidenav.open();
+        this.sidenav.open();
       } else {
-         this.sidenav.close();
+        this.sidenav.close();
       }
     }
   )

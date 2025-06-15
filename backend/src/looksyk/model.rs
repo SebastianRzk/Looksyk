@@ -10,7 +10,7 @@ pub struct RawBlock {
     pub text_content: Vec<String>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
@@ -64,7 +64,7 @@ pub struct PreparedBlockContent {
     pub prepared_markdown: String,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BlockContent {
     pub as_text: String,
     pub as_tokens: Vec<BlockToken>,
@@ -79,7 +79,7 @@ pub enum BlockTokenType {
     Todo,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BlockToken {
     pub block_token_type: BlockTokenType,
     pub payload: String,
@@ -98,6 +98,12 @@ pub struct RawMarkdownFile {
 #[derive(Clone)]
 pub struct ParsedMarkdownFile {
     pub blocks: Vec<ParsedBlock>,
+}
+
+impl ParsedMarkdownFile {
+    pub fn empty() -> Self {
+        ParsedMarkdownFile { blocks: vec![] }
+    }
 }
 
 impl Display for RawMarkdownFile {
@@ -219,7 +225,7 @@ impl Ord for PageId {
 mod tests {
     use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
-    use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock};
+    use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
 
     #[test]
     fn test_journal_page_id_should_be_a_journal_page() {
@@ -320,5 +326,10 @@ mod tests {
         };
 
         assert!(block.contains_reference(&page_id.name));
+    }
+
+    #[test]
+    fn test_empty_should_return_empty() {
+        assert_eq!(ParsedMarkdownFile::empty().blocks.len(), 0);
     }
 }

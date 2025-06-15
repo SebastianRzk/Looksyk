@@ -2,9 +2,11 @@ use crate::looksyk::model::{BlockToken, BlockTokenType, SimplePageName};
 
 #[cfg(test)]
 pub mod test_builder {
-    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::{page_name_str, text_token_str};
     use crate::looksyk::datatypes::AssetDescriptor;
-    use crate::looksyk::model::{BlockToken, BlockTokenType, PageId};
+    use crate::looksyk::model::{
+        BlockContent, BlockToken, BlockTokenType, PageId, ParsedMarkdownFile,
+    };
     use crate::state::application_state::GraphRootLocation;
     use crate::state::journal::JournalPageIndex;
     use std::path::PathBuf;
@@ -51,6 +53,17 @@ pub mod test_builder {
     pub fn empty_journal_index() -> JournalPageIndex {
         JournalPageIndex {
             entries: std::collections::HashMap::new(),
+        }
+    }
+
+    pub fn any_parsed_markdown_file() -> ParsedMarkdownFile {
+        ParsedMarkdownFile { blocks: vec![] }
+    }
+
+    pub fn block_content(text: &str) -> BlockContent {
+        BlockContent {
+            as_tokens: vec![text_token_str(text)],
+            as_text: text.to_string(),
         }
     }
 }

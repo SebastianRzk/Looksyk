@@ -20,14 +20,16 @@
 </div>
 
 @if (favs$ | async; as favs) {
-  <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
-    @for (fav of favs; track fav) {
-      <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
-        <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
-        {{ fav }}
-      </button>
-    }
-  </div>
+  @if (favs.length !== 0) {
+    <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
+      @for (fav of favs; track fav) {
+        <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
+          <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
+          {{ fav }}
+        </button>
+      }
+    </div>
+  }
 }
 
 

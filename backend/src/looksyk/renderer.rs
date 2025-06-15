@@ -23,88 +23,6 @@ pub struct StaticRenderContext<'a> {
     pub tag_index: &'a TagIndex,
 }
 
-#[cfg(test)]
-pub mod builder {
-    use crate::looksyk::builder::test_builder::empty_journal_index;
-    use crate::looksyk::renderer::StaticRenderContext;
-    use crate::state::journal::JournalPageIndex;
-    use crate::state::tag::builder::empty_tag_index;
-    use crate::state::tag::TagIndex;
-    use crate::state::todo::builder::empty_todo_index;
-    use crate::state::todo::TodoIndex;
-    use crate::state::userpage::builder::empty_user_page_index;
-    use crate::state::userpage::UserPageIndex;
-
-    pub struct TestRenderContext {
-        pub user_pages: UserPageIndex,
-        pub journal_pages: JournalPageIndex,
-        pub todo_index: TodoIndex,
-        pub tag_index: TagIndex,
-    }
-
-    impl TestRenderContext {
-        pub fn to_static(&self) -> StaticRenderContext {
-            StaticRenderContext {
-                user_pages: &self.user_pages,
-                todo_index: &self.todo_index,
-                tag_index: &self.tag_index,
-                journal_pages: &self.journal_pages,
-            }
-        }
-    }
-
-    pub fn create_render_context_with_user_page_index(
-        user_page_index: UserPageIndex,
-    ) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: user_page_index,
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index: empty_tag_index(),
-        }
-    }
-
-    pub fn create_render_context_with_todo_index(todo_index: TodoIndex) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index,
-            tag_index: empty_tag_index(),
-        }
-    }
-
-    pub fn create_render_context_with_tag_index(tag_index: TagIndex) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index,
-        }
-    }
-
-    pub fn create_render_context(
-        user_page_index: UserPageIndex,
-        todo_index: TodoIndex,
-        tag_index: TagIndex,
-    ) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: user_page_index,
-            journal_pages: empty_journal_index(),
-            todo_index,
-            tag_index,
-        }
-    }
-
-    pub fn create_empty_render_context() -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index: empty_tag_index(),
-        }
-    }
-}
-
 pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
     render_context: &StaticRenderContext,
@@ -322,11 +240,19 @@ fn decode_destination(destination: &str) -> String {
     destination.replace("%2F", "/")
 }
 
+fn decode_date(destination: &str) -> String {
+    let splitted = destination.split('_').collect::<Vec<&str>>();
+    let mut date = String::new();
+    date.push_str(splitted[2]);
+    date.push('.');
+    date.push_str(splitted[1]);
+    date.push('.');
+    date.push_str(splitted[0]);
+    date
+}
+
 fn render_journal_link(destination: &SimplePageName) -> String {
-    markdown_link(
-        &decode_destination(&destination.name),
-        &journal_path(&destination),
-    )
+    markdown_link(&decode_date(&destination.name), &journal_path(&destination))
 }
 
 pub fn render_block_link(block_reference: &BlockReference) -> String {
@@ -352,6 +278,88 @@ fn journal_path(name: &&SimplePageName) -> String {
 
 fn page_path(name: &&SimplePageName) -> String {
     format!("page/{}", encode(&name.name))
+}
+
+#[cfg(test)]
+pub mod builder {
+    use crate::looksyk::builder::test_builder::empty_journal_index;
+    use crate::looksyk::renderer::StaticRenderContext;
+    use crate::state::journal::JournalPageIndex;
+    use crate::state::tag::builder::empty_tag_index;
+    use crate::state::tag::TagIndex;
+    use crate::state::todo::builder::empty_todo_index;
+    use crate::state::todo::TodoIndex;
+    use crate::state::userpage::builder::empty_user_page_index;
+    use crate::state::userpage::UserPageIndex;
+
+    pub struct TestRenderContext {
+        pub user_pages: UserPageIndex,
+        pub journal_pages: JournalPageIndex,
+        pub todo_index: TodoIndex,
+        pub tag_index: TagIndex,
+    }
+
+    impl TestRenderContext {
+        pub fn to_static(&self) -> StaticRenderContext {
+            StaticRenderContext {
+                user_pages: &self.user_pages,
+                todo_index: &self.todo_index,
+                tag_index: &self.tag_index,
+                journal_pages: &self.journal_pages,
+            }
+        }
+    }
+
+    pub fn create_render_context_with_user_page_index(
+        user_page_index: UserPageIndex,
+    ) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: user_page_index,
+            journal_pages: empty_journal_index(),
+            todo_index: empty_todo_index(),
+            tag_index: empty_tag_index(),
+        }
+    }
+
+    pub fn create_render_context_with_todo_index(todo_index: TodoIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            journal_pages: empty_journal_index(),
+            todo_index,
+            tag_index: empty_tag_index(),
+        }
+    }
+
+    pub fn create_render_context_with_tag_index(tag_index: TagIndex) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            journal_pages: empty_journal_index(),
+            todo_index: empty_todo_index(),
+            tag_index,
+        }
+    }
+
+    pub fn create_render_context(
+        user_page_index: UserPageIndex,
+        todo_index: TodoIndex,
+        tag_index: TagIndex,
+    ) -> TestRenderContext {
+        TestRenderContext {
+            user_pages: user_page_index,
+            journal_pages: empty_journal_index(),
+            todo_index,
+            tag_index,
+        }
+    }
+
+    pub fn create_empty_render_context() -> TestRenderContext {
+        TestRenderContext {
+            user_pages: empty_user_page_index(),
+            journal_pages: empty_journal_index(),
+            todo_index: empty_todo_index(),
+            tag_index: empty_tag_index(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -419,7 +427,7 @@ mod tests {
             content: vec![BlockContent {
                 as_tokens: vec![
                     text_token_str("before"),
-                    journal_link_token("MyPage"),
+                    journal_link_token("2022_10_30"),
                     text_token_str("after"),
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
@@ -436,7 +444,7 @@ mod tests {
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
         assert_eq!(
             result.content.prepared_markdown,
-            "before [MyPage](journal/MyPage) after"
+            "before [30.10.2022](journal/2022_10_30) after"
         )
     }
 

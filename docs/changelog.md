@@ -5,7 +5,8 @@ layout: default
 
 ## Table of Contents
 
--[v1.8.0](#v180-2025-06-12)
+- [v1.9.0](#v190)
+- [v1.8.0](#v180-2025-06-12)
 - [v1.7.0](#v170-2025-06-07)
 - [v1.6.0](#v160-2025-06-04)
 - [v1.5.6](#v156-2025-06-01)
@@ -42,6 +43,17 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.9.0
+
+Enhancements:
+
+* Add templates
+* Fix missing action on "Insert Block" in content assist
+* Fix pages without blocks (not possible anymore, treated as empty page)
+* Improve backlink formatting for journal backlinks
+* Improve design of backlinks
 
 
 ### v1.8.0 (2025-06-12)

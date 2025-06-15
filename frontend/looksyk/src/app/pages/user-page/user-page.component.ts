@@ -61,7 +61,9 @@ export class UserPageComponent implements OnInit, OnDestroy {
         const pageName = decodeURIComponent(pageNameUnencoded);
         this.page_.unsubscribe();
         this.page_ = this.pageSerivce.getUserPage(pageName).subscribe(
-          value => this.pageState.next(value)
+          value => {
+            this.pageState.next(value)
+          }
         );
         this.pageName.next(pageName);
         this.titleService.pushCurrentPageTitle(pageName);
