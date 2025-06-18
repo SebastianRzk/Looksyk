@@ -2,9 +2,9 @@ name: Build and Test Looksyk
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, stable, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, stable, dev ]
 
 jobs:
   backend-test:

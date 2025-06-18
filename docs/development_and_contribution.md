@@ -52,8 +52,22 @@ Contributions are welcome! Here are the steps to contribute:
 3. Make your changes.
 4. Commit your changes (`git commit -am 'Add new feature'`).
 5. Push to the branch (`git push origin feature-branch`).
-6. Create a new Pull Request into the `dev` branch.
+6. Create a new Pull Request into the `main` branch.
 
+## Where should I target my pull request?
+
+Pull requests should be targeted to the `main` branch.
+
+The `stable` branch is reserved for the latest release.
+
+## Why is the `stable` branch not the default branch?
+
+The `stable` branch is not the default branch because it is reserved for the latest release. The `main` branch is where
+active development takes place, and it is the branch that contributors should target for their pull requests.
+
+GitHub will automatically show the default branch when you visit the repository. To avoid unstable or incomplete changes
+being displayed by default, the default branch is `stable`. In addition, the GitHub docs website is also generated from
+the default branch.
 
 ## Troubleshooting
 
