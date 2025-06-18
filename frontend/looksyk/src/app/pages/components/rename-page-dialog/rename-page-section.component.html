@@ -1,11 +1,11 @@
 <h3>Rename Page</h3>
 <mat-dialog-content>
-  <div class="small-description">(If the name matches an existing page, the pages will be merged.)</div>
-  <mat-form-field>
-    <input matInput [(ngModel)]="newPageName" placeholder="New page name" cdkFokusInitial>
-  </mat-form-field>
-  <div class="actions">
-    <button matButton (click)="onNoClick()">Skip rename</button>
-    <button matButton [mat-dialog-close]="newPageName()">Rename</button>
-  </div>
+	<div class="small-description">(If the name matches an existing page, the pages will be merged.)</div>
+	<mat-form-field>
+		<input matInput [(ngModel)]="newPageName" placeholder="New page name" cdkFokusInitial>
+	</mat-form-field>
+	<div class="actions">
+		<button matButton (click)="onNoClick()">Cancel</button>
+		<button matButton [mat-dialog-close]="newPageName()">Rename</button>
+	</div>
 </mat-dialog-content>

@@ -30,7 +30,7 @@ pub fn generate_assets_overview_page(
 
 fn render_table(asset_type_name: &str, assets: Vec<AssetDescription>) -> ParsedBlock {
     let mut result = format!(
-        "### {} \n \n | name | size |\n| :-- | :-- |\n",
+        "### {} \n \n | Name | Size |\n| :-- | :-- |\n",
         asset_type_name
     );
     for asset in assets {
@@ -195,7 +195,7 @@ mod tests {
 
         assert_eq!(
             get_first_text_payload(&result),
-            "### Images \n \n | name | size |\n| :-- | :-- |\n| [a.jpg](/assets/a.jpg) | 1 B |\n"
+            "### Images \n \n | Name | Size |\n| :-- | :-- |\n| [a.jpg](/assets/a.jpg) | 1 B |\n"
         );
     }
 
