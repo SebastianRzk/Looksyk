@@ -8,36 +8,6 @@
   min-width: 3ex;
   min-height: 3ex;
   border-right: 1px solid grey;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.collapse-toggle {
-  width: 2.5ex;
-  height: 2.5ex;
-  min-width: 2.5ex;
-  min-height: 2.5ex;
-  padding: 0;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 2px;
-}
-
-.collapse-toggle:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.collapse-toggle mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  transition: transform 0.2s ease-in-out;
-}
-
-.collapse-toggle:hover mat-icon {
-  transform: scale(1.1);
 }
 
 .line {
