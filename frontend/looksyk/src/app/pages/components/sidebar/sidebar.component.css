@@ -7,6 +7,24 @@
   margin-top: 7ex;
 }
 
+.history-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.menu-header {
+	padding-left: 1em;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	font-weight: 400;
+}
+
+.menu-button-list.history button {
+	font-weight: 200 !important;
+}
+
 .menu-button-list > button {
   width: 100%;
   justify-content: start;
