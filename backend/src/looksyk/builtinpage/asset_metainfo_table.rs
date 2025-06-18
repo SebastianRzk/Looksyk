@@ -11,8 +11,8 @@ pub fn get_asset_meta_info_table(size: u64, last_changed: i64) -> ParsedMarkdown
                 as_tokens: vec![text_token(format!(
                     "### Properties \n\n\
                              | Property | Value |\n | :-- | :-- |\n\
-                             | Size | {} |\n\
-                             | Last Changed | {} |",
+                             | size | {} |\n\
+                             | last changed | {} |",
                     filesize_as_human_string(size),
                     timestamp_as_human_string(last_changed),
                 ))],
@@ -38,8 +38,8 @@ mod tests {
             result.blocks[0].content[0].as_tokens[0].payload,
             "### Properties \n\n\
                              | Property | Value |\n | :-- | :-- |\n\
-                             | Size | 1.02 kB |\n\
-                             | Last Changed | 07.01.2021 06:13:20 |"
+                             | size | 1.02 kB |\n\
+                             | last changed | 07.01.2021 06:13:20 |"
         );
     }
 }
