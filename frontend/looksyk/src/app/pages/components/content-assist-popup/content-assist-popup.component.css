@@ -69,3 +69,33 @@
   scrollbar-color: var(--primary-color) var(--primary-shading);
   max-height: 100%;
 }
+
+.suggestion-group div {
+	margin-bottom: 1em;
+}
+
+.suggestion-group div:hover {
+	cursor: pointer;
+}
+
+.search-result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2ex;
+}
+
+.search-result-title {
+  font-weight: bold;
+}
+
+.search-result-location {
+  color: var(--primary-shading);
+  font-size: 0.9em;
+  font-weight: 100;
+}
+
+.search-result-text {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-left: 1ex;
+}

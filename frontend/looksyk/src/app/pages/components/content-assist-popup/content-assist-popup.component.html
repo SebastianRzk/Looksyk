@@ -8,7 +8,16 @@
           <div class="suggestion-group"> <h4>{{ group.title }}</h4>
             @for (name of group.items; track name.name) {
               <div [classList]="name.highlight? 'active': 'inactive'"
-                   (mousedown)="onClickItem($event, name, group)">{{ name.name }}</div>
+                   (mousedown)="onClickItem($event, name, group)">
+                @if (name.searchResult && name.searchResult.reference.fileName) {
+                  <div class="search-result-item">
+                    <span class="search-result-title">{{ name.searchResult.reference.fileName }} <span class="search-result-location">[#{{ name.searchResult.reference.blockNumber }}]</span></span>
+                    <span class="search-result-text">{{ name.searchResult.textLine }}</span>
+                  </div>
+                } @else {
+                  {{ name.name }}
+                }
+              </div>
             }
                 </div>
         }
