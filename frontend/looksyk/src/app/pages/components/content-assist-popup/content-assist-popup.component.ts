@@ -328,7 +328,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       cursor: this.contentAssist.cursorInContentAssist$,
       subMenu: this.subMenuState$,
       contentAssistContent: this.contentAssistContent$,
-      mode: this.state$
+      mode: this.state$,
+      metaInfo: this.metaInfoFromBackend.currentmetaInfo$
     }).pipe(
       debounce(() => timer(30)),
       map(value => {
@@ -336,17 +337,17 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         if (value.mode != ContentAssistMode.Search) {
           filteredGroups = this._filterGroup(value.contentAssistContent, value.filter);
         }
-        return this._highlightItem(value.cursor, this._addAddLinkGroup(filteredGroups, value.filter, this.contentAssist.stateRaw, value.subMenu))
+        return this._highlightItem(value.cursor, this._addAddLinkGroup(filteredGroups, value.filter, this.contentAssist.stateRaw, value.subMenu, value.metaInfo.tags))
       }));
   }
 
   private readonly ADD_LINK = "Add Link";
 
-  private readonly NAVIGATE_TO_NEW_PAGE = "Navigate to new page";
+  private readonly NAVIGATE_TO_NEW_PAGE = "Create new page";
 
   private readonly INSERT_NEW_TAG = "Insert new tag";
 
-  private _addAddLinkGroup(groups: ContentAssistSection[], value: string, filter: ContentAssistMode, subMenu: ContentAssistSection): ContentAssistSection[] {
+  private _addAddLinkGroup(groups: ContentAssistSection[], value: string, filter: ContentAssistMode, subMenu: ContentAssistSection, existingTags: string[] = []): ContentAssistSection[] {
     if (filter == ContentAssistMode.Insert) {
       groups.push({
         title: this.ADD_LINK,
@@ -357,13 +358,21 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       });
       return groups
     } else if (filter == ContentAssistMode.Navigate) {
-      groups.push({
-        title: this.NAVIGATE_TO_NEW_PAGE,
-        items: [{
-          name: `Navigate to page ${value}`,
-          highlight: false
-        }]
-      });
+      // Only show "Create new page" if:
+      // 1. Input is not blank
+      // 2. Page with the same name doesn't exist
+      const trimmedValue = value.trim();
+      const pageExists = existingTags.some(tag => tag.toLowerCase() === trimmedValue.toLowerCase());
+      
+      if (trimmedValue && !pageExists) {
+        groups.push({
+          title: this.NAVIGATE_TO_NEW_PAGE,
+          items: [{
+            name: `Navigate to page ${value}`,
+            highlight: false
+          }]
+        });
+      }
       return groups
     } else if (filter == ContentAssistMode.InsertTag) {
       groups.push({
@@ -444,18 +453,28 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
     return [{
       title: this.SEARCH_RESULT_IN_PAGES_TITLE,
       items: data.page.map(page => {
-        return {
+        const item: Item = {
           name: this.formatSearchResult(page),
           highlight: false
+        };
+        // Only add searchResult if it has a valid fileName (not the MIN_LENGTH case)
+        if (page.reference.fileName) {
+          item.searchResult = page;
         }
+        return item;
       }),
     }, {
       title: "Search results in journals",
       items: data.journal.map(page => {
-        return {
+        const item: Item = {
           name: this.formatSearchResult(page),
           highlight: false
+        };
+        // Only add searchResult if it has a valid fileName (not the MIN_LENGTH case)
+        if (page.reference.fileName) {
+          item.searchResult = page;
         }
+        return item;
       }),
 
     }];
@@ -463,6 +482,10 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
 
 
   private formatSearchResult(page: SearchFinding) {
+    // Handle the special case where no fileName means it's the MIN_LENGTH message
+    if (!page.reference.fileName) {
+      return page.textLine;
+    }
     return `${page.reference.fileName}#${page.reference.blockNumber}: ${page.textLine}`;
   }
 
@@ -610,7 +633,8 @@ interface ContentAssistSection {
 
 interface Item {
   name: string,
-  highlight: boolean
+  highlight: boolean,
+  searchResult?: SearchFinding
 }
 
 enum Result {
