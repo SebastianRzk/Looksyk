@@ -1,3 +1,5 @@
 @for (block of page.blocks; track $index) {
-  <app-editable-block [block]="block" [pageid]="page.pageid"></app-editable-block>
+  @if (isBlockVisible(block, $index)) {
+    <app-editable-block [block]="block" [pageid]="page.pageid" [blockIndex]="$index" [allBlocks]="page.blocks"></app-editable-block>
+  }
 }

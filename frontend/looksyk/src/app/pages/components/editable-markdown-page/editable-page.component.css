@@ -6,9 +6,19 @@ app-block:hover{
 
 app-editable-block {
   padding: 1px;
+  overflow: hidden;
+  transition: opacity 0.2s ease-in-out, max-height 0.3s ease-in-out;
 }
 
-
-app-editable-block {
+app-editable-block.block-hidden {
+  opacity: 0;
+  max-height: 0;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+app-editable-block.block-visible {
+  opacity: 1;
+  max-height: none;
 }

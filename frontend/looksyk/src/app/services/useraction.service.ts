@@ -85,14 +85,8 @@ export class UseractionService {
         const newOriginalText = newBlocks[index - 1].content.originalText + "\n\n" + newBlocks[index].content.originalText;
         const newPreparedMarkdown = newBlocks[index - 1].content.preparedMarkdown + "\n\n" + newBlocks[index].content.preparedMarkdown;
         newBlocks = newBlocks.filter(block => block.indentification != event.target.blockTarget);
-        newBlocks[index - 1] = {
-          ...newBlocks[index - 1],
-          content: {
-            ...newBlocks[index - 1].content,
-            originalText: newOriginalText,
-            preparedMarkdown: newPreparedMarkdown
-          }
-        }
+        newBlocks[index - 1].content.originalText = newOriginalText;
+        newBlocks[index - 1].content.preparedMarkdown = newPreparedMarkdown;
         this.pageService.onNextPageById(currentPage.pageid, {
           name: currentPage.name,
           blocks: newBlocks,
@@ -281,9 +275,11 @@ export class UseractionService {
     const result: BasicPageContent[] = [];
     for (const block of content) {
       const indentation = await firstValueFrom(block.indentation);
+      const collapsed = await firstValueFrom(block.collapsed);
       result.push({
         indentation: indentation,
-        markdown: block.content.originalText
+        markdown: block.content.originalText,
+        collapsed: collapsed
       })
     }
     return result;

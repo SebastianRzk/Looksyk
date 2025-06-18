@@ -27,6 +27,34 @@
         <mat-icon>expand_more</mat-icon>
         <span>Add block after</span>
       </button>
+      
+      @if (hasChildren()) {
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="onToggleCollapse()">
+          <mat-icon>
+            @if (markdown.collapsed$ | async) {
+              expand_more
+            } @else {
+              chevron_right
+            }
+          </mat-icon>
+          <span>
+            @if (markdown.collapsed$ | async) {
+              Expand
+            } @else {
+              Collapse
+            }
+          </span>
+        </button>
+        <button mat-menu-item (click)="onCollapseAll()">
+          <mat-icon>unfold_less</mat-icon>
+          <span>Collapse All</span>
+        </button>
+        <button mat-menu-item (click)="onExpandAll()">
+          <mat-icon>unfold_more</mat-icon>
+          <span>Expand All</span>
+        </button>
+      }
     </mat-menu>
   </div>
   @if (todo$ | async; as t) {

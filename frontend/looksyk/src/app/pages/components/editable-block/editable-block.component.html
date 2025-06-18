@@ -1,8 +1,21 @@
 <div class="line">
   @if (block.indentation$ | async; as i) {
     @for (_ of [].constructor(i); track $index) {
-      <div class="indentation"></div>
+      <div class="indentation">
+        @if ($index === i - 1 && hasChildren()) {
+          <button mat-icon-button class="collapse-toggle" (click)="onToggleCollapse()" 
+                  [title]="(block.collapsed$ | async) ? 'Expand' : 'Collapse'">
+            <mat-icon>
+              @if (block.collapsed$ | async) {
+                chevron_right
+              } @else {
+                expand_more
+              }
+            </mat-icon>
+          </button>
+        }
+      </div>
     }
   }
-  <app-editable-markdown [markdown]="block" [pageid]="pageid"></app-editable-markdown>
+  <app-editable-markdown [markdown]="block" [pageid]="pageid" [allBlocks]="allBlocks" [blockIndex]="blockIndex"></app-editable-markdown>
 </div>
