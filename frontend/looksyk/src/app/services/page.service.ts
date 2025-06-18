@@ -211,7 +211,8 @@ interface RenameResultDto {
 
 export interface BasicPageContent {
   markdown: string,
-  indentation: number
+  indentation: number,
+  collapsed?: boolean
 }
 
 export enum SavingState {
