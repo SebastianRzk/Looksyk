@@ -22,11 +22,12 @@
 @if (favs$ | async; as favs) {
   @if (favs.length !== 0) {
     <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
+      <p class="menu-header">Favorites</p>
       @for (fav of favs; track fav) {
-        <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
-          <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
-          {{ fav }}
-        </button>
+      <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
+        <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
+        {{ fav }}
+      </button>
       }
     </div>
   }
@@ -35,7 +36,9 @@
 
 @if (history$ | async; as historyEntry) {
   @if (historyEntry.length !== 0) {
-    <div class="menu-element">
+  <div class="menu-element">
+    <p class="menu-header">History</p>
+    <div class="history-buttons">
       <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
         <mat-icon>navigate_before</mat-icon>
       </button>
@@ -46,22 +49,23 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="menu-button-list">
-      @for (history of historyEntry; track history.title) {
-        @if (history.title.length < 20) {
-          <button mat-button [routerLink]="history.url">
-            <mat-icon>history</mat-icon>
-            {{ history.title }}
-          </button>
+  </div>
+  <div class="menu-button-list history">
+    @for (history of historyEntry; track history.title) {
+      @if (history.title.length < 20) {
+        <button mat-button [routerLink]="history.url">
+        <mat-icon>history</mat-icon>
+        {{ history.title }}
+        </button>
         } @else {
-          <button mat-button [routerLink]="history.url">
-            <mat-icon>history</mat-icon>
-            <div class="small-history-item">{{ history.title }}</div>
-          </button>
+        <button mat-button [routerLink]="history.url">
+          <mat-icon>history</mat-icon>
+          <div class="small-history-item">{{ history.title }}</div>
+        </button>
         }
       }
-    </div>
-  }
+  </div>
+}
 }
 <button mat-button (click)="reload()" class="unimportant bottom">
   <mat-icon>sync</mat-icon>
