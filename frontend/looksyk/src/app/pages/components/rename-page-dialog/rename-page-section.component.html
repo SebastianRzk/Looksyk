@@ -5,7 +5,7 @@
 		<input matInput [(ngModel)]="newPageName" placeholder="New page name" cdkFokusInitial>
 	</mat-form-field>
 	<div class="actions">
-		<button matButton (click)="onNoClick()">Skip rename</button>
+		<button matButton (click)="onNoClick()">Cancel</button>
 		<button matButton [mat-dialog-close]="newPageName()">Rename</button>
 	</div>
 </mat-dialog-content>
