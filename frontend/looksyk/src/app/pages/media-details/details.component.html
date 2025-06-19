@@ -1,5 +1,5 @@
 <div class="header">
-  @if (sidenav.opened$ | async; as opened) {
+  @if (sidenav.opened$ | async;) {
     <h1>
       <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
       </mat-icon>
@@ -9,7 +9,6 @@
       <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
     </h1>
   }
-  <mat-divider vertical="true"></mat-divider>
   <h1 class="header-text">{{ pageName$ | async }} </h1>
   <button mat-mini-fab (click)="download()">
     <mat-icon>download</mat-icon>

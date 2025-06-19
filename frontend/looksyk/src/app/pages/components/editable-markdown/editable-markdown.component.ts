@@ -60,12 +60,8 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
 
   changeDetector = inject(ChangeDetectorRef);
 
-
   @ViewChild("textarea")
   textareaRef!: ElementRef;
-
-  @ViewChild("other", {read: ElementRef, static: true})
-  otherRef!: ElementRef;
 
   @ViewChild("markdownComponent")
   markdownRef!: ElementRef;
@@ -136,7 +132,7 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
         state => {
           if (state == MarkdownComponentState.EDITING) {
             if (openMarkdown.target.blockTarget.length == 0) {
-              this.otherRef.nativeElement.focus();
+              this.onFocusOutEditor();
             }
           }
         }

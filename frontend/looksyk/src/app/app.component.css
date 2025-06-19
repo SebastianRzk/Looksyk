@@ -12,8 +12,8 @@ mat-sidenav-content {
 }
 
 mat-sidenav {
-  width: 30ex;
-  max-width: 30ex;
+  width: 33ex;
+  max-width: 33ex;
 }
 
 app-sidebar {

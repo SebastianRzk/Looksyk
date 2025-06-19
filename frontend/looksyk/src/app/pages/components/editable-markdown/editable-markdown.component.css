@@ -69,13 +69,22 @@ div[contenteditable] {
 }
 
 .dot-button {
-  width: 2ex !important;
-  min-width: unset !important;
   height: 100%;
   min-height: 5ex;
-  margin-right: 3ex;
-  background: rgba(1, 1, 1, 0.07);
-  color: var(--primary-shading);
+  text-color: var(--foreground-color);
+  border-radius: 1ex;
+}
+
+.dot-button:hover {
+  background: var(--primary-shading);
+}
+
+.dot-button>mat-icon {
+  text-align: center;
+  vertical-align: middle;
+  font-size: x-small;
+  margin-top: 1.5ex;
+  margin-right: 1ex;
 }
 
 .checkbox-container {
