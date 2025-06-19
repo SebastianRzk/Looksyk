@@ -30,9 +30,6 @@ export class UseractionService {
 
   currentOpenMarkdown$: Observable<OpenMarkdownEvent> = this.currentOpenMarkdown.asObservable();
 
-  //FIXME:
-  openDebug_ = this.openMarkdown$.subscribe(event => {console.log("Open Markdown Event: ", event)});
-
   openMarkdown_ = this.openMarkdown$.subscribe(event => this.currentOpenMarkdown.next(event));
 
 
