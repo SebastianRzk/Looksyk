@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub favourites: Vec<Favourite>,
     pub design: Design,
+    pub appearance: Option<String>,
     pub title: Option<String>,
 }
 
@@ -43,6 +44,7 @@ pub mod builder {
         Config {
             design: empty_design(),
             favourites: vec![favourite_str(fav)],
+            appearance: Some("dark".to_string()),
             title: None,
         }
     }

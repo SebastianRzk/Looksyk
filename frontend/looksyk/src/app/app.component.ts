@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild, Inject, DOCUMENT } from '@angular/core';
 import { UseractionService } from "./services/useraction.service";
 import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
 import { Title } from "@angular/platform-browser";
 import { TitleService } from "./services/title.service";
+import { AppearanceService } from "./services/appearance.service";
 import { Subscription } from "rxjs";
 import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { ContentAssistPopupComponent } from "./pages/components/content-assist-popup/content-assist-popup.component";
@@ -28,7 +29,9 @@ export class AppComponent implements OnInit {
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
   titleService = inject(TitleService);
+  appearanceService = inject(AppearanceService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
+  appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => this.loadHighlightTheme(x));
 
   @ViewChild('sidenav')
   sidenav!: MatSidenav;
@@ -50,12 +53,20 @@ export class AppComponent implements OnInit {
   @ViewChild('content')
   content!: ElementRef;
 
-  constructor(iconRegistry: MatIconRegistry) {
+  private currentHighlightTheme: string | null = null;
+
+  constructor(iconRegistry: MatIconRegistry, @Inject(DOCUMENT) private document: Document) {
     iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
   }
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {
+    const result = this.contentAssist.registerKeyPress(event);
+    if (result == KeypressResult.StopAndStopPropagation) {
+      this.stopPropagation(event);
+      return;
+    }
+
     if (this.contentAssist.stateRaw != ContentAssistMode.Closed) {
       this.stopPropagation(event);
     } else {
@@ -68,16 +79,36 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.fetchGraphTitle();
+    this.appearanceService.fetchAppearance();
+  }
+
+  private loadHighlightTheme(appearance: 'light' | 'dark' = 'dark'): void {
+    const themeFile = appearance === 'dark' ? 
+      '/assets/fonts/highlightjs.11.10.min.dark.css' : 
+      '/assets/fonts/highlightjs.11.9.min.css';
+    
+    if (this.currentHighlightTheme === themeFile) {
+      return; // Already loaded
+    }
+
+    // Remove existing highlight theme
+    const existingLink = this.document.getElementById('highlight-theme') as HTMLLinkElement;
+    if (existingLink) {
+      existingLink.remove();
+    }
+
+    // Add new theme
+    const link = this.document.createElement('link');
+    link.id = 'highlight-theme';
+    link.rel = 'stylesheet';
+    link.href = themeFile;
+    this.document.head.appendChild(link);
+    
+    this.currentHighlightTheme = themeFile;
   }
 
   @HostListener('window:keyup', ['$event'])
   keyUpEvent(event: KeyboardEvent) {
-    const result = this.contentAssist.registerKeyPress(event);
-    if (result == KeypressResult.StopAndStopPropagation) {
-      this.stopPropagation(event);
-      return;
-    }
-
     if (event.key == 'Escape') {
       this.stopPropagation(event);
       if (this.contentAssist.stateRaw != ContentAssistMode.Closed) {
