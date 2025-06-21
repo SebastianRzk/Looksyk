@@ -1,0 +1,341 @@
+/* ----------- */
+/* GENERAL UI */
+/* ---------- */
+:root {
+	/* --primary-color: #000 !important; */
+	/* --foreground-color: #000 !important; */
+	--primary-color: rgb(204, 213, 245) !important;
+	--background-color: #252739 !important;
+	--primary-shading: rgba(0, 0, 0, 0.1) !important;
+	/* Sidebar background */
+	--mat-icon-color: rgb(204, 213, 245) !important;
+}
+
+html .mat-mdc-mini-fab.mat-accent,
+html .mat-accent {
+	--mat-fab-container-color: rgb(204, 213, 245) !important;
+	--mat-fab-small-container-color: rgb(204, 213, 245) !important;
+}
+
+div.header>button>mat-icon {
+	color: #252739 !important;
+}
+
+body,
+.title,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span:not([class*="hljs"]),
+div:not([class*="hljs"]) {
+	color: rgb(204, 213, 245) !important;
+}
+
+/* Force white background */
+body,
+.main-content,
+.page-content {
+	background-color: #EEE !important;
+}
+
+html,
+body {
+	font-family: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+/* -------------------------------------- */
+/* HIDE SIDEBAR BUTTON/PAGE TITLE DIVIDER */
+/* -------------------------------------- */
+.header mat-divider {
+	display: none;
+}
+
+/* --------------------------------- */
+/* BLOCK INDICATORS – REMOVE SHADOW */
+/* -------------------------------- */
+.dot-button {
+	background: transparent !important;
+	box-shadow: none !important;
+	border: none !important;
+}
+
+.mat-mdc-raised-button {
+	box-shadow: none !important;
+}
+
+.mdc-button__ripple,
+.mat-mdc-button-persistent-ripple {
+	background: transparent !important;
+}
+
+.mdc-button--raised {
+	box-shadow: none !important;
+}
+
+.mat-focus-indicator {
+	background: transparent !important;
+}
+
+/* --------------------------------- */
+/* BLOCK INDICATORS – REMOVE SHADOW */
+/* -------------------------------- */
+/* Replace "o" text with filled circle - NOTE: should be fixed in source */
+.dot-button .mdc-button__label {
+	font-size: 0 !important;
+	position: relative;
+}
+
+.dot-button .mdc-button__label::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	background-color: rgb(204, 213, 245);
+	/* Using your text color */
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: initial;
+}
+
+/* ------- */
+/* DEFAULT */
+/* ------- */
+html,
+body {
+	scroll-behavior: smooth;
+	font-family: 'EB Garamond';
+	font-size: large;
+
+	scrollbar-width: thin;
+	scrollbar-color: var(--primary-color) var(--primary-shading);
+}
+
+body {
+	margin: 0;
+	background: var(--background-color);
+	color: var(--foreground-color) !important;
+}
+
+:root {
+	--mat-sidenav-content-text-color: var(--foreground-color);
+	--mat-button-text-label-text-color: var(--foreground-color);
+	--mat-sidenav-container-text-color: var(--foreground-color);
+}
+
+app-root {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+}
+
+.emoji {
+	width: 3ex;
+	height: 3ex;
+	margin-bottom: -0.75ex;
+}
+
+.active-markdown>p {
+	margin-top: 1ex;
+}
+
+a {
+	color: var(--primary-color);
+	cursor: pointer;
+}
+
+table {
+	padding: 1ex;
+	border-spacing: 0;
+}
+
+td,
+th {
+	border-bottom: 1px solid var(--primary-shading);
+	padding: 1.2ex;
+}
+
+
+tr:hover {
+	background: var(--primary-shading);
+}
+
+td:hover {
+	background: var(--backround-color);
+}
+
+.mat-drawer-container {
+	background-color: var(--background-color) !important;
+}
+
+.mat-drawer-inner-container {
+	overflow-x: hidden !important;
+}
+
+.mat-drawer {
+	background-color: var(--primary-shading) !important;
+}
+
+img {
+	max-width: 70vw;
+	max-height: 70vh;
+}
+
+iframe {
+	max-width: 85vw;
+	max-height: 85vh;
+	margin-left: auto;
+	margin-right: auto;
+	width: 98%;
+	height: 80vh;
+	overflow: scroll;
+	background-color: white;
+}
+
+h1>a {
+	text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-top: 0.5ex;
+	font-family: Roboto, sans-serif;
+	font-weight: 300;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-top: 3ex;
+	margin-bottom: 1.5ex;
+}
+
+[contenteditable] {
+	white-space: pre-wrap;
+	/* css-3 */
+	white-space: -moz-pre-wrap;
+	/* Mozilla, since 1999 */
+	white-space: -o-pre-wrap;
+	/* Opera 7 */
+	word-wrap: break-word;
+	/* Internet Explorer 5.5+ */
+}
+
+
+.global-content {
+	padding-left: 4ex;
+	padding-top: 3ex;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+
+/* --------------------- */
+/* LOOKSYK TITLE STYLING */
+/* --------------------- */
+app-sidebar .title {
+	display: inline-block;
+	padding: 12px 24px;
+	margin-bottom: 16px;
+	/* background: linear-gradient(135deg, rgba(238, 238, 0, 0.1) 0%, rgba(238, 238, 0, 0.05) 100%); */
+	/* border-radius: 8px; */
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+		0 2px 4px rgba(0, 0, 0, 0.1),
+		inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	position: relative;
+	overflow: hidden;
+}
+
+app-sidebar .title::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	/* background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); */
+	transition: left 0.5s ease;
+}
+
+app-sidebar .title:hover::before {
+	left: 100%;
+}
+
+app-sidebar .title-h1 {
+	text-transform: uppercase;
+	letter-spacing: 0.3em;
+	font-size: 1.8rem !important;
+	font-weight: 300 !important;
+	margin: 0 !important;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+		0 0 20px rgba(238, 238, 0, 0.2);
+	font-family: 'Roboto', sans-serif !important;
+}
+
+.graph-title {
+	margin: 4px 0 0 0 !important;
+	font-size: 0.9rem;
+	opacity: 0.8;
+	letter-spacing: 0.1em;
+	text-transform: lowercase;
+	font-style: italic;
+}
+
+/* ----------- */
+/* PAGE PICKER */
+/* ----------- */
+.popuptext .active {
+	border: transparent !important;
+	background: #3b3d50 !important;
+	border-radius: 10px !important;
+}
+
+.suggestion-group div:hover {
+	background: #3b3d50 !important;
+	border-radius: 10px !important;
+}
+
+span .popuptext,
+.popuptext {
+	box-shadow: 8px 8px 8px #3b3d5080 !important;
+}
+
+.insert-value-input {
+	background: #3b3d50 !important;
+}
+
+/* ----------- */
+/* INLINE CODE */
+/* ----------- */
+.active-markdown code {
+	background: #3b3d50 !important;
+}
+/* ----------- */
+/* CODE BLOCKS */
+/* ----------- */
+html[data-theme='light'] code.hljs {
+	background: #EEE !important;
+}
+
+/* Fix: Main content cut off on left side */
+.global-content .page {
+	padding-left: 1em !important;
+}
+
+.global-content {
+	padding-left: 3ex !important;
+}
