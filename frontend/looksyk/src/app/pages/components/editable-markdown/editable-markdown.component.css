@@ -7,7 +7,6 @@ div[contenteditable] {
   min-height: 3ex;
 }
 
-
 .active {
   height: 100%;
   min-height: 10ex;
@@ -66,6 +65,7 @@ div[contenteditable] {
 .markdown-block {
   display: flex;
   flex-direction: row;
+  font-family: EBGaramond, serif;
 }
 
 .dot-button {

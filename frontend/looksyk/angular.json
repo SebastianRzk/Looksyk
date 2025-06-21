@@ -30,7 +30,10 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "externalDependencies": [
+              "/assets/fonts/noto/regular.ttf",
+            ]
           },
           "configurations": {
             "production": {

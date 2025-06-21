@@ -1,12 +1,12 @@
 <div class="header">
   @if (sidenav.opened$ | async;) {
     <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.close()">left_panel_close
+      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.close()">left_panel_close
       </mat-icon>
     </h1>
   } @else {
     <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined" (click)="sidenav.open()">left_panel_open</mat-icon>
+      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.open()">left_panel_open</mat-icon>
     </h1>
   }
   <h1 class="header-text">{{ pageName$ | async }} </h1>

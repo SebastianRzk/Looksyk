@@ -18,7 +18,6 @@ import { SidenavService } from "../../services/sidenav.service";
     DisplayPageComponent,
     MatDivider,
     MatIcon,
-    MatMiniFabButton,
     RouterLink
   ],
     templateUrl: './journal-overview.component.html',

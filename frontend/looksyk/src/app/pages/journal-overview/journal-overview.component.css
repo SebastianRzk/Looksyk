@@ -26,3 +26,7 @@
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.journal-toggle {
+  margin: auto 0 !important;
+}

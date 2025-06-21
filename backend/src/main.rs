@@ -22,9 +22,9 @@ use crate::io::http::r#static;
 use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
-use actix_web::{error, web, App, HttpResponse, HttpServer};
-
 mod io;
+
+use actix_web::{error, web, App, HttpResponse, HttpServer};
 mod looksyk;
 mod state;
 
@@ -98,6 +98,7 @@ async fn main() -> std::io::Result<()> {
             .service(r#static::endpoints::js)
             .service(r#static::endpoints::font_css)
             .service(r#static::endpoints::font_garamond)
+            .service(r#static::endpoints::font_noto)
             .service(r#static::endpoints::font_material)
             .service(r#static::endpoints::emoji)
             .service(r#static::endpoints::asset_js)
