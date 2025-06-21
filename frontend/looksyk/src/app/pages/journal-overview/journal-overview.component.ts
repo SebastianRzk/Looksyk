@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { PageService } from "../../services/page.service";
-import { Observable } from "rxjs";
-import { MarkdownPage } from "../model";
-import { AsyncPipe } from "@angular/common";
-import { TitleService } from "../../services/title.service";
-import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
-import { MatDivider } from "@angular/material/divider";
-import { MatMiniFabButton } from "@angular/material/button";
-import { RouterLink } from "@angular/router";
-import { MatIcon } from "@angular/material/icon";
-import { SidenavService } from "../../services/sidenav.service";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {PageService} from "../../services/page.service";
+import {Observable} from "rxjs";
+import {MarkdownPage} from "../model";
+import {AsyncPipe} from "@angular/common";
+import {TitleService} from "../../services/title.service";
+import {DisplayPageComponent} from "../components/display-markdown-page/display-page.component";
+import {MatDivider} from "@angular/material/divider";
+import {RouterLink} from "@angular/router";
+import {MatIcon} from "@angular/material/icon";
+import {SidenavService} from "../../services/sidenav.service";
 
 @Component({
     selector: 'app-journal-single-entry',
