@@ -4,7 +4,21 @@
 }
 
 .menu-element {
-  margin-top: 7ex;
+  margin-top: 5ex;
+}
+
+.history-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.menu-header {
+  padding-left: 1em;
+  text-transform: uppercase;
+  font-size: smaller;
+  font-weight: 400;
 }
 
 .menu-button-list > button {
@@ -33,11 +47,16 @@ mat-divider {
   flex-wrap: wrap;
   text-align: center;
   justify-content: center;
+  margin-bottom: 1ex;
+  padding-bottom: 1ex;
+  padding-left: 1ex;
+  padding-right: 1ex;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+  0 2px 4px rgba(0, 0, 0, 0.1),
+  inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.small-history-item {
-  font-size: x-small;
-}
+
 
 .bottom {
   margin-top: auto;
@@ -52,13 +71,18 @@ mat-divider {
   padding-right: 0.5ex;
 }
 
-
 .title-h1 {
-  margin: 1ex;
+  margin: 0 auto;
+  padding-top: 0.5ex;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 1.8rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+  0 0 20px rgba(238, 238, 0, 0.2);
 }
 
-.graph-title{
-  font-family: Roboto, sans-serif;
+.graph-title {
   font-weight: 300;
   margin: 0.5ex;
+  font-style: italic;
 }

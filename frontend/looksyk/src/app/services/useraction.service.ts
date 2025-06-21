@@ -27,7 +27,9 @@ export class UseractionService {
       fileTarget: "",
     }
   })
+
   currentOpenMarkdown$: Observable<OpenMarkdownEvent> = this.currentOpenMarkdown.asObservable();
+
   openMarkdown_ = this.openMarkdown$.subscribe(event => this.currentOpenMarkdown.next(event));
 
 

@@ -4,10 +4,6 @@ app-block:hover{
   background: var(--primary-shading);
 }
 
-app-editable-block {
-  padding: 1px;
-}
-
 
 app-editable-block {
   overflow: hidden;

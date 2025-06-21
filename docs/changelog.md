@@ -5,7 +5,7 @@ layout: default
 
 ## Table of Contents
 
-- [v1.9.0](#v190)
+- [v1.9.0](#v190-2025-06-15)
 - [v1.8.0](#v180-2025-06-12)
 - [v1.7.0](#v170-2025-06-07)
 - [v1.6.0](#v160-2025-06-04)
@@ -45,7 +45,16 @@ layout: default
 - [Changelog](changelog.md)
 
 
-### v1.9.0
+### v1.10.0 (2025-06-21)
+
+Enhancements:
+
+* Refactor overall UI / UX (Part 1), thanks to @mschmidtkorth
+* Refactor content assist / search UI / UX, thanks to @mschmidtkorth
+* Add keyboard shortcuts for MacOS/Arc
+
+
+### v1.9.0 (2025-06-15)
 
 Enhancements:
 

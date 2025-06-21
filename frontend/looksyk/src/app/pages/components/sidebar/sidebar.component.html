@@ -22,10 +22,11 @@
 @if (favs$ | async; as favs) {
   @if (favs.length !== 0) {
     <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
+      <p class="menu-header">Favorites</p>
       @for (fav of favs; track fav) {
         <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
           <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
-          {{ fav }}
+          <app-sidebar-text [text]="fav"></app-sidebar-text>
         </button>
       }
     </div>
@@ -36,29 +37,25 @@
 @if (history$ | async; as historyEntry) {
   @if (historyEntry.length !== 0) {
     <div class="menu-element">
-      <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
-        <mat-icon>navigate_before</mat-icon>
-      </button>
-      <button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-      <button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <p class="menu-header">History</p>
+      <div class="history-buttons">
+        <button mat-button (click)="onBack()" [disabled]="historyEmpty$ | async">
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+        <button mat-button (click)="onNext()" [disabled]="historyEmpty$ | async">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+        <button mat-button (click)="onDelete()" [disabled]="historyEmpty$ | async">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="menu-button-list">
+    <div class="menu-button-list history">
       @for (history of historyEntry; track history.title) {
-        @if (history.title.length < 20) {
-          <button mat-button [routerLink]="history.url">
-            <mat-icon>history</mat-icon>
-            {{ history.title }}
-          </button>
-        } @else {
-          <button mat-button [routerLink]="history.url">
-            <mat-icon>history</mat-icon>
-            <div class="small-history-item">{{ history.title }}</div>
-          </button>
-        }
+        <button mat-button [routerLink]="history.url">
+          <mat-icon>history</mat-icon>
+          <app-sidebar-text [text]="history.title"></app-sidebar-text>
+        </button>
       }
     </div>
   }

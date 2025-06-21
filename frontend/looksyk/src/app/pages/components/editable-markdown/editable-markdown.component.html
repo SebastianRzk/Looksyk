@@ -1,6 +1,8 @@
 <div class="markdown-block">
   <div>
-    <button #other mat-raised-button [matMenuTriggerFor]="menu" class="dot-button">o</button>
+    <div [matMenuTriggerFor]="menu" class="dot-button">
+      <mat-icon class="material-symbols-rounded-filled">circle</mat-icon>
+    </div>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="clickConvertBlockIntoPage()">
         <mat-icon>note_add</mat-icon>

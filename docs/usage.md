@@ -151,7 +151,7 @@ Configuration:
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
 * <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
-* <kbd>Ctrl</kbd>+<kbd>Space</kbd> opens the content assist
+* <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>Ctrl</kbd> + <kbd>k</kbd>  e.g. for MacOS / Arch) opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
 * <kbd>Alt</kbd>+<kbd>Left</kbd> Navigate to the previous page

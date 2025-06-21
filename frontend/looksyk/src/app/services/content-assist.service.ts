@@ -124,11 +124,11 @@ export class ContentAssistService {
   }
 
   private isOpenContentAssist(event: KeyboardEvent): boolean {
-    return event.key == ' ' && event.ctrlKey;
+    return (event.key == ' ' && (event.ctrlKey || event.metaKey)) || (event.key == 'k' && event.ctrlKey);
   }
 
   private isOpenContentAssistForSearch(event: KeyboardEvent): boolean {
-    return event.key == 'F' && event.ctrlKey;
+    return (event.key == 'F' && event.ctrlKey) || (event.key == 'f' && event.ctrlKey && event.shiftKey);
   }
 
   private isCloseContentAssist(event: KeyboardEvent) {

@@ -99,6 +99,18 @@ async fn font_garamond(path: web::Path<String>, state: Data<AppState>) -> Result
         }))
 }
 
+#[get("/assets/fonts/noto/{filename}.ttf")]
+async fn font_noto(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
+    let static_file_name = format!("{}.ttf", path.into_inner());
+    let complete_path = to_noto(&state.static_path, static_file_name.as_str());
+    Ok(NamedFile::open(complete_path)?
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Inline,
+            parameters: vec![],
+        }))
+}
+
 #[get("/assets/fonts/material-icons/material.woff2")]
 async fn font_material(state: Data<AppState>) -> Result<NamedFile, Error> {
     let complete_path =
@@ -151,10 +163,19 @@ fn to_static_asset_fonts(static_path: &String, static_file_name: &str) -> PathBu
         .join("fonts")
         .join(static_file_name)
 }
+
 fn to_garamond(static_path: &String, static_file_name: &str) -> PathBuf {
     Path::new(static_path)
         .join("assets")
         .join("fonts")
         .join("ebgaramond")
+        .join(static_file_name)
+}
+
+fn to_noto(static_path: &String, static_file_name: &str) -> PathBuf {
+    Path::new(static_path)
+        .join("assets")
+        .join("fonts")
+        .join("noto")
         .join(static_file_name)
 }

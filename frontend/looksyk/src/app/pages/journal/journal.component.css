@@ -35,7 +35,11 @@
   margin: 0 0.5ex;
 }
 
-.header > button{
+.header > button {
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.journal-toggle {
+  margin: auto 0 !important;
 }

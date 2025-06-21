@@ -11,10 +11,6 @@ mat-sidenav-content {
   flex: 1;
 }
 
-mat-sidenav {
-  width: 30ex;
-  max-width: 30ex;
-}
 
 app-sidebar {
   height: 99%;

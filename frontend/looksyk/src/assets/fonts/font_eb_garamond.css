@@ -1,33 +1,33 @@
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-Italic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: italic;
   font-weight: 500;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-MediumItalic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-SemiBoldItalic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-BoldItalic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: italic;
   font-weight: 800;
   font-display: swap;
@@ -35,35 +35,35 @@
 }
 
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-Medium.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-SemiBold.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url(/assets/fonts/ebgaramond/EBGaramond-Bold.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'EB Garamond';
+  font-family: 'EBGaramond';
   font-style: normal;
   font-weight: 800;
   font-display: swap;

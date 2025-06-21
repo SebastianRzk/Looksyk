@@ -2,17 +2,27 @@
 
 html, body {
   scroll-behavior: smooth;
-  font-family: 'EB Garamond';
   font-size: large;
-
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--primary-shading);
+}
+
+@font-face {
+  font-family: 'Noto';
+  src: url('/assets/fonts/noto/regular.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
 }
 
 body {
   margin: 0;
   background: var(--background-color);
   color: var(--foreground-color) !important;
+}
+
+html {
+  font-family: Noto, sans-serif;
 }
 
 :root {
@@ -59,7 +69,7 @@ tr:hover {
 }
 
 td:hover {
-  background: var(--backround-color);
+  background: var(--background-color);
 }
 
 .mat-drawer-container {
@@ -96,12 +106,12 @@ h1 > a {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0.5ex;
-  font-family: Roboto, sans-serif;
+  font-family: Noto, sans-serif;
   font-weight: 300;
 }
 
 h2, h3, h4, h5, h6 {
-  margin-top: 3ex;
+  margin-top: 0.5ex;
   margin-bottom: 1.5ex;
 }
 
@@ -121,3 +131,6 @@ h2, h3, h4, h5, h6 {
   box-sizing: border-box;
 }
 
+.pointer {
+  cursor: pointer;
+}
