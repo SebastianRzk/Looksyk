@@ -1,21 +1,20 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Subject } from "rxjs";
-import { ActivatedRoute } from "@angular/router";
-import { MediaPreview, MediaService } from "../../services/media.service";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { HistoryService } from "../../services/history.service";
-import { MarkdownPage } from "../model";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { AsyncPipe } from "@angular/common";
-import { TitleService } from "../../services/title.service";
-import { DisplayMarkdownComponent } from "../components/display-markdown/display-markdown.component";
-import { MatDivider } from "@angular/material/divider";
-import { SidenavService } from "../../services/sidenav.service";
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {BehaviorSubject, firstValueFrom, Subject} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {MediaPreview, MediaService} from "../../services/media.service";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {HistoryService} from "../../services/history.service";
+import {MarkdownPage} from "../model";
+import {MatIconModule} from "@angular/material/icon";
+import {AsyncPipe} from "@angular/common";
+import {TitleService} from "../../services/title.service";
+import {DisplayMarkdownComponent} from "../components/display-markdown/display-markdown.component";
+import {MatDivider} from "@angular/material/divider";
+import {SidenavService} from "../../services/sidenav.service";
 
 @Component({
   selector: 'app-media-details-overview',
-  imports: [DisplayMarkdownComponent, MatIconModule, MatButtonModule, AsyncPipe, MatDivider],
+  imports: [DisplayMarkdownComponent, MatIconModule, AsyncPipe, MatDivider],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

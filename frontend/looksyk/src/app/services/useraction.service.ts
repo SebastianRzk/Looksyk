@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,9 +10,9 @@ import {
   Subject,
   timer
 } from "rxjs";
-import {BasicPageContent, PageService} from "./page.service";
-import {Block} from "../pages/model";
-import {MediaService} from "./media.service";
+import { BasicPageContent, PageService } from "./page.service";
+import { Block } from "../pages/model";
+import { MediaService } from "./media.service";
 
 @Injectable({
   providedIn: 'root'
@@ -129,36 +129,24 @@ export class UseractionService {
     .subscribe(
       async event => {
         const currentPage = await firstValueFrom(this.pageService.getPage(event.target.fileTarget));
-        let foundForInsertAfter = false;
-        let indentation: Subject<number> = new Subject<number>();
         const newBlockList: Block[] = [];
-        let newId = "";
+        const newId = this.generateNewBlockId(currentPage.pageid);
         for (const block of currentPage.blocks) {
-          if (foundForInsertAfter) {
-            const initialIndentation = await firstValueFrom(indentation);
-            newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
-            foundForInsertAfter = false;
-          }
-
-
           if (event.target.blockTarget == block.indentification) {
-            newId = this.generateNewBlockId(block);
-            indentation = block.indentation;
-            if (event.insert == InsertMode.INSERT_AFTER) {
-              foundForInsertAfter = true;
-            } else {
+            const indentation = block.indentation;
+            if (event.insert == InsertMode.INSERT_BEFORE) {
               const initialIndentation = await firstValueFrom(indentation);
               newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId))
             }
+            newBlockList.push(block);
+            if (event.insert == InsertMode.INSERT_AFTER) {
+              const initialIndentation = await firstValueFrom(indentation);
+              newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId));
+            }
+            continue;
           }
-
           newBlockList.push(block);
         }
-        if (foundForInsertAfter) {
-          const initialIndentation = await firstValueFrom(indentation);
-          newBlockList.push(this.createEmptyBlock(new BehaviorSubject(initialIndentation), newId));
-        }
-
         this.pageService.onNextPageById(currentPage.pageid, {
           name: currentPage.name,
           blocks: newBlockList,
@@ -174,14 +162,14 @@ export class UseractionService {
               fileTarget: event.target.fileTarget
             },
           })
-        }, 70)
+        }, 50)
 
       }
     )
 
 
-  private generateNewBlockId(block: Block) {
-    return block.indentification + "_" + Math.random().toString(36).substring(7);
+  private generateNewBlockId(source: string) {
+    return source + "_" + Math.random().toString(36).substring(7);
   }
 
   newBlockAfterCurrentOpenBlock_ = combineLatest({
@@ -262,7 +250,7 @@ export class UseractionService {
     if (currentIndentation == 0) {
       return 0;
     }
-    return currentIndentation + -1;
+    return currentIndentation - 1;
   }
 
 

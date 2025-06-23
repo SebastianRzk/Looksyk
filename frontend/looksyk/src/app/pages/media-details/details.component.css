@@ -33,3 +33,7 @@
   width: 95%;
   height: 100%;
 }
+
+.download-button {
+  margin: auto 0 !important;
+}
