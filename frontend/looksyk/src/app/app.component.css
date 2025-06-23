@@ -41,8 +41,13 @@ app-sidebar {
 .header-text{
   margin-left: 1.5ex !important;
 }
+
 .menu-toggle {
   width: auto;
   margin: 0 0.5ex;
+}
+
+app-sidebar {
+  max-width: 33ex;
 }
 

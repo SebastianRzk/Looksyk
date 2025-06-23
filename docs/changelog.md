@@ -5,6 +5,8 @@ layout: default
 
 ## Table of Contents
 
+- [v1.10.1](#v1101-2025-06-23)
+- [v1.10.0](#v1100-2025-06-21)
 - [v1.9.0](#v190-2025-06-15)
 - [v1.8.0](#v180-2025-06-12)
 - [v1.7.0](#v170-2025-06-07)
@@ -44,6 +46,13 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.10.1 (2025-06-23)
+
+Enhancements:
+
+* Replace index-based block identification tracking of angular with block id tracking (fixes rendering issues)
+* Add max width for sidebar
+* Change download fab to download icon
 
 ### v1.10.0 (2025-06-21)
 

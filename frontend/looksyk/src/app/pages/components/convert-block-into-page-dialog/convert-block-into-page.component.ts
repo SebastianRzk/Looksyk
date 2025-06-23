@@ -5,7 +5,7 @@ import {MatDialogClose, MatDialogContent, MatDialogRef} from "@angular/material/
 import {FormsModule} from "@angular/forms";
 
 @Component({
-    selector: 'app-rename-page-section',
+    selector: 'app-convert-block-into-page-section',
   imports: [
     MatButton,
     MatInput,
