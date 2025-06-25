@@ -25,8 +25,13 @@ use actix_web::middleware::Logger;
 mod io;
 
 use actix_web::{error, web, App, HttpResponse, HttpServer};
+use crate::io::cargo::get_current_application_version;
+use crate::io::fs::version::load_user_data_version;
+use crate::migration::migrator::run_migrations;
+
 mod looksyk;
 mod state;
+mod migration;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -53,6 +58,12 @@ async fn main() -> std::io::Result<()> {
     });
 
     init_graph_if_needed(&data_root_location);
+
+    run_migrations(
+        get_current_application_version(),
+        load_user_data_version(&data_root_location),
+        &data_root_location,
+    );
 
     let app_state = convert_to_app_state(load_graph_data(data_root_location), &config.static_path);
 

@@ -5,5 +5,6 @@ pub mod config;
 pub mod env;
 pub mod media;
 pub mod pages;
-mod paths;
+pub mod paths;
 pub mod root_path;
+pub mod version;

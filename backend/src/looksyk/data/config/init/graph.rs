@@ -1,6 +1,8 @@
+use crate::io::cargo::get_current_application_version;
 use crate::io::fs::basic_file::{create_folder, exists_folder, folder_empty};
 use crate::io::fs::config::save_config_to_file;
 use crate::io::fs::media::write_media_config;
+use crate::io::fs::version::save_user_data_version;
 use crate::looksyk::data::config::init::theme::init_empty_user_theme_if_non_existent;
 use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Config, Design};
 use crate::looksyk::index::media::MediaIndex;
@@ -18,6 +20,7 @@ pub fn init_graph_if_needed(data_root_location: &GraphRootLocation) {
 fn init_empty_graph(data_root_location: &GraphRootLocation) {
     create_folder(data_root_location.path.join("assets"));
     create_folder(data_root_location.path.join("config"));
+    save_user_data_version(data_root_location, &get_current_application_version());
     write_media_config(data_root_location, &MediaIndex { media: vec![] });
     save_config_to_file(
         data_root_location,
