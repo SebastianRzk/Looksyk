@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.10.2](#v1102-2025-06-25)
 - [v1.10.1](#v1101-2025-06-23)
 - [v1.10.0](#v1100-2025-06-21)
 - [v1.9.0](#v190-2025-06-15)
@@ -45,6 +46,12 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.10.2 (2025-06-25)
+
+Enhancements:
+
+* Add appearance settings to the config.json to fix light/dark mode switching
 
 ### v1.10.1 (2025-06-23)
 

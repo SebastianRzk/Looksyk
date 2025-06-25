@@ -5,3 +5,4 @@ pub mod journal;
 pub mod tag;
 pub mod todo;
 pub mod userpage;
+mod version;

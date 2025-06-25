@@ -27,3 +27,18 @@ pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
         .insert_header(ContentType(mime::TEXT_CSS))
         .body(css_text)
 }
+
+#[derive(serde::Serialize)]
+struct AppearanceDto {
+    appearance: String,
+}
+
+#[get("/api/appearance")]
+pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
+    let config = app_state.g_config.lock().unwrap();
+    let appearance = config.design.appearance.clone();
+    drop(config);
+    HttpResponse::Ok().json(AppearanceDto {
+        appearance: appearance.to_string(),
+    })
+}

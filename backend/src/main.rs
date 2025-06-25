@@ -24,8 +24,13 @@ use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
 mod io;
 
+use crate::io::cargo::get_current_application_version;
+use crate::io::fs::version::load_graph_version;
+use crate::migration::migrator::run_migrations;
 use actix_web::{error, web, App, HttpResponse, HttpServer};
+
 mod looksyk;
+mod migration;
 mod state;
 
 #[actix_web::main]
@@ -53,6 +58,12 @@ async fn main() -> std::io::Result<()> {
     });
 
     init_graph_if_needed(&data_root_location);
+
+    run_migrations(
+        get_current_application_version(),
+        load_graph_version(&data_root_location),
+        &data_root_location,
+    );
 
     let app_state = convert_to_app_state(load_graph_data(data_root_location), &config.static_path);
 
@@ -90,6 +101,7 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::upload_file)
             .service(media::endpoints::compute_asset_suggestion)
             .service(design::endpoints::get_css_theme)
+            .service(design::endpoints::get_appearance)
             .service(metainfo::endpoints::get_metainfo)
             .service(metainfo::endpoints::get_title)
             .service(r#static::endpoints::fav)

@@ -98,6 +98,8 @@ The design consists of the following elements:
 * `backgroundColor` is the color of the background
 * `foregroundColor` is the color of the text
 * `primaryShading` is the color of the shading, used for the sidebar, the hover effect and the active element
+* `appearance` is the appearance of the application, either `dark` or `light`. This is used to set the default color
+  scheme of the application. The default value is `dark`.
 
 Inspire yourself with the following examples:
 
@@ -112,7 +114,8 @@ Configuration:
 "primaryColor": "#0c884c",
 "backgroundColor": "#15212D",
 "foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryShading": "rgba(255, 255, 255, 0.1)",
+"appearance": "dark"
 }
 ```
 
@@ -127,7 +130,8 @@ Configuration:
 "primaryColor": "#859900",
 "backgroundColor": "#fdf6e3",
 "foregroundColor": "#002b36",
-"primaryShading": "rgba(0, 0, 0, 0.1)"
+"primaryShading": "rgba(0, 0, 0, 0.1)",
+"appearance": "light"
 }
 ```
 
@@ -142,7 +146,8 @@ Configuration:
 "primaryColor": "#859900",
 "backgroundColor": "black",
 "foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryShading": "rgba(255, 255, 255, 0.1)",
+"appearance": "dark"
 }
 ```
 

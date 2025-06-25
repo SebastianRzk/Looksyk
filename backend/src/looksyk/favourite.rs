@@ -57,7 +57,7 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 #[cfg(test)]
 mod tests {
     use crate::looksyk::data::config::runtime_graph_configuration::builder::{
-        config_with_fav, empty_design,
+        config_with_fav, empty_config, empty_design,
     };
     use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
     use crate::looksyk::favourite::{
@@ -81,17 +81,11 @@ mod tests {
 
     #[test]
     fn when_fav_is_not_set_in_config_should_return_not_fav() {
-        let config: Config = Config {
-            favourites: vec![],
-            design: empty_design(),
-            title: None,
-        };
-
         let result = is_favourite(
             &SimplePageName {
                 name: "MySite".to_string(),
             },
-            &config,
+            &empty_config(),
         );
 
         assert!(!result);
