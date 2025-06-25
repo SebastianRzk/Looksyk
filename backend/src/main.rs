@@ -90,6 +90,7 @@ async fn main() -> std::io::Result<()> {
             .service(media::endpoints::upload_file)
             .service(media::endpoints::compute_asset_suggestion)
             .service(design::endpoints::get_css_theme)
+            .service(design::endpoints::get_appearance)
             .service(metainfo::endpoints::get_metainfo)
             .service(metainfo::endpoints::get_title)
             .service(r#static::endpoints::fav)
