@@ -14,11 +14,17 @@ pub fn run_migrations(
     );
 
     if data_state_version > current_version {
-        panic!("Der Datenbestand ist neuer als die aktuelle Version. Bitte aktualisieren Sie die Anwendung.");
+        panic!(
+            "Data state version {} is newer than current version {}. This is not supported. Please update the application.",
+            data_state_version, current_version
+        );
     }
 
     if data_state_version == current_version {
-        println!("Keine Migration erforderlich.");
+        println!(
+            "No migration needed. Current version is already up to date: {}",
+            current_version
+        );
         return;
     }
 

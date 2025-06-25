@@ -19,7 +19,7 @@ pub struct Design {
     pub primary_shading: String,
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug, PartialEq, Eq)]
 pub enum Appearance {
     #[default]
     Dark,
@@ -107,8 +107,8 @@ mod tests {
     fn test_appearance_from_str() {
         use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
 
-        assert_eq!(Appearance::from_str("dark").unwrap().to_string(), "dark");
-        assert_eq!(Appearance::from_str("light").unwrap().to_string(), "light");
+        assert_eq!(Appearance::from_str("dark").unwrap(), Appearance::Dark);
+        assert_eq!(Appearance::from_str("light").unwrap(), Appearance::Light);
         assert!(Appearance::from_str("unknown").is_err());
     }
 
