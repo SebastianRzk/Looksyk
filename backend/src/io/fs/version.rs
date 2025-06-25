@@ -4,10 +4,8 @@ use crate::state::application_state::GraphRootLocation;
 
 const UNKNOWN_VERSION: &str = "0.0.0";
 
-pub fn load_user_data_version(
-    user_application_directory: &GraphRootLocation,
-) -> ApplicationVersion {
-    let version_path = user_application_directory
+pub fn load_graph_version(graph_root_location: &GraphRootLocation) -> ApplicationVersion {
+    let version_path = graph_root_location
         .path
         .join(REL_CONFIG_DIRECTORY)
         .join(VERSION_FILE_NAME);
@@ -16,11 +14,8 @@ pub fn load_user_data_version(
     ApplicationVersion::new(version_string.as_str())
 }
 
-pub fn save_user_data_version(
-    user_application_directory: &GraphRootLocation,
-    version: &ApplicationVersion,
-) {
-    let version_path = user_application_directory
+pub fn save_graph_version(graph_root_location: &GraphRootLocation, version: &ApplicationVersion) {
+    let version_path = graph_root_location
         .path
         .join(REL_CONFIG_DIRECTORY)
         .join(VERSION_FILE_NAME);

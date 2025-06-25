@@ -1,4 +1,4 @@
-use crate::io::fs::version::save_user_data_version;
+use crate::io::fs::version::save_graph_version;
 use crate::migration::migration_1_10_2::migriere_1_10_2;
 use crate::migration::model::ApplicationVersion;
 use crate::state::application_state::GraphRootLocation;
@@ -28,7 +28,7 @@ pub fn run_migrations(
         migriere_1_10_2(user_application_directory)
     }
 
-    save_user_data_version(user_application_directory, &current_version);
+    save_graph_version(user_application_directory, &current_version);
     println!(
         "Migrated from version {} to {}",
         data_state_version, current_version

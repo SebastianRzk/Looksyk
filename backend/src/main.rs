@@ -25,7 +25,7 @@ use actix_web::middleware::Logger;
 mod io;
 
 use crate::io::cargo::get_current_application_version;
-use crate::io::fs::version::load_user_data_version;
+use crate::io::fs::version::load_graph_version;
 use crate::migration::migrator::run_migrations;
 use actix_web::{error, web, App, HttpResponse, HttpServer};
 
@@ -61,7 +61,7 @@ async fn main() -> std::io::Result<()> {
 
     run_migrations(
         get_current_application_version(),
-        load_user_data_version(&data_root_location),
+        load_graph_version(&data_root_location),
         &data_root_location,
     );
 

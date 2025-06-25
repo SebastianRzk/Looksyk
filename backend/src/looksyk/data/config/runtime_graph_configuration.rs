@@ -19,8 +19,7 @@ pub struct Design {
     pub primary_shading: String,
 }
 
-#[derive(Clone)]
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub enum Appearance {
     #[default]
     Dark,
@@ -47,7 +46,6 @@ impl FromStr for Appearance {
         }
     }
 }
-
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Favourite {
