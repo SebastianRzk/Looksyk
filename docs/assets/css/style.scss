@@ -30,6 +30,14 @@ img {
   margin-right: auto;
 }
 
+img[alt~="GithubCI"]{
+  width: unset;
+}
+
+li {
+  margin-bottom: 1ex;
+}
+
 h2 {
   margin-top: 7ex;
 }
