@@ -95,7 +95,8 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/purple-green.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/fonts/highlightjs.11.9.min.css"
             ],
             "scripts": [
               "../node_modules/marked/marked.min.js"

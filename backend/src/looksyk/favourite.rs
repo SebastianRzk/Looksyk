@@ -19,6 +19,7 @@ pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Confi
     Config {
         favourites: new_favourites,
         design: config.design.clone(),
+        appearance: config.appearance.clone(),
         title: config.title.clone(),
     }
 }
@@ -33,6 +34,7 @@ pub fn set_favourites(new_favourites: Vec<SimplePageName>, config: &Config) -> C
     Config {
         favourites: result,
         design: config.design.clone(),
+        appearance: config.appearance.clone(),
         title: config.title.clone(),
     }
 }
@@ -50,6 +52,7 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
     Config {
         favourites: new_favourites,
         design: config.design.clone(),
+        appearance: config.appearance.clone(),
         title: config.title.clone(),
     }
 }
@@ -57,9 +60,11 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 #[cfg(test)]
 mod tests {
     use crate::looksyk::data::config::runtime_graph_configuration::builder::{
-        config_with_fav, empty_design,
+        config_with_fav, empty_config, empty_design,
     };
-    use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
+    use crate::looksyk::data::config::runtime_graph_configuration::{
+        Appearance, Config, Favourite,
+    };
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };
@@ -81,17 +86,11 @@ mod tests {
 
     #[test]
     fn when_fav_is_not_set_in_config_should_return_not_fav() {
-        let config: Config = Config {
-            favourites: vec![],
-            design: empty_design(),
-            title: None,
-        };
-
         let result = is_favourite(
             &SimplePageName {
                 name: "MySite".to_string(),
             },
-            &config,
+            &empty_config(),
         );
 
         assert!(!result);
@@ -128,6 +127,7 @@ mod tests {
                 },
             ],
             design: empty_design(),
+            appearance: Appearance::default(),
             title: None,
         };
 

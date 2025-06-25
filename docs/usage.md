@@ -98,6 +98,8 @@ The design consists of the following elements:
 * `backgroundColor` is the color of the background
 * `foregroundColor` is the color of the text
 * `primaryShading` is the color of the shading, used for the sidebar, the hover effect and the active element
+* `appearance` is the appearance of the application, either `dark` or `light`. This is used to set the default color
+  scheme of the application. The default value is `dark`.
 
 Inspire yourself with the following examples:
 
