@@ -1,7 +1,6 @@
 use actix_web::http::header::ContentType;
 use actix_web::web::Data;
 use actix_web::{get, HttpResponse};
-use serde_json::json;
 
 use crate::state::application_state::AppState;
 
@@ -29,14 +28,15 @@ pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
         .body(css_text)
 }
 
+#[derive(serde::Serialize)]
+struct AppearanceDto {
+    appearance: String,
+}
+
 #[get("/api/appearance")]
 pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
     let config = app_state.g_config.lock().unwrap();
-    let appearance = config
-        .appearance
-        .as_ref()
-        .unwrap_or(&"dark".to_string())
-        .clone();
+    let appearance = config.appearance.clone();
     drop(config);
-    HttpResponse::Ok().json(json!({ "appearance": appearance }))
+    HttpResponse::Ok().json(AppearanceDto { appearance: appearance.to_string() })
 }

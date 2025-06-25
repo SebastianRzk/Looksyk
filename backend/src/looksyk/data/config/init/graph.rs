@@ -2,7 +2,7 @@ use crate::io::fs::basic_file::{create_folder, exists_folder, folder_empty};
 use crate::io::fs::config::save_config_to_file;
 use crate::io::fs::media::write_media_config;
 use crate::looksyk::data::config::init::theme::init_empty_user_theme_if_non_existent;
-use crate::looksyk::data::config::runtime_graph_configuration::{Config, Design};
+use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Config, Design};
 use crate::looksyk::index::media::MediaIndex;
 use crate::state::application_state::GraphRootLocation;
 
@@ -29,7 +29,7 @@ fn init_empty_graph(data_root_location: &GraphRootLocation) {
                 foreground_color: "white".to_string(),
                 primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
             },
-            appearance: Some("dark".to_string()),
+            appearance: Appearance::Dark,
             title: Some("No Graph Title".to_string()),
         },
     );
