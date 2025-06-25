@@ -1,6 +1,8 @@
 use crate::io::fs::config::save_config_to_file;
 use crate::io::fs::paths::REL_CONFIG_PATH;
-use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Config, Design, Favourite};
+use crate::looksyk::data::config::runtime_graph_configuration::{
+    Appearance, Config, Design, Favourite,
+};
 use crate::state::application_state::GraphRootLocation;
 use serde::Deserialize;
 use std::fs;
@@ -24,7 +26,7 @@ pub struct OldDesignOnDisk {
 pub fn migriere_1_10_2(user_application_directory: &GraphRootLocation) {
     let config_location = user_application_directory.path.join(REL_CONFIG_PATH);
     if config_location.exists() {
-        println!("Found shares file, migrating...");
+        println!("Found config file, migrating...");
 
         // Read the old config file
         let old_config_content =

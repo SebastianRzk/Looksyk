@@ -24,14 +24,14 @@ use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
 mod io;
 
-use actix_web::{error, web, App, HttpResponse, HttpServer};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_user_data_version;
 use crate::migration::migrator::run_migrations;
+use actix_web::{error, web, App, HttpResponse, HttpServer};
 
 mod looksyk;
-mod state;
 mod migration;
+mod state;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

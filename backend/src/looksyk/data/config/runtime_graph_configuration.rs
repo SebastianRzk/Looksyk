@@ -20,7 +20,9 @@ pub struct Design {
 }
 
 #[derive(Clone)]
+#[derive(Default)]
 pub enum Appearance {
+    #[default]
     Dark,
     Light,
 }
@@ -46,11 +48,6 @@ impl FromStr for Appearance {
     }
 }
 
-impl Default for Appearance {
-    fn default() -> Self {
-        Appearance::Dark
-    }
-}
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Favourite {

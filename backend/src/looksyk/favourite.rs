@@ -59,8 +59,12 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::data::config::runtime_graph_configuration::builder::{config_with_fav, empty_config, empty_design};
-    use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Config, Favourite};
+    use crate::looksyk::data::config::runtime_graph_configuration::builder::{
+        config_with_fav, empty_config, empty_design,
+    };
+    use crate::looksyk::data::config::runtime_graph_configuration::{
+        Appearance, Config, Favourite,
+    };
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };
