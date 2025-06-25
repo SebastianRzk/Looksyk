@@ -31,8 +31,8 @@ fn init_empty_graph(data_root_location: &GraphRootLocation) {
                 background_color: "#15212D".to_string(),
                 foreground_color: "white".to_string(),
                 primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
+                appearance: Appearance::Dark,
             },
-            appearance: Appearance::Dark,
             title: Some("No Graph Title".to_string()),
         },
     );

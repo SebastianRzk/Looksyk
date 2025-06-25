@@ -12,7 +12,6 @@ use std::str::FromStr;
 pub struct ConfigOnDisk {
     pub favourites: Vec<Favourite>,
     pub design: DesignOnDisk,
-    pub appearance: String,
     pub title: Option<String>,
 }
 
@@ -23,6 +22,7 @@ pub struct DesignOnDisk {
     pub background_color: String,
     pub foreground_color: String,
     pub primary_shading: String,
+    pub appearance: String,
 }
 
 pub fn read_config_from_file(data_path: &GraphRootLocation) -> Config {
@@ -40,9 +40,9 @@ fn convert_config_on_disk_to_config(config_on_disk: ConfigOnDisk) -> Config {
             background_color: config_on_disk.design.background_color,
             foreground_color: config_on_disk.design.foreground_color,
             primary_shading: config_on_disk.design.primary_shading,
+            appearance: Appearance::from_str(&config_on_disk.design.appearance)
+                .expect("Failed to parse appearance from config"),
         },
-        appearance: Appearance::from_str(&config_on_disk.appearance)
-            .expect("Failed to parse appearance from config"),
         title: config_on_disk.title,
     }
 }
@@ -55,8 +55,8 @@ fn convert_config_to_on_disk(config: &Config) -> ConfigOnDisk {
             background_color: config.design.background_color.clone(),
             foreground_color: config.design.foreground_color.clone(),
             primary_shading: config.design.primary_shading.clone(),
+            appearance: config.design.appearance.to_string(),
         },
-        appearance: config.appearance.to_string(),
         title: config.title.clone(),
     }
 }

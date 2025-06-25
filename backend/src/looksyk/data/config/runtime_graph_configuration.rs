@@ -7,7 +7,6 @@ use std::str::FromStr;
 pub struct Config {
     pub favourites: Vec<Favourite>,
     pub design: Design,
-    pub appearance: Appearance,
     pub title: Option<String>,
 }
 
@@ -17,6 +16,7 @@ pub struct Design {
     pub background_color: String,
     pub foreground_color: String,
     pub primary_shading: String,
+    pub appearance: Appearance,
 }
 
 #[derive(Clone, Default, Debug, PartialEq, Eq)]
@@ -75,7 +75,6 @@ pub mod builder {
         Config {
             design: empty_design(),
             favourites: vec![favourite_str(fav)],
-            appearance: Appearance::default(),
             title: None,
         }
     }
@@ -84,7 +83,6 @@ pub mod builder {
         Config {
             favourites: vec![],
             design: empty_design(),
-            appearance: Appearance::default(),
             title: None,
         }
     }
@@ -95,6 +93,7 @@ pub mod builder {
             background_color: "".to_string(),
             foreground_color: "".to_string(),
             primary_shading: "".to_string(),
+            appearance: Appearance::default(),
         }
     }
 }

@@ -46,6 +46,12 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+### v1.10.2 (2025-06-25)
+
+Enhancements:
+
+* Add appearance settings to the config.json to fix light/dark mode switching
+
 ### v1.10.1 (2025-06-23)
 
 Enhancements:

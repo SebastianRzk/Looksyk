@@ -114,7 +114,8 @@ Configuration:
 "primaryColor": "#0c884c",
 "backgroundColor": "#15212D",
 "foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryShading": "rgba(255, 255, 255, 0.1)",
+"appearance": "dark"
 }
 ```
 
@@ -129,7 +130,8 @@ Configuration:
 "primaryColor": "#859900",
 "backgroundColor": "#fdf6e3",
 "foregroundColor": "#002b36",
-"primaryShading": "rgba(0, 0, 0, 0.1)"
+"primaryShading": "rgba(0, 0, 0, 0.1)",
+"appearance": "light"
 }
 ```
 
@@ -144,7 +146,8 @@ Configuration:
 "primaryColor": "#859900",
 "backgroundColor": "black",
 "foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)"
+"primaryShading": "rgba(255, 255, 255, 0.1)",
+"appearance": "dark"
 }
 ```
 

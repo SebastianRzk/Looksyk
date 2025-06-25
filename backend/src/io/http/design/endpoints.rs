@@ -36,7 +36,7 @@ struct AppearanceDto {
 #[get("/api/appearance")]
 pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
     let config = app_state.g_config.lock().unwrap();
-    let appearance = config.appearance.clone();
+    let appearance = config.design.appearance.clone();
     drop(config);
     HttpResponse::Ok().json(AppearanceDto {
         appearance: appearance.to_string(),

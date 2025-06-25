@@ -42,8 +42,8 @@ pub fn migriere_1_10_2(user_application_directory: &GraphRootLocation) {
                 background_color: old_config.design.background_color,
                 foreground_color: old_config.design.foreground_color,
                 primary_shading: old_config.design.primary_shading,
+                appearance: Appearance::Dark,
             },
-            appearance: Appearance::Dark,
             title: old_config.title,
         };
 
