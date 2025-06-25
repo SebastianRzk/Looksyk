@@ -32,7 +32,11 @@ pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
 #[get("/api/appearance")]
 pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
     let config = app_state.g_config.lock().unwrap();
-    let appearance = config.appearance.as_ref().unwrap_or(&"dark".to_string()).clone();
+    let appearance = config
+        .appearance
+        .as_ref()
+        .unwrap_or(&"dark".to_string())
+        .clone();
     drop(config);
     HttpResponse::Ok().json(json!({ "appearance": appearance }))
 }
