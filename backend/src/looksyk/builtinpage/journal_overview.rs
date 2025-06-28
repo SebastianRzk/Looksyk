@@ -68,9 +68,9 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
         }
         let date_str = date.format("%Y_%m_%d").to_string();
         if !sorted_journals.contains(&date) {
-            as_text.push_str(&format!("[No Entry](/journal/{})|", date_str));
+            as_text.push_str(&format!("[No Entry](/journal/{date_str})|"));
         } else {
-            as_text.push_str(&format!("[{0}](/journal/{0})|", date_str));
+            as_text.push_str(&format!("[{date_str}](/journal/{date_str})|"));
         }
         weekday = (weekday + 1) % 7;
 

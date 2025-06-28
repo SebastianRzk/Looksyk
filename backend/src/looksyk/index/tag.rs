@@ -108,10 +108,10 @@ fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<Pars
         indentation: 0,
         content: vec![BlockContent {
             as_tokens: vec![BlockToken {
-                payload: format!("{} that reference this page", name),
+                payload: format!("{name} that reference this page"),
                 block_token_type: BlockTokenType::Text,
             }],
-            as_text: format!("{} that reference this page", name),
+            as_text: format!("{name} that reference this page"),
         }],
     }];
 

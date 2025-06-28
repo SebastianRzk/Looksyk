@@ -38,9 +38,9 @@ async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     let default_config = startup_configuration::get_default_configuration();
     let cli_args = get_cli_args();
-    println!("Provided CLI args {:?}", cli_args);
+    println!("Provided CLI args {cli_args:?}");
     let config = default_config.overwrite(cli_args);
-    println!("Computed configuration {:?}", config);
+    println!("Computed configuration {config:?}");
 
     let data_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
         let initial_config_path = env::get_or_default(

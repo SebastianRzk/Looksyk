@@ -34,7 +34,7 @@ pub fn read_all_journal_files(data_root_location: &GraphRootLocation) -> Vec<Pag
 }
 
 fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
-    println!("Reading {}", data_path);
+    println!("Reading {data_path}");
     let directory_list = fs::read_dir(data_path).unwrap();
     let mut all_files = vec![];
 

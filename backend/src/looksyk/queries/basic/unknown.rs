@@ -14,8 +14,7 @@ pub fn render_display_unknown(
     QueryRenderResult {
         has_dynamic_content: false,
         inplace_markdown: format!(
-            "display type {} not supported for querytype. Avaliable display types: {}",
-            display_type, available_display_types
+            "display type {display_type} not supported for querytype. Avaliable display types: {available_display_types}"
         ),
         referenced_markdown: vec![],
     }

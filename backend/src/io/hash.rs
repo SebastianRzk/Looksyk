@@ -10,6 +10,6 @@ pub fn hash_file_content(loaded_media: LoadedMedia) -> String {
     hasher.finalize()[..]
         .to_ascii_lowercase()
         .iter()
-        .for_each(|b| result.push_str(&format!("{:02x}", b)));
+        .for_each(|b| result.push_str(&format!("{b:02x}")));
     result
 }

@@ -8,23 +8,16 @@ pub fn run_migrations(
     data_state_version: ApplicationVersion,
     user_application_directory: &GraphRootLocation,
 ) {
-    println!(
-        "Running migrations from version {} to {}",
-        data_state_version, current_version
-    );
+    println!("Running migrations from version {data_state_version} to {current_version}");
 
     if data_state_version > current_version {
         panic!(
-            "Data state version {} is newer than current version {}. This is not supported. Please update the application.",
-            data_state_version, current_version
+            "Data state version {data_state_version} is newer than current version {current_version}. This is not supported. Please update the application."
         );
     }
 
     if data_state_version == current_version {
-        println!(
-            "No migration needed. Current version is already up to date: {}",
-            current_version
-        );
+        println!("No migration needed. Current version is already up to date: {current_version}");
         return;
     }
 
@@ -35,12 +28,9 @@ pub fn run_migrations(
     }
 
     save_graph_version(user_application_directory, &current_version);
-    println!(
-        "Migrated from version {} to {}",
-        data_state_version, current_version
-    );
+    println!("Migrated from version {data_state_version} to {current_version}");
 }
 
 fn print_running_migration(migration: ApplicationVersion) {
-    println!("Running migration: {}", migration);
+    println!("Running migration: {migration}");
 }

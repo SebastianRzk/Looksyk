@@ -6,11 +6,6 @@ use crate::looksyk::queries::todo::QUERY_NAME_TODOS;
 
 pub fn available_query_types() -> String {
     format!(
-        "{}, {}, {}, {}, {}",
-        QUERY_NAME_BLOCKS,
-        QUERY_NAME_PAGE_HIERARCHY,
-        QUERY_NAME_REFERENCES_TO,
-        QUERY_NAME_TODOS,
-        QUERY_NAME_INSERT_FILE_CONTENT
+        "{QUERY_NAME_BLOCKS}, {QUERY_NAME_PAGE_HIERARCHY}, {QUERY_NAME_REFERENCES_TO}, {QUERY_NAME_TODOS}, {QUERY_NAME_INSERT_FILE_CONTENT}"
     )
 }
