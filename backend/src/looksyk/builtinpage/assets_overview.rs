@@ -29,10 +29,7 @@ pub fn generate_assets_overview_page(
 }
 
 fn render_table(asset_type_name: &str, assets: Vec<AssetDescription>) -> ParsedBlock {
-    let mut result = format!(
-        "### {} \n \n | Name | Size |\n| :-- | :-- |\n",
-        asset_type_name
-    );
+    let mut result = format!("### {asset_type_name} \n \n | Name | Size |\n| :-- | :-- |\n");
     for asset in assets {
         result.push_str(&format!(
             "| {} | {} |\n",

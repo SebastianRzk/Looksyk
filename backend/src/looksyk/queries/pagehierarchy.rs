@@ -65,7 +65,7 @@ pub fn render_as_list(
     root_name: &String,
     selected_pages: Vec<&SimplePageName>,
 ) -> QueryRenderResult {
-    let mut result = format!("{}:\n", root_name);
+    let mut result = format!("{root_name}:\n");
     for page in selected_pages {
         result.push_str("- ");
         result.push_str(render_user_link(page).as_str());

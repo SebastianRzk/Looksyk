@@ -41,9 +41,9 @@ pub async fn upload_file(
         json_filename, form.file.size
     );
     println!("path: {}", form.file.file.path().display());
-    println!("original file-name: {}", json_filename);
+    println!("original file-name: {json_filename}");
     let filename = delete_all_forbidden_chars_in_filename(json_filename);
-    println!("name after cleanup: {}", filename);
+    println!("name after cleanup: {filename}");
     let file = read_binary_file(form.file.file.path().to_path_buf());
 
     let hash = hash_file_content(LoadedMedia {

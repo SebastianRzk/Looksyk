@@ -42,7 +42,7 @@ async fn update_block(
     let selected_page = match page_id.page_type {
         PageType::JournalPage => journal_guard.entries.get(&page_id.name).unwrap().clone(),
         PageType::UserPage => {
-            println!("Simple page {:?}", page_id);
+            println!("Simple page {page_id:?}");
             page_guard.entries.get(&page_id.name).unwrap().clone()
         }
     };

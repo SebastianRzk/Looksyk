@@ -53,6 +53,10 @@ The command `looksyk` accepts the following command line arguments:
 * `--window-height` to specify the height of the window (default: `800`)
 * `--window-zoom` to specify the zoom level of the window (default: `-0.6`)
 
+Note for Flatpak from FlatHub users (this does not apply to the manual flatpak-build or the download from github):
+Changing the graph location is only possible, if the Flatpak is run with the `--filesystem=home` option, otherwise the
+graph location is fixed to `~/graph`.
+
 ## Usage
 
 ![The Looksyk startup page explained](journal_overview.png)
@@ -156,7 +160,8 @@ Configuration:
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
 * <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
-* <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>Ctrl</kbd> + <kbd>k</kbd>  e.g. for MacOS / Arch) opens the content assist
+* <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>
+  Ctrl</kbd> + <kbd>k</kbd>  e.g. for MacOS / Arch) opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"
 * <kbd>Alt</kbd>+<kbd>Left</kbd> Navigate to the previous page
@@ -222,7 +227,6 @@ Templates can be used to create reusable content, such as checklists, meeting no
 The indentation of the blocks in the template is preserved, so you can create nested blocks. The initial block in edit
 is considered as starting-point, the template is inserted at the same indentation level and the following blocks are
 inserted with the relative indentation to the first block.
-
 
 ### Queries
 

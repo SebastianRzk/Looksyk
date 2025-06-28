@@ -26,14 +26,17 @@ layout: default
 
 ## Run Looksyk
 
-| Operation System    | Installation Method     | Status                                                         |
-|---------------------|-------------------------|----------------------------------------------------------------|
-| Arch Linux          | AUR                     | ✅ [Installation Guide](#arch-linux--aur)                       |
-| Arch Linux          | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
-| Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
-| Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
-| Windows native      | manual build  *)        | untested / not working out of the box   *)                     |
-| Mac native          | manual build  *)        | untested / not working out of the box   *)                     |
+| Operation System    | Installation Method                   | Status                                                                                   |
+|---------------------|---------------------------------------|------------------------------------------------------------------------------------------|
+| Arch Linux          | AUR                                   | ✅ recommended [Installation Guide](#arch-linux--aur)                                     |
+| Arch Linux          | PKGBUILD                              | ✅ [Installation Guide](#arch-linux--pkgbuild)                                            |
+| Linux (any)         | flatpak build local                   | ✅ in testing [Installation Guide](#linux-any--flatpak-build-local)                       |
+| Linux (any)         | flatpak download from github releases | ✅ in testing [Installation Guide](#linux-any--flatpak-download-from-github-releases~~~~) |
+| Linux (any)         | flatpak from flathub                  | in progress                                                                              |
+| Linux (any)         | manual build                          | ✅ [Installation Guide](#production-build--manual-installation)                           |
+| Linux, Windows, Mac | docker / docker compose               | ✅ [Installation Guide](#docker--docker-compose)                                          |
+| Windows native      | manual build  *)                      | untested / not working out of the box   *)                                               |
+| Mac native          | manual build  *)                      | untested / not working out of the box   *)                                               |
 
 *) The application is programmed to be platform independent, but the build script and the installation process are not
 yet implemented on Windows and Mac. Mainly because I have no knowledge of packaging for Windows and Mac, and because I
@@ -52,6 +55,35 @@ You can build the application with the PKGBUILD. Run `makepkg` and install the p
 `pacman -U ./looksyk-desktop-<version>.tar.zst`.
 
 You can run the application with the command `looksyk`.
+
+### Linux (any) / flatpak build local
+
+You can build the application with flatpak. The yml to build the application from the current repository is
+`de.sebastianruziczka.looksyk.local.yml`.
+
+You can use the following command to build and install the application:
+
+```bash
+flatpak-builder --repo=repo --force-clean build-dir de.sebastianruziczka.looksyk.local.yml
+flatpak build-bundle repo looksyk.flatpak de.sebastianruziczka.looksyk 
+flatpak install ./looksyk.flatpak
+```
+
+Run the application with the command `flatpak run de.sebastianruziczka.looksyk --no-sandbox --installed-flatpak`, or 
+you can use the desktop shortcut (currently under development).
+
+### Linux (any) / flatpak download from github releases
+
+You can download the flatpak from the [github releases](https://github.com/SebastianRzk/Looksyk/releases).
+
+You can use the following command to install the application:
+
+```bash	
+flatpak install ./looksyk.flatpak
+```
+
+Run the application with the command `flatpak run de.sebastianruziczka.looksyk --no-sandbox --installed-flatpak`, or
+you can use the desktop shortcut (currently under development).
 
 ### Docker / docker-compose
 

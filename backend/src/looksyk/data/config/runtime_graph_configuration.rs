@@ -42,7 +42,7 @@ impl FromStr for Appearance {
         match s.to_lowercase().as_str() {
             "dark" => Ok(Appearance::Dark),
             "light" => Ok(Appearance::Light),
-            _ => Err(format!("Unknown appearance: {}", s)),
+            _ => Err(format!("Unknown appearance: {s}")),
         }
     }
 }

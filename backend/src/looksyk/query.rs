@@ -31,7 +31,7 @@ pub fn render_query(
         let error = query.err().unwrap();
         println!("Error on parsing query {}", &error);
         return QueryRenderResult {
-            inplace_markdown: format!("\n\nError on parsing query: {}\n\n", error),
+            inplace_markdown: format!("\n\nError on parsing query: {error}\n\n"),
             referenced_markdown: vec![],
             has_dynamic_content: false,
         };

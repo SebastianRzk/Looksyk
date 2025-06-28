@@ -1,7 +1,7 @@
 use crate::looksyk::datatypes::AssetDescriptor;
 
 pub fn render_as_link(filename: &String, path: &str) -> String {
-    format!("[{}]({})", filename, path)
+    format!("[{filename}]({path})")
 }
 
 pub fn render_asset_as_link(asset_descriptor: &AssetDescriptor) -> String {
@@ -42,10 +42,9 @@ pub fn render_as_audio(asset_descriptor: &AssetDescriptor) -> String {
 pub fn render_as_code_block(language: String, content: &String) -> String {
     format!(
         "\
-```{}
-{}
-```",
-        language, content
+```{language}
+{content}
+```"
     )
 }
 

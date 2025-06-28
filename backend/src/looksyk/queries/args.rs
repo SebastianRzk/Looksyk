@@ -26,12 +26,11 @@ pub fn parse_property(
     input_string: &str,
     expected_property_name: &str,
 ) -> Result<PropertyParsed, Error> {
-    let prefix = format!("{}:\"", expected_property_name);
+    let prefix = format!("{expected_property_name}:\"");
     let chop = input_string
         .strip_prefix(prefix.as_str())
         .ok_or(Error::other(format!(
-            "Parse error, expected tag '{}', got '{}'",
-            prefix, input_string
+            "Parse error, expected tag '{prefix}', got '{input_string}'"
         )))?;
     let mut splittet = chop.splitn(2, "\"");
     let value = splittet
