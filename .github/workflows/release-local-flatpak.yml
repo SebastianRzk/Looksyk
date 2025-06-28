@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Starte D-Bus Session
         run: |
-          export $(dbus-launch)
+          eval "$(dbus-launch --sh-syntax)"
           echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $GITHUB_ENV
           echo "DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $GITHUB_ENV
       - name: Installiere Flatpak und flatpak-builder
