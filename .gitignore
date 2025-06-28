@@ -1,2 +1,5 @@
 target/
 .idea/
+looksyk.flatpak
+looksyk-source.tar.gz
+.flatpak-builder
