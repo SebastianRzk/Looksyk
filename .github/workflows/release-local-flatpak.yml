@@ -8,20 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Starte D-Bus Session
-        run: |
-          eval "$(dbus-launch --sh-syntax)"
-          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> $GITHUB_ENV
-          echo "DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID" >> $GITHUB_ENV
-      - name: Installiere Flatpak und flatpak-builder
+      - name: Installiere Flatpak, starte D-Bus und baue Flatpak
         run: |
           sudo apt-get update
           sudo apt-get install -y flatpak flatpak-builder
-      - name: Build flatpak
-        env:
-          DBUS_SESSION_BUS_ADDRESS: ${{ env.DBUS_SESSION_BUS_ADDRESS }}
-          DBUS_SESSION_BUS_PID: ${{ env.DBUS_SESSION_BUS_PID }}
-        run: |
+          eval "$(dbus-launch --sh-syntax)"
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --user -y flathub org.flatpak.Builder
           flatpak run org.flatpak.Builder --force-clean --user --install --install-deps-from=flathub --ccache --mirror-screenshots-url=https://dl.flathub.org/media/ --repo=repo builddir ./de.sebastianruziczka.looksyk.local.yml
