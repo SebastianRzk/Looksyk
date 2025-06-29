@@ -3,7 +3,7 @@ Type=Application
 Name=Looksyk
 StartupWMClass=looksyk
 GenericName=A markdown centric, fast and local personal knowledge platform
-Icon=~/.local/share/flatpak/exports/share/icons/looksyk/icon.png
+Icon=de.sebastianruziczka.looksyk
 Terminal=false
 Exec=flatpak run de.sebastianruziczka.looksyk --no-sandbox --installed-flatpak
 
