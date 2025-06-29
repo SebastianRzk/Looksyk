@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.10.4](#v1104-2025-06-29)
 - [v1.10.3](#v1103-2025-06-28)
 - [v1.10.2](#v1102-2025-06-25)
 - [v1.10.1](#v1101-2025-06-23)
@@ -47,6 +48,13 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.10.4 (2025-06-29)
+
+Enhancements:
+
+* Fix focus out bug
+* Improve flatpak build (desktop icon)
 
 ### v1.10.3 (2025-06-28)
 

@@ -39,7 +39,6 @@ export class UseractionService {
   newBlock: Subject<NewBlockEvent> = new Subject<NewBlockEvent>();
   newBlock$: Observable<NewBlockEvent> = this.newBlock.asObservable();
 
-
   deleteBlock: Subject<DeleteBlockEvent> = new Subject<DeleteBlockEvent>();
   deleteBlock$: Observable<DeleteBlockEvent> = this.deleteBlock.asObservable();
 
@@ -153,8 +152,6 @@ export class UseractionService {
           pageid: currentPage.pageid,
           isFavourite: currentPage.isFavourite
         });
-
-        this.closeCurrentMarkdownBlock();
         setTimeout(() => {
           this.openMarkdown.next({
             target: {

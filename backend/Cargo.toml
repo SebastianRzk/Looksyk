@@ -1,6 +1,6 @@
 [package]
 name = "looksyk"
-version = "1.10.3"
+version = "1.10.4"
 edition = "2021"
 
 [dependencies]
