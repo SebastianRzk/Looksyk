@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.11.0](#v1110-2025-06-30)
 - [v1.10.4](#v1104-2025-06-29)
 - [v1.10.3](#v1103-2025-06-28)
 - [v1.10.2](#v1102-2025-06-25)
@@ -48,6 +49,16 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.11.0 (2025-06-30)
+
+Enhancements:
+
+* Change application icon
+* Disable horizontal scrolling in journal log page
+* Show loading spinner instead of loading text
+* Improve Flatpak desktop file, and flatpak archive name
 
 ### v1.10.4 (2025-06-29)
 

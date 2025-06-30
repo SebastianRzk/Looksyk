@@ -43,3 +43,12 @@
 .journal-toggle {
   margin: auto 0 !important;
 }
+
+cdk-virtual-scroll-viewport {
+  height: 100%;
+  width: 100%;
+
+  ::ng-deep .cdk-virtual-scroll-content-wrapper {
+    max-width: 100% !important;
+  }
+}

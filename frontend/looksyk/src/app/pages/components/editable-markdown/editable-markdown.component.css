@@ -32,7 +32,26 @@ div[contenteditable] {
 
 
 .loading {
-  min-height: 28ex;
+  min-height: 10ex;
+}
+
+.loading-spinner {
+  -webkit-animation:spin 2s linear infinite;
+  -moz-animation:spin 2s linear infinite;
+  animation:spin 2s linear infinite;
+  margin: 1ex;
+}
+@-moz-keyframes spin {
+  100% { -moz-transform: rotate(-360deg); }
+}
+@-webkit-keyframes spin {
+  100% { -webkit-transform: rotate(-360deg); }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+    transform:rotate(-360deg);
+  }
 }
 
 .inactive {
@@ -66,6 +85,7 @@ div[contenteditable] {
   display: flex;
   flex-direction: row;
   font-family: EBGaramond, serif;
+  transition: height 1s ease-in-out;
 }
 
 .dot-button {
