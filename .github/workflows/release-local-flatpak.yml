@@ -17,9 +17,8 @@ jobs:
             flatpak install --user -y flathub org.flatpak.Builder
             flatpak run org.flatpak.Builder --force-clean --user --install --install-deps-from=flathub --ccache --mirror-screenshots-url=https://dl.flathub.org/media/ --repo=repo builddir ./de.sebastianruziczka.looksyk.local.yml
             flatpak build-bundle repo looksyk.flatpak de.sebastianruziczka.looksyk
-            mv looksyk.flatpak "looksyk-${GITHUB_REF_NAME#v}.flatpak"
           "
       - name: Upload looksyk.flatpak
-        run: gh release upload "$GITHUB_REF_NAME" "looksyk-${GITHUB_REF_NAME#v}.flatpak" --clobber
+        run: gh release upload "$GITHUB_REF_NAME" looksyk.flatpak --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
