@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.11.1](#v1111-2025-06-30)
 - [v1.11.0](#v1110-2025-06-30)
 - [v1.10.4](#v1104-2025-06-29)
 - [v1.10.3](#v1103-2025-06-28)
@@ -50,6 +51,13 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.11.1 (2025-06-30)
+
+Enhancements:
+
+* (flatpak) github release automation
+* (flatpak) use zypak for running instead of no-sandbox-mode
 
 ### v1.11.0 (2025-06-30)
 

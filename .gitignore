@@ -4,3 +4,6 @@ looksyk.flatpak
 looksyk-source.tar.gz
 .flatpak-builder
 repo
+**/npm-cache
+**/cargo-cache
+**/electron-cache

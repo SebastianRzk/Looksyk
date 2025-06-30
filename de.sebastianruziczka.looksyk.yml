@@ -2,6 +2,8 @@ app-id: de.sebastianruziczka.looksyk
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
 command: looksyk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.node22
@@ -14,6 +16,9 @@ modules:
   - name: looksyk-desktop
     buildsystem: simple
     build-commands:
+      # This does not work. flatpak-node-generator does not support git-sources-lockfile-v2 and electron-forge does not
+      # support caching of electron and is trying to fetch it every time with electron/@get, even if caching and offline
+      # mode is active
       #- cd application-wrapper/Looksyk && npm install --offline --cache ./npm-cache && npm run package --offline --cache ./npm-cache && cd ..
       - cd frontend/looksyk && npm install --offline --cache ./npm-cache && npm run build --configuration=production && cd ..
       - cd backend && cargo build --release && cd ..
@@ -30,8 +35,9 @@ modules:
       - cp -r frontend/looksyk/dist/looksyk/browser/* /app/share/looksyk/static/
     sources:
       - type: archive
-        url: https://github.com/SebastianRzk/Looksyk/releases/download/v1.11.0/looksyk-source.tar.gz
-        sha256: 79504557485bdae3227f1d7de5bd5d02bbfe3a6abac39c0463319497cf12c185
+        url: https://github.com/SebastianRzk/Looksyk/releases/download/v1.11.1/looksyk-source.tar.gz
+        sha256: <please insert the correct sha256 hash here>
+        #path: ./looksyk-source.tar.gz
 
 finish-args:
   - --share=ipc
