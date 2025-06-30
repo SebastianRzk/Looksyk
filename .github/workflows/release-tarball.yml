@@ -12,7 +12,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Install dependencies
         run: sh ./deploy/create_tarball.sh || true
+      - name: Move tarball
+        run: mv looksyk-source.tar.gz "looksyk-source-${GITHUB_REF_NAME#v}.tar.gz"
       - name: Upload looksyk.flatpak zum Release
-        run: gh release upload "$GITHUB_REF_NAME" looksyk-source.tar.gz --clobber
+        run: gh release upload "$GITHUB_REF_NAME" "looksyk-source-${GITHUB_REF_NAME#v}.tar.gz" --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

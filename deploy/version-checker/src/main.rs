@@ -62,7 +62,7 @@ fn extract_version_from_yaml_source_url(path: &str) -> Option<String> {
             let parts: Vec<&str> = line.split('/').collect();
             for (i, part) in parts.iter().enumerate() {
                 if *part == "download" && i + 1 < parts.len() {
-                    return Some(parts[i + 1].trim_matches('\'').to_string());
+                    return Some(parts[i + 1].trim_matches('\'').chars().skip(1).collect());
                 }
             }
         }

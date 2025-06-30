@@ -3,3 +3,4 @@ target/
 looksyk.flatpak
 looksyk-source.tar.gz
 .flatpak-builder
+repo

@@ -52,7 +52,7 @@
          [innerText]="editText$ | async"
          #textarea contenteditable="plaintext-only"></div>
     @if (loadingMode$ | async) {
-      <div class="loading">Loading...</div>
+      <div class="loading"><mat-icon class="loading-spinner">sync</mat-icon></div>
     }
   </div>
 </div>
