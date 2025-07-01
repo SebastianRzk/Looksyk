@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.11.2](#v1112-2025-07-01)
 - [v1.11.1](#v1111-2025-06-30)
 - [v1.11.0](#v1110-2025-06-30)
 - [v1.10.4](#v1104-2025-06-29)
@@ -51,6 +52,12 @@ layout: default
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
 
+
+### v1.11.2 (2025-07-01)
+
+Enhancements:
+
+* Update electron to fix security issues and shortcut issues
 
 ### v1.11.1 (2025-06-30)
 
