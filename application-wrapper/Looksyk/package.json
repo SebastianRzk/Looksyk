@@ -1,7 +1,7 @@
 {
   "name": "looksyk",
   "productName": "looksyk",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
@@ -25,7 +25,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.11.0",
-    "electron": "35.5.0",
+    "electron": "37.1.0",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
     "fork-ts-checker-webpack-plugin": "^7.3.0",
