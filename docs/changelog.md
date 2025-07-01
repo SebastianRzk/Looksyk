@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.11.3](#v1113-2025-07-02)
 - [v1.11.2](#v1112-2025-07-01)
 - [v1.11.1](#v1111-2025-06-30)
 - [v1.11.0](#v1110-2025-06-30)
@@ -53,9 +54,24 @@ layout: default
 - [Changelog](changelog.md)
 
 
-### v1.11.2 (2025-07-01)
+### v1.11.3 (2025-07-02)
 
 Enhancements:
+
+* Insert loading pinner in bootup process
+* (flatpak local): Add wayland support for flatpak
+
+Fixes:
+
+* Fix content assist to insert the correct amount of leading braces
+
+Maintenance:
+
+* Update backend dependencies
+
+### v1.11.2 (2025-07-01)
+
+Maintenance:
 
 * Update electron to fix security issues and shortcut issues
 
@@ -71,9 +87,12 @@ Enhancements:
 Enhancements:
 
 * Change application icon
-* Disable horizontal scrolling in journal log page
 * Show loading spinner instead of loading text
 * Improve Flatpak desktop file, and flatpak archive name
+
+Fixes:
+
+* Disable horizontal scrolling in journal log page
 
 ### v1.10.4 (2025-06-29)
 
