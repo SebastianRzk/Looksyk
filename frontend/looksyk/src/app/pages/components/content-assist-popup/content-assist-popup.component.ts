@@ -265,12 +265,12 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       const targetText: string = await firstValueFrom(this.contentAssist.textInContentAssist$);
       this.useraction.insertText.next({
         target: target.target,
-        inlineMarkdown: `${targetText}]] `
+        inlineMarkdown: `[${targetText}]] `
       })
     } else {
       this.useraction.insertText.next({
         target: target.target,
-        inlineMarkdown: `${item.name}]] `
+        inlineMarkdown: `[${item.name}]] `
       })
     }
   }
@@ -363,7 +363,7 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       // 2. Page with the same name doesn't exist
       const trimmedValue = value.trim();
       const pageExists = existingTags.some(tag => tag.toLowerCase() === trimmedValue.toLowerCase());
-      
+
       if (trimmedValue && !pageExists) {
         groups.push({
           title: this.NAVIGATE_TO_NEW_PAGE,
