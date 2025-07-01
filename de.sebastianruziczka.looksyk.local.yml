@@ -10,6 +10,8 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 build-options:
   append-path: /usr/lib/sdk/node22/bin:/usr/lib/sdk/rust-stable/bin
+  build-args:
+    - --share=network
 finish-args:
   - --socket=wayland
   - --socket=fallback-x11
