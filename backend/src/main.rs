@@ -15,6 +15,7 @@ use crate::io::http::markdown;
 use crate::io::http::media;
 use crate::io::http::metainfo;
 use crate::io::http::page;
+use crate::io::http::help;
 use crate::io::http::page::search;
 use crate::io::http::page::userpage;
 use crate::io::http::page::{journalpage, templates};
@@ -123,6 +124,7 @@ async fn main() -> std::io::Result<()> {
             .service(templates::endpoints::insert_template_into_page)
             .service(search::endpoints::search_in_files)
             .service(http::state::endpoints::update_block)
+            .service(help::help)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

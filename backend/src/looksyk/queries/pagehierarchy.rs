@@ -8,7 +8,7 @@ use crate::looksyk::queries::args::{
 use crate::looksyk::queries::basic::count::render_as_count;
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::render_user_link;
+use crate::looksyk::renderer::atomics::render_user_link;
 use crate::state::userpage::UserPageIndex;
 
 pub const QUERY_NAME_PAGE_HIERARCHY: &str = "page-hierarchy";

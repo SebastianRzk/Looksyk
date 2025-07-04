@@ -28,6 +28,7 @@ import { ContentAssistMode, ContentAssistService } from "../../../services/conte
 import { AsyncPipe } from "@angular/common";
 import { DialogService } from "../../../services/dialog.service";
 import { ConvertBlockIntoPageComponent } from "../convert-block-into-page-dialog/convert-block-into-page.component";
+import { SafeHtml } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-editable-markdown',
@@ -87,8 +88,8 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
   editMode$: Observable<boolean> = this.componentMode.pipe(map(x => x === MarkdownComponentState.EDITING));
   loadingMode$: Observable<boolean> = this.componentMode.pipe(map(x => x === MarkdownComponentState.LOADING));
 
-  renderedMarkdown: Subject<string> = new BehaviorSubject<string>("");
-  renderedMarkdown$: Observable<string> = this.renderedMarkdown.asObservable();
+  renderedMarkdown: Subject<SafeHtml> = new BehaviorSubject<SafeHtml>(this.markdownService.EMPTY_MARKDOWN);
+  renderedMarkdown$: Observable<SafeHtml> = this.renderedMarkdown.asObservable();
 
   referencedMarkdown: Subject<RefecencedBlockContent[]> = new BehaviorSubject<RefecencedBlockContent[]>([]);
   referencedMarkdown$ = this.referencedMarkdown.asObservable();

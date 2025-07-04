@@ -15,7 +15,7 @@
   <h1 class="header-text">Journal</h1>
 </div>
 <mat-divider></mat-divider>
-<div class="global-content">
+<div class="global-content-internal-scrollbar">
   <cdk-virtual-scroll-viewport autosize class="journal-viewport">
     <app-journal-entry *cdkVirtualFor="let item of items; templateCacheSize: 0" [page]="item"></app-journal-entry>
   </cdk-virtual-scroll-viewport>

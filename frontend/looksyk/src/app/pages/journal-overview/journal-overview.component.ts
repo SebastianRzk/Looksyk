@@ -27,11 +27,11 @@ export class JournalOverviewComponent implements OnInit{
 
   private pageSerivce: PageService = inject(PageService);
   sidenav = inject(SidenavService);
-  public page: Observable<MarkdownPage> = this.pageSerivce.getBuildInPage("journal-overview");
+  public page: Observable<MarkdownPage> = this.pageSerivce.getBuildInPage("help");
   private titleService = inject(TitleService);
 
   ngOnInit(): void {
-    this.pageSerivce.loadBuildInPage("journal-overview");
+    this.pageSerivce.loadBuildInPage("help");
     this.titleService.pushCurrentPageTitle("Journal Overview");
   }
 }

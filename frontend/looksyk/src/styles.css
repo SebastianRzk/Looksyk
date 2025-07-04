@@ -111,7 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h2, h3, h4, h5, h6 {
-  margin-top: 0.5ex;
+  margin-top: 1ex;
   margin-bottom: 1.5ex;
 }
 
@@ -126,6 +126,15 @@ h2, h3, h4, h5, h6 {
 .global-content {
   padding-left: 4ex;
   padding-top: 3ex;
+  padding-right: 3ex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.global-content-internal-scrollbar {
+  padding-left: 4ex;
+  padding-top: 3ex;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -133,4 +142,30 @@ h2, h3, h4, h5, h6 {
 
 .pointer {
   cursor: pointer;
+}
+
+progress{
+  width: 95%;
+
+  border-radius: 10em;
+  font-size: x-small;
+  background-color: var(--primary-shading);
+}
+
+progress::-moz-progress-bar { background: var(--primary-color); }
+
+progress::-webkit-progress-bar {
+  background-color: var(--primary-shading);
+  border-radius: 10em;
+}
+
+progress::-webkit-progress-value {
+  background: var(--primary-color);
+  border-radius: 10em;
+}
+progress { color: var(--primary-color); }
+
+
+.demo {
+  background-color: red;
 }

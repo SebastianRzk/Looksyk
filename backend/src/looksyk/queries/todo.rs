@@ -9,7 +9,8 @@ use crate::looksyk::queries::args::{
 };
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::{render_block_flat_as_string, render_link};
+use crate::looksyk::renderer::atomics::render_link;
+use crate::looksyk::renderer::renderer_flat::render_block_flat_as_string;
 use crate::state::block::BlockReference;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 

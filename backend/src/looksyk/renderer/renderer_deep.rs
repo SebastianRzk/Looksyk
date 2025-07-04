@@ -1,27 +1,10 @@
-extern crate urlencoding;
-
-use crate::io::markdown::markdown_link;
-use crate::looksyk::model::{
-    BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile, PreparedBlock,
-    PreparedBlockContent, PreparedMarkdownFile, PreparedReferencedMarkdown, ReferencedMarkdown,
-    SimplePageName,
-};
+use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile, SimplePageName};
 use crate::looksyk::query::render_query;
+use crate::looksyk::renderer::atomics::{render_journal_link, render_user_link, serialize_reference};
+use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
-use crate::state::block::BlockReference;
-use crate::state::journal::JournalPageIndex;
-use crate::state::tag::TagIndex;
-use crate::state::todo::TodoIndex;
-use crate::state::userpage::UserPageIndex;
-use urlencoding::encode;
 
-pub struct StaticRenderContext<'a> {
-    pub user_pages: &'a UserPageIndex,
-    pub journal_pages: &'a JournalPageIndex,
-    pub todo_index: &'a TodoIndex,
-    pub tag_index: &'a TagIndex,
-}
 
 pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
@@ -43,15 +26,6 @@ pub fn render_file(
     }
 }
 
-pub fn render_file_flat(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
-    let mut result_blocks = vec![];
-    for original_block in &markdown_file.blocks {
-        result_blocks.push(render_block_flat(original_block));
-    }
-    PreparedMarkdownFile {
-        blocks: result_blocks,
-    }
-}
 
 pub fn render_block(
     block: &ParsedBlock,
@@ -92,77 +66,7 @@ pub fn render_block(
     }
 }
 
-fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedReferencedMarkdown {
-    PreparedReferencedMarkdown {
-        reference: BlockReference {
-            block_number: referenced_markdown.reference.block_number,
-            page_id: referenced_markdown.reference.page_id.clone(),
-        },
-        content: render_block_content_flat(&referenced_markdown.content),
-    }
-}
 
-fn combine_text_content(block: &ParsedBlock) -> String {
-    let mut result_list = vec![];
-
-    for content in &block.content {
-        result_list.push(content.as_text.clone());
-    }
-    result_list.join("\n")
-}
-
-pub fn render_block_flat(block: &ParsedBlock) -> PreparedBlock {
-    PreparedBlock {
-        indentation: block.indentation,
-        content: render_block_content_flat(block),
-        referenced_markdown: vec![],
-        has_dynamic_content: false,
-    }
-}
-
-fn render_block_content_flat(block: &ParsedBlock) -> PreparedBlockContent {
-    PreparedBlockContent {
-        prepared_markdown: render_block_flat_as_string(block),
-        original_text: combine_text_content(block),
-    }
-}
-
-pub fn render_block_flat_as_string(block: &ParsedBlock) -> String {
-    let mut result_list = vec![];
-
-    for content in &block.content {
-        result_list.push(render_tokens_flat(&content.as_tokens));
-    }
-    result_list.join("\n")
-}
-
-pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
-    let mut inline_markdown_result_list = vec![];
-    for token in tokens {
-        match token.block_token_type {
-            BlockTokenType::Text => {
-                inline_markdown_result_list.push(token.payload.clone());
-            }
-            BlockTokenType::Link => {
-                inline_markdown_result_list.push(render_user_link(&SimplePageName {
-                    name: token.payload.clone(),
-                }));
-            }
-            BlockTokenType::JournalLink => {
-                inline_markdown_result_list.push(render_journal_link(&SimplePageName {
-                    name: token.payload.clone(),
-                }));
-            }
-            BlockTokenType::Query => {
-                inline_markdown_result_list.push("query hidden".to_string());
-            }
-            BlockTokenType::Todo => {
-                inline_markdown_result_list.push(format!("[{}]", token.payload).to_string());
-            }
-        }
-    }
-    inline_markdown_result_list.join(" ")
-}
 
 pub fn render_tokens_deep(
     tokens: &Vec<BlockToken>,
@@ -209,166 +113,14 @@ pub fn render_tokens_deep(
     }
 }
 
-pub struct RenderResult {
-    inline_markdown: String,
-    referenced_markdown: Vec<ReferencedMarkdown>,
-    has_dynamic_content: bool,
-}
-
-pub fn render_link(destination: &PageId) -> String {
-    match destination.page_type {
-        PageType::UserPage => render_user_link(&destination.name),
-        PageType::JournalPage => render_journal_link(&destination.name),
-    }
-}
-
-pub fn render_link_by_id(destination: &PageId) -> String {
-    match destination.page_type {
-        PageType::UserPage => render_user_link(&destination.name),
-        PageType::JournalPage => render_journal_link(&destination.name),
-    }
-}
-
-pub fn render_user_link(destination: &SimplePageName) -> String {
-    markdown_link(
-        &decode_destination(&destination.name),
-        &page_path(&destination),
-    )
-}
-
-fn decode_destination(destination: &str) -> String {
-    destination.replace("%2F", "/")
-}
-
-fn decode_date(destination: &str) -> String {
-    let splitted = destination.split('_').collect::<Vec<&str>>();
-    let mut date = String::new();
-    date.push_str(splitted[2]);
-    date.push('.');
-    date.push_str(splitted[1]);
-    date.push('.');
-    date.push_str(splitted[0]);
-    date
-}
-
-fn render_journal_link(destination: &SimplePageName) -> String {
-    markdown_link(&decode_date(&destination.name), &journal_path(&destination))
-}
-
-pub fn render_block_link(block_reference: &BlockReference) -> String {
-    let name = &block_reference.page_id.name;
-    let link = match block_reference.page_id.page_type {
-        PageType::UserPage => page_path(&name),
-        PageType::JournalPage => journal_path(&name),
-    };
-
-    markdown_link(
-        &format!(
-            "{}:{}",
-            decode_destination(&name.name),
-            block_reference.block_number
-        ),
-        &link,
-    )
-}
-
-fn journal_path(name: &&SimplePageName) -> String {
-    format!("journal/{}", encode(&name.name))
-}
-
-fn page_path(name: &&SimplePageName) -> String {
-    format!("page/{}", encode(&name.name))
-}
-
-#[cfg(test)]
-pub mod builder {
-    use crate::looksyk::builder::test_builder::empty_journal_index;
-    use crate::looksyk::renderer::StaticRenderContext;
-    use crate::state::journal::JournalPageIndex;
-    use crate::state::tag::builder::empty_tag_index;
-    use crate::state::tag::TagIndex;
-    use crate::state::todo::builder::empty_todo_index;
-    use crate::state::todo::TodoIndex;
-    use crate::state::userpage::builder::empty_user_page_index;
-    use crate::state::userpage::UserPageIndex;
-
-    pub struct TestRenderContext {
-        pub user_pages: UserPageIndex,
-        pub journal_pages: JournalPageIndex,
-        pub todo_index: TodoIndex,
-        pub tag_index: TagIndex,
-    }
-
-    impl TestRenderContext {
-        pub fn to_static(&self) -> StaticRenderContext {
-            StaticRenderContext {
-                user_pages: &self.user_pages,
-                todo_index: &self.todo_index,
-                tag_index: &self.tag_index,
-                journal_pages: &self.journal_pages,
-            }
-        }
-    }
-
-    pub fn create_render_context_with_user_page_index(
-        user_page_index: UserPageIndex,
-    ) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: user_page_index,
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index: empty_tag_index(),
-        }
-    }
-
-    pub fn create_render_context_with_todo_index(todo_index: TodoIndex) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index,
-            tag_index: empty_tag_index(),
-        }
-    }
-
-    pub fn create_render_context_with_tag_index(tag_index: TagIndex) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index,
-        }
-    }
-
-    pub fn create_render_context(
-        user_page_index: UserPageIndex,
-        todo_index: TodoIndex,
-        tag_index: TagIndex,
-    ) -> TestRenderContext {
-        TestRenderContext {
-            user_pages: user_page_index,
-            journal_pages: empty_journal_index(),
-            todo_index,
-            tag_index,
-        }
-    }
-
-    pub fn create_empty_render_context() -> TestRenderContext {
-        TestRenderContext {
-            user_pages: empty_user_page_index(),
-            journal_pages: empty_journal_index(),
-            todo_index: empty_todo_index(),
-            tag_index: empty_tag_index(),
-        }
-    }
-}
 
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
-    use crate::looksyk::renderer::builder::create_empty_render_context;
-    use crate::looksyk::renderer::render_block;
+    use crate::looksyk::renderer::model::builder::create_empty_render_context;
+    use crate::looksyk::renderer::renderer_deep::render_block;
     use crate::state::application_state::builder::empty_data_root_location;
 
     #[test]
