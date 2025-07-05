@@ -11,11 +11,11 @@ use crate::io::fs::root_path::{get_current_active_data_root_location, InitialCon
 use crate::io::http;
 use crate::io::http::design;
 use crate::io::http::favourites;
+use crate::io::http::help;
 use crate::io::http::markdown;
 use crate::io::http::media;
 use crate::io::http::metainfo;
 use crate::io::http::page;
-use crate::io::http::help;
 use crate::io::http::page::search;
 use crate::io::http::page::userpage;
 use crate::io::http::page::{journalpage, templates};

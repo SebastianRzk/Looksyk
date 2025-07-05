@@ -9,14 +9,14 @@ use crate::looksyk::queries::args::{
 use crate::looksyk::queries::basic::count::render_as_count;
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
+use crate::looksyk::renderer::atomics::{render_block_link, render_user_link};
+use crate::looksyk::renderer::renderer_flat::render_block_flat;
 use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
 use std::collections::{HashMap, HashSet};
 use std::io::Error;
-use crate::looksyk::renderer::atomics::{render_block_link, render_user_link};
-use crate::looksyk::renderer::renderer_flat::render_block_flat;
 
 pub const QUERY_NAME_BLOCKS: &str = "blocks";
 
@@ -65,9 +65,11 @@ pub fn render_blocks_query(
         QueryDisplayType::Count => render_as_count(&resolved_blocks),
         QueryDisplayType::ReferencedList => render_as_referenced_list(&resolved_blocks),
         QueryDisplayType::Paragraphs => render_as_paragraph(&target, &resolved_blocks),
+        QueryDisplayType::Cards => render_as_cards(&target, &resolved_blocks),
         _ => render_display_unknown(
             query.display,
             vec![
+                QueryDisplayType::Cards,
                 QueryDisplayType::InplaceList,
                 QueryDisplayType::ReferencedList,
                 QueryDisplayType::Count,
@@ -175,6 +177,37 @@ fn render_as_paragraph(tag: &SimplePageName, refs: &[BlockQueryResult]) -> Query
     }
 }
 
+fn render_as_cards(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+    let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
+    for r in refs.iter() {
+        let mut prepared_markdown = render_block_flat(&r.parsed_block).content.prepared_markdown;
+        prepared_markdown = prepared_markdown.replace("\n", "<br>").replace("\n", "");
+        result.push_str(
+            format!(
+                "<div class=\"extension-card\">
+{} <br> {}
+</div>\n\n
+",
+                render_block_link(&r.block_reference),
+                prepared_markdown
+            )
+            .as_str(),
+        );
+    }
+    if refs.is_empty() {
+        result.push_str(                "<div class=\"extension-card\">
+No blocks found!
+</div>\n\n
+");
+    }
+
+    QueryRenderResult {
+        referenced_markdown: vec![],
+        inplace_markdown: result,
+        has_dynamic_content: false,
+    }
+}
+
 fn render_as_referenced_list(refs: &[BlockQueryResult]) -> QueryRenderResult {
     let mut result = vec![];
     for r in refs.iter() {
@@ -199,12 +232,12 @@ mod tests {
     use crate::looksyk::model::{BlockContent, ParsedBlock};
     use crate::looksyk::queries::args::PARAM_TARGET;
     use crate::looksyk::query::Query;
+    use crate::looksyk::renderer::renderer_flat::render_block_flat;
     use crate::state::tag::builder::empty_tag_index;
     use crate::state::tag::TagIndex;
     use crate::state::userpage::builder::empty_user_page_index;
     use crate::state::userpage::UserPageIndex;
     use std::collections::HashSet;
-    use crate::looksyk::renderer::renderer_flat::render_block_flat;
 
     #[test]
     fn test_parse_query() {

@@ -31,10 +31,7 @@ pub mod builder {
         TodoIndex { entries: vec![] }
     }
 
-    pub fn todo_index_entry(
-        state: super::TodoState,
-        tag: SimplePageName,
-    ) -> super::TodoIndexEntry {
+    pub fn todo_index_entry(state: super::TodoState, tag: SimplePageName) -> super::TodoIndexEntry {
         super::TodoIndexEntry {
             state,
             source: BlockReference {

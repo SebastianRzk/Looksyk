@@ -1,5 +1,10 @@
-use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile, SimplePageName};
-use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link, render_user_link};
+use crate::looksyk::model::{
+    BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock,
+    PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
+};
+use crate::looksyk::renderer::atomics::{
+    combine_text_content, render_journal_link, render_user_link,
+};
 
 pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
     let mut inline_markdown_result_list = vec![];
@@ -53,8 +58,6 @@ pub fn render_block_flat_as_string(block: &ParsedBlock) -> String {
     }
     result_list.join("\n")
 }
-
-
 
 pub fn render_file_flat(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];

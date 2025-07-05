@@ -36,11 +36,14 @@ export class MarkdownService {
     );
 
     this.renderer.html = (html: HTML | Tag): string => {
-
       let tmp_ = document.createElement("div");
       tmp_.innerHTML = html.text;
+      console.log("tmp", tmp_);
+      if (tmp_.children.length === 0) {
+        return html.text;
+      }
       let inner = tmp_.children[0].innerHTML;
-      if (!inner){
+      if (!inner) {
         return html.text;
       }
       tmp_.children[0].innerHTML = this.marked.parse(inner).toString();

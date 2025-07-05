@@ -1,10 +1,14 @@
-use crate::looksyk::model::{BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock, PreparedBlockContent, PreparedMarkdownFile, SimplePageName};
+use crate::looksyk::model::{
+    BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock,
+    PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
+};
 use crate::looksyk::query::render_query;
-use crate::looksyk::renderer::atomics::{render_journal_link, render_user_link, serialize_reference};
+use crate::looksyk::renderer::atomics::{
+    render_journal_link, render_user_link, serialize_reference,
+};
 use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
-
 
 pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
@@ -25,7 +29,6 @@ pub fn render_file(
         blocks: result_blocks,
     }
 }
-
 
 pub fn render_block(
     block: &ParsedBlock,
@@ -65,8 +68,6 @@ pub fn render_block(
         has_dynamic_content,
     }
 }
-
-
 
 pub fn render_tokens_deep(
     tokens: &Vec<BlockToken>,
@@ -112,7 +113,6 @@ pub fn render_tokens_deep(
         inline_markdown: inline_markdown_result_list.join(" "),
     }
 }
-
 
 #[cfg(test)]
 mod tests {

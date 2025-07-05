@@ -2,9 +2,7 @@ use crate::looksyk::model::{
     BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, PreparedBlock,
     PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
 };
-use crate::looksyk::renderer::atomics::{
-    combine_text_content, render_journal_link,
-};
+use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link};
 
 pub fn render_file_basic_markdown(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];

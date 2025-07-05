@@ -57,10 +57,9 @@ fn render_progress(tag_name: &str, todo_count: u32, done_count: u32) -> QueryRen
         referenced_markdown: vec![],
         inplace_markdown: format!(
             "<label>
-{} -Todos : {}/{} done ({}%)
- <progress value=\"{}\" max=\"100\"></progress>
-</label>",
-            tag_name, done_count, todo_count, percent_done, percent_done
+{tag_name} -Todos : {done_count}/{todo_count} done ({percent_done}%)
+ <progress value=\"{percent_done}\" max=\"100\"></progress>
+</label>"
         ),
     }
 }

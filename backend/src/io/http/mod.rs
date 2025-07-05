@@ -1,5 +1,6 @@
 pub mod design;
 pub mod favourites;
+pub(crate) mod help;
 mod link_encoding;
 pub mod markdown;
 pub mod media;
@@ -8,4 +9,3 @@ pub mod page;
 mod page_type;
 pub mod state;
 pub mod r#static;
-pub(crate) mod help;

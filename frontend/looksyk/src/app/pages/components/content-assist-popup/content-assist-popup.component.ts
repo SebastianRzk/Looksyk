@@ -215,7 +215,9 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
       } else if (item.name == ADD_QUERY_INLINE_FILE_CONTENT) {
         text_to_insert = "{query: insert-file-content target-file:\"myFile\" display:\"inline-text\" }"
       } else if (item.name == ADD_QUERY_BLOCKS) {
-        text_to_insert = "{query: blocks tag:\"myTag\" display:\"paragraphs\" }"
+        text_to_insert = "{query: blocks tag:\"myTag\" display:\"cards\" }"
+      } else if (item.name == ADD_QUERY_TODO_PROGRESS) {
+        text_to_insert = "{query: todo-progress tag:\"myTag\" }"
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
       for (const value of this.currentSuggestions.suggestions) {
@@ -593,6 +595,8 @@ const ADD_QUERY_REFERENCES = "query references";
 
 const ADD_QUERY_TODOS = "query todos";
 
+const ADD_QUERY_TODO_PROGRESS = "query progress of todos";
+
 const ADD_QUERY_BLOCKS = "query blocks";
 
 const ADD_QUERY_INLINE_FILE_CONTENT = "query inline file content";
@@ -608,6 +612,10 @@ function CONTENT_ASSIST_QUERIES(): ContentAssistSection {
       {
         name: ADD_QUERY_REFERENCES,
         highlight: false,
+      },
+      {
+        name: ADD_QUERY_TODO_PROGRESS,
+        highlight: false
       },
       {
         name: ADD_QUERY_TODOS,

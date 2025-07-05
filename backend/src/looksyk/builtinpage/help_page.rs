@@ -12,10 +12,9 @@ pub fn help_page() -> PreparedMarkdownFile {
     render_file_basic_markdown(&parsed_file)
 }
 
-
 fn help_page_on_disk() -> PageOnDisk {
     let help_page_text = include_str!("help_page.md");
-    PageOnDisk{
+    PageOnDisk {
         content: help_page_text.to_string(),
         name: "Help".to_string(),
     }

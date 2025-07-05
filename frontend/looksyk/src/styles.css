@@ -145,7 +145,7 @@ h2, h3, h4, h5, h6 {
 }
 
 progress{
-  width: 95%;
+  width: 99%;
 
   border-radius: 10em;
   font-size: x-small;
@@ -166,6 +166,18 @@ progress::-webkit-progress-value {
 progress { color: var(--primary-color); }
 
 
-.demo {
-  background-color: red;
+.extension-card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 1ex 2ex 0 rgba(0,0,0,0.4);
+  transition: 0.3s;
+  min-height: 5ex;
+  padding: 2ex;
+  border: 1px solid var(--primary-shading);
+  border-radius: 0.5ex;
+  margin-bottom: 3ex;
+}
+
+/* On mouse-over, add a deeper shadow */
+.extension-card:hover {
+  box-shadow: 0 2ex 4ex 0 var(--primary-shading);
 }

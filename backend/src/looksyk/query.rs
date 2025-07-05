@@ -16,7 +16,9 @@ use crate::looksyk::queries::references_to::{
     parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO,
 };
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query, QUERY_NAME_TODOS};
-use crate::looksyk::queries::todo_progress::{parse_query_todo_progress, render_todo_query_progress, QUERY_NAME_TODO_PROGRESS};
+use crate::looksyk::queries::todo_progress::{
+    parse_query_todo_progress, render_todo_query_progress, QUERY_NAME_TODO_PROGRESS,
+};
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
@@ -57,7 +59,7 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
         return parse_query_insert_file_content(query_str);
     } else if query_str.starts_with(QUERY_NAME_BLOCKS) {
         return parse_query_blocks(query_str);
-    } else if query_str.starts_with(QUERY_NAME_TODO_PROGRESS){
+    } else if query_str.starts_with(QUERY_NAME_TODO_PROGRESS) {
         return parse_query_todo_progress(query_str);
     }
     Ok(Query {
@@ -86,9 +88,7 @@ pub fn render_parsed_query(
             render_context.user_pages,
             render_context.journal_pages,
         ),
-        QueryType::TodoProgress => {
-            render_todo_query_progress(query, render_context.todo_index)
-        }
+        QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
         QueryType::Unknown => QueryRenderResult {
             inplace_markdown: format!(
                 "Query type unknown. Allowed types: {}",
@@ -124,6 +124,7 @@ pub enum QueryDisplayType {
     CodeBlock,
     InlineText,
     Paragraphs,
+    Cards,
     Video,
     Link,
     Audio,
@@ -144,6 +145,7 @@ impl Display for QueryDisplayType {
             QueryDisplayType::InlineText => write!(f, "inline-text"),
             QueryDisplayType::Video => write!(f, "video"),
             QueryDisplayType::Audio => write!(f, "audio"),
+            QueryDisplayType::Cards => write!(f, "cards"),
         }
     }
 }
@@ -168,11 +170,11 @@ mod tests {
     use crate::state::block::BlockReference;
     use crate::state::tag::builder::empty_tag_index;
     use crate::state::tag::TagIndex;
+    use crate::state::todo::builder::{empty_todo_index, todo_index_entry};
     use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
     use crate::state::userpage::builder::user_page_index_with;
     use crate::state::userpage::UserPageIndex;
     use std::collections::{HashMap, HashSet};
-    use crate::state::todo::builder::{empty_todo_index, todo_index_entry};
 
     #[test]
     pub fn should_render_unknown_query_on_unknown_query() {
@@ -650,7 +652,7 @@ mod tests {
     }
 
     #[test]
-    pub fn should_render_todo_progress_with_no_todos(){
+    pub fn should_render_todo_progress_with_no_todos() {
         let result = render_query(
             &query_block_token("todo-progress tag:\"bernd\""),
             &create_render_context_with_todo_index(empty_todo_index()).to_static(),
@@ -664,12 +666,12 @@ mod tests {
     }
 
     #[test]
-    pub fn should_render_todo_progress_with_todos(){
+    pub fn should_render_todo_progress_with_todos() {
         let todo_index = TodoIndex {
             entries: vec![
                 todo_index_entry(TodoState::Done, page_name_str("bernd")),
                 todo_index_entry(TodoState::Done, page_name_str("bernd")),
-                todo_index_entry(TodoState::Todo, page_name_str("bernd"))
+                todo_index_entry(TodoState::Todo, page_name_str("bernd")),
             ],
         };
 
@@ -684,7 +686,7 @@ mod tests {
         assert_eq!(result.referenced_markdown.len(), 0);
         assert_eq!(result.has_dynamic_content, true);
     }
-    
+
     #[test]
     pub fn should_parse_todo_progress_query() {
         let query = "todo-progress tag:\"bernd\"";
