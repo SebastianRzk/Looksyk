@@ -60,7 +60,11 @@
     </div>
   }
 }
-<button mat-button (click)="reload()" class="unimportant bottom">
-  <mat-icon>sync</mat-icon>
-  reload data from disk
-</button>
+<div class="bottom">
+  <button matTooltip="reload data from disk" mat-button (click)="reload()" class="unimportant">
+    <mat-icon>sync</mat-icon>
+  </button>
+  <button matTooltip="help" mat-button routerLink="/special-page/help" class="unimportant">
+    <mat-icon>help_center</mat-icon>
+  </button>
+</div>

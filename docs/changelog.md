@@ -54,6 +54,17 @@ layout: default
 - [Changelog](changelog.md)
 
 
+### v1.12.0 (2025-07-06)
+
+Enhancements:
+
+* Add query type `todo-progress`
+* Add display type `cards` for `blocks` query
+* Add help page
+* Change markdown rendering to allow html in markdown (allows custom styling)
+* Improve overall design of the application
+
+
 ### v1.11.3 (2025-07-02)
 
 Enhancements:

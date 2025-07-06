@@ -26,6 +26,7 @@ layout: default
 		- [Query Backlinks](#query-backlinks)
 		- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
 		- [Query Blocks](#query-blocks)
+    - [HTML in Markdown](#html-in-markdown)
 - [History](#history)
 
 ### Further Reading
@@ -270,6 +271,20 @@ Display types:
 	* Query ![count](queries/page-hierarchy/count-query.png)
 	* Result ![count](queries/page-hierarchy/count-result.png)
 
+#### Query Todo Progress
+
+Quick example
+
+* Query
+
+```
+{query: todo-progress tag:"myTag" }
+```
+
+* Result
+
+![todo-progress](queries/todo-progress/todo_progress.png)
+
 #### Query Todos
 
 Quick examples:
@@ -355,8 +370,19 @@ Display-types:
 
 * Inserts a blocks, that contain a certain tag
 
+* **card**
+
+	* Creates a card for every matching block int the markdown. The filename and block-index is rendered at the top of
+	  the card (and link), the content of the block is rendered in the body of the card.
+	* Query:
+
+	  ```{query: blocks tag:"Pizza Rating" display:"cards" }```
+		* Result:
+		  ![cards](queries/blocks/cards-result.png)
+
 * **paragraphs**
-	* Creates a section for every block in the markdown. The filename and block-index is rendered as headline (and
+	* Creates a section for every matching block in the markdown. The filename and block-index is rendered as headline (
+	  and
 	  link), the content of the block is rendered as paragraph. Paragraphs are separated by a horizontal line. Good for
 	  multi-line blocks
 	* Query
@@ -388,6 +414,17 @@ Display-types:
 	  ![referenced-list](queries/blocks/referenced-list-result.png)
 * **count**
 	* Creates a number of the selected blocks in the markdown-block.
+
+### HTML in Markdown
+
+You can use HTML in Markdown, but it is not recommended. Currently, markdown is rendered in the file only in
+html-node-depth `0` (not in html) and `1` (in the first child). Deeper nesting gets transferred into the page, but the
+containing markdown is not rendered to HTML.
+
+If you want to style your markdown, simply pack them in a `<div>` with a css-class and style them in the
+`user-theme.css` file.
+
+The html gets sanitized, so you cannot use any script tags or other potentially dangerous HTML tags.
 
 ### History
 

@@ -17,7 +17,8 @@ use crate::looksyk::index::tag::render_tag_index_for_page;
 use crate::looksyk::model::{PageType, ParsedMarkdownFile, RawMarkdownFile};
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
-use crate::looksyk::renderer::{render_file, StaticRenderContext};
+use crate::looksyk::renderer::model::StaticRenderContext;
+use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::serializer::serialize_page;
 use crate::state::application_state::{
     AppState, CurrentPageAssociatedState, CurrentPageOnDiskState,

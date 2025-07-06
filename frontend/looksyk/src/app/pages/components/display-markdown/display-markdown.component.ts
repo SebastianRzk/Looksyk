@@ -19,6 +19,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MarkdownService } from "../../../services/markdown.service";
 import { AsyncPipe } from "@angular/common";
 import { Router } from "@angular/router";
+import { SafeHtml } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-display-markdown',
@@ -44,8 +45,8 @@ export class DisplayMarkdownComponent implements OnChanges, OnDestroy {
   @ViewChild("markdownComponent")
   markdownRef!: ElementRef;
 
-  renderedMarkdown: Subject<string> = new BehaviorSubject<string>("");
-  renderedMarkdown$: Observable<string> = this.renderedMarkdown.asObservable();
+  renderedMarkdown: Subject<SafeHtml> = new BehaviorSubject<SafeHtml>(this.markdownService.EMPTY_MARKDOWN);
+  renderedMarkdown$: Observable<SafeHtml> = this.renderedMarkdown.asObservable();
 
   renderedMarkdown_ = this.renderedMarkdown$.subscribe(() => {
     setTimeout(() => this.markdownService.makeLinksInternal(this.markdownRef, this.router)

@@ -1,9 +1,14 @@
-import { ElementRef, Injectable } from '@angular/core';
-import { Marked } from "marked";
+import { ElementRef, inject, Injectable } from '@angular/core';
+import { marked, Marked, Tokens } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js'
 import { Router } from "@angular/router";
 import { emojiExtension } from "../internal/emoji";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import DOMPurify from "dompurify";
+import Renderer = marked.Renderer;
+import Tag = Tokens.Tag;
+import HTML = Tokens.HTML;
 
 
 @Injectable({
@@ -12,6 +17,11 @@ import { emojiExtension } from "../internal/emoji";
 export class MarkdownService {
 
   private marked: Marked;
+  private angularSanitizer = inject(DomSanitizer);
+
+  private renderer = new Renderer();
+
+  public readonly EMPTY_MARKDOWN: SafeHtml = this.angularSanitizer.bypassSecurityTrustHtml("");
 
   constructor() {
     this.marked = new Marked(
@@ -24,10 +34,30 @@ export class MarkdownService {
       }),
       emojiExtension()
     );
+
+    this.renderer.html = (html: HTML | Tag): string => {
+      const tmpHtmlElement = document.createElement("div");
+      tmpHtmlElement.innerHTML = html.text;
+      console.log("tmp", tmpHtmlElement);
+      if (tmpHtmlElement.children.length === 0) {
+        return html.text;
+      }
+      const inner = tmpHtmlElement.children[0].innerHTML;
+      if (!inner) {
+        return html.text;
+      }
+      tmpHtmlElement.children[0].innerHTML = this.marked.parse(inner).toString();
+      return tmpHtmlElement.innerHTML
+    }
+
   }
 
-  public renderMarkdown(input: string): string {
-    return this.marked.parse(input).toString();
+  public renderMarkdown(input: string): SafeHtml {
+    const markedMarkdown = this.marked.parse(input, {
+      renderer: this.renderer,
+    }).toString();
+    const sanitizedMarkdown = DOMPurify.sanitize(markedMarkdown);
+    return this.angularSanitizer.bypassSecurityTrustHtml(sanitizedMarkdown);
   }
 
   public makeLinksInternal(elementRef: ElementRef, router: Router) {

@@ -16,7 +16,10 @@ use crate::looksyk::queries::references_to::{
     parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO,
 };
 use crate::looksyk::queries::todo::{parse_query_todo, render_todo_query, QUERY_NAME_TODOS};
-use crate::looksyk::renderer::StaticRenderContext;
+use crate::looksyk::queries::todo_progress::{
+    parse_query_todo_progress, render_todo_query_progress, QUERY_NAME_TODO_PROGRESS,
+};
+use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
@@ -56,6 +59,8 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
         return parse_query_insert_file_content(query_str);
     } else if query_str.starts_with(QUERY_NAME_BLOCKS) {
         return parse_query_blocks(query_str);
+    } else if query_str.starts_with(QUERY_NAME_TODO_PROGRESS) {
+        return parse_query_todo_progress(query_str);
     }
     Ok(Query {
         query_type: QueryType::Unknown,
@@ -83,6 +88,7 @@ pub fn render_parsed_query(
             render_context.user_pages,
             render_context.journal_pages,
         ),
+        QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
         QueryType::Unknown => QueryRenderResult {
             inplace_markdown: format!(
                 "Query type unknown. Allowed types: {}",
@@ -105,6 +111,7 @@ pub enum QueryType {
     PageHierarchy,
     ReferencesTo,
     Todo,
+    TodoProgress,
     Blocks,
     InsertFileContent,
     Unknown,
@@ -117,6 +124,7 @@ pub enum QueryDisplayType {
     CodeBlock,
     InlineText,
     Paragraphs,
+    Cards,
     Video,
     Link,
     Audio,
@@ -137,6 +145,7 @@ impl Display for QueryDisplayType {
             QueryDisplayType::InlineText => write!(f, "inline-text"),
             QueryDisplayType::Video => write!(f, "video"),
             QueryDisplayType::Audio => write!(f, "audio"),
+            QueryDisplayType::Cards => write!(f, "cards"),
         }
     }
 }
@@ -152,7 +161,7 @@ mod tests {
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
     use crate::looksyk::query::{parse_query, render_query, QueryDisplayType, QueryType};
-    use crate::looksyk::renderer::builder::{
+    use crate::looksyk::renderer::model::builder::{
         create_empty_render_context, create_render_context, create_render_context_with_tag_index,
         create_render_context_with_todo_index, create_render_context_with_user_page_index,
     };
@@ -161,6 +170,7 @@ mod tests {
     use crate::state::block::BlockReference;
     use crate::state::tag::builder::empty_tag_index;
     use crate::state::tag::TagIndex;
+    use crate::state::todo::builder::{empty_todo_index, todo_index_entry};
     use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
     use crate::state::userpage::builder::user_page_index_with;
     use crate::state::userpage::UserPageIndex;
@@ -639,5 +649,50 @@ mod tests {
 
         assert_eq!(result.inplace_markdown, "```rust\nmyFileContent\n```");
         assert_eq!(result.referenced_markdown.len(), 0);
+    }
+
+    #[test]
+    pub fn should_render_todo_progress_with_no_todos() {
+        let result = render_query(
+            &query_block_token("todo-progress tag:\"bernd\""),
+            &create_render_context_with_todo_index(empty_todo_index()).to_static(),
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
+
+        assert_eq!(result.inplace_markdown, "<label>\nbernd -Todos : 0/0 done (100%)\n <progress value=\"100\" max=\"100\"></progress>\n</label>");
+        assert_eq!(result.referenced_markdown.len(), 0);
+        assert_eq!(result.has_dynamic_content, true);
+    }
+
+    #[test]
+    pub fn should_render_todo_progress_with_todos() {
+        let todo_index = TodoIndex {
+            entries: vec![
+                todo_index_entry(TodoState::Done, page_name_str("bernd")),
+                todo_index_entry(TodoState::Done, page_name_str("bernd")),
+                todo_index_entry(TodoState::Todo, page_name_str("bernd")),
+            ],
+        };
+
+        let result = render_query(
+            &query_block_token("todo-progress tag:\"bernd\""),
+            &create_render_context_with_todo_index(todo_index).to_static(),
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
+
+        assert_eq!(result.inplace_markdown, "<label>\nbernd -Todos : 2/3 done (67%)\n <progress value=\"67\" max=\"100\"></progress>\n</label>");
+        assert_eq!(result.referenced_markdown.len(), 0);
+        assert_eq!(result.has_dynamic_content, true);
+    }
+
+    #[test]
+    pub fn should_parse_todo_progress_query() {
+        let query = "todo-progress tag:\"bernd\"";
+        let result = parse_query(query).unwrap();
+        assert_eq!(result.query_type, QueryType::TodoProgress);
+        assert_eq!(result.display, QueryDisplayType::Unknown);
+        assert_eq!(result.args.get("tag").unwrap(), "bernd");
     }
 }

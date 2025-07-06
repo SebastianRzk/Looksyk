@@ -5,6 +5,7 @@ app-editable-markdown-page {
 .page {
   display:flex;
   flex-direction: column;
+  margin-right: 3ex;
 }
 
 app-journal-page-title {

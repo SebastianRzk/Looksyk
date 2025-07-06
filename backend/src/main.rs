@@ -11,6 +11,7 @@ use crate::io::fs::root_path::{get_current_active_data_root_location, InitialCon
 use crate::io::http;
 use crate::io::http::design;
 use crate::io::http::favourites;
+use crate::io::http::help;
 use crate::io::http::markdown;
 use crate::io::http::media;
 use crate::io::http::metainfo;
@@ -123,6 +124,7 @@ async fn main() -> std::io::Result<()> {
             .service(templates::endpoints::insert_template_into_page)
             .service(search::endpoints::search_in_files)
             .service(http::state::endpoints::update_block)
+            .service(help::help)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

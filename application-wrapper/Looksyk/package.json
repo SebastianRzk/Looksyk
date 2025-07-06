@@ -1,12 +1,13 @@
 {
   "name": "looksyk",
   "productName": "looksyk",
-  "version": "1.11.3",
+  "version": "1.12.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "package-all": "electron-forge package --arch=x64,arm64",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."

@@ -7,7 +7,7 @@ use crate::looksyk::queries::args::{
 };
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::{render_link_by_id, render_user_link};
+use crate::looksyk::renderer::atomics::{render_link_by_id, render_user_link};
 use crate::state::tag::TagIndex;
 
 pub const QUERY_NAME_REFERENCES_TO: &str = "references-to";
@@ -21,9 +21,8 @@ pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
 
     let display_type = parse_display_type(query_target_opt.remaining_text.clone())?;
 
-    let mut args1 = HashMap::new();
-    args1.insert(PARAM_TARGET.to_string(), query_target_opt.value);
-    let (display_type, args) = (display_type, args1);
+    let mut args = HashMap::new();
+    args.insert(PARAM_TARGET.to_string(), query_target_opt.value);
     Ok(Query {
         query_type: QueryType::ReferencesTo,
         display: display_type,

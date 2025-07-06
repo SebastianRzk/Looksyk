@@ -1,5 +1,6 @@
 pub mod design;
 pub mod favourites;
+pub(crate) mod help;
 mod link_encoding;
 pub mod markdown;
 pub mod media;

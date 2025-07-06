@@ -9,7 +9,7 @@ use actix_web::web::Data;
 use actix_web::{get, Error};
 
 #[get("/")]
-async fn index_html(state: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn index_html(state: Data<AppState>) -> Result<NamedFile, Error> {
     index_html_response(&state)
 }
 
@@ -29,7 +29,7 @@ pub async fn index(state: Data<AppState>) -> Result<NamedFile, Error> {
 }
 
 #[get("/{filename}.js")]
-async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.js", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
@@ -41,7 +41,7 @@ async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile,
 }
 
 #[get("/{filename}.css")]
-async fn css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     Ok(NamedFile::open(complete_path)?
