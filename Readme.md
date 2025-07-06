@@ -63,6 +63,7 @@ own client: Looksyk (name may need to be changed).
 	* Save and display existing code files in your pages with syntax highlighting
 	* Save and display backups of websites in your pages (with single-file-downloader)
 	* Insert videos, audio files, images, text files and PDFs.
+* Custom styling of markdown content with html and css and support for custom themes.
 
 [Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage.html)
 
@@ -85,9 +86,10 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 	* Audio (html5 audio player)
 	* Code (with highlighting)
 	* Text files
+* Templates
 * Queries (placeholders for dynamic content):
 	* Query blocks
-	* Query todos
+	* Query todos / visualize progress of todos
 	* Query page hierarchy
 	* Query references
 	* Render video, audio, images, text files and code files (with highlighting)
@@ -95,6 +97,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
 * History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
+* Custom styling of markdown content with html and css
 
 Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
 

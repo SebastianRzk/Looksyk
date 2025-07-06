@@ -11,10 +11,11 @@ import { HistoryService } from "../../../services/history.service";
 import { StateService } from "../../../services/state.service";
 import { AsyncPipe } from "@angular/common";
 import { SidebarTextComponent } from "../sidebar-text/sidebar-text.component";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-sidebar',
-  imports: [MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList, AsyncPipe, SidebarTextComponent],
+  imports: [MatButtonModule, RouterLink, MatListModule, MatIconModule, CdkDrag, CdkDropList, AsyncPipe, SidebarTextComponent, MatTooltip],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

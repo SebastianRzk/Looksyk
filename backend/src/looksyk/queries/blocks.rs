@@ -195,10 +195,12 @@ fn render_as_cards(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRend
         );
     }
     if refs.is_empty() {
-        result.push_str(                "<div class=\"extension-card\">
+        result.push_str(
+            "<div class=\"extension-card\">
 No blocks found!
 </div>\n\n
-");
+",
+        );
     }
 
     QueryRenderResult {

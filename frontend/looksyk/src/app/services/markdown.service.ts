@@ -36,24 +36,24 @@ export class MarkdownService {
     );
 
     this.renderer.html = (html: HTML | Tag): string => {
-      let tmp_ = document.createElement("div");
-      tmp_.innerHTML = html.text;
-      console.log("tmp", tmp_);
-      if (tmp_.children.length === 0) {
+      const tmpHtmlElement = document.createElement("div");
+      tmpHtmlElement.innerHTML = html.text;
+      console.log("tmp", tmpHtmlElement);
+      if (tmpHtmlElement.children.length === 0) {
         return html.text;
       }
-      let inner = tmp_.children[0].innerHTML;
+      const inner = tmpHtmlElement.children[0].innerHTML;
       if (!inner) {
         return html.text;
       }
-      tmp_.children[0].innerHTML = this.marked.parse(inner).toString();
-      return tmp_.innerHTML
+      tmpHtmlElement.children[0].innerHTML = this.marked.parse(inner).toString();
+      return tmpHtmlElement.innerHTML
     }
 
   }
 
   public renderMarkdown(input: string): SafeHtml {
-    let markedMarkdown = this.marked.parse(input, {
+    const markedMarkdown = this.marked.parse(input, {
       renderer: this.renderer,
     }).toString();
     const sanitizedMarkdown = DOMPurify.sanitize(markedMarkdown);

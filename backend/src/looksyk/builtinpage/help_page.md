@@ -17,10 +17,12 @@ This page explains the most important Markdown features supported in Looksyk.
     * Templates
     * Queries
       * Query Page Hierarchy
+      * Query Todo Progress
       * Query Todos
       * Query Backlinks
       * Query Render Assets ("insert-content-from-file")
       * Query Blocks
+    * HTML in Markdown
 ---
 
 ## Basic Markdown Features
@@ -151,6 +153,15 @@ Display types:
 	  link. The list is not modifiable.
 * **count**: Creates a number of the selected pages in the markdown-block.
 
+#### Query Todo Progress
+
+Quick examples:
+
+```
+ Show the progress of todos
+ {query: todo-progress tag:"myTag" }
+```
+
 #### Query Todos
 
 Quick examples:
@@ -210,7 +221,17 @@ Display-types:
 
 #### Query Blocks
 
-* Inserts a blocks, that contain a certain tag
+* Inserts a blocks, that contain a certain tag.
+```
+ Show a list of blocks with a link to the source file as cards
+ {query: blocks tag:"myTag" display:"cards" }
+ 
+ Show a list of blocks in the markdown-block
+ {query: blocks tag:"myTag" display:"inplace-list" }
+```
+
+* **cards**: Creates a card for every block in the markdown. The filename and block-index is rendered as headline (and
+	  link), the content of the block is rendered as paragraph.
 
 * **paragraphs**: Creates a section for every block in the markdown. The filename and block-index is rendered as headline (and
 	  link), the content of the block is rendered as paragraph. Paragraphs are separated by a horizontal line. Good for
@@ -221,3 +242,15 @@ Display-types:
 * **referenced-list**: Creates a list of the selected blocks at the end of the current block. Each item contains a link to
 	  the source file. Different query-results can be stacked. Good for multi-line blocks
 * **count**: Creates a number of the selected blocks in the markdown-block.
+
+
+### HTML in Markdown
+
+You can use HTML in Markdown, but it is not recommended. Currently, markdown is rendered in the file only in
+html-node-depth `0` (not in html) and `1` (in the first child). Deeper nesting gets transferred into the page, but the
+containing markdown is not rendered to HTML.
+
+If you want to style your markdown, simply pack them in a `<div>` with a css-class and style them in the
+`user-theme.css` file.
+
+The html gets sanitized, so you cannot use any script tags or other potentially dangerous HTML tags.

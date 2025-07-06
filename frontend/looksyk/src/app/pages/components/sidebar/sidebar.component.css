@@ -65,6 +65,7 @@ mat-divider {
 .unimportant {
   color: grey !important;
   font-size: x-small;
+  width: 50%;
 }
 
 .nav-fav{
