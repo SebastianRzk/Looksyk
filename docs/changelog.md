@@ -5,6 +5,8 @@ layout: default
 
 ## Table of Contents
 
+- [v1.13.0](#v1130-2025-07-08)
+- [v1.12.0](#v1120-2025-07-06)
 - [v1.11.3](#v1113-2025-07-02)
 - [v1.11.2](#v1112-2025-07-01)
 - [v1.11.1](#v1111-2025-06-30)
@@ -52,6 +54,13 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.13.0 (2025-07-08)
+
+Enhancements:
+
+* Add settings page
 
 
 ### v1.12.0 (2025-07-06)

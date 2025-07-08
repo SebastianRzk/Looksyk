@@ -1,7 +1,8 @@
-use crate::io::http::metainfo::dtos::{MetaInfoDto, TitleDto};
+use crate::io::fs::config::save_config_to_file;
+use crate::io::http::metainfo::dtos::{GraphLocationDto, MetaInfoDto, TitleDto};
 use crate::state::application_state::AppState;
 use actix_web::web::Data;
-use actix_web::{get, web, Responder};
+use actix_web::{get, post, web, Responder};
 use std::collections::HashSet;
 
 #[get("/api/title")]
@@ -14,6 +15,27 @@ async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
             .clone()
             .title
             .unwrap_or("No Graph Title".to_string()),
+    }))
+}
+
+#[get("/api/graph-location")]
+async fn get_graph_location(data: Data<AppState>) -> actix_web::Result<impl Responder> {
+    Ok(web::Json(GraphLocationDto {
+        graph_location: data.data_path.path.to_string_lossy().to_string(),
+    }))
+}
+
+#[post("/api/title")]
+async fn set_title(
+    data: Data<AppState>,
+    title: web::Json<TitleDto>,
+) -> actix_web::Result<impl Responder> {
+    let mut config_guard = data.g_config.lock().unwrap();
+    config_guard.title = Some(title.title.clone());
+    save_config_to_file(&data.data_path, &config_guard);
+    drop(config_guard);
+    Ok(web::Json(TitleDto {
+        title: title.title.clone(),
     }))
 }
 

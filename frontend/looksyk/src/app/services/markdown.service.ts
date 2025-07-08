@@ -38,7 +38,6 @@ export class MarkdownService {
     this.renderer.html = (html: HTML | Tag): string => {
       const tmpHtmlElement = document.createElement("div");
       tmpHtmlElement.innerHTML = html.text;
-      console.log("tmp", tmpHtmlElement);
       if (tmpHtmlElement.children.length === 0) {
         return html.text;
       }
