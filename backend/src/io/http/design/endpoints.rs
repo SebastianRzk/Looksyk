@@ -1,8 +1,12 @@
+use crate::design::dtos::AppearanceDto;
+use crate::design::dtos::DesignConfigDto;
+use crate::io::fs::config::save_config_to_file;
+use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
+use crate::state::application_state::AppState;
 use actix_web::http::header::ContentType;
 use actix_web::web::Data;
-use actix_web::{get, HttpResponse};
-
-use crate::state::application_state::AppState;
+use actix_web::{get, post, web, HttpResponse};
+use std::str::FromStr;
 
 #[get("/api/design")]
 pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
@@ -28,11 +32,6 @@ pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {
         .body(css_text)
 }
 
-#[derive(serde::Serialize)]
-struct AppearanceDto {
-    appearance: String,
-}
-
 #[get("/api/appearance")]
 pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
     let config = app_state.g_config.lock().unwrap();
@@ -41,4 +40,21 @@ pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
     HttpResponse::Ok().json(AppearanceDto {
         appearance: appearance.to_string(),
     })
+}
+
+#[post("/api/design-config")]
+pub async fn set_design_config(
+    app_state: Data<AppState>,
+    design: web::Json<DesignConfigDto>,
+) -> HttpResponse {
+    let mut config = app_state.g_config.lock().unwrap();
+    config.design.primary_color = design.primary_color.clone();
+    config.design.background_color = design.background_color.clone();
+    config.design.foreground_color = design.foreground_color.clone();
+    config.design.primary_shading = design.primary_shading.clone();
+    config.design.appearance =
+        Appearance::from_str(&design.appearance.appearance).unwrap_or(Appearance::Dark);
+    save_config_to_file(&app_state.data_path, &config);
+    drop(config);
+    HttpResponse::Ok().finish()
 }

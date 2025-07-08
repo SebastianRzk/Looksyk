@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 pub struct MetaInfoDto {
@@ -6,7 +6,13 @@ pub struct MetaInfoDto {
     pub media: Vec<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct TitleDto {
     pub title: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GraphLocationDto {
+    pub graph_location: String,
 }

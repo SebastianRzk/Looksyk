@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, firstValueFrom, map, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { PageService } from "./page.service";
 
@@ -30,6 +30,10 @@ export class MetaInfoService {
     return this.http.get<Suggestions>("/api/assets/suggestion/" + encodeURIComponent(file_name));
   }
 
+  public getGraphLocation(): Promise<string> {
+    return firstValueFrom(this.http.get<GraphLocationDto>("/api/graph-location").pipe(map(x => x.graphLocation)));
+  }
+
 }
 
 export interface MetaInformation {
@@ -37,6 +41,10 @@ export interface MetaInformation {
   media: string[]
 }
 
+
+interface GraphLocationDto {
+  graphLocation: string
+}
 
 export interface Suggestions {
   suggestions: Suggestion[]

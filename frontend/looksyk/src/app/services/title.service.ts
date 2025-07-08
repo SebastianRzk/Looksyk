@@ -8,6 +8,8 @@ import {Title} from "@angular/platform-browser";
 })
 export class TitleService {
 
+    public static INITIAL_GRAPH_TITLE = "Looksyk";
+
     private httpClient: HttpClient = inject(HttpClient);
     private title: Title = inject(Title);
     private graphTitle: Subject<string> = new BehaviorSubject<string>("Looksyk");
@@ -26,6 +28,12 @@ export class TitleService {
 
     public pushCurrentPageTitle(title: string): void {
         this.pageTitle.next(title);
+    }
+
+    public saveGraphTitle(title: string): void {
+        this.httpClient.post("/api/title", {title: title}).subscribe(() => {
+            this.graphTitle.next(title);
+        });
     }
 }
 

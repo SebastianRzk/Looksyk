@@ -83,8 +83,9 @@ The `graph` folder in the home directory contains all data.
 
 The design is based on the [Material Design](https://material.io/design) guidelines.
 
-There are two ways to customize the design:
+There are three ways to customize the design:
 
+* Change the design or single color variables in the `settings` tab in the sidebar
 * Changing predefined color variables in the `config/config.json` file (see description below)
 * Adding custom CSS in the `config/user-theme.css` file.
 
@@ -106,55 +107,15 @@ The design consists of the following elements:
 * `appearance` is the appearance of the application, either `dark` or `light`. This is used to set the default color
   scheme of the application. The default value is `dark`.
 
-Inspire yourself with the following examples:
+Inspire yourself with the following examples (all avaliable in the settings tab):
 
-#### Dark Mode (default)
-
-![dark mode](themes/default.png)
-
-Configuration:
-
-```json
-"design": {
-"primaryColor": "#0c884c",
-"backgroundColor": "#15212D",
-"foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)",
-"appearance": "dark"
-}
-```
-
-#### Light Mode / Solarized Light
-
-![light mode](themes/light.png)
-
-Configuration:
-
-```json
-"design": {
-"primaryColor": "#859900",
-"backgroundColor": "#fdf6e3",
-"foregroundColor": "#002b36",
-"primaryShading": "rgba(0, 0, 0, 0.1)",
-"appearance": "light"
-}
-```
-
-#### Extra Dark Mode
-
-![extra dark mode](themes/extra_dark.png)
-
-Configuration:
-
-```json
-"design": {
-"primaryColor": "#859900",
-"backgroundColor": "black",
-"foregroundColor": "white",
-"primaryShading": "rgba(255, 255, 255, 0.1)",
-"appearance": "dark"
-}
-```
+![Theme1](themes/theme1.png)
+![Theme2](themes/theme2.png)
+![Theme3](themes/theme3.png)
+![Theme4](themes/theme4.png)
+![Theme5](themes/theme5.png)
+![Theme6](themes/theme6.png)
+![Theme7](themes/theme7.png)
 
 ### Markdown Syntax and Features
 

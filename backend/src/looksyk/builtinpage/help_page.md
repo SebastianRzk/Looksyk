@@ -2,6 +2,8 @@
 
 This page explains the most important Markdown features supported in Looksyk.
 
+## Find the complete documentation at [sebastianrzk.github.io/Looksyk](https://sebastianrzk.github.io/Looksyk/)
+
 ## Table of Contents
 
 * Basic Markdown Features

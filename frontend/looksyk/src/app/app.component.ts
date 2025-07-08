@@ -83,10 +83,10 @@ export class AppComponent implements OnInit {
   }
 
   private loadHighlightTheme(appearance: 'light' | 'dark' = 'dark'): void {
-    const themeFile = appearance === 'dark' ? 
-      '/assets/fonts/highlightjs.11.10.min.dark.css' : 
+    const themeFile = appearance === 'dark' ?
+      '/assets/fonts/highlightjs.11.10.min.dark.css' :
       '/assets/fonts/highlightjs.11.9.min.css';
-    
+
     if (this.currentHighlightTheme === themeFile) {
       return; // Already loaded
     }
@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
     link.rel = 'stylesheet';
     link.href = themeFile;
     this.document.head.appendChild(link);
-    
+
     this.currentHighlightTheme = themeFile;
   }
 
