@@ -39,14 +39,33 @@ fn read_all_files(data_path: &str) -> Vec<PageOnDisk> {
     let mut all_files = vec![];
 
     for file in directory_list {
-        let dir = file.unwrap();
-        let path = dir.path();
-        let file_content = read_file(path.clone());
-        let file_stem = Path::file_stem(path.as_path()).unwrap().to_str().unwrap();
-        all_files.push(PageOnDisk {
-            name: unescape_page_name(file_stem.to_string().as_str()),
-            content: file_content,
-        });
+        if let Ok(dir) = file {
+            if dir.file_type().unwrap().is_dir() {
+                println!("Skipping directory: {:?}", dir.path());
+                continue; // Skip directories
+            }
+
+            let path = dir.path();
+            if !dir
+                .file_name()
+                .as_os_str()
+                .to_string_lossy()
+                .ends_with(".md")
+            {
+                println!("Skipping non-md file: {path:?}");
+                continue;
+            }
+
+            let file_content = read_file(path.clone());
+            let file_stem = Path::file_stem(path.as_path()).unwrap().to_str().unwrap();
+            all_files.push(PageOnDisk {
+                name: unescape_page_name(file_stem.to_string().as_str()),
+                content: file_content,
+            });
+        } else {
+            println!("Error reading file: {file:?}");
+            continue;
+        }
     }
 
     all_files

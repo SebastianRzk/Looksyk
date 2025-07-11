@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.13.1](#v1131-2025-07-11)
 - [v1.13.0](#v1130-2025-07-08)
 - [v1.12.0](#v1120-2025-07-06)
 - [v1.11.3](#v1113-2025-07-02)
@@ -54,6 +55,16 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.13.1 (2025-07-11)
+
+Enhancements:
+
+* Allow trailing new-line in `version.txt`
+
+Bugfixes:
+
+* Skip folders an non-markdown files in `journal` and `pages` folder.
 
 
 ### v1.13.0 (2025-07-08)

@@ -11,7 +11,7 @@ pub fn load_graph_version(graph_root_location: &GraphRootLocation) -> Applicatio
         .join(VERSION_FILE_NAME);
     let version_string =
         std::fs::read_to_string(version_path).unwrap_or_else(|_| UNKNOWN_VERSION.to_string());
-    ApplicationVersion::new(version_string.as_str())
+    ApplicationVersion::new(version_string.trim())
 }
 
 pub fn save_graph_version(graph_root_location: &GraphRootLocation, version: &ApplicationVersion) {
