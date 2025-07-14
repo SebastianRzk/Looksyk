@@ -24,7 +24,7 @@ import { MarkdownService } from "../../../services/markdown.service";
 import { Router } from "@angular/router";
 import { PageService } from "../../../services/page.service";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
-import { ContentAssistMode, ContentAssistService } from "../../../services/content-assist.service";
+import { ContentAssistService } from "../../../services/content-assist.service";
 import { AsyncPipe } from "@angular/common";
 import { DialogService } from "../../../services/dialog.service";
 import { ConvertBlockIntoPageComponent } from "../convert-block-into-page-dialog/convert-block-into-page.component";
@@ -130,10 +130,10 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
 
     } else {
       firstValueFrom(this.componentMode).then(
-        state => {
+        async state => {
           if (state == MarkdownComponentState.EDITING) {
             if (openMarkdown.target.blockTarget.length == 0) {
-              this.onFocusOutEditor();
+              await this.onFocusOutEditor();
             }
           }
         }
@@ -210,12 +210,16 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
   }
 
 
-  onFocusOutEditor(event?: Event) {
-    if (this.contentAssist.stateRaw !=
-      ContentAssistMode.Closed) {
+  async onFocusOutEditor(event?: Event) {
+    if (this.contentAssist.isOpened()) {
       event?.stopPropagation();
       event?.preventDefault();
       event?.stopImmediatePropagation();
+      return;
+    }
+
+    const currentState = await firstValueFrom(this.componentMode);
+    if (currentState !== MarkdownComponentState.EDITING) {
       return;
     }
 

@@ -46,7 +46,7 @@ modules:
       - cp -r frontend/looksyk/dist/looksyk/browser/* /app/share/looksyk/static/
     sources:
       - type: archive
-        url: https://github.com/SebastianRzk/Looksyk/releases/download/v1.13.1/looksyk-source.tar.gz
+        url: https://github.com/SebastianRzk/Looksyk/releases/download/v1.13.2/looksyk-source.tar.gz
         sha256: <please insert sha here>
       - type: file
         path: de.sebastianruziczka.looksyk.metainfo.xml
