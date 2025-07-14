@@ -138,6 +138,10 @@ export class ContentAssistService {
   overwriteText(text: string) {
     this.textInContentAssist.next(text);
   }
+
+  public isOpened(): boolean {
+    return this.stateRaw != ContentAssistMode.Closed;
+  }
 }
 
 export enum KeypressResult {

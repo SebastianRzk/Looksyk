@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.13.2](#v1132-2025-07-14)
 - [v1.13.1](#v1131-2025-07-11)
 - [v1.13.0](#v1130-2025-07-08)
 - [v1.12.0](#v1120-2025-07-06)
@@ -55,6 +56,12 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.13.2 (2025-07-14)
+
+Bugfixes:
+
+* Fix focus out event on markdown block only to fire once.
 
 ### v1.13.1 (2025-07-11)
 
