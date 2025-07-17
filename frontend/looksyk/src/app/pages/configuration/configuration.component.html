@@ -1,30 +1,24 @@
-<div class="header">
-  @if (sidenav.opened$ | async; ) {
-    <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.close()">left_panel_close
-      </mat-icon>
-    </h1>
-  } @else {
-    <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.open()">left_panel_open
-      </mat-icon>
-    </h1>
-  }
-  <h1 class="header-text">Configuration</h1>
-</div>
-<mat-divider></mat-divider>
+<app-default-header headerTitle="Configuration"></app-default-header>
 <div class="global-content">
-  <h2>Graph Location</h2>
+  <h2>
+    <mat-icon class="material-symbols-outlined">my_location</mat-icon>
+    Graph Location
+  </h2>
   <p>Current graph location: <em>{{ graphLocation | async }}</em></p>
   <p>To change the current graph location, please look into the <a href="https://sebastianrzk.github.io/Looksyk/">online
     documentation</a></p>
-  <h2>Title</h2>
+  <h2 class="inner-heading">
+    <mat-icon class="material-symbols-outlined">page_header</mat-icon>
+    Title
+  </h2>
   <mat-form-field>
     <mat-label>Title</mat-label>
     <input type="text" matInput [formControl]="titleControl" placeholder="Enter title here"/>
   </mat-form-field>
-  <mat-divider></mat-divider>
-  <h2>Color Theme</h2>
+  <h2 class="inner-heading">
+    <mat-icon class="material-symbols-outlined">format_paint</mat-icon>
+    Color Theme
+  </h2>
   <h3>Apply pre-configured themes</h3>
   <mat-form-field>
     <mat-select [formControl]="colorThemeControl">
@@ -61,7 +55,8 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <p>You want to change more? Create your own css-theme in the <em>user-theme.css</em> file in the <em>config</em> folder of your
+  <p>You want to change more? Create your own css-theme in the <em>user-theme.css</em> file in the <em>config</em>
+    folder of your
     graph.</p>
   <h3>Design Preview</h3>
   <div class="extension-card"><h3>DEMO</h3> <a href="/journal">LINK</a></div>

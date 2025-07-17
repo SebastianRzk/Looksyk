@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@
 import { BehaviorSubject, debounce, filter, firstValueFrom, Subject, timer } from "rxjs";
 import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
-import { MatDivider } from "@angular/material/divider";
 import { MatIcon } from "@angular/material/icon";
-import { SidenavService } from "../../services/sidenav.service";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel, MatSelect } from "@angular/material/select";
@@ -13,6 +11,7 @@ import { MatInput } from "@angular/material/input";
 import { AppearanceService } from "../../services/appearance.service";
 import { ColorTheme, DesignService } from "../../services/design.service";
 import { MetaInfoService } from "../../services/meta-info.service";
+import { DefaultHeaderComponent } from "../components/default-header/default-header.component";
 
 
 const CURRENT_THEME_NAME = "Current Theme";
@@ -21,7 +20,6 @@ const CURRENT_THEME_NAME = "Current Theme";
   selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
-    MatDivider,
     MatIcon,
     FormsModule,
     ReactiveFormsModule,
@@ -31,6 +29,7 @@ const CURRENT_THEME_NAME = "Current Theme";
     MatFormField,
     MatLabel,
     MatInput,
+    DefaultHeaderComponent,
   ],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css',
@@ -102,7 +101,6 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     }
   ]
 
-  sidenav = inject(SidenavService);
   private titleService = inject(TitleService);
   private designService = inject(DesignService);
 

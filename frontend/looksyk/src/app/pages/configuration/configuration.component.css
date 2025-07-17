@@ -1,31 +1,4 @@
 
-.header {
-  display: flex;
-  flex-direction: row;
-  vertical-align: middle;
-}
-
-.header > mat-divider {
-  margin: 2ex 0;
-}
-
-.header > h1 {
-  margin: 0.5ex;
-}
-
-.header-text {
-  margin-left: 1.5ex !important;
-}
-
-.menu-toggle {
-  width: auto;
-  margin: 0 0.5ex;
-}
-
-.header > button{
-  margin-top: auto;
-  margin-bottom: auto;
-}
 
 .form-fields {
   display: flex;
@@ -47,4 +20,8 @@
   width: 40px;
   height: 40px;
   cursor: pointer;
+}
+
+.inner-heading {
+  margin-top: 5ex;
 }
