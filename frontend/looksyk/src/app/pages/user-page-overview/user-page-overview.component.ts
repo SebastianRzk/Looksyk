@@ -5,13 +5,11 @@ import { MarkdownPage } from "../model";
 import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
 import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
-import { MatDivider } from "@angular/material/divider";
-import { MatIcon } from "@angular/material/icon";
-import { SidenavService } from "../../services/sidenav.service";
+import { DefaultHeaderComponent } from "../components/default-header/default-header.component";
 
 @Component({
   selector: 'app-user-page-overview',
-  imports: [DisplayPageComponent, AsyncPipe, MatDivider, MatIcon],
+  imports: [DisplayPageComponent, AsyncPipe, DefaultHeaderComponent],
   templateUrl: './user-page-overview.component.html',
   styleUrls: ['./user-page-overview.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,7 +17,6 @@ import { SidenavService } from "../../services/sidenav.service";
 export class UserPageOverviewComponent implements OnInit {
 
   public pageSerivce: PageService = inject(PageService);
-  public sidenav = inject(SidenavService);
   private titleService = inject(TitleService);
   public page: Observable<MarkdownPage> = this.pageSerivce.getBuildInPage("user-page-overview");
 

@@ -20,7 +20,7 @@ pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> Medi
 
     match extension.unwrap().to_lowercase().as_str() {
         "mp4" | "webm" | "ogm" => MediaType::Video,
-        "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" => MediaType::Image,
+        "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" | "avif" => MediaType::Image,
         "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
         "txt" => MediaType::Text,
         "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" | "sh" => {
