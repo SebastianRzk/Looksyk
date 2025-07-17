@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.13.3](#v1133-2025-07-17)
 - [v1.13.2](#v1132-2025-07-14)
 - [v1.13.1](#v1131-2025-07-11)
 - [v1.13.0](#v1130-2025-07-08)
@@ -56,6 +57,13 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+### v1.13.3 (2025-07-17)
+
+Enhancements:
+
+* Improve design
+* Detect `avif` files as images
 
 ### v1.13.2 (2025-07-14)
 
