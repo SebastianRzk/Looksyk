@@ -37,7 +37,7 @@
 }
 
 .journal-toggle {
-  margin: auto 0 !important;
+  margin: auto 0.5ex auto 0 !important;
 }
 
 cdk-virtual-scroll-viewport {
