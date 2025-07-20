@@ -5,6 +5,7 @@ layout: default
 
 ## Table of Contents
 
+- [v1.13.4](#v1134-2025-07-20)
 - [v1.13.3](#v1133-2025-07-17)
 - [v1.13.2](#v1132-2025-07-14)
 - [v1.13.1](#v1131-2025-07-11)
@@ -57,6 +58,13 @@ layout: default
 - [Configuration and Usage](usage.md)
 - [Development Guide and Contribution Guidelines](development_and_contribution.md)
 - [Changelog](changelog.md)
+
+
+### v1.13.4 (2025-07-20)
+
+Enhancements:
+
+* detecting the followiing file types as code: `yml`, `yaml`, `json` and `bash`
 
 ### v1.13.3 (2025-07-17)
 
