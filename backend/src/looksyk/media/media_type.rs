@@ -23,9 +23,8 @@ pub fn get_media_type_from_extension(asset_descriptor: &AssetDescriptor) -> Medi
         "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" | "avif" => MediaType::Image,
         "mp3" | "wav" | "flac" | "ogg" => MediaType::Audio,
         "txt" => MediaType::Text,
-        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" | "sh" => {
-            MediaType::Code
-        }
+        "rs" | "py" | "js" | "css" | "java" | "kt" | "c" | "sql" | "go" | "php" | "sh" | "yml"
+        | "yaml" | "json" | "bash" => MediaType::Code,
         "html" | "htm" => MediaType::Html,
         "pdf" => MediaType::Pdf,
         _ => MediaType::Other,
