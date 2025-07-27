@@ -1,25 +1,7 @@
 ---
-layout: default
+layout: base.njk
+title: Idea and technical concept
 ---
-
-# Idea and technical concept
-
-## Table of Contents
-
-### This page
-
-- [Technical concept](#technical-concept)
-- [Project work and future](#project-work-and-future)
-
-### Further Reading
-
-- [Overview](index.md)
-- [idea and technical concept](idea_and_technical_concept.md)
-- [Install + Run](installation.md)
-- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
-- [Configuration and Usage](usage.md)
-- [Development Guide and Contribution Guidelines](development_and_contribution.md)
-- [Changelog](changelog.md)
 
 ## Technical concept
 

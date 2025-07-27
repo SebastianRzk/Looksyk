@@ -1,28 +1,9 @@
 ---
-layout: default
+layout: base.njk
+title: Installation
 ---
 
 # Installation
-
-## Table of Contents
-
-### This page
-
-- [Run Looksyk](#run-looksyk)
-	- [Arch Linux / AUR](#arch-linux--aur)
-	- [Arch Linux / PKGBUILD](#arch-linux--pkgbuild)
-	- [Production Build / Manual Installation](#production-build--manual-installation)
-	- [Running different looksyk graphs at the same time (with different ports)](#running-different-looksyk-graphs-at-the-same-time-with-different-ports)
-
-### Further Reading
-
-- [Overview](index.md)
-- [idea and technical concept](idea_and_technical_concept.md)
-- [Install + Run](installation.md)
-- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
-- [Configuration and Usage](usage.md)
-- [Development Guide and Contribution Guidelines](development_and_contribution.md)
-- [Changelog](changelog.md)
 
 ## Run Looksyk
 

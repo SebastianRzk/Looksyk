@@ -1,26 +1,9 @@
 ---
-layout: default
+layout: base.njk
+title: Development and Contribution
 ---
 
 # Development Build
-
-## Table of Contents
-
-### This page
-
-- [Build backend and frontend](#build-backend-and-frontend)
-- [Build electron app](#build-electron-app)
-- [Contribution Guidelines](#contribution-guidelines)
-
-### Further Reading
-
-- [Overview](index.md)
-- [idea and technical concept](idea_and_technical_concept.md)
-- [Install + Run](installation.md)
-- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
-- [Configuration and Usage](usage.md)
-- [Development Guide and Contribution Guidelines](development_and_contribution.md)
-- [Changelog](changelog.md)
 
 ## Build backend and frontend
 

@@ -1,0 +1,12 @@
+{
+  "name": "looksyk-docs",
+  "version": "1.0.0",
+  "description": "Dokumentation für Looksyk mit 11ty",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.0"
+  }
+}
