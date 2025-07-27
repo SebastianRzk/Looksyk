@@ -1,0 +1,210 @@
+body {
+    background: #23272f;
+    color: #e6e6e6;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+header {
+    margin: 1.5rem;
+    background-color: #314d6a;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.header-title > h2 {
+    font-weight: 300;
+}
+
+.header-title > h1 {
+    font-size: 4rem;
+    font-weight: 300;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+}
+
+header > .logo {
+    max-width: 200px;
+}
+
+.header-title {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 2ex;
+}
+
+.main-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #181a20;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid #2c2f36;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.main-menu ul {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1 1 auto;
+}
+
+.main-menu a, .advanced-menu-title {
+    color: #e6e6e6;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.main-menu a:hover, .main-menu a:focus {
+    background: #2c2f36;
+    color: #fff;
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    color: #e6e6e6;
+    margin-right: 2rem;
+    font-size: 1.2rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+}
+
+.github-link:hover, .github-link:focus {
+    background: #2c2f36;
+    color: #b5e853;
+}
+
+main {
+    max-width: 1100px;
+    margin: 2rem auto 2rem auto;
+    background: #23272f;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+    padding: 2.5rem 2rem 2rem 2rem;
+    min-height: 60vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+
+p, li {
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+code, pre {
+    background: #181a20;
+    color: #a6d69d;
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    font-family: 'Fira Mono', 'Consolas', monospace;
+}
+
+pre {
+    padding: 1em;
+    overflow-x: auto;
+}
+
+a {
+    color: #f7cc6b;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #fff;
+}
+
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin: 2rem 0 1rem 0;
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 1rem 0.5rem;
+    }
+
+    .main-menu, .advanced-menu {
+        flex-direction: column!important;
+        align-items: stretch;
+    }
+
+    .main-menu ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .github-link {
+        margin: 0.5rem auto 0 auto;
+        justify-content: center;
+    }
+}
+
+.advanced-menu-title {
+    font-size: medium;
+}
+
+.advanced-menu > li {
+    font-size: smaller;
+}
+
+.advanced-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+    object-fit: cover;
+}
+
+.vertical-line {
+    border-left: thin solid #888;
+}
+
+.menu-list > li, .menu-list > div {
+    display: flex;
+    align-items: center;
+}
+
+.menu-list > li {
+    font-size: larger;
+}

@@ -1,0 +1,97 @@
+---
+layout: base.njk
+title: Startseite
+---
+
+<div class="badge">
+  <img src="https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=main" alt="GithubCI Status" />
+</div>
+
+<p class="lead">A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.</p>
+
+<h2>Key Features</h2>
+<ul class="feature-list">
+  <li><strong>Local Storage</strong>: Your information is always exclusively in Markdown files.</li>
+  <li><strong>Fast and Efficient</strong>: Scans and indexes large knowledge bases in under a second.</li>
+  <li><strong>Developer-Centric</strong>: Insert code blocks with syntax highlighting, save and display existing code files. Save and display backups of websites in your pages.</li>
+  <li><strong>Simple Queries</strong>: Use case based query language.</li>
+  <li><strong>Customizable Design</strong>: Configure your own design or choose from three themes: light mode, dark mode (default), and extra dark mode.</li>
+</ul>
+
+<p>Read more in <a href="#what-are-the-key-selling-points-compared-to-other-knowledge-platforms">What are the key selling points compared to other knowledge platforms?</a></p>
+
+<div class="intro-animation">
+  <img src="intro_animation.gif" alt="Intro Animation" />
+</div>
+
+<h2>Further Reading</h2>
+<ul class="toc-list toc-secondary">
+  <li><a href="idea_and_technical_concept.md">Idee & technisches Konzept</a></li>
+  <li><a href="installation.md">Install + Run</a></li>
+  <li><a href="migration_from_logseq.md">Migration von Logseq</a></li>
+  <li><a href="usage.md">Konfiguration & Nutzung</a></li>
+  <li><a href="development_and_contribution.md">Entwicklung & Beitrag</a></li>
+  <li><a href="changelog.md">Changelog</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+<p>I have always been a fan of <a href="https://logseq.com/">Logseq</a>, but there were a few things that bothered me, such as the many control characters in the markdown files, the query language that is difficult to learn and limited in its capability, or the general performance. When the database version announced the move away from Markdown as the leading data storage format, I tried to write my own client: Looksyk (name may need to be changed).</p>
+
+<h3 id="what-are-the-key-selling-points-compared-to-other-knowledge-platforms">What are the key selling points compared to other knowledge platforms?</h3>
+<ul class="feature-list">
+  <li>Runs local on your computer.</li>
+  <li>Your information is always exclusively in the Markdown files. No replication in a database or similar. The files can be easily synchronized with other sync tools.</li>
+  <li>Based on blocks, but these can also be larger, contain entire chapters and multiple queries.</li>
+  <li>Simple, use case based query language.</li>
+  <li>Multiple instances of Looksyk with different knowledge bases can be opened in parallel.</li>
+  <li>Developer-centric file support:
+    <ul>
+      <li>Insert code blocks with syntax highlighting</li>
+      <li>Save and display existing code files in your pages with syntax highlighting</li>
+      <li>Save and display backups of websites in your pages (with single-file-downloader)</li>
+      <li>Insert videos, audio files, images, text files and PDFs.</li>
+    </ul>
+  </li>
+  <li>Custom styling of markdown content with html and css and support for custom themes.</li>
+</ul>
+<p><a href="usage.md">Check out screenshots to see how each feature can be used!</a></p>
+<p><a class="button" href="installation.md">Installation Guide</a></p>
+
+<h3 id="implemented-features">Implemented Features</h3>
+<ul class="feature-list">
+  <li>Pages</li>
+  <li>Journal (infinite scrolling page, single day page, journal overview page)</li>
+  <li>Todos</li>
+  <li>Content assist
+    <ul>
+      <li>Creating links, inserting queries, tags, templates and media</li>
+    </ul>
+  </li>
+  <li>View (and link) media
+    <ul>
+      <li>Images</li>
+      <li>PDFs</li>
+      <li>HTML Files (e.g. SingleFile saved pages from <a href="https://addons.mozilla.org/en-US/firefox/addon/single-file/">SingleFile Firefox</a> or <a href="https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle">SingleFile Chrome</a>)</li>
+      <li>Video (html5 video player)</li>
+      <li>Audio (html5 audio player)</li>
+      <li>Code (with highlighting)</li>
+      <li>Text files</li>
+    </ul>
+  </li>
+  <li>Templates</li>
+  <li>Queries (placeholders for dynamic content):
+    <ul>
+      <li>Query blocks</li>
+      <li>Query todos / visualize progress of todos</li>
+      <li>Query page hierarchy</li>
+      <li>Query references</li>
+      <li>Render video, audio, images, text files and code files (with highlighting)</li>
+    </ul>
+  </li>
+  <li>Search across all pages and journals</li>
+  <li>Delete and rename pages (and update references across all pages and journals)</li>
+  <li>Favourites</li>
+  <li>History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.</li>
+  <li>Custom styling of markdown content with html and css</li>
+</ul>
+

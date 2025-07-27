@@ -1,43 +1,9 @@
 ---
-layout: default
+layout: base.njk
+title: Configuration and Usage
 ---
 
 # Configuration and Usage
-
-## Table of Contents
-
-### This page
-
-- [Configuration](#configuration)
-- [Usage](#usage)
-	- [Data Storage](#data-storage)
-	- [Design](#design)
-		- [Dark Mode (default)](#dark-mode-default)
-		- [Light Mode / Solarized Light](#light-mode--solarized-light)
-		- [Extra Dark Mode](#extra-dark-mode)
-	- [Markdown Syntax and Features](#markdown-syntax-and-features)
-	- [Page names and hierarchy](#page-names-and-hierarchy)
-	- [Favorites](#favorites)
-	- [Code](#code)
-	- [Todos](#todos)
-	- [Queries](#queries)
-		- [Query Page Hierarchy](#query-page-hierarchy)
-		- [Query Todos](#query-todos)
-		- [Query Backlinks](#query-backlinks)
-		- [Query Render Assets ("insert-content-from-file")](#query-render-assets-insert-content-from-file)
-		- [Query Blocks](#query-blocks)
-    - [HTML in Markdown](#html-in-markdown)
-- [History](#history)
-
-### Further Reading
-
-- [Overview](index.md)
-- [idea and technical concept](idea_and_technical_concept.md)
-- [Install + Run](installation.md)
-- [Migrate Your Existing Logseq Graph](migration_from_logseq.md)
-- [Configuration and Usage](usage.md)
-- [Development Guide and Contribution Guidelines](development_and_contribution.md)
-- [Changelog](changelog.md)
 
 ## Configuration
 
@@ -378,12 +344,12 @@ Display-types:
 
 ### HTML in Markdown
 
-You can use HTML in Markdown, but it is not recommended. Currently, markdown is rendered in the file only in
-html-node-depth `0` (not in html) and `1` (in the first child). Deeper nesting gets transferred into the page, but the
-containing markdown is not rendered to HTML.
+You can use HTML in Markdown, but it is not recommended. If you want to style your markdown, simply pack them in a
+`<div>` with a css-class and style them in the `user-theme.css` file.
 
-If you want to style your markdown, simply pack them in a `<div>` with a css-class and style them in the
-`user-theme.css` file.
+Please note, that double-line breaks in the markdown file gets rendered in a `<p>` tag, and all existing "manually"
+added tags get automatically closed.
+If you want to wrap your tag across multiple lines, o you can use `<br>` to create line breaks.
 
 The html gets sanitized, so you cannot use any script tags or other potentially dangerous HTML tags.
 
