@@ -34,12 +34,12 @@ in [What are the key selling points compared to other knowledge platforms?](#wha
 
 ### Further Reading
 
-- [idea and technical concept](docs/idea_and_technical_concept.md)
-- [Install + Run](docs/installation.md)
-- [Migrate Your Existing Logseq Graph](docs/migration_from_logseq.md)
-- [Configuration and Usage](docs/usage.md)
-- [Development Guide and Contribution Guidelines](docs/development_and_contribution.md)
-- [Changelog](docs/changelog.md)
+- [idea and technical concept](https://sebastianrzk.github.io/Looksyk/idea_and_technical_concept/)
+- [Install + Run](https://sebastianrzk.github.io/Looksyk/installation/)
+- [Migrate Your Existing Logseq Graph](https://sebastianrzk.github.io/Looksyk/migration_from_logseq/)
+- [Configuration and Usage](https://sebastianrzk.github.io/Looksyk/usage/)
+- [Development Guide and Contribution Guidelines](https://sebastianrzk.github.io/Looksyk/development_and_contribution/)
+- [Changelog](https://sebastianrzk.github.io/Looksyk/changelog/)
 
 ## Introduction
 
@@ -64,9 +64,9 @@ own client: Looksyk (name may need to be changed).
     * Insert videos, audio files, images, text files and PDFs.
 * Custom styling of markdown content with html and css and support for custom themes.
 
-[Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage.html)
+[Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage/)
 
-Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation.html)
+Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation/)
 
 ### Implemented Features
 
@@ -102,9 +102,9 @@ Are you missing something? Create an [issue](https://github.com/SebastianRzk/Loo
 a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
 
 How can you get the most out of Looksyk with these features? Learn more in
-the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage.html) .
+the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage/).
 
-Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation.html)
+Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation/)
 
 ### Out of scope
 
@@ -122,7 +122,7 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 
 ## Development
 
-- [Development Guide and Contribution Guidelines](docs/development_and_contribution.md)
+- [Development Guide and Contribution Guidelines](https://sebastianrzk.github.io/Looksyk/development_and_contribution/)
 
 ## License
 
