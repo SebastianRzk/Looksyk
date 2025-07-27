@@ -3,8 +3,12 @@ name: Build and Test Looksyk
 on:
   push:
     branches: [ main, stable, dev ]
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches: [ main, stable, dev ]
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   backend-test:
