@@ -15,8 +15,8 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 - **Developer-Centric**: Insert code blocks with syntax highlighting, save and display existing code files. Save and
   display backups of websites in your pages.
 - **Simple Queries**: Use case based query language.
-- **Customizable Design**:  Configure your own design with color variables or custom css, or choose from seven prebuild
-  themes.~~~~
+- **Customizable Design**: Configure your own design with color variables or custom css, or choose from seven prebuild
+  themes.
 
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
