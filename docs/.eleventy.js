@@ -5,6 +5,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("*.gif");
 
   return {
+    pathPrefix: "/Looksyk/",
     dir: {
       input: ".",
       output: "_site"
