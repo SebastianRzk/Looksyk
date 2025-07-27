@@ -15,8 +15,8 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 - **Developer-Centric**: Insert code blocks with syntax highlighting, save and display existing code files. Save and
   display backups of websites in your pages.
 - **Simple Queries**: Use case based query language.
-- **Customizable Design**: Configure your own design or choose from three themes: light mode, dark mode (default), and
-  extra dark mode.
+- **Customizable Design**: Configure your own design with color variables or custom css, or choose from seven prebuild
+  themes.
 
 Read more
 in [What are the key selling points compared to other knowledge platforms?](#what-are-the-key-selling-points-compared-to-other-knowledge-platforms)
@@ -49,7 +49,6 @@ capability, or the general performance.
 When the database version announced the move away from Markdown as the leading data storage format, I tried to write my
 own client: Looksyk (name may need to be changed).
 
-
 ### What are the key selling points compared to other knowledge platforms?
 
 * Runs local on your computer.
@@ -59,10 +58,10 @@ own client: Looksyk (name may need to be changed).
 * Simple, use case based query language.
 * Multiple instances of Looksyk with different knowledge bases can be opened in parallel.
 * Developer-centric file support:
-	* Insert code blocks with syntax highlighting
-	* Save and display existing code files in your pages with syntax highlighting
-	* Save and display backups of websites in your pages (with single-file-downloader)
-	* Insert videos, audio files, images, text files and PDFs.
+    * Insert code blocks with syntax highlighting
+    * Save and display existing code files in your pages with syntax highlighting
+    * Save and display backups of websites in your pages (with single-file-downloader)
+    * Insert videos, audio files, images, text files and PDFs.
 * Custom styling of markdown content with html and css and support for custom themes.
 
 [Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage.html)
@@ -75,34 +74,35 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Journal (infinite scrolling page, single day page, journal overview page)
 * Todos
 * Content assist
-	* Creating links, inserting queries, tags, templates and media
+    * Creating links, inserting queries, tags, templates and media
 * View (and link) media
-	* Images
-	* PDFs
-	* HTML Files (e.g. SingleFile saved pages
-	  from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
-	  or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
-	* Video (html5 video player)
-	* Audio (html5 audio player)
-	* Code (with highlighting)
-	* Text files
+    * Images
+    * PDFs
+    * HTML Files (e.g. SingleFile saved pages
+      from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
+      or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+    * Video (html5 video player)
+    * Audio (html5 audio player)
+    * Code (with highlighting)
+    * Text files
 * Templates
 * Queries (placeholders for dynamic content):
-	* Query blocks
-	* Query todos / visualize progress of todos
-	* Query page hierarchy
-	* Query references
-	* Render video, audio, images, text files and code files (with highlighting)
+    * Query blocks
+    * Query todos / visualize progress of todos
+    * Query page hierarchy
+    * Query references
+    * Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
 * History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
 * Custom styling of markdown content with html and css
 
-Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
+Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or
+a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
 
-How can you get the most out of Looksyk with these features? Learn more in the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage.html) .
-
+How can you get the most out of Looksyk with these features? Learn more in
+the [Configuration and Usage page](https://sebastianrzk.github.io/Looksyk/usage.html) .
 
 Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/Looksyk/installation.html)
 
@@ -114,11 +114,11 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Server version / multi user / rcs
 * i18n
 * Sync with other devices. Please use other tools to sync your knowledge base such as
-	* [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/)
-	* [Dropbox](https://www.dropbox.com/)
-	* [Nextcloud](https://nextcloud.com/)
-	* [Syncthing](https://syncthing.net/)
-	* [git](https://git-scm.com/)
+    * [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/)
+    * [Dropbox](https://www.dropbox.com/)
+    * [Nextcloud](https://nextcloud.com/)
+    * [Syncthing](https://syncthing.net/)
+    * [git](https://git-scm.com/)
 
 ## Development
 

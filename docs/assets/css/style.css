@@ -163,7 +163,7 @@ footer {
     }
 
     .main-menu, .advanced-menu {
-        flex-direction: column!important;
+        flex-direction: column !important;
         align-items: stretch;
     }
 
@@ -239,4 +239,36 @@ td {
 
 table {
     border: none;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1ex;
+}
+
+.feature-list > li {
+    list-style: none;
+    max-width: 23ex;
+    display: flex;
+    flex-direction: column;
+
+    padding: 2ex;
+    border: 1px solid #3a3d44;
+    border-radius: 8px;
+
+    font-size: smaller;
+}
+
+.feature-list > li:hover {
+    background: #2c2f36;
+    transition: background 0.3s;
+}
+
+.feature-list > li > strong {
+    font-size: larger;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #3a3d44;
 }
