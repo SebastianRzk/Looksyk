@@ -153,31 +153,6 @@ footer {
     margin: 2rem 0 1rem 0;
 }
 
-@media (max-width: 600px) {
-    main {
-        padding: 1rem 0.5rem;
-    }
-
-    .main-menu {
-        position: relative;
-    }
-
-    .main-menu, .advanced-menu {
-        flex-direction: column !important;
-        align-items: stretch;
-    }
-
-    .main-menu ul {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: center;
-    }
-
-    .github-link {
-        margin: 0.5rem auto 0 auto;
-        justify-content: center;
-    }
-}
 
 .advanced-menu-title {
     font-size: medium;
@@ -271,4 +246,36 @@ table {
     font-size: larger;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #3a3d44;
+}
+
+
+@media (max-width: 600px) {
+    main {
+        padding: 1rem 0.5rem;
+    }
+
+    .main-menu {
+        position: relative;
+    }
+
+    .main-menu, .advanced-menu {
+        flex-direction: column !important;
+        align-items: stretch;
+    }
+
+    .main-menu ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .github-link {
+        margin: 0.5rem auto 0 auto;
+        justify-content: center;
+    }
+
+    .feature-list > li {
+        width: 100%;
+        max-width: 100%;
+    }
 }
