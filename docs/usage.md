@@ -75,13 +75,13 @@ The design consists of the following elements:
 
 Inspire yourself with the following examples (all avaliable in the settings tab):
 
-![Theme1](themes/theme1.png)
-![Theme2](themes/theme2.png)
-![Theme3](themes/theme3.png)
-![Theme4](themes/theme4.png)
-![Theme5](themes/theme5.png)
-![Theme6](themes/theme6.png)
-![Theme7](themes/theme7.png)
+![Theme1]({{config.pathPrefix}}themes/theme1.png)
+![Theme2]({{config.pathPrefix}}themes/theme2.png)
+![Theme3]({{config.pathPrefix}}themes/theme3.png)
+![Theme4]({{config.pathPrefix}}themes/theme4.png)
+![Theme5]({{config.pathPrefix}}themes/theme5.png)
+![Theme6]({{config.pathPrefix}}themes/theme6.png)
+![Theme7]({{config.pathPrefix}}themes/theme7.png)
 
 ### Markdown Syntax and Features
 
@@ -105,7 +105,7 @@ Inspire yourself with the following examples (all avaliable in the settings tab)
 
 ### Page names and hierarchy
 
-![page hierarchy](hierarchy/animation.gif)
+![page hierarchy]({{config.pathPrefix}}hierarchy/animation.gif)
 
 * Every tag `[[myTag]]` links to a page with the name `myTag`
 * To create a hierarchy, use the `/` character in the page name. `[[myTag / mySubTag]]` creates a page
@@ -116,7 +116,7 @@ Inspire yourself with the following examples (all avaliable in the settings tab)
 
 ### Favorites
 
-![favorites](fav/animation.gif)
+![favorites]({{config.pathPrefix}}fav/animation.gif)
 
 * You can mark a page as favorite by clicking on the star next to the page title
 * Favorites are displayed in the sidebar
@@ -189,14 +189,14 @@ Display types:
 * **inplace-list**
 	* Creates a list of the selected pages in the markdown-block. Each item is prefixed with a icon, and the location as
 	  link. The list is not modifiable.
-	* Query without trailing slash ![inplace-list](queries/page-hierarchy/inplace-list-query.png)
-	* Result ![inplace-list](queries/page-hierarchy/inplace-list-result.png)
-	* Query with trailing slash ![inplace-list](queries/page-hierarchy/inplace-list-query-trailing-slash.png)
-	* Result ![inplace-list](queries/page-hierarchy/inplace-list-result-trailing-slash.png)
+	* Query without trailing slash ![inplace-list]({{config.pathPrefix}}queries/page-hierarchy/inplace-list-query.png)
+	* Result ![inplace-list]({{config.pathPrefix}}queries/page-hierarchy/inplace-list-result.png)
+	* Query with trailing slash ![inplace-list]({{config.pathPrefix}}queries/page-hierarchy/inplace-list-query-trailing-slash.png)
+	* Result ![inplace-list]({{config.pathPrefix}}queries/page-hierarchy/inplace-list-result-trailing-slash.png)
 * **count**
 	* Creates a number of the selected pages in the markdown-block.
-	* Query ![count](queries/page-hierarchy/count-query.png)
-	* Result ![count](queries/page-hierarchy/count-result.png)
+	* Query ![count]({{config.pathPrefix}}queries/page-hierarchy/count-query.png)
+	* Result ![count]({{config.pathPrefix}}queries/page-hierarchy/count-result.png)
 
 #### Query Todo Progress
 
@@ -210,7 +210,7 @@ Quick example
 
 * Result
 
-![todo-progress](queries/todo-progress/todo_progress.png)
+![todo-progress]({{config.pathPrefix}}queries/todo-progress/todo_progress.png)
 
 #### Query Todos
 
@@ -238,31 +238,31 @@ Display-types:
 	  source file. If the checkbox is clicked, the todo is marked as done. Query-results can be stacked.
 	* Query
 
-	  ![referenced-list](queries/todo/reference-list-query.png)
+	  ![referenced-list]({{config.pathPrefix}}queries/todo/reference-list-query.png)
 	* Result
 
-	  ![referenced-list](queries/todo/reference-list-result.png)
+	  ![referenced-list]({{config.pathPrefix}}queries/todo/reference-list-result.png)
 
 * **inplace-list**
 	* Creates a list of the selected todos in the markdown-block. Each item is prefixed with a icon. The list is not
 	  modifiable.
 	* Query
 
-	  ![inplace-list](queries/todo/inplace-list-query.png)
+	  ![inplace-list]({{config.pathPrefix}}queries/todo/inplace-list-query.png)
 	* Result
 
-	  ![inplace-list](queries/todo/inplace-list-result.png)
+	  ![inplace-list]({{config.pathPrefix}}queries/todo/inplace-list-result.png)
 	* Result (done)
 
-	  ![inplace-list](queries/todo/inplace-list-result-done.png)
+	  ![inplace-list]({{config.pathPrefix}}queries/todo/inplace-list-result-done.png)
 * **count**
 	* Creates a number of the selected todos in the markdown-block.
 	* Query
 
-	  ![count](queries/todo/count-query.png)
+	  ![count]({{config.pathPrefix}}queries/todo/count-query.png)
 	* Result
 
-	  ![count](queries/todo/count-result.png)
+	  ![count]({{config.pathPrefix}}queries/todo/count-result.png)
 
 #### Query Backlinks
 
@@ -305,7 +305,7 @@ Display-types:
 
 	  ```{query: blocks tag:"Pizza Rating" display:"cards" }```
 		* Result:
-		  ![cards](queries/blocks/cards-result.png)
+		  ![cards]({{config.pathPrefix}}queries/blocks/cards-result.png)
 
 * **paragraphs**
 	* Creates a section for every matching block in the markdown. The filename and block-index is rendered as headline (
@@ -314,31 +314,31 @@ Display-types:
 	  multi-line blocks
 	* Query
 
-	  ![paragraphs](queries/blocks/paragraphs-query.png)
+	  ![paragraphs]({{config.pathPrefix}}queries/blocks/paragraphs-query.png)
 	* Result
 
-	  ![paragraphs](queries/blocks/paragraphs-result.png)
+	  ![paragraphs]({{config.pathPrefix}}queries/blocks/paragraphs-result.png)
 * **inplace-list**
 
 	* Creates a list of the selected blocks in the markdown-block. Each item is prefixed with a list-icon. Best suited
 	  for single-line blocks.
 	* Query
 
-	  ![inplace-list](queries/blocks/inplace-list-query.png)
+	  ![inplace-list]({{config.pathPrefix}}queries/blocks/inplace-list-query.png)
 
 	* Result
 
-	  ![inplace-list](queries/blocks/inplace-list-result.png)
+	  ![inplace-list]({{config.pathPrefix}}queries/blocks/inplace-list-result.png)
 
 * **referenced-list**
 	* Creates a list of the selected blocks at the end of the current block. Each item contains a link to
 	  the source file. Different query-results can be stacked. Good for multi-line blocks
 	* Query
 
-	  ![referenced-list](queries/blocks/referenced-list-query.png)
+	  ![referenced-list]({{config.pathPrefix}}queries/blocks/referenced-list-query.png)
 	* Result
 
-	  ![referenced-list](queries/blocks/referenced-list-result.png)
+	  ![referenced-list]({{config.pathPrefix}}queries/blocks/referenced-list-result.png)
 * **count**
 	* Creates a number of the selected blocks in the markdown-block.
 

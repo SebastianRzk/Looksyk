@@ -99,4 +99,4 @@ you can run the application with the arguments `--port` and `--graph-location` m
 Are you having problems installing or setting up? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues)!
 
 Or would you like to improve the documentation or provide alternative installation methods? Make
-a [pull request](development_and_contribution.md).
+a [pull request]({{config.pathPrefix}}/development_and_contribution).

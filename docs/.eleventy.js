@@ -1,3 +1,5 @@
+const config = require("./_data/config");
+
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "assets": "assets" });
   eleventyConfig.addPassthroughCopy("usage");
@@ -5,7 +7,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("*.gif");
 
   return {
-    pathPrefix: "/Looksyk/",
+    pathPrefix: config.pathPrefix,
     dir: {
       input: ".",
       output: "_site"

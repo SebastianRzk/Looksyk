@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ title or "Looksyk Dokumentation" }}</title>
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="icon" type="image/png" href="/fav_512.png">
+  <link rel="stylesheet" href="{{config.pathPrefix}}assets/css/style.css">
+  <link rel="icon" type="image/png" href="{{config.pathPrefix}}fav_512.png">
 </head>
 <body>
   {% include "menu.njk" %}
   <header>
-  <img src="/fav_512.png" alt="Looksyk Logo" class="logo">
+  <img src="{{config.pathPrefix}}fav_512.png" alt="Looksyk Logo" class="logo">
   <div class="header-title">
   <h1>
   Looksyk
