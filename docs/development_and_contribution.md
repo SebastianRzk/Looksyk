@@ -56,4 +56,4 @@ the default branch.
 
 ## Troubleshooting
 
-- see FAQ [Install + Run](installation.md)
+- see FAQ [Install + Run]({{config.pathPrefix}}installation/)

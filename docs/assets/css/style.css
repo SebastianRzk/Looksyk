@@ -8,8 +8,9 @@ body {
 }
 
 header {
-    margin: 1.5rem;
+    margin: 1.5rem auto;
     background-color: #314d6a;
+    max-width: 1100px;
     border-radius: 8px;
     padding: 1rem;
 }
@@ -157,6 +158,10 @@ footer {
         padding: 1rem 0.5rem;
     }
 
+    .main-menu {
+        position: relative;
+    }
+
     .main-menu, .advanced-menu {
         flex-direction: column!important;
         align-items: stretch;
@@ -207,4 +212,31 @@ img {
 
 .menu-list > li {
     font-size: larger;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0.7rem 0.4rem;
+    width: 100%;
+}
+
+th, td {
+    padding: 0.6rem 1rem;
+    border: 1px solid #3a3d44;
+    border-radius: 4px;
+    background: #23272f;
+}
+
+th {
+    background: #2c2f36;
+    color: #fff;
+    font-weight: 600;
+}
+
+td {
+    color: #e6e6e6;
+}
+
+table {
+    border: none;
 }
