@@ -258,6 +258,15 @@ table {
         position: relative;
     }
 
+    header {
+        flex-direction: column;
+    }
+
+    header > img {
+        max-width: 150px;
+        margin: 0 auto;
+    }
+
     .main-menu, .advanced-menu {
         flex-direction: column !important;
         align-items: stretch;
