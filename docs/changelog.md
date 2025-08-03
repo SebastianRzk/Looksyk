@@ -4,6 +4,10 @@ title: Changelog
 ---
 # Changelog
 
+### v1.13.5 (2025-08-03)
+
+Internal refactoring / reduction of code duplication
+
 ### v1.13.4 (2025-07-20)
 
 Enhancements:
