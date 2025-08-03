@@ -7,7 +7,7 @@ use crate::looksyk::queries::args::{
 };
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
-use crate::looksyk::renderer::atomics::{render_link_by_id, render_user_link};
+use crate::looksyk::renderer::atomics::{render_link, render_user_link};
 use crate::state::tag::TagIndex;
 
 pub const QUERY_NAME_REFERENCES_TO: &str = "references-to";
@@ -62,7 +62,7 @@ pub fn render_as_count(refs: &HashSet<PageId>) -> QueryRenderResult {
 fn render_as_list(page_name: &SimplePageName, refs: &HashSet<PageId>) -> QueryRenderResult {
     let mut result = format!("Pages that reference {}\n", render_user_link(page_name));
     for r in refs.iter() {
-        result.push_str(format!("* {}\n", render_link_by_id(r)).as_str());
+        result.push_str(format!("* {}\n", render_link(r)).as_str());
     }
     if refs.is_empty() {
         result.push_str("* No references found!\n");

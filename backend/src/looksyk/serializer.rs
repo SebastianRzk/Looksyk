@@ -1,6 +1,9 @@
 use crate::looksyk::model::{
     BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock,
 };
+use crate::looksyk::syntax::looksyk_markdown::{
+    render_as_query, render_as_tag_str, render_as_todo,
+};
 
 pub fn update_and_serialize_page(
     update_block: &UpdateBlock,
@@ -91,18 +94,12 @@ fn generate_indentation(depth: usize) -> String {
 fn serialize_block_token(block_token: &BlockToken) -> String {
     match block_token.block_token_type {
         BlockTokenType::Text => block_token.payload.clone(),
-        BlockTokenType::Link => {
-            format!("[[{}]]", block_token.payload.clone())
-        }
+        BlockTokenType::Link => render_as_tag_str(&block_token.payload),
         BlockTokenType::JournalLink => {
             format!("[[journal::{}]]", block_token.payload.clone())
         }
-        BlockTokenType::Query => {
-            format!("{{query: {} }}", block_token.payload.clone())
-        }
-        BlockTokenType::Todo => {
-            format!("[{}] ", block_token.payload.clone())
-        }
+        BlockTokenType::Query => render_as_query(block_token),
+        BlockTokenType::Todo => render_as_todo(block_token),
     }
 }
 

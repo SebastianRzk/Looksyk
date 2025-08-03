@@ -66,6 +66,13 @@ pub mod test_builder {
             as_text: text.to_string(),
         }
     }
+
+    pub fn text_block_content(text: &str) -> BlockContent {
+        BlockContent {
+            as_tokens: vec![text_token_str(text)],
+            as_text: text.to_string(),
+        }
+    }
 }
 
 pub fn text_token_str(text: &str) -> BlockToken {

@@ -5,6 +5,7 @@ use crate::looksyk::model::{
 use crate::looksyk::renderer::atomics::{
     combine_text_content, render_journal_link, render_user_link,
 };
+use crate::looksyk::syntax::looksyk_markdown::render_as_todo_without_padding;
 
 pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
     let mut inline_markdown_result_list = vec![];
@@ -27,7 +28,7 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
                 inline_markdown_result_list.push("query hidden".to_string());
             }
             BlockTokenType::Todo => {
-                inline_markdown_result_list.push(format!("[{}]", token.payload).to_string());
+                inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
         }
     }

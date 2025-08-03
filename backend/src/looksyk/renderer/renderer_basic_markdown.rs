@@ -3,6 +3,7 @@ use crate::looksyk::model::{
     PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
 };
 use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link};
+use crate::looksyk::syntax::looksyk_markdown::{render_as_tag_str, render_as_todo_without_padding};
 
 pub fn render_file_basic_markdown(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
@@ -43,7 +44,7 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
                 inline_markdown_result_list.push(token.payload.clone());
             }
             BlockTokenType::Link => {
-                inline_markdown_result_list.push(format!("[[{}]]", token.payload).to_string());
+                inline_markdown_result_list.push(render_as_tag_str(&token.payload).to_string());
             }
             BlockTokenType::JournalLink => {
                 inline_markdown_result_list.push(render_journal_link(&SimplePageName {
@@ -55,9 +56,51 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
                     .push(format!("{{query: {}}}", token.payload).to_string());
             }
             BlockTokenType::Todo => {
-                inline_markdown_result_list.push(format!("[{}]", token.payload).to_string());
+                inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
         }
     }
     inline_markdown_result_list.join(" ")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::looksyk::builder::{link_token, text_token_str};
+    use crate::looksyk::model::{BlockContent, ParsedMarkdownFile};
+
+    #[test]
+    fn test_render_file_basic_markdown() {
+        let markdown_file = ParsedMarkdownFile {
+            blocks: vec![ParsedBlock {
+                indentation: 0,
+                content: vec![BlockContent {
+                    as_text: "Test content".to_string(),
+                    as_tokens: vec![text_token_str("Test content")],
+                }],
+            }],
+        };
+        let rendered = render_file_basic_markdown(&markdown_file);
+        assert_eq!(rendered.blocks.len(), 1);
+        assert_eq!(rendered.blocks[0].content.prepared_markdown, "Test content");
+    }
+
+    #[test]
+    fn test_render_file_basic_markdown_should_preserve_links_as_tag_link() {
+        let markdown_file = ParsedMarkdownFile {
+            blocks: vec![ParsedBlock {
+                indentation: 0,
+                content: vec![BlockContent {
+                    as_text: "Test content".to_string(),
+                    as_tokens: vec![link_token("Test link")],
+                }],
+            }],
+        };
+        let rendered = render_file_basic_markdown(&markdown_file);
+        assert_eq!(rendered.blocks.len(), 1);
+        assert_eq!(
+            rendered.blocks[0].content.prepared_markdown,
+            "[[Test link]]"
+        );
+    }
 }
