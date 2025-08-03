@@ -28,8 +28,7 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
                 inline_markdown_result_list.push("query hidden".to_string());
             }
             BlockTokenType::Todo => {
-                inline_markdown_result_list
-                    .push(render_as_todo_without_padding(token).to_string());
+                inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
         }
     }
