@@ -280,6 +280,7 @@ table {
     border-radius: 50%;
     padding: 0.5rem;
     width: 3ex;
+    min-width: 3ex;
     height: 3ex;
     text-align: center;
     vertical-align: center;
