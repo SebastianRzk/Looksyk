@@ -7,6 +7,7 @@ use crate::looksyk::renderer::atomics::{
     render_journal_link, render_user_link, serialize_reference,
 };
 use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
+use crate::looksyk::syntax::looksyk_markdown::render_as_todo_without_padding;
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
@@ -103,7 +104,7 @@ pub fn render_tokens_deep(
                 inline_markdown_result_list.push(render_result.inplace_markdown);
             }
             BlockTokenType::Todo => {
-                inline_markdown_result_list.push(format!("[{}]", token.payload));
+                inline_markdown_result_list.push(render_as_todo_without_padding(&token));
             }
         }
     }

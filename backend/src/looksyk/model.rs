@@ -58,7 +58,7 @@ pub struct PreparedBlock {
     pub has_dynamic_content: bool,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct PreparedBlockContent {
     pub original_text: String,
     pub prepared_markdown: String,
