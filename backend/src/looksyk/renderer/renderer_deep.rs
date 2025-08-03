@@ -104,7 +104,7 @@ pub fn render_tokens_deep(
                 inline_markdown_result_list.push(render_result.inplace_markdown);
             }
             BlockTokenType::Todo => {
-                inline_markdown_result_list.push(render_as_todo_without_padding(&token));
+                inline_markdown_result_list.push(render_as_todo_without_padding(token));
             }
         }
     }

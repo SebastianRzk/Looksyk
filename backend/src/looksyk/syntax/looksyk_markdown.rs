@@ -5,7 +5,7 @@ pub fn render_as_tag(simple_page_name: &SimplePageName) -> String {
 }
 
 pub fn render_as_tag_str(simple_page_name: &str) -> String {
-    format!("[[{}]]", simple_page_name)
+    format!("[[{simple_page_name}]]")
 }
 
 pub fn render_as_todo(token: &BlockToken) -> String {
