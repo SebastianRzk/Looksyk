@@ -25,13 +25,14 @@ use crate::looksyk::data::graph::load_graph_data;
 use actix_web::middleware::Logger;
 mod io;
 
+use crate::io::actix::{json_form_config, multipart_form_config};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
 use crate::migration::migrator::run_migrations;
 use crate::sync::git::config::GitConfigOnDisk;
 use crate::sync::git::git_services::initialize_git_configuration;
 use actix_web::web::Data;
-use actix_web::{error, web, App, HttpResponse, HttpServer};
+use actix_web::{web, App, HttpServer};
 
 mod looksyk;
 mod migration;
@@ -87,15 +88,11 @@ async fn main() -> std::io::Result<()> {
     );
 
     HttpServer::new(move || {
-        let json_cfg = web::FormConfig::default()
-            .limit(40000 * 1000 * 1000)
-            .error_handler(|err, _req| {
-                error::InternalError::from_response(err, HttpResponse::Conflict().into()).into()
-            });
         App::new()
             .wrap(Logger::default())
             .app_data(app_state.clone())
-            .app_data(json_cfg)
+            .app_data(json_form_config())
+            .app_data(multipart_form_config())
             .app_data(Data::new(git_config.clone()))
             .service(markdown::endpoints::parse)
             .service(page::endpoints::update_block)

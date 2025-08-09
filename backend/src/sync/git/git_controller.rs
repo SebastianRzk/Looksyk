@@ -1,6 +1,9 @@
 use crate::state::application_state::AppState;
 use crate::sync::git::config::GitConfig;
-use crate::sync::git::git_services::{calc_git_status, GitActionResult, GitStatus};
+use crate::sync::git::git_services::{
+    calc_git_status, create_checkpoint, pull_updates, push_existing_commits, GitActionResult,
+    GitStatus,
+};
 use actix_web::web::Data;
 use actix_web::{get, web};
 use actix_web::{post, Responder};
@@ -12,8 +15,7 @@ pub async fn post_create_checkpoint(
     git_config: Data<GitConfig>,
 ) -> actix_web::Result<impl Responder> {
     let location = data.data_path.clone();
-    let create_checkpoint_result =
-        crate::sync::git::git_services::create_checkpoint(&git_config, data, &location);
+    let create_checkpoint_result = create_checkpoint(&git_config, data, &location);
     Ok(web::Json(to_dto(create_checkpoint_result)))
 }
 
@@ -69,8 +71,7 @@ pub async fn update_current_data(
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
-    let updates =
-        crate::sync::git::git_services::pull_updates(&git_config, data, &graph_root_location);
+    let updates = pull_updates(&git_config, data, &graph_root_location);
     Ok(web::Json(to_dto(updates)))
 }
 
@@ -80,10 +81,6 @@ pub async fn post_retry_upload(
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
-    let updates = crate::sync::git::git_services::push_existing_commits(
-        &git_config,
-        data,
-        &graph_root_location,
-    );
+    let updates = push_existing_commits(&git_config, data, &graph_root_location);
     Ok(web::Json(to_dto(updates)))
 }
