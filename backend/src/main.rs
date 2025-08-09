@@ -28,11 +28,15 @@ mod io;
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
 use crate::migration::migrator::run_migrations;
+use crate::sync::git::config::GitConfigOnDisk;
+use crate::sync::git::git_services::initialize_git_configuration;
+use actix_web::web::Data;
 use actix_web::{error, web, App, HttpResponse, HttpServer};
 
 mod looksyk;
 mod migration;
 mod state;
+mod sync;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -43,7 +47,7 @@ async fn main() -> std::io::Result<()> {
     let config = default_config.overwrite(cli_args);
     println!("Computed configuration {config:?}");
 
-    let data_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
+    let graph_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
         let initial_config_path = env::get_or_default(
             LOOKSYK_CONFIG_PATH,
             home_directory()
@@ -58,19 +62,28 @@ async fn main() -> std::io::Result<()> {
         })
     });
 
-    init_graph_if_needed(&data_root_location);
+    init_graph_if_needed(&graph_root_location);
 
     run_migrations(
         get_current_application_version(),
-        load_graph_version(&data_root_location),
-        &data_root_location,
+        load_graph_version(&graph_root_location),
+        &graph_root_location,
     );
 
-    let app_state = convert_to_app_state(load_graph_data(data_root_location), &config.static_path);
+    let app_state =
+        convert_to_app_state(load_graph_data(&graph_root_location), &config.static_path);
 
     println!(
         "Starting Looksyk on  http://{}:{}",
         config.application_host, config.application_port
+    );
+
+    let git_config = initialize_git_configuration(
+        &GitConfigOnDisk {
+            active: true,
+            git_conflict_resolution: sync::git::config::GitConflictResolution::Merge,
+        },
+        &graph_root_location,
     );
 
     HttpServer::new(move || {
@@ -83,6 +96,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .app_data(app_state.clone())
             .app_data(json_cfg)
+            .app_data(Data::new(git_config.clone()))
             .service(markdown::endpoints::parse)
             .service(page::endpoints::update_block)
             .service(userpage::endpoints::get_overview_page)
@@ -126,8 +140,12 @@ async fn main() -> std::io::Result<()> {
             .service(templates::endpoints::list_all_templates)
             .service(templates::endpoints::insert_template_into_page)
             .service(search::endpoints::search_in_files)
-            .service(http::state::endpoints::update_block)
+            .service(http::state::endpoints::post_refresh_internal_state)
             .service(help::help)
+            .service(sync::git::git_controller::get_current_git_status)
+            .service(sync::git::git_controller::update_current_data)
+            .service(sync::git::git_controller::post_create_checkpoint)
+            .service(sync::git::git_controller::post_retry_upload)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

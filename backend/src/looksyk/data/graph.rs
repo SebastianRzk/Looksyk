@@ -7,7 +7,7 @@ use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
 use crate::state::application_state::{GraphRootLocation, PureAppState};
 
-pub fn load_graph_data(data_root_location: GraphRootLocation) -> PureAppState {
+pub fn load_graph_data(data_root_location: &GraphRootLocation) -> PureAppState {
     let mut media_index = read_media_config(&data_root_location);
     media_index = init_media(&data_root_location, &media_index);
     write_media_config(&data_root_location, &media_index);
@@ -24,7 +24,7 @@ pub fn load_graph_data(data_root_location: GraphRootLocation) -> PureAppState {
     println!("all data refreshed");
 
     PureAppState {
-        data_path: data_root_location,
+        data_path: data_root_location.clone(),
         a_user_pages: user_page_index,
         b_journal_pages: journal_index,
         c_todo_index: todo_index,

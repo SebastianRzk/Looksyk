@@ -5,8 +5,15 @@ use actix_web::web::Data;
 use actix_web::{post, web, Responder};
 
 #[post("/api/state/refresh")]
-async fn update_block(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    let new_state = load_graph_data(data.data_path.clone());
+pub async fn post_refresh_internal_state(
+    data: Data<AppState>,
+) -> actix_web::Result<impl Responder> {
+    refresh_internal_state(data);
+    Ok(web::Json(state_refreshed()))
+}
+
+pub fn refresh_internal_state(data: Data<AppState>) {
+    let new_state = load_graph_data(&data.data_path);
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
@@ -31,6 +38,4 @@ async fn update_block(data: Data<AppState>) -> actix_web::Result<impl Responder>
     drop(asset_cache);
     drop(media_index);
     drop(config);
-
-    Ok(web::Json(state_refreshed()))
 }
