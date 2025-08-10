@@ -56,7 +56,7 @@ pub fn push_existing_commits(
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
-    if git_config.git_sync_readyness.is_ready() {
+    if !git_config.git_sync_readyness.is_ready() {
         return GitActionResult::error("Git configuration is not ready".to_string());
     }
 
@@ -110,7 +110,7 @@ pub fn pull_updates(
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
-    if !git_config.git_sync_readyness.is_ready() {
+    if git_config.git_sync_readyness.not_ready() {
         return GitActionResult::error("Git configuration is not ready".to_string());
     }
 
@@ -168,7 +168,7 @@ fn calculate_readyness(
 }
 
 pub fn calc_git_status(config: &GitConfig, graph_root_location: &GraphRootLocation) -> GitStatus {
-    if !config.git_sync_readyness.is_ready() {
+    if config.git_sync_readyness.not_ready() {
         return GitStatus {
             enabled: config.enabled,
             has_changes: false,

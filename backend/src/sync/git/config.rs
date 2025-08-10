@@ -1,5 +1,4 @@
 use std::fmt::{Display, Formatter};
-use std::pin::Pin;
 
 pub struct GitConfigOnDisk {
     pub active: bool,
@@ -23,8 +22,8 @@ pub enum GitConflictResolution {
 impl Display for GitConflictResolution {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            GitConflictResolution::KeepLocal => write!(f, "keep-local"),
-            GitConflictResolution::KeepRemote => write!(f, "keep-remote"),
+            GitConflictResolution::KeepLocal => write!(f, "ours"),
+            GitConflictResolution::KeepRemote => write!(f, "theirs"),
             GitConflictResolution::Merge => write!(f, "merge"),
         }
     }

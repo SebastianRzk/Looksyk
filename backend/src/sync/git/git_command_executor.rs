@@ -39,6 +39,8 @@ impl GitCommandExecutable {
         for arg in self.args {
             cmd.arg(arg);
         }
+        cmd.env("LANG", "en_US.UTF-8");
+        cmd.env("GIT_TERMINAL_PROMPT", "0");
 
         println!("Executing {} with command {cmd:?}", self.cmd_description);
         println!("Current working directory: {:?}", self.working_directory);

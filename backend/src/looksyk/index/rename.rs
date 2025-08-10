@@ -180,11 +180,9 @@ fn combine_two_pages(
             },
         };
     }
+    
     let mut new_user_state = new_page_associated_state.user_pages.entries.clone();
-    if target.is_none() {
-        new_user_state.insert(new_tag_name.page_name.clone(), source.unwrap().clone());
-    } else {
-        let target = target.unwrap();
+    if let Some(target) = target {
         let source = source.unwrap();
         let mut new_blocks = target.blocks.clone();
         new_blocks.append(&mut source.blocks.clone());
@@ -192,6 +190,9 @@ fn combine_two_pages(
             new_tag_name.page_name.clone(),
             ParsedMarkdownFile { blocks: new_blocks },
         );
+
+    } else {
+        new_user_state.insert(new_tag_name.page_name.clone(), source.unwrap().clone());
     }
 
     RenameTagResult {

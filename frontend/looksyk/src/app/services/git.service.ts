@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, debounce, delay, firstValueFrom, map, Observable, timer } from "rxjs";
+import { BehaviorSubject, debounce, filter, firstValueFrom, skip, timer } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { PageService } from "./page.service";
 
@@ -8,6 +8,8 @@ import { PageService } from "./page.service";
 })
 export class GitService {
 
+
+  private syncStatus = SyncStatus.Unknown;
 
   private currentGitInfo = new BehaviorSubject<GitInformation>({
     enabled: false,
@@ -22,7 +24,17 @@ export class GitService {
 
   private http = inject(HttpClient);
   private pageService = inject(PageService);
-  private update_ = this.pageService.somethingHasChanged$.pipe(debounce(() => timer(1000))).subscribe(() => this.update());
+  private update_ = this.pageService.somethingHasChanged$
+    .pipe(filter(() => this.syncStatus == SyncStatus.Enabled || this.syncStatus == SyncStatus.Unknown))
+    .pipe(debounce(() => timer(1000))).subscribe(() => this.update());
+
+  private _updateInitialStatus = firstValueFrom(this.currentGitInfo$.pipe(skip(1))).then((status: GitInformation) => {
+    if (status.enabled && status.isReady) {
+      this.syncStatus = SyncStatus.Enabled;
+    } else {
+      this.syncStatus = SyncStatus.Disabled;
+    }
+  })
 
   public update() {
     this.http.get<GitInformation>("/api/sync/git/status").subscribe((data: GitInformation) => {
@@ -41,4 +53,10 @@ export interface GitInformation {
   hasErrors: boolean,
 }
 
+
+enum SyncStatus {
+  Enabled,
+  Disabled,
+  Unknown
+}
 

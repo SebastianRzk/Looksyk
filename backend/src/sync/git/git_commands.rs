@@ -2,6 +2,7 @@ use crate::state::application_state::GraphRootLocation;
 use crate::sync::git::config::GitConfig;
 use crate::sync::git::git_command_executor::GitCommandExecutor;
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
+use std::process::Command;
 
 pub fn check_if_git_is_installed(graph_root_location: &GraphRootLocation) -> Result<(), String> {
     let output = GitCommandExecutor::new("git --version", graph_root_location)
@@ -19,11 +20,11 @@ pub fn check_if_git_is_installed(graph_root_location: &GraphRootLocation) -> Res
 pub fn check_if_git_repo_is_initialized(
     graph_root_location: &GraphRootLocation,
 ) -> Result<(), String> {
-    use std::process::Command;
-
     let output = Command::new("git")
         .arg("rev-parse")
         .arg("--is-inside-work-tree")
+        .env("LANG", "en_US.UTF-8")
+        .env("GIT_TERMINAL_PROMPT", "0")
         .current_dir(graph_root_location.path.clone())
         .output()
         .map_err(|e| format!("Failed to execute git command: {e}"))?;
@@ -66,7 +67,8 @@ pub fn check_remote_has_incoming_updates(
     }
 
     let status_output = String::from_utf8_lossy(&process_output.stdout);
-    let has_changes = status_output.contains("Your branch is behind");
+    let has_changes =
+        status_output.contains("Your branch is behind") || status_output.contains(" have diverged");
 
     if has_changes {
         RemoteUpdateResult::UpdatePending
@@ -85,10 +87,6 @@ pub enum RemoteUpdateResult {
 impl RemoteUpdateResult {
     pub fn is_update_pending(&self) -> bool {
         matches!(self, RemoteUpdateResult::UpdatePending)
-    }
-
-    pub fn is_no_update_pending(&self) -> bool {
-        matches!(self, RemoteUpdateResult::NoUpdatePending)
     }
 
     pub fn is_error(&self) -> bool {
@@ -149,6 +147,9 @@ pub fn pull_updates_from_remote(
     cmd.arg("--strategy=recursive");
     cmd.arg(format!("-X{}", config.git_conflict_resolution));
     cmd.current_dir(graph_root_location.path.clone());
+    cmd.env("LANG", "en_US.UTF-8");
+    cmd.env("GIT_TERMINAL_PROMPT", "0");
+    println!("Executing git pull command: {cmd:?}");
 
     let output = cmd
         .output()
@@ -156,6 +157,15 @@ pub fn pull_updates_from_remote(
     if output.status.success() {
         Ok(())
     } else {
+        eprintln!("Command failed with status: {}", output.status);
+        eprintln!(
+            "Command output: {}",
+            String::from_utf8_lossy(&output.stdout)
+        );
+        eprintln!(
+            "Command error output: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
         Err("Failed to pull updates from remote".to_string())
     }
 }

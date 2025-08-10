@@ -82,7 +82,7 @@ async fn main() -> std::io::Result<()> {
     let git_config = initialize_git_configuration(
         &GitConfigOnDisk {
             active: true,
-            git_conflict_resolution: sync::git::config::GitConflictResolution::Merge,
+            git_conflict_resolution: sync::git::config::GitConflictResolution::KeepLocal,
         },
         &graph_root_location,
     );
