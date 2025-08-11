@@ -60,7 +60,43 @@
     </div>
   }
 }
-<div class="bottom">
+
+@if( gitService.currentGitInfo$ | async; as gitInfo) {
+  @if(gitInfo && gitInfo.enabled && gitInfo.isReady){
+    <div class="bottom sync-info">
+      <div class="sync-icon unimportant">
+        sync
+        @if (gitInfo.hasErrors){
+          <mat-icon>sync_problem</mat-icon>
+        }@else {
+          <mat-icon>sync</mat-icon>
+        }
+        @if(gitInfo.hasIncomingUpdates) {
+          <mat-icon>arrow_downward_alt</mat-icon>
+        }
+        @if(gitInfo.hasOutgoingUpdates) {
+          <mat-icon>arrow_upward_alt</mat-icon>
+        }
+      </div>
+      <div class="sync-icon unimportant">
+        @if (gitInfo.hasChanges){
+          <mat-icon>edit</mat-icon>
+        }@else {
+          <mat-icon>check_circle</mat-icon>
+        }
+        checkpoint
+      </div>
+    </div>
+  }
+  @if (gitInfo && gitInfo.enabled && !gitInfo.isReady) {
+    <div class="bottom">
+      <div class="sync-icon">
+        <mat-icon>sync_problem</mat-icon>
+      </div>
+    </div>
+  }
+}
+<div>
   <button matTooltip="reload data from disk" mat-button (click)="reload()" class="unimportant">
     <mat-icon>sync</mat-icon>
   </button>  <button matTooltip="configuration" mat-button routerLink="/special-page/configuration" class="unimportant">

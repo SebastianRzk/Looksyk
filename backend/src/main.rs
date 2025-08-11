@@ -28,9 +28,10 @@ mod io;
 use crate::io::actix::{json_form_config, multipart_form_config};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
-use crate::migration::migrator::run_migrations;
-use crate::sync::git::config::GitConfigOnDisk;
-use crate::sync::git::git_services::initialize_git_configuration;
+use crate::migration::migrator::{run_migrations, would_run_migrations, MigrationResult};
+use crate::sync::git::application_port::git_sync_application_port::{
+    load_git_config, try_to_commit_and_push, try_to_update_graph,
+};
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 
@@ -65,11 +66,25 @@ async fn main() -> std::io::Result<()> {
 
     init_graph_if_needed(&graph_root_location);
 
-    run_migrations(
-        get_current_application_version(),
-        load_graph_version(&graph_root_location),
+    let current_application_version = get_current_application_version();
+    let graph_version = load_graph_version(&graph_root_location);
+    let git_config = load_git_config(&graph_root_location);
+
+    if would_run_migrations(&current_application_version, &graph_version) {
+        try_to_update_graph(&graph_root_location, &git_config)
+    }
+
+    let migration_result = run_migrations(
+        current_application_version,
+        graph_version,
         &graph_root_location,
     );
+
+    if migration_result == MigrationResult::MigratedSomething {
+        try_to_commit_and_push(&graph_root_location, &git_config);
+    }
+
+    let git_config = load_git_config(&graph_root_location);
 
     let app_state =
         convert_to_app_state(load_graph_data(&graph_root_location), &config.static_path);
@@ -77,14 +92,6 @@ async fn main() -> std::io::Result<()> {
     println!(
         "Starting Looksyk on  http://{}:{}",
         config.application_host, config.application_port
-    );
-
-    let git_config = initialize_git_configuration(
-        &GitConfigOnDisk {
-            active: true,
-            git_conflict_resolution: sync::git::config::GitConflictResolution::KeepLocal,
-        },
-        &graph_root_location,
     );
 
     HttpServer::new(move || {
@@ -139,10 +146,10 @@ async fn main() -> std::io::Result<()> {
             .service(search::endpoints::search_in_files)
             .service(http::state::endpoints::post_refresh_internal_state)
             .service(help::help)
-            .service(sync::git::git_controller::get_current_git_status)
-            .service(sync::git::git_controller::update_current_data)
-            .service(sync::git::git_controller::post_create_checkpoint)
-            .service(sync::git::git_controller::post_retry_upload)
+            .service(sync::git::io::git_controller::get_current_git_status)
+            .service(sync::git::io::git_controller::update_current_data)
+            .service(sync::git::io::git_controller::post_create_checkpoint)
+            .service(sync::git::io::git_controller::post_retry_upload)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

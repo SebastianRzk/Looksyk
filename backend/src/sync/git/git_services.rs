@@ -1,20 +1,16 @@
 use crate::http::state;
 use crate::state::application_state::{AppState, GraphRootLocation};
-use crate::sync::git::config::{
-    GitConfig, GitConfigOnDisk, GitSyncReadyness, GitSyncReadynessTrait,
-};
+use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
 use crate::sync::git::git_commands::{
-    check_if_git_is_installed, check_if_git_repo_is_initialized,
     check_if_remote_has_outgoing_updates, check_local_changes, check_remote_has_incoming_updates,
     git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
 };
-use crate::sync::git::git_services::GitSyncReadyness::{Disabled, NotReady, ReadyAndActive};
 use actix_web::web::Data;
 
 pub fn create_checkpoint(
     git_config: &GitConfig,
-    app_state: Data<AppState>,
+    app_state: Option<Data<AppState>>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
     if !git_config.git_sync_readyness.is_ready() {
@@ -37,10 +33,14 @@ pub fn create_checkpoint(
                 pull_result.unwrap_err()
             ));
         } else {
-            println!("Pulled updates from remote before pushing local changes.");
-            println!("Updating internal state after pulling updates.");
-            state::endpoints::refresh_internal_state(app_state);
-            println!("Internal state updated successfully.");
+            if let Some(app_state) = app_state {
+                println!("Pulled updates from remote before pushing local changes.");
+                println!("Updating internal state after pulling updates.");
+                state::endpoints::refresh_internal_state(app_state);
+                println!("Internal state updated successfully.");
+            } else {
+                println!("No application state provided, skipping internal state update.");
+            }
         }
     }
 
@@ -53,7 +53,7 @@ pub fn create_checkpoint(
 
 pub fn push_existing_commits(
     git_config: &GitConfig,
-    app_state: Data<AppState>,
+    app_state: Option<Data<AppState>>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
     if !git_config.git_sync_readyness.is_ready() {
@@ -79,7 +79,12 @@ pub fn push_existing_commits(
         return GitActionResult::error(format!("Failed to push: {e}"));
     }
     if update_result == RemoteUpdateResult::UpdatePending {
-        state::endpoints::refresh_internal_state(app_state);
+        if let Some(app_state) = app_state {
+            println!("Updating internal state.");
+            state::endpoints::refresh_internal_state(app_state);
+        } else {
+            println!("No application state provided, skipping internal state update.");
+        }
     }
     GitActionResult::success()
 }
@@ -110,17 +115,10 @@ pub fn pull_updates(
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
-    if git_config.git_sync_readyness.not_ready() {
-        return GitActionResult::error("Git configuration is not ready".to_string());
-    }
-
-    let update_result = check_remote_has_incoming_updates(graph_root_location);
-
-    if let Error(e) = update_result {
-        return GitActionResult::error(format!("Failed to check for updates on remote: {e}"));
-    }
-
-    let pull_result = pull_updates_from_remote(git_config, graph_root_location);
+    let (update_result, pull_result) = match try_updating(git_config, graph_root_location) {
+        Ok(value) => value,
+        Err(value) => return value,
+    };
 
     if let Err(e) = &pull_result {
         return GitActionResult::error(format!("Failed to pull updates from remote: {e}"));
@@ -133,38 +131,26 @@ pub fn pull_updates(
     GitActionResult::success()
 }
 
-pub fn initialize_git_configuration(
-    config: &GitConfigOnDisk,
+pub fn try_updating(
+    git_config: &GitConfig,
     graph_root_location: &GraphRootLocation,
-) -> GitConfig {
-    GitConfig {
-        enabled: config.active,
-        git_sync_readyness: calculate_readyness(config, graph_root_location),
-        git_conflict_resolution: config.git_conflict_resolution.clone(),
-    }
-}
-
-fn calculate_readyness(
-    config: &GitConfigOnDisk,
-    graph_root_location: &GraphRootLocation,
-) -> GitSyncReadyness {
-    if !config.active {
-        return Disabled;
+) -> Result<(RemoteUpdateResult, Result<(), String>), GitActionResult> {
+    if git_config.git_sync_readyness.not_ready() {
+        return Err(GitActionResult::error(
+            "Git configuration is not ready".to_string(),
+        ));
     }
 
-    let installed = check_if_git_is_installed(graph_root_location);
-    if let Err(e) = &installed {
-        println!("Git is not installed or not found in PATH: {e}");
-        return NotReady(e.clone());
+    let update_result = check_remote_has_incoming_updates(graph_root_location);
+
+    if let Error(e) = update_result {
+        return Err(GitActionResult::error(format!(
+            "Failed to check for updates on remote: {e}"
+        )));
     }
 
-    let repo_is_initialized = check_if_git_repo_is_initialized(graph_root_location);
-
-    if let Err(e) = &repo_is_initialized {
-        println!("Current directory is not a git repository: {e}");
-        return NotReady(e.clone());
-    }
-    ReadyAndActive
+    let pull_result = pull_updates_from_remote(git_config, graph_root_location);
+    Ok((update_result, pull_result))
 }
 
 pub fn calc_git_status(config: &GitConfig, graph_root_location: &GraphRootLocation) -> GitStatus {

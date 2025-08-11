@@ -15,7 +15,7 @@ pub async fn post_create_checkpoint(
     git_config: Data<GitConfig>,
 ) -> actix_web::Result<impl Responder> {
     let location = data.data_path.clone();
-    let create_checkpoint_result = create_checkpoint(&git_config, data, &location);
+    let create_checkpoint_result = create_checkpoint(&git_config, Some(data), &location);
     Ok(web::Json(to_dto(create_checkpoint_result)))
 }
 
@@ -81,6 +81,6 @@ pub async fn post_retry_upload(
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
-    let updates = push_existing_commits(&git_config, data, &graph_root_location);
+    let updates = push_existing_commits(&git_config, Some(data), &graph_root_location);
     Ok(web::Json(to_dto(updates)))
 }

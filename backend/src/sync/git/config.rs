@@ -1,10 +1,5 @@
 use std::fmt::{Display, Formatter};
 
-pub struct GitConfigOnDisk {
-    pub active: bool,
-    pub git_conflict_resolution: GitConflictResolution,
-}
-
 #[derive(Clone, Debug)]
 pub struct GitConfig {
     pub enabled: bool,
@@ -25,6 +20,22 @@ impl Display for GitConflictResolution {
             GitConflictResolution::KeepLocal => write!(f, "ours"),
             GitConflictResolution::KeepRemote => write!(f, "theirs"),
             GitConflictResolution::Merge => write!(f, "merge"),
+        }
+    }
+}
+
+impl From<&String> for GitConflictResolution {
+    fn from(value: &String) -> Self {
+        match value.as_str() {
+            "ours" => GitConflictResolution::KeepLocal,
+            "theirs" => GitConflictResolution::KeepRemote,
+            "merge" => GitConflictResolution::Merge,
+            _ => {
+                eprintln!(
+                    "Unknown git conflict resolution strategy: {value}. Defaulting to 'ours'."
+                );
+                GitConflictResolution::KeepLocal
+            }
         }
     }
 }

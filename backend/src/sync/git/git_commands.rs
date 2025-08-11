@@ -1,7 +1,7 @@
 use crate::state::application_state::GraphRootLocation;
 use crate::sync::git::config::GitConfig;
-use crate::sync::git::git_command_executor::GitCommandExecutor;
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
+use crate::sync::git::io::git_command_executor::GitCommandExecutor;
 use std::process::Command;
 
 pub fn check_if_git_is_installed(graph_root_location: &GraphRootLocation) -> Result<(), String> {
