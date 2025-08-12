@@ -6,6 +6,7 @@ use crate::sync::git::git_commands::{
     check_if_remote_has_outgoing_updates, check_local_changes, check_remote_has_incoming_updates,
     git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
 };
+use crate::sync::git::git_services::UpdateResult::NothingToDo;
 use actix_web::web::Data;
 
 pub fn create_checkpoint(
@@ -32,15 +33,13 @@ pub fn create_checkpoint(
                 "Failed to pull updates from remote: {}",
                 pull_result.unwrap_err()
             ));
+        } else if let Some(app_state) = app_state {
+            println!("Pulled updates from remote before pushing local changes.");
+            println!("Updating internal state after pulling updates.");
+            state::endpoints::refresh_internal_state(app_state);
+            println!("Internal state updated successfully.");
         } else {
-            if let Some(app_state) = app_state {
-                println!("Pulled updates from remote before pushing local changes.");
-                println!("Updating internal state after pulling updates.");
-                state::endpoints::refresh_internal_state(app_state);
-                println!("Internal state updated successfully.");
-            } else {
-                println!("No application state provided, skipping internal state update.");
-            }
+            println!("No application state provided, skipping internal state update.");
         }
     }
 
@@ -115,16 +114,12 @@ pub fn pull_updates(
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
-    let (update_result, pull_result) = match try_updating(git_config, graph_root_location) {
-        Ok(value) => value,
-        Err(value) => return value,
-    };
-
-    if let Err(e) = &pull_result {
+    let try_updating_result = try_updating(git_config, graph_root_location);
+    if let UpdateResult::Error(e) = &try_updating_result {
         return GitActionResult::error(format!("Failed to pull updates from remote: {e}"));
     }
 
-    if update_result == RemoteUpdateResult::UpdatePending {
+    if try_updating_result == UpdateResult::HasChangedSomething {
         state::endpoints::refresh_internal_state(app_state);
     }
 
@@ -134,23 +129,55 @@ pub fn pull_updates(
 pub fn try_updating(
     git_config: &GitConfig,
     graph_root_location: &GraphRootLocation,
-) -> Result<(RemoteUpdateResult, Result<(), String>), GitActionResult> {
+) -> UpdateResult {
     if git_config.git_sync_readyness.not_ready() {
-        return Err(GitActionResult::error(
-            "Git configuration is not ready".to_string(),
-        ));
+        return NothingToDo;
     }
 
-    let update_result = check_remote_has_incoming_updates(graph_root_location);
+    let fetch_result = check_remote_has_incoming_updates(graph_root_location);
 
-    if let Error(e) = update_result {
-        return Err(GitActionResult::error(format!(
-            "Failed to check for updates on remote: {e}"
-        )));
+    if let Error(e) = fetch_result {
+        return UpdateResult::Error(format!("Failed to check for updates on remote: {e}"));
     }
 
-    let pull_result = pull_updates_from_remote(git_config, graph_root_location);
-    Ok((update_result, pull_result))
+    if fetch_result == RemoteUpdateResult::UpdatePending {
+        let has_local_changes_result = check_local_changes(graph_root_location);
+        if let Err(e) = &has_local_changes_result {
+            return UpdateResult::Error(format!("Failed to check local changes: {e}"));
+        }
+
+        let local_commit_result = if has_local_changes_result.unwrap() {
+            let result = git_commit(graph_root_location);
+            if let Err(e) = &result {
+                return UpdateResult::Error(format!("Failed to commit local changes: {e}"));
+            }
+            true
+        } else {
+            false
+        };
+
+        let pull_result = pull_updates_from_remote(git_config, graph_root_location);
+        if let Err(e) = &pull_result {
+            return UpdateResult::Error(format!("Failed to pull updates from remote: {e}"));
+        }
+
+        if local_commit_result {
+            let push_result = git_push(graph_root_location);
+            if let Err(e) = &push_result {
+                return UpdateResult::Error(format!("Failed to push local changes: {e}"));
+            }
+        }
+        UpdateResult::HasChangedSomething
+    } else {
+        UpdateResult::NothingToDo
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum UpdateResult {
+    HasChangedSomething,
+    Error(String),
+    NothingToDo,
 }
 
 pub fn calc_git_status(config: &GitConfig, graph_root_location: &GraphRootLocation) -> GitStatus {

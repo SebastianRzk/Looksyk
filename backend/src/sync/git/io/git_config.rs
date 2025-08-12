@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfig {
     initialize_git_configuration(
         &load_git_config_from_disk(graph_root_location),
-        &graph_root_location,
+        graph_root_location,
     )
 }
 
@@ -30,8 +30,7 @@ fn load_git_config_from_disk(graph_root_location: &GraphRootLocation) -> GitConf
         }
     } else {
         eprintln!(
-            "Git configuration file not found at {:?}. Using default.",
-            git_config_file
+            "Git configuration file not found at {git_config_file:?}. Using default."
         );
         disabled_config_on_disk()
     }

@@ -28,10 +28,11 @@ mod io;
 use crate::io::actix::{json_form_config, multipart_form_config};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
-use crate::migration::migrator::{run_migrations, would_run_migrations, MigrationResult};
+use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
     load_git_config, try_to_commit_and_push, try_to_update_graph,
 };
+use crate::sync::io::sync_application_port::GraphChanges;
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 
@@ -70,9 +71,7 @@ async fn main() -> std::io::Result<()> {
     let graph_version = load_graph_version(&graph_root_location);
     let git_config = load_git_config(&graph_root_location);
 
-    if would_run_migrations(&current_application_version, &graph_version) {
-        try_to_update_graph(&graph_root_location, &git_config)
-    }
+    try_to_update_graph(&graph_root_location, &git_config);
 
     let migration_result = run_migrations(
         current_application_version,
@@ -84,10 +83,12 @@ async fn main() -> std::io::Result<()> {
         try_to_commit_and_push(&graph_root_location, &git_config);
     }
 
-    let git_config = load_git_config(&graph_root_location);
+    let git_config = Data::new(load_git_config(&graph_root_location));
 
     let app_state =
         convert_to_app_state(load_graph_data(&graph_root_location), &config.static_path);
+
+    let changes_state = Data::new(GraphChanges::default());
 
     println!(
         "Starting Looksyk on  http://{}:{}",
@@ -100,7 +101,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(app_state.clone())
             .app_data(json_form_config())
             .app_data(multipart_form_config())
-            .app_data(Data::new(git_config.clone()))
+            .app_data(git_config.clone())
+            .app_data(changes_state.clone())
             .service(markdown::endpoints::parse)
             .service(page::endpoints::update_block)
             .service(userpage::endpoints::get_overview_page)
