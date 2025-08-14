@@ -8,7 +8,7 @@ pub struct GitCommandExecutor {
 }
 
 pub struct GitCommandExecutable {
-    args: &'static [&'static str],
+    args: Vec<String>,
     cmd_description: &'static str,
     working_directory: PathBuf,
 }
@@ -24,9 +24,17 @@ impl GitCommandExecutor {
         }
     }
 
-    pub fn args(self, args: &'static [&'static str]) -> GitCommandExecutable {
+    pub fn args_str(self, args: &'static [&'static str]) -> GitCommandExecutable {
         GitCommandExecutable {
-            args,
+            args: args.iter().map(|&arg| arg.to_string()).collect(),
+            cmd_description: self.cmd_description,
+            working_directory: self.working_directory,
+        }
+    }
+
+    pub fn args(self, args: &[String]) -> GitCommandExecutable {
+        GitCommandExecutable {
+            args: args.iter().map(|arg| arg.to_string()).collect(),
             cmd_description: self.cmd_description,
             working_directory: self.working_directory,
         }

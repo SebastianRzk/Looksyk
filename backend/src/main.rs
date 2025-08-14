@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 
@@ -30,7 +31,7 @@ use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
 use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
-    load_git_config, try_to_commit_and_push, try_to_update_graph,
+    load_git_config, try_to_commit_and_push, try_to_update_graph, CommitInitiator,
 };
 use crate::sync::io::sync_application_port::GraphChanges;
 use actix_web::web::Data;
@@ -71,7 +72,12 @@ async fn main() -> std::io::Result<()> {
     let graph_version = load_graph_version(&graph_root_location);
     let git_config = load_git_config(&graph_root_location);
 
-    try_to_update_graph(&graph_root_location, &git_config);
+    try_to_update_graph(
+        &graph_root_location,
+        &git_config,
+        CommitInitiator::Startup,
+        &HashSet::new(),
+    );
 
     let migration_result = run_migrations(
         current_application_version,
@@ -80,7 +86,12 @@ async fn main() -> std::io::Result<()> {
     );
 
     if migration_result == MigrationResult::MigratedSomething {
-        try_to_commit_and_push(&graph_root_location, &git_config);
+        try_to_commit_and_push(
+            &graph_root_location,
+            &git_config,
+            CommitInitiator::Migration,
+            &HashSet::new(),
+        );
     }
 
     let git_config = Data::new(load_git_config(&graph_root_location));

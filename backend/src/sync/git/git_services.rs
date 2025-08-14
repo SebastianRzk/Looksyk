@@ -1,5 +1,6 @@
 use crate::http::state;
 use crate::state::application_state::{AppState, GraphRootLocation};
+use crate::sync::git::application_port::git_sync_application_port::CommitInitiator;
 use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
 use crate::sync::git::git_commands::{
@@ -7,18 +8,25 @@ use crate::sync::git::git_commands::{
     git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
 };
 use crate::sync::git::git_services::UpdateResult::NothingToDo;
+use crate::sync::io::sync_application_port::GraphChange;
 use actix_web::web::Data;
+use std::collections::HashSet;
 
 pub fn create_checkpoint(
     git_config: &GitConfig,
     app_state: Option<Data<AppState>>,
     graph_root_location: &GraphRootLocation,
+    initiator: CommitInitiator,
+    graph_changes: &HashSet<GraphChange>,
 ) -> GitActionResult {
     if !git_config.git_sync_readyness.is_ready() {
         return GitActionResult::error("Git configuration is not ready".to_string());
     }
 
-    let create_checkpoint_result = git_commit(graph_root_location);
+    let create_checkpoint_result = git_commit(
+        graph_root_location,
+        calculate_git_commit_message(initiator, graph_changes),
+    );
     if let Err(e) = &create_checkpoint_result {
         return GitActionResult::error(format!("Failed to create checkpoint: {e}"));
     }
@@ -47,7 +55,7 @@ pub fn create_checkpoint(
     if let Err(e) = &git_push_result {
         return GitActionResult::error(format!("Failed to push: {e}"));
     }
-    GitActionResult::success()
+    GitActionResult::success(true)
 }
 
 pub fn push_existing_commits(
@@ -85,11 +93,12 @@ pub fn push_existing_commits(
             println!("No application state provided, skipping internal state update.");
         }
     }
-    GitActionResult::success()
+    GitActionResult::success(false)
 }
 
 pub struct GitActionResult {
     pub success: bool,
+    pub commit_was_done: bool,
     pub message: Option<String>,
 }
 
@@ -97,13 +106,15 @@ impl GitActionResult {
     pub fn error(message: String) -> Self {
         GitActionResult {
             success: false,
+            commit_was_done: false,
             message: Some(message),
         }
     }
 
-    pub fn success() -> Self {
+    pub fn success(commit_was_done: bool) -> Self {
         GitActionResult {
             message: None,
+            commit_was_done,
             success: true,
         }
     }
@@ -113,8 +124,11 @@ pub fn pull_updates(
     git_config: &GitConfig,
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
+    initiator: CommitInitiator,
+    graph_changes: &HashSet<GraphChange>,
 ) -> GitActionResult {
-    let try_updating_result = try_updating(git_config, graph_root_location);
+    let try_updating_result =
+        try_updating(git_config, graph_root_location, initiator, graph_changes);
     if let UpdateResult::Error(e) = &try_updating_result {
         return GitActionResult::error(format!("Failed to pull updates from remote: {e}"));
     }
@@ -123,12 +137,14 @@ pub fn pull_updates(
         state::endpoints::refresh_internal_state(app_state);
     }
 
-    GitActionResult::success()
+    GitActionResult::success(try_updating_result == UpdateResult::HasChangedSomething)
 }
 
 pub fn try_updating(
     git_config: &GitConfig,
     graph_root_location: &GraphRootLocation,
+    initiator: CommitInitiator,
+    graph_changes: &HashSet<GraphChange>,
 ) -> UpdateResult {
     if git_config.git_sync_readyness.not_ready() {
         return NothingToDo;
@@ -147,7 +163,10 @@ pub fn try_updating(
         }
 
         let local_commit_result = if has_local_changes_result.unwrap() {
-            let result = git_commit(graph_root_location);
+            let result = git_commit(
+                graph_root_location,
+                calculate_git_commit_message(initiator, graph_changes),
+            );
             if let Err(e) = &result {
                 return UpdateResult::Error(format!("Failed to commit local changes: {e}"));
             }
@@ -214,4 +233,82 @@ pub struct GitStatus {
     pub has_changes: bool,
     pub has_incoming_updates: bool,
     pub has_outgoing_updates: bool,
+}
+
+impl CommitInitiator {
+    pub fn description(&self) -> &str {
+        match self {
+            CommitInitiator::Startup => "Application Startup",
+            CommitInitiator::Shutdown => "Application Shutdown",
+            CommitInitiator::UserCheckpoint => "User Checkpoint",
+            CommitInitiator::UserUpdate => "User Update",
+            CommitInitiator::Migration => "Application Version Migration",
+        }
+    }
+}
+
+fn calculate_git_commit_message(
+    commit_entity: CommitInitiator,
+    graph_changes: &HashSet<GraphChange>,
+) -> String {
+    let headline = calculate_headline(commit_entity, graph_changes);
+    let body = calculate_body(graph_changes);
+
+    format!("{headline}\n\n{body}")
+}
+
+fn calculate_headline(
+    commit_initiator: CommitInitiator,
+    graph_changes: &HashSet<GraphChange>,
+) -> String {
+    let content = graph_changes
+        .iter()
+        .map(|change| change.change_type.description())
+        .collect::<Vec<String>>()
+        .join(", ");
+
+    format!("{}: {}", commit_initiator.description(), content)
+}
+
+fn calculate_body(graph_changes: &HashSet<GraphChange>) -> String {
+    let mut sorted_changes: Vec<&GraphChange> = graph_changes.iter().collect();
+    sorted_changes.sort_by(|l, r| l.target.cmp(&r.target));
+
+    let changes = sorted_changes
+        .iter()
+        .map(|change| {
+            format!(
+                "  * {}: {}",
+                change.change_type.description(),
+                change.target
+            )
+        })
+        .collect::<Vec<String>>()
+        .join("\n");
+
+    format!("Changes:\n{changes}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::sync::io::sync_application_port::GraphChangeType;
+
+    #[test]
+    fn test_calculate_git_commit_message() {
+        let changes = HashSet::from([
+            GraphChange {
+                change_type: GraphChangeType::PageChanged,
+                target: "Page1".to_string(),
+            },
+            GraphChange {
+                change_type: GraphChangeType::PageRenamed,
+                target: "Page2".to_string(),
+            },
+        ]);
+
+        let message = calculate_git_commit_message(CommitInitiator::UserCheckpoint, &changes);
+
+        assert_eq!(message, ("User Checkpoint: Page changed, Page renamed\n\nChanges:\n  * Page changed: Page1\n  * Page renamed: Page2"));
+    }
 }

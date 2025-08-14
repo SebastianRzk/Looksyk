@@ -29,9 +29,7 @@ fn load_git_config_from_disk(graph_root_location: &GraphRootLocation) -> GitConf
             }
         }
     } else {
-        eprintln!(
-            "Git configuration file not found at {git_config_file:?}. Using default."
-        );
+        eprintln!("Git configuration file not found at {git_config_file:?}. Using default.");
         disabled_config_on_disk()
     }
 }
