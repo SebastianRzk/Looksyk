@@ -130,6 +130,20 @@ pub fn check_if_remote_has_outgoing_updates(
     }
 }
 
+pub fn get_last_commit_timestamp(graph_root_location: &GraphRootLocation) -> String {
+    let output = GitCommandExecutor::new("git log", graph_root_location)
+        .args_str(&["log", "-1", "--format=%cd"])
+        .execute();
+    if let Err(e) = output {
+        return "N/A".to_string();
+    }
+    let process_output = output.unwrap();
+    if !process_output.status.success() {
+        return "N/A".to_string();
+    }
+    String::from_utf8_lossy(&process_output.stdout).to_string()
+}
+
 pub fn pull_updates_from_remote(
     config: &GitConfig,
     graph_root_location: &GraphRootLocation,

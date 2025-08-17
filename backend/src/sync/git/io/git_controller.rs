@@ -5,7 +5,7 @@ use crate::sync::git::git_services::{
     calc_git_status, create_checkpoint, pull_updates, push_existing_commits, GitActionResult,
     GitStatus,
 };
-use crate::sync::io::sync_application_port::GraphChanges;
+use crate::sync::io::sync_application_port::GraphChangesState;
 use actix_web::web::Data;
 use actix_web::{get, web};
 use actix_web::{post, Responder};
@@ -15,7 +15,7 @@ use serde::Serialize;
 pub async fn post_create_checkpoint(
     data: Data<AppState>,
     git_config: Data<GitConfig>,
-    graph_changes: Data<GraphChanges>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let location = data.data_path.clone();
     let mut graph_changes = graph_changes.changes.lock().unwrap();
@@ -61,6 +61,7 @@ struct GitStatusDto {
     pub has_incoming_updates: bool,
     pub has_changes: bool,
     pub has_errors: bool,
+    pub last_commit: String,
 }
 
 impl From<GitStatus> for GitStatusDto {
@@ -72,6 +73,7 @@ impl From<GitStatus> for GitStatusDto {
             has_outgoing_updates: status.has_outgoing_updates,
             has_incoming_updates: status.has_incoming_updates,
             has_errors: status.has_error,
+            last_commit: status.last_commit,
         }
     }
 }
@@ -80,7 +82,7 @@ impl From<GitStatus> for GitStatusDto {
 pub async fn update_current_data(
     git_config: Data<GitConfig>,
     data: Data<AppState>,
-    graph_changes: Data<GraphChanges>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
     let mut graph_changes = graph_changes.changes.lock().unwrap();

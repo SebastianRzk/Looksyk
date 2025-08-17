@@ -21,6 +21,7 @@ use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
 use crate::state::application_state::AppState;
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_files::NamedFile;
 use actix_multipart::form::MultipartForm;
 use actix_web::http::header::{ContentDisposition, DispositionType};
@@ -36,6 +37,7 @@ use std::str::FromStr;
 pub async fn upload_file(
     MultipartForm(form): MultipartForm<UploadFormDto>,
     app_state: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let json_filename = form.json.name.clone();
     println!(
@@ -74,6 +76,11 @@ pub async fn upload_file(
     });
 
     drop(media_guard);
+
+    document_change(
+        graph_changes,
+        GraphChange::media_added(index_element.file_name.clone()),
+    );
 
     Ok(Json(FileUploadResult {
         inline_markdown: inver_markdown_media_link(&index_element.file_name),

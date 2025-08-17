@@ -95,6 +95,11 @@
       </div>
     </div>
   }
+  @if (gitInfo) {
+    <div class="unimportant last-commit">
+      {{gitInfo.lastCommit}}
+    </div>
+  }
 }
 <div>
   <button matTooltip="reload data from disk" mat-button (click)="reload()" class="unimportant">

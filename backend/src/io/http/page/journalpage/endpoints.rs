@@ -14,6 +14,7 @@ use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
 use crate::looksyk::serializer::serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Path};
 use actix_web::{get, post, web, Responder};
 
@@ -84,6 +85,7 @@ async fn update_journal(
     path: Path<String>,
     body: web::Json<UpdateMarkdownFileDto>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
     let simple_page_name = page_name(path.into_inner());
@@ -144,6 +146,11 @@ async fn update_journal(
     drop(page_guard);
     drop(journal_guard);
     drop(asset_cache);
+
+    document_change(
+        graph_changes,
+        GraphChange::journal_page_changed(simple_page_name.name.clone()),
+    );
 
     Ok(web::Json(map_markdown_file_to_dto(rendered_file, is_fav)))
 }

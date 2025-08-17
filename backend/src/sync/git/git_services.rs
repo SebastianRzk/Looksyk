@@ -5,19 +5,18 @@ use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
 use crate::sync::git::git_commands::{
     check_if_remote_has_outgoing_updates, check_local_changes, check_remote_has_incoming_updates,
-    git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
+    get_last_commit_timestamp, git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
 };
 use crate::sync::git::git_services::UpdateResult::NothingToDo;
-use crate::sync::io::sync_application_port::GraphChange;
+use crate::sync::io::sync_application_port::{GraphChange, GraphChanges};
 use actix_web::web::Data;
-use std::collections::HashSet;
 
 pub fn create_checkpoint(
     git_config: &GitConfig,
     app_state: Option<Data<AppState>>,
     graph_root_location: &GraphRootLocation,
     initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> GitActionResult {
     if !git_config.git_sync_readyness.is_ready() {
         return GitActionResult::error("Git configuration is not ready".to_string());
@@ -125,7 +124,7 @@ pub fn pull_updates(
     app_state: Data<AppState>,
     graph_root_location: &GraphRootLocation,
     initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> GitActionResult {
     let try_updating_result =
         try_updating(git_config, graph_root_location, initiator, graph_changes);
@@ -144,7 +143,7 @@ pub fn try_updating(
     git_config: &GitConfig,
     graph_root_location: &GraphRootLocation,
     initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> UpdateResult {
     if git_config.git_sync_readyness.not_ready() {
         return NothingToDo;
@@ -208,11 +207,13 @@ pub fn calc_git_status(config: &GitConfig, graph_root_location: &GraphRootLocati
             has_error: false,
             has_incoming_updates: false,
             has_outgoing_updates: false,
+            last_commit: "N/A".to_string(),
         };
     }
     let has_updates_downstream = check_remote_has_incoming_updates(graph_root_location);
     let has_pending_updates_upstream = check_if_remote_has_outgoing_updates(graph_root_location);
     let has_changes = check_local_changes(graph_root_location);
+    let timestamp = get_last_commit_timestamp(graph_root_location);
 
     GitStatus {
         enabled: config.enabled,
@@ -223,6 +224,7 @@ pub fn calc_git_status(config: &GitConfig, graph_root_location: &GraphRootLocati
         has_changes: has_changes.map_err(|_| true).unwrap(),
         has_incoming_updates: has_updates_downstream.is_update_pending(),
         has_outgoing_updates: has_pending_updates_upstream.is_update_pending(),
+        last_commit: timestamp,
     }
 }
 
@@ -233,6 +235,7 @@ pub struct GitStatus {
     pub has_changes: bool,
     pub has_incoming_updates: bool,
     pub has_outgoing_updates: bool,
+    pub last_commit: String,
 }
 
 impl CommitInitiator {
@@ -249,7 +252,7 @@ impl CommitInitiator {
 
 fn calculate_git_commit_message(
     commit_entity: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> String {
     let headline = calculate_headline(commit_entity, graph_changes);
     let body = calculate_body(graph_changes);
@@ -257,11 +260,9 @@ fn calculate_git_commit_message(
     format!("{headline}\n\n{body}")
 }
 
-fn calculate_headline(
-    commit_initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
-) -> String {
+fn calculate_headline(commit_initiator: CommitInitiator, graph_changes: &GraphChanges) -> String {
     let content = graph_changes
+        .get_changes()
         .iter()
         .map(|change| change.change_type.description())
         .collect::<Vec<String>>()
@@ -270,8 +271,8 @@ fn calculate_headline(
     format!("{}: {}", commit_initiator.description(), content)
 }
 
-fn calculate_body(graph_changes: &HashSet<GraphChange>) -> String {
-    let mut sorted_changes: Vec<&GraphChange> = graph_changes.iter().collect();
+fn calculate_body(graph_changes: &GraphChanges) -> String {
+    let mut sorted_changes: Vec<&GraphChange> = graph_changes.get_changes().iter().collect();
     sorted_changes.sort_by(|l, r| l.target.cmp(&r.target));
 
     let changes = sorted_changes
@@ -296,19 +297,20 @@ mod tests {
 
     #[test]
     fn test_calculate_git_commit_message() {
-        let changes = HashSet::from([
-            GraphChange {
-                change_type: GraphChangeType::PageChanged,
-                target: "Page1".to_string(),
-            },
-            GraphChange {
-                change_type: GraphChangeType::PageRenamed,
-                target: "Page2".to_string(),
-            },
-        ]);
+        let message = calculate_git_commit_message(
+            CommitInitiator::UserCheckpoint,
+            &GraphChanges::from_iter([
+                GraphChange {
+                    change_type: GraphChangeType::UserPageChanged,
+                    target: "Page1".to_string(),
+                },
+                GraphChange {
+                    change_type: GraphChangeType::UserPageRenamed,
+                    target: "Page2".to_string(),
+                },
+            ]),
+        );
 
-        let message = calculate_git_commit_message(CommitInitiator::UserCheckpoint, &changes);
-
-        assert_eq!(message, ("User Checkpoint: Page changed, Page renamed\n\nChanges:\n  * Page changed: Page1\n  * Page renamed: Page2"));
+        assert_eq!(message, ("User Checkpoint: Wiki Page changed, Wiki Page renamed\n\nChanges:\n  * Wiki Page changed: Page1\n  * Wiki Page renamed: Page2"));
     }
 }

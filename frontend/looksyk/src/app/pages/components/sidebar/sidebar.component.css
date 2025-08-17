@@ -113,3 +113,7 @@ mat-divider {
   margin: 0.5ex;
   font-style: italic;
 }
+
+.last-commit{
+  white-space: nowrap;
+}

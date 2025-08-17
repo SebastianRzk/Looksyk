@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::net::{IpAddr, SocketAddr};
 use std::str::FromStr;
 
@@ -33,7 +32,7 @@ use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
     load_git_config, try_to_commit_and_push, try_to_update_graph, CommitInitiator,
 };
-use crate::sync::io::sync_application_port::GraphChanges;
+use crate::sync::io::sync_application_port::{GraphChange, GraphChanges, GraphChangesState};
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 
@@ -76,12 +75,12 @@ async fn main() -> std::io::Result<()> {
         &graph_root_location,
         &git_config,
         CommitInitiator::Startup,
-        &HashSet::new(),
+        &GraphChanges::new(),
     );
 
     let migration_result = run_migrations(
-        current_application_version,
-        graph_version,
+        &current_application_version,
+        &graph_version,
         &graph_root_location,
     );
 
@@ -90,7 +89,9 @@ async fn main() -> std::io::Result<()> {
             &graph_root_location,
             &git_config,
             CommitInitiator::Migration,
-            &HashSet::new(),
+            &GraphChanges::from_iter([GraphChange::graph_updated(
+                current_application_version.to_string(),
+            )]),
         );
     }
 
@@ -99,7 +100,7 @@ async fn main() -> std::io::Result<()> {
     let app_state =
         convert_to_app_state(load_graph_data(&graph_root_location), &config.static_path);
 
-    let changes_state = Data::new(GraphChanges::default());
+    let changes_state = Data::new(GraphChangesState::default());
 
     println!(
         "Starting Looksyk on  http://{}:{}",

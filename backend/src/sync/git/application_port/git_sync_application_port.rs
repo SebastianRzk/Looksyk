@@ -4,8 +4,7 @@ use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
 use crate::sync::git::git_services::UpdateResult;
 use crate::sync::git::io::git_config;
 use crate::sync::git::io::git_config::{disabled_config_on_disk, save_git_config_to_disk};
-use crate::sync::io::sync_application_port::GraphChange;
-use std::collections::HashSet;
+use crate::sync::io::sync_application_port::GraphChanges;
 use sync::git::git_services::{create_checkpoint, push_existing_commits, try_updating};
 
 pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfig {
@@ -16,7 +15,7 @@ pub fn try_to_update_graph(
     graph_root_location: &GraphRootLocation,
     git_config: &GitConfig,
     commit_initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> GraphChangesToClear {
     if git_config.git_sync_readyness.not_ready() {
         println!("Git configuration is not ready. Skipping update.");
@@ -47,7 +46,7 @@ pub fn try_to_commit_and_push(
     graph_root_location: &GraphRootLocation,
     git_config: &GitConfig,
     commit_initiator: CommitInitiator,
-    graph_changes: &HashSet<GraphChange>,
+    graph_changes: &GraphChanges,
 ) -> GraphChangesToClear {
     if git_config.git_sync_readyness.not_ready() {
         println!("Git configuration is not ready. Skipping update.");

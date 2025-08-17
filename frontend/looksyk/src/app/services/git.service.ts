@@ -17,7 +17,8 @@ export class GitService {
     hasChanges: false,
     hasOutgoingUpdates: false,
     hasIncomingUpdates: false,
-    hasErrors: false
+    hasErrors: false,
+    lastCommit: "N/A"
   });
 
   public currentGitInfo$ = this.currentGitInfo.asObservable();
@@ -51,6 +52,7 @@ export interface GitInformation {
   hasOutgoingUpdates: boolean,
   hasIncomingUpdates: boolean,
   hasErrors: boolean,
+  lastCommit: string
 }
 
 
