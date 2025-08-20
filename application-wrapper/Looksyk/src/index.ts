@@ -219,11 +219,28 @@ app.on('activate', async () => {
         await createWindow();
     }
 });
-
+let shutdownCalled = false;
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-app.on('before-quit', () => {
+app.on('before-quit', async (event) => {
+    if (shutdownCalled) {
+        return;
+    }
+    shutdownCalled = true;
+    event.preventDefault();
+    const request = new Request(
+        `http://localhost:${config.port}/api/sync/git/shutdown-checkpoint`,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'text/html,application/xhtml+xml,application/xml'
+            }
+        });
+    await fetch(request);
+
     if (serverProcess) {
         serverProcess.kill();
     }
+
+    app.quit()
 });

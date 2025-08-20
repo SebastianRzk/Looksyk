@@ -1,4 +1,5 @@
 use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
+use crate::io::fs::paths::REL_CONFIG_DIRECTORY;
 use crate::state::application_state::GraphRootLocation;
 use crate::sync::git::config::GitSyncReadyness::{Disabled, NotReady, ReadyAndActive};
 use crate::sync::git::config::{GitConfig, GitConflictResolution, GitSyncReadyness};
@@ -15,7 +16,7 @@ pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfig {
 fn load_git_config_from_disk(graph_root_location: &GraphRootLocation) -> GitConfigOnDisk {
     let git_config_file = graph_root_location
         .path
-        .join(LOOKSYK_CONFIG_PATH)
+        .join(REL_CONFIG_DIRECTORY)
         .join("git_config.json");
     if git_config_file.exists() {
         match std::fs::read_to_string(&git_config_file) {

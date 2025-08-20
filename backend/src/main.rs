@@ -163,6 +163,7 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::get_current_git_status)
             .service(sync::git::io::git_controller::update_current_data)
             .service(sync::git::io::git_controller::post_create_checkpoint)
+            .service(sync::git::io::git_controller::post_create_shutdown_checkpoint)
             .service(sync::git::io::git_controller::post_retry_upload)
             .default_service(web::get().to(r#static::endpoints::index))
     })

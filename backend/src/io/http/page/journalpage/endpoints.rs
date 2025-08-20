@@ -44,20 +44,21 @@ async fn get_journal(
 
     let fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
 
-    if page.is_some() && !page.unwrap().blocks.is_empty() {
-        let parsed_page = page.unwrap();
-        let prepared_page = render_file(
-            parsed_page,
-            &StaticRenderContext {
-                user_pages: &page_guard,
-                journal_pages: &journal_guard,
-                todo_index: &todo_index_guard,
-                tag_index: &data.d_tag_index.lock().unwrap(),
-            },
-            &mut asset_cache,
-            &data.data_path,
-        );
-        return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
+    if let Some(parsed_page) = page {
+        if !parsed_page.blocks.is_empty() {
+            let prepared_page = render_file(
+                parsed_page,
+                &StaticRenderContext {
+                    user_pages: &page_guard,
+                    journal_pages: &journal_guard,
+                    todo_index: &todo_index_guard,
+                    tag_index: &data.d_tag_index.lock().unwrap(),
+                },
+                &mut asset_cache,
+                &data.data_path,
+            );
+            return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
+        }
     }
 
     let rendered_file = render_file(

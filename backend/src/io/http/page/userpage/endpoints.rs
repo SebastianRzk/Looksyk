@@ -121,20 +121,21 @@ async fn get_page(
     let page = page_guard.entries.get(&simple_page_name);
 
     let data_root_location = &data.data_path;
-    if page.is_some() && !page.unwrap().blocks.is_empty() {
-        let parsed_page = page.unwrap();
-        let prepared_page = render_file(
-            parsed_page,
-            &StaticRenderContext {
-                user_pages: &page_guard,
-                journal_pages: &journal_guard,
-                todo_index: &todo_index_guard,
-                tag_index: &tag_guard,
-            },
-            &mut asset_cache,
-            data_root_location,
-        );
-        return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
+    if let Some(parsed_page) = page {
+        if !parsed_page.blocks.is_empty() {
+            let prepared_page = render_file(
+                parsed_page,
+                &StaticRenderContext {
+                    user_pages: &page_guard,
+                    journal_pages: &journal_guard,
+                    todo_index: &todo_index_guard,
+                    tag_index: &tag_guard,
+                },
+                &mut asset_cache,
+                data_root_location,
+            );
+            return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
+        }
     }
     let rendered_file = render_file(
         &generate_page_not_found(),

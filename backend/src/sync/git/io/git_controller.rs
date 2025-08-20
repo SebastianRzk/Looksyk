@@ -30,6 +30,25 @@ pub async fn post_create_checkpoint(
     Ok(web::Json(to_dto(create_checkpoint_result)))
 }
 
+#[post("/api/sync/git/shutdown-checkpoint")]
+pub async fn post_create_shutdown_checkpoint(
+    data: Data<AppState>,
+    git_config: Data<GitConfig>,
+    graph_changes: Data<GraphChangesState>,
+) -> actix_web::Result<impl Responder> {
+    let location = data.data_path.clone();
+    let mut graph_changes = graph_changes.changes.lock().unwrap();
+    let create_checkpoint_result = create_checkpoint(
+        &git_config,
+        Some(data),
+        &location,
+        CommitInitiator::Shutdown,
+        &graph_changes,
+    );
+    graph_changes.clear();
+    Ok(web::Json(to_dto(create_checkpoint_result)))
+}
+
 fn to_dto(create_checkpoint_result: GitActionResult) -> GitActionResultDto {
     GitActionResultDto {
         success: create_checkpoint_result.success,

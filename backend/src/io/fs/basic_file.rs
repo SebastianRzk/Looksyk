@@ -23,7 +23,16 @@ pub fn exists_folder(path: PathBuf) -> bool {
 pub fn folder_empty(path: PathBuf) -> bool {
     fs::metadata(path.clone()).is_ok()
         && fs::metadata(path.clone()).unwrap().is_dir()
-        && fs::read_dir(path).unwrap().count() == 0
+        && no_files_except_git(path)
+}
+
+fn no_files_except_git(path: PathBuf) -> bool {
+    fs::read_dir(path.clone()).unwrap().count() == 0
+        || fs::read_dir(path).unwrap().all(|entry| {
+            let entry = entry.unwrap();
+            let file_name = entry.file_name();
+            file_name == ".git" || file_name == ".gitignore"
+        })
 }
 
 pub fn exists_file(path: PathBuf) -> bool {
