@@ -31,10 +31,12 @@ use crate::io::fs::version::load_graph_version;
 use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
     load_git_config, try_to_commit_and_push, try_to_update_graph, CommitInitiator,
+    GraphChangesToClear,
 };
 use crate::sync::io::sync_application_port::{GraphChange, GraphChanges, GraphChangesState};
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
+use migration::migrator::would_migrate_something;
 
 mod looksyk;
 mod migration;
@@ -71,12 +73,24 @@ async fn main() -> std::io::Result<()> {
     let graph_version = load_graph_version(&graph_root_location);
     let git_config = load_git_config(&graph_root_location);
 
-    try_to_update_graph(
+    let pull_changes = try_to_update_graph(
         &graph_root_location,
-        &git_config,
+        &git_config.config.lock().unwrap(),
         CommitInitiator::Startup,
         &GraphChanges::new(),
     );
+    if pull_changes == GraphChangesToClear::Error
+        && git_config
+            .config
+            .lock()
+            .unwrap()
+            .halt_on_migration_without_internet
+        && would_migrate_something(&graph_version)
+    {
+        panic!(
+            "Failed to pull changes from remote repository. Halting startup due to configuration."
+        );
+    }
 
     let migration_result = run_migrations(
         &current_application_version,
@@ -87,7 +101,7 @@ async fn main() -> std::io::Result<()> {
     if migration_result == MigrationResult::MigratedSomething {
         try_to_commit_and_push(
             &graph_root_location,
-            &git_config,
+            &git_config.config.lock().unwrap(),
             CommitInitiator::Migration,
             &GraphChanges::from_iter([GraphChange::graph_updated(
                 current_application_version.to_string(),
@@ -165,6 +179,8 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::post_create_checkpoint)
             .service(sync::git::io::git_controller::post_create_shutdown_checkpoint)
             .service(sync::git::io::git_controller::post_retry_upload)
+            .service(sync::git::io::git_controller::post_clone_existing_graph)
+            .service(sync::git::io::git_controller::post_connect_to_git)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

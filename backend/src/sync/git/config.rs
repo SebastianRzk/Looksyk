@@ -1,8 +1,13 @@
 use std::fmt::{Display, Formatter};
+use std::sync::Mutex;
 
-#[derive(Clone, Debug)]
+pub struct GitConfigData {
+    pub config: Mutex<GitConfig>,
+}
+
 pub struct GitConfig {
     pub enabled: bool,
+    pub halt_on_migration_without_internet: bool,
     pub git_sync_readyness: GitSyncReadyness,
     pub git_conflict_resolution: GitConflictResolution,
 }

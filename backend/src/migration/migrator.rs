@@ -39,6 +39,14 @@ pub fn run_migrations(
     MigrationResult::MigratedSomething
 }
 
+pub fn would_migrate_something(data_state_version: &ApplicationVersion) -> bool {
+    let version_1_14_0 = ApplicationVersion::new("1.14.0");
+    if data_state_version < &version_1_14_0 {
+        return true;
+    }
+    false
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MigrationResult {
     MigratedSomething,

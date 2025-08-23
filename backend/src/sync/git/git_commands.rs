@@ -199,3 +199,123 @@ pub fn git_push(graph_root_location: &GraphRootLocation) -> Result<(), String> {
     }
     Ok(())
 }
+
+pub fn git_clone(graph_root_location: &GraphRootLocation, remote_url: &str) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git clone", graph_root_location)
+        .args(&["clone".to_string(), remote_url.to_string(), ".".to_string()])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to clone repository".to_string())
+    }
+}
+
+pub fn git_init(graph_root_location: &GraphRootLocation) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git init", graph_root_location)
+        .args_str(&["init"])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to initialize git repository".to_string())
+    }
+}
+
+pub fn git_add_remote(
+    graph_root_location: &GraphRootLocation,
+    remote_url: &str,
+) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git remote add", graph_root_location)
+        .args(&[
+            "remote".to_string(),
+            "add".to_string(),
+            "origin".to_string(),
+            remote_url.to_string(),
+        ])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to add remote repository".to_string())
+    }
+}
+
+pub fn git_config_push_default(graph_root_location: &GraphRootLocation) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git config push.default", graph_root_location)
+        .args_str(&["config", "push.default", "current"])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to set git push default".to_string())
+    }
+}
+
+pub fn git_config_default_no_edit(graph_root_location: &GraphRootLocation) -> Result<(), String> {
+    let output = GitCommandExecutor::new(
+        "git config --global core.mergeoptions --no-edit",
+        graph_root_location,
+    )
+    .args_str(&[
+        "git",
+        "config",
+        "--global",
+        "core.mergeoptions",
+        "--no-edit",
+    ])
+    .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to set git commit default no edit".to_string())
+    }
+}
+
+pub fn git_config_default_merge(graph_root_location: &GraphRootLocation) -> Result<(), String> {
+    let output =
+        GitCommandExecutor::new("git config --global pull.rebase false", graph_root_location)
+            .args_str(&["git", "config", "--global", "pull.rebase", "false"])
+            .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to set git pull default merge".to_string())
+    }
+}
+
+pub fn git_config_user_name(
+    graph_root_location: &GraphRootLocation,
+    user_name: &str,
+) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git config user.name", graph_root_location)
+        .args(&[
+            "config".to_string(),
+            "user.name".to_string(),
+            user_name.to_string(),
+        ])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to set git user name".to_string())
+    }
+}
+
+pub fn git_config_user_email(
+    graph_root_location: &GraphRootLocation,
+    user_email: &str,
+) -> Result<(), String> {
+    let output = GitCommandExecutor::new("git config user.email", graph_root_location)
+        .args(&[
+            "config".to_string(),
+            "user.email".to_string(),
+            user_email.to_string(),
+        ])
+        .execute();
+    if output.is_ok() {
+        Ok(())
+    } else {
+        Err("Failed to set git user email".to_string())
+    }
+}

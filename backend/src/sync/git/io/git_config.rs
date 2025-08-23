@@ -2,11 +2,11 @@ use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::paths::REL_CONFIG_DIRECTORY;
 use crate::state::application_state::GraphRootLocation;
 use crate::sync::git::config::GitSyncReadyness::{Disabled, NotReady, ReadyAndActive};
-use crate::sync::git::config::{GitConfig, GitConflictResolution, GitSyncReadyness};
+use crate::sync::git::config::{GitConfig, GitConfigData, GitConflictResolution, GitSyncReadyness};
 use crate::sync::git::git_commands::{check_if_git_is_installed, check_if_git_repo_is_initialized};
 use serde::{Deserialize, Serialize};
 
-pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfig {
+pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfigData {
     initialize_git_configuration(
         &load_git_config_from_disk(graph_root_location),
         graph_root_location,
@@ -38,6 +38,7 @@ fn load_git_config_from_disk(graph_root_location: &GraphRootLocation) -> GitConf
 pub fn disabled_config_on_disk() -> GitConfigOnDisk {
     GitConfigOnDisk {
         active: false,
+        halt_on_migration_without_internet: true,
         git_conflict_resolution: GitConflictResolution::KeepLocal.to_string(),
     }
 }
@@ -59,16 +60,27 @@ pub fn save_git_config_to_disk(graph_root_location: &GraphRootLocation, config: 
 #[derive(Serialize, Deserialize)]
 pub struct GitConfigOnDisk {
     pub active: bool,
+    pub halt_on_migration_without_internet: bool,
     pub git_conflict_resolution: String,
 }
 
 pub fn initialize_git_configuration(
     config: &GitConfigOnDisk,
     graph_root_location: &GraphRootLocation,
+) -> GitConfigData {
+    GitConfigData {
+        config: std::sync::Mutex::new(initialize_inner_git_config(&config, graph_root_location)),
+    }
+}
+
+pub fn initialize_inner_git_config(
+    config: &&GitConfigOnDisk,
+    graph_root_location: &GraphRootLocation,
 ) -> GitConfig {
     GitConfig {
         enabled: config.active,
         git_sync_readyness: calculate_readyness(config, graph_root_location),
+        halt_on_migration_without_internet: config.halt_on_migration_without_internet,
         git_conflict_resolution: GitConflictResolution::from(&config.git_conflict_resolution),
     }
 }

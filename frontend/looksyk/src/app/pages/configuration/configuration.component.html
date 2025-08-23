@@ -63,4 +63,18 @@
   <h3>Save or discard</h3>
   <button mat-raised-button (click)="saveConfiguration()">Save</button>
   <button mat-button (click)="discardConfiguration()">Discard and reset changes</button>
+  <h2>Configure sync</h2>
+  <div class="warning"><strong>Warning</strong>
+    If multiple Looksyk instances are working on the same Git repository,
+    change conflicts may occur. This can lead to data loss or incompatible graph states.
+    To minimize the risk of conflicts, the graph should be updated regularly.
+
+    After a Looksyk version update, the application should be connected to the internet upon first startup,
+    so that any database updates from other instances can be loaded and not overwritten.
+  </div>
+  <h3>Import existing graph from git repository</h3>
+  <div class="warning"><strong>Warning</strong>: This will overwrite the existing graph. All local data will be lost.
+  </div>
+
+  <h3>Initialize git and push it to an empty git repo</h3>
 </div>

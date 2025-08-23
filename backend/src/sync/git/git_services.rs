@@ -5,7 +5,9 @@ use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
 use crate::sync::git::git_commands::RemoteUpdateResult::Error;
 use crate::sync::git::git_commands::{
     check_if_remote_has_outgoing_updates, check_local_changes, check_remote_has_incoming_updates,
-    get_last_commit_timestamp, git_commit, git_push, pull_updates_from_remote, RemoteUpdateResult,
+    get_last_commit_timestamp, git_add_remote, git_clone, git_commit, git_config_default_merge,
+    git_config_default_no_edit, git_config_push_default, git_config_user_email,
+    git_config_user_name, git_init, git_push, pull_updates_from_remote, RemoteUpdateResult,
 };
 use crate::sync::git::git_services::UpdateResult::NothingToDo;
 use crate::sync::io::sync_application_port::{GraphChange, GraphChanges};
@@ -99,6 +101,11 @@ pub struct GitActionResult {
     pub success: bool,
     pub commit_was_done: bool,
     pub message: Option<String>,
+}
+
+pub enum GitConnect {
+    ConnectedSuccessfully,
+    ConnectFailed(String),
 }
 
 impl GitActionResult {
@@ -288,6 +295,115 @@ fn calculate_body(graph_changes: &GraphChanges) -> String {
         .join("\n");
 
     format!("Changes:\n{changes}")
+}
+
+pub fn setup_remote_graph(
+    graph_root_location: &GraphRootLocation,
+    git_graph_url: &str,
+) -> GitConnect {
+    let tmp_dir = graph_root_location.path.join("tmp");
+    if tmp_dir.exists() {
+        if let Err(e) = std::fs::remove_dir_all(&tmp_dir) {
+            return GitConnect::ConnectFailed(format!(
+                "Failed to remove existing temp directory: {e}"
+            ));
+        }
+    }
+
+    if let Err(e) = std::fs::create_dir_all(&tmp_dir) {
+        return GitConnect::ConnectFailed(format!("Failed to create temp directory: {e}"));
+    }
+
+    let clone_result = git_clone(
+        &GraphRootLocation {
+            path: tmp_dir.clone(),
+        },
+        git_graph_url,
+    );
+
+    if let Err(e) = clone_result {
+        return GitConnect::ConnectFailed(format!("Failed to clone repository: {e}"));
+    }
+
+    let folders_to_empty = ["journals", "pages", "assets", ".git"];
+    for folder in folders_to_empty {
+        let folder_path = tmp_dir.join(folder);
+        if folder_path.exists() {
+            if let Err(e) = std::fs::remove_dir_all(&folder_path) {
+                return GitConnect::ConnectFailed(format!("Failed to remove folder {folder}: {e}"));
+            }
+        }
+        if let Err(e) = std::fs::create_dir_all(&folder_path) {
+            return GitConnect::ConnectFailed(format!("Failed to create folder {folder}: {e}"));
+        }
+
+        if folder == ".git" {
+            continue;
+        }
+        let gitignore_path = folder_path.join(".gitignore");
+        if let Err(e) = std::fs::write(&gitignore_path, "*\n!.gitignore") {
+            return GitConnect::ConnectFailed(format!(
+                "Failed to create .gitignore file in {folder}: {e}"
+            ));
+        }
+    }
+
+    if let Err(e) = std::fs::copy(&tmp_dir, &graph_root_location.path) {
+        return GitConnect::ConnectFailed(format!(
+            "Failed to copy files from temp directory to graph root location: {e}"
+        ));
+    }
+
+    let git_config_result = git_configure_default_options(graph_root_location);
+    if let Err(e) = git_config_result {
+        return GitConnect::ConnectFailed(format!("Failed to configure git options: {e}"));
+    }
+
+    GitConnect::ConnectedSuccessfully
+}
+
+pub fn connect_to_empty_git_repository(
+    graph_root_location: &GraphRootLocation,
+    git_graph_url: &str,
+) -> GitConnect {
+    let git_init_result = git_init(graph_root_location);
+    if let Err(e) = git_init_result {
+        return GitConnect::ConnectFailed(format!("Failed to initialize git repository: {e}"));
+    }
+
+    let git_config_result = git_configure_default_options(graph_root_location);
+    if let Err(e) = git_config_result {
+        return GitConnect::ConnectFailed(format!("Failed to configure git options: {e}"));
+    }
+
+    let git_add_remote_result = git_add_remote(graph_root_location, git_graph_url);
+    if let Err(e) = git_add_remote_result {
+        return GitConnect::ConnectFailed(format!("Failed to add remote repository: {e}"));
+    }
+
+    let git_commit_result = git_commit(
+        graph_root_location,
+        "Initial commit: Setting up empty git repository".to_string(),
+    );
+
+    if let Err(e) = git_commit_result {
+        return GitConnect::ConnectFailed(format!("Failed to commit initial changes: {e}"));
+    };
+
+    let git_push_result = git_push(graph_root_location);
+    if let Err(e) = git_push_result {
+        return GitConnect::ConnectFailed(format!("Failed to push initial commit: {e}"));
+    }
+    GitConnect::ConnectedSuccessfully
+}
+
+fn git_configure_default_options(graph_root_location: &GraphRootLocation) -> Result<(), String> {
+    git_config_user_name(graph_root_location, "Looksyk")?;
+    git_config_user_email(graph_root_location, "looksyk@looksyk.looksyk")?;
+    git_config_default_merge(graph_root_location)?;
+    git_config_push_default(graph_root_location)?;
+    git_config_default_no_edit(graph_root_location)?;
+    Ok(())
 }
 
 #[cfg(test)]

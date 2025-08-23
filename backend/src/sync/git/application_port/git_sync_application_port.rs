@@ -1,13 +1,13 @@
 use crate::state::application_state::GraphRootLocation;
 use crate::sync;
-use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
+use crate::sync::git::config::{GitConfig, GitConfigData, GitSyncReadynessTrait};
 use crate::sync::git::git_services::UpdateResult;
 use crate::sync::git::io::git_config;
 use crate::sync::git::io::git_config::{disabled_config_on_disk, save_git_config_to_disk};
 use crate::sync::io::sync_application_port::GraphChanges;
 use sync::git::git_services::{create_checkpoint, push_existing_commits, try_updating};
 
-pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfig {
+pub fn load_git_config(graph_root_location: &GraphRootLocation) -> GitConfigData {
     git_config::load_git_config(graph_root_location)
 }
 
@@ -31,6 +31,7 @@ pub fn try_to_update_graph(
 
     if let UpdateResult::Error(e) = &result {
         println!("Failed to update graph: {e:?}");
+        return GraphChangesToClear::Error;
     } else {
         println!("Graph updated successfully.");
     }
@@ -73,9 +74,11 @@ pub fn write_default_disabled_config_to_disk(graph_root_location: &GraphRootLoca
     save_git_config_to_disk(graph_root_location, &disabled_config_on_disk());
 }
 
+#[derive(PartialEq, Debug)]
 pub enum GraphChangesToClear {
     All,
     None,
+    Error,
 }
 
 pub enum CommitInitiator {

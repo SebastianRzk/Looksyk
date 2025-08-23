@@ -1,26 +1,30 @@
+use crate::io::http::state::endpoints::refresh_internal_state;
 use crate::state::application_state::AppState;
 use crate::sync::git::application_port::git_sync_application_port::CommitInitiator;
-use crate::sync::git::config::GitConfig;
+use crate::sync::git::config::{GitConfigData, GitConflictResolution};
 use crate::sync::git::git_services::{
-    calc_git_status, create_checkpoint, pull_updates, push_existing_commits, GitActionResult,
-    GitStatus,
+    calc_git_status, connect_to_empty_git_repository, create_checkpoint, pull_updates,
+    push_existing_commits, setup_remote_graph, GitActionResult, GitConnect, GitStatus,
+};
+use crate::sync::git::io::git_config::{
+    initialize_inner_git_config, save_git_config_to_disk, GitConfigOnDisk,
 };
 use crate::sync::io::sync_application_port::GraphChangesState;
 use actix_web::web::Data;
 use actix_web::{get, web};
 use actix_web::{post, Responder};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[post("/api/sync/git/checkpoint")]
 pub async fn post_create_checkpoint(
     data: Data<AppState>,
-    git_config: Data<GitConfig>,
+    git_config: Data<GitConfigData>,
     graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let location = data.data_path.clone();
     let mut graph_changes = graph_changes.changes.lock().unwrap();
     let create_checkpoint_result = create_checkpoint(
-        &git_config,
+        &git_config.config.lock().unwrap(),
         Some(data),
         &location,
         CommitInitiator::UserCheckpoint,
@@ -33,13 +37,13 @@ pub async fn post_create_checkpoint(
 #[post("/api/sync/git/shutdown-checkpoint")]
 pub async fn post_create_shutdown_checkpoint(
     data: Data<AppState>,
-    git_config: Data<GitConfig>,
+    git_config: Data<GitConfigData>,
     graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let location = data.data_path.clone();
     let mut graph_changes = graph_changes.changes.lock().unwrap();
     let create_checkpoint_result = create_checkpoint(
-        &git_config,
+        &git_config.config.lock().unwrap(),
         Some(data),
         &location,
         CommitInitiator::Shutdown,
@@ -64,10 +68,10 @@ struct GitActionResultDto {
 
 #[get("/api/sync/git/status")]
 pub async fn get_current_git_status(
-    git_config: Data<GitConfig>,
+    git_config: Data<GitConfigData>,
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
-    let status = calc_git_status(&git_config, &data.data_path);
+    let status = calc_git_status(&git_config.config.lock().unwrap(), &data.data_path);
     Ok(web::Json::<GitStatusDto>(status.into()))
 }
 
@@ -99,14 +103,14 @@ impl From<GitStatus> for GitStatusDto {
 
 #[post("/api/sync/git/update")]
 pub async fn update_current_data(
-    git_config: Data<GitConfig>,
+    git_config: Data<GitConfigData>,
     data: Data<AppState>,
     graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
     let mut graph_changes = graph_changes.changes.lock().unwrap();
     let updates = pull_updates(
-        &git_config,
+        &git_config.config.lock().unwrap(),
         data,
         &graph_root_location,
         CommitInitiator::UserUpdate,
@@ -120,10 +124,85 @@ pub async fn update_current_data(
 
 #[post("/api/sync/git/retry_upload")]
 pub async fn post_retry_upload(
-    git_config: Data<GitConfig>,
+    git_config: Data<GitConfigData>,
     data: Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let graph_root_location = data.data_path.clone();
-    let updates = push_existing_commits(&git_config, Some(data), &graph_root_location);
+    let updates = push_existing_commits(
+        &git_config.config.lock().unwrap(),
+        Some(data),
+        &graph_root_location,
+    );
     Ok(web::Json(to_dto(updates)))
+}
+
+#[derive(Deserialize)]
+pub struct GitRepoDto {
+    pub url: String,
+    pub git_conflict_resolution: String,
+    pub halt_on_migration_without_internet: bool,
+}
+
+#[post("/api/sync/git/clone_existing_git")]
+pub async fn post_clone_existing_graph(
+    data: Data<AppState>,
+    git_config: Data<GitConfigData>,
+    git_repo: web::Json<GitRepoDto>,
+) -> actix_web::Result<impl Responder> {
+    let new_git_config = &GitConfigOnDisk {
+        active: true,
+        halt_on_migration_without_internet: git_repo.halt_on_migration_without_internet,
+        git_conflict_resolution: GitConflictResolution::from(&git_repo.git_conflict_resolution)
+            .to_string(),
+    };
+
+    let result = setup_remote_graph(&data.data_path, &git_repo.url);
+    match result {
+        GitConnect::ConnectedSuccessfully => {
+            save_git_config_to_disk(&data.data_path, new_git_config);
+            let new_git_config_data = initialize_inner_git_config(&new_git_config, &data.data_path);
+            *git_config.config.lock().unwrap() = new_git_config_data;
+            refresh_internal_state(data);
+            Ok(web::Json(GitActionResultDto {
+                success: true,
+                message: Some("Git repository cloned successfully.".to_string()),
+            }))
+        }
+        GitConnect::ConnectFailed(e) => Ok(web::Json(GitActionResultDto {
+            success: false,
+            message: Some(format!("Failed to clone git repository: {}", e)),
+        })),
+    }
+}
+
+#[post("/api/sync/git/connect")]
+pub async fn post_connect_to_git(
+    data: Data<AppState>,
+    git_config: Data<GitConfigData>,
+    git_repo: web::Json<GitRepoDto>,
+) -> actix_web::Result<impl Responder> {
+    let new_git_config = &GitConfigOnDisk {
+        active: true,
+        halt_on_migration_without_internet: git_repo.halt_on_migration_without_internet,
+        git_conflict_resolution: GitConflictResolution::from(&git_repo.git_conflict_resolution)
+            .to_string(),
+    };
+
+    let result = connect_to_empty_git_repository(&data.data_path, &git_repo.url);
+    match result {
+        GitConnect::ConnectedSuccessfully => {
+            save_git_config_to_disk(&data.data_path, new_git_config);
+            let new_git_config_data = initialize_inner_git_config(&new_git_config, &data.data_path);
+            *git_config.config.lock().unwrap() = new_git_config_data;
+            refresh_internal_state(data);
+            Ok(web::Json(GitActionResultDto {
+                success: true,
+                message: Some("Connected to remote git repository successfully.".to_string()),
+            }))
+        }
+        GitConnect::ConnectFailed(e) => Ok(web::Json(GitActionResultDto {
+            success: false,
+            message: Some(format!("Failed to connect to remote git repository: {}", e)),
+        })),
+    }
 }
