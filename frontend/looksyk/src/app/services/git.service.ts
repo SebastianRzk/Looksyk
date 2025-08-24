@@ -67,6 +67,30 @@ export class GitService {
       this.update();
     });
   }
+
+  public cloneExistingGit(repoUrl: string, haltOnMigrationWithoutInternet: boolean, gitConflictResolution: string) {
+    this.locked.next(true);
+    this.http.post("/api/sync/git/clone_existing_git", {
+      url: repoUrl,
+      haltOnMigrationWithoutInternet: haltOnMigrationWithoutInternet,
+      gitConflictResolution: gitConflictResolution
+    }).subscribe(() => {
+      this.update();
+      window.location.reload();
+    });
+  }
+
+  attachToExistingGitRepo(repoUrl: string, haltOnMigrationWithoutInternet: boolean, gitConflictResolution: string) {
+    this.locked.next(true);
+    this.http.post("/api/sync/git/connect", {
+      url: repoUrl,
+      haltOnMigrationWithoutInternet: haltOnMigrationWithoutInternet,
+      gitConflictResolution: gitConflictResolution
+    }).subscribe(() => {
+      this.update();
+      window.location.reload();
+    });
+  }
 }
 
 export interface GitInformation {

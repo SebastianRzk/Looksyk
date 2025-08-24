@@ -254,16 +254,10 @@ pub fn git_config_push_default(graph_root_location: &GraphRootLocation) -> Resul
 
 pub fn git_config_default_no_edit(graph_root_location: &GraphRootLocation) -> Result<(), String> {
     let output = GitCommandExecutor::new(
-        "git config --global core.mergeoptions --no-edit",
+        "git config core.mergeoptions --no-edit",
         graph_root_location,
     )
-    .args_str(&[
-        "git",
-        "config",
-        "--global",
-        "core.mergeoptions",
-        "--no-edit",
-    ])
+    .args_str(&["git", "config", "core.mergeoptions", "--no-edit"])
     .execute();
     if output.is_ok() {
         Ok(())
@@ -273,10 +267,9 @@ pub fn git_config_default_no_edit(graph_root_location: &GraphRootLocation) -> Re
 }
 
 pub fn git_config_default_merge(graph_root_location: &GraphRootLocation) -> Result<(), String> {
-    let output =
-        GitCommandExecutor::new("git config --global pull.rebase false", graph_root_location)
-            .args_str(&["git", "config", "--global", "pull.rebase", "false"])
-            .execute();
+    let output = GitCommandExecutor::new("git config pull.rebase false", graph_root_location)
+        .args_str(&["git", "config", "pull.rebase", "false"])
+        .execute();
     if output.is_ok() {
         Ok(())
     } else {

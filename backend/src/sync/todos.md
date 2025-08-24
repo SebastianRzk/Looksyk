@@ -1,7 +1,8 @@
 ### Todos for git-sync
 
 
-- [ ] Add init function for existing graph
-- [ ] Add import of existing graph
-- [ ] commit on shutdown
-- git config pull.rebase true
+- [ ] Test merge conflict resolution strategies
+- [ ] Document behavior of git-sync in various scenarios
+- [ ] Document ssh auth
+- [ ] test git flatpak
+- [ ] test git docker

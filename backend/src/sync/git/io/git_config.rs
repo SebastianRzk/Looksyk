@@ -1,4 +1,3 @@
-use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::paths::REL_CONFIG_DIRECTORY;
 use crate::state::application_state::GraphRootLocation;
 use crate::sync::git::config::GitSyncReadyness::{Disabled, NotReady, ReadyAndActive};
@@ -46,7 +45,7 @@ pub fn disabled_config_on_disk() -> GitConfigOnDisk {
 pub fn save_git_config_to_disk(graph_root_location: &GraphRootLocation, config: &GitConfigOnDisk) {
     let git_config_file = graph_root_location
         .path
-        .join(LOOKSYK_CONFIG_PATH)
+        .join(REL_CONFIG_DIRECTORY)
         .join("git_config.json");
     if let Err(e) = std::fs::create_dir_all(git_config_file.parent().unwrap()) {
         eprintln!("Failed to create directory for git configuration file: {e}");

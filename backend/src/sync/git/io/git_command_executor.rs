@@ -58,6 +58,11 @@ impl GitCommandExecutable {
             .output()
             .map_err(|e| format!("Failed to {}: {}", self.cmd_description, e));
         println!("Command success? {:?}", result.is_ok());
+        println!("Command output: {:?}", result);
+        println!(
+            "Command stdout: {}",
+            String::from_utf8_lossy(&result.as_ref().map_or(vec![], |o| o.stdout.clone()))
+        );
         result
     }
 }

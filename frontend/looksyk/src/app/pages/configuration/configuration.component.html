@@ -63,8 +63,11 @@
   <h3>Save or discard</h3>
   <button mat-raised-button (click)="saveConfiguration()">Save</button>
   <button mat-button (click)="discardConfiguration()">Discard and reset changes</button>
-  <h2>Configure sync</h2>
-  <div class="warning"><strong>Warning</strong>
+  <h2>
+    <mat-icon>graph_1</mat-icon>
+    Configure sync
+  </h2>
+  <div class="warn"><strong>Warning</strong>
     If multiple Looksyk instances are working on the same Git repository,
     change conflicts may occur. This can lead to data loss or incompatible graph states.
     To minimize the risk of conflicts, the graph should be updated regularly.
@@ -72,9 +75,85 @@
     After a Looksyk version update, the application should be connected to the internet upon first startup,
     so that any database updates from other instances can be loaded and not overwritten.
   </div>
-  <h3>Import existing graph from git repository</h3>
-  <div class="warning"><strong>Warning</strong>: This will overwrite the existing graph. All local data will be lost.
-  </div>
+  <section>
+    <h3>Current sync configuration</h3>
+    @if (gitService.currentGitInfo$ | async; as config) {
+      @if (config && config.enabled) {
+        <p>Git sync is currently <strong>enabled</strong>.</p>
+        @if (config.isReady) {
+          @if (config.hasErrors) {
+            <div class="warning">
+              <strong>Warning</strong>: There were errors with the git repository. Please check the logs.
+            </div>
+          } @else {
+            @if (config.hasIncomingUpdates) {
+              <div class="info">
+                <strong>Info</strong>: There are incoming updates from the remote repository. Please pull the latest
+                changes.
+              </div>
+            } @else {
+              <div class="info">
+                <strong>Info</strong>: The git repository is up to date.
+              </div>
+            }
+            @if (config.hasOutgoingUpdates) {
+              <div class="info">
+                <strong>Info</strong>: There are outgoing updates to the remote repository. Please push your local
+                changes.
+              </div>
+            }
+            @if (config.hasChanges) {
+              <div class="info">
+                <strong>Info</strong>: There are local changes that have not been committed yet. Please create a
+                checkpoint.
+              </div>
+            } @else {
+              <div class="info">
+                <strong>Info</strong>: There are no local changes.
+              </div>
+            }
+          }
+        } @else {
+          <div class="warning">
+            <strong>Warning</strong>: The git repository is not ready. Please check the logs.
+          </div>
+        }
+      } @else {
+        <p>Git sync is currently <strong>disabled</strong>.</p>
+      }
+    } @else {
+      <p>No git configuration found.</p>
+    }
+  </section>
+  <section>
+    <h3>Configure sync</h3>
+    <mat-form-field>
+      <mat-label>Git Repository URL</mat-label>
+      <input type="text" matInput [formControl]="gitImportControl" placeholder="Enter git repository URL here"
+             required/>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Conflict resolutionstrategy</mat-label>
+      <mat-select [formControl]="gitImportConflictStrategyControl">
+        <mat-option value="theirs">Use remote changes (theirs)</mat-option>
+        <mat-option value="ours">Keep local changes (ours)</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>When running migration, require update graph to be run successfully before</mat-label>
+      <mat-select [formControl]="gitImportRequireUpdateGraphControl">
+        <mat-option [value]="true">Yes</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button (click)="attachGit()" [disabled]="importGitDisable$| async">Initialize git to an empty
+      repository (keep current graph)
+    </button>
+    <button mat-raised-button (click)="importFromGit()" [disabled]="importGitDisable$| async">Import from git
+      <div class="warn">(discard
+        current graph)
+      </div>
+    </button>
+  </section>
 
-  <h3>Initialize git and push it to an empty git repo</h3>
 </div>

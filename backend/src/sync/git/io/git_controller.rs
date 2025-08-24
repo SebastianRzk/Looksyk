@@ -137,6 +137,7 @@ pub async fn post_retry_upload(
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GitRepoDto {
     pub url: String,
     pub git_conflict_resolution: String,

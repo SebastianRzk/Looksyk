@@ -25,3 +25,26 @@
 .inner-heading {
   margin-top: 5ex;
 }
+
+
+section{
+  display: flex;
+  flex-direction: column;
+  gap: 2ex;
+  margin-bottom: 5ex;
+}
+
+h2 {
+  margin-top: 5ex;
+}
+
+
+h3 {
+  margin-top: 5ex;
+}
+
+
+.warn {
+  color: red;
+  font-weight: bold;
+}

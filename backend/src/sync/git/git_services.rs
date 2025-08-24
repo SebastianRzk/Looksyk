@@ -297,6 +297,25 @@ fn calculate_body(graph_changes: &GraphChanges) -> String {
     format!("Changes:\n{changes}")
 }
 
+fn copy_recursively(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    if src.is_dir() {
+        std::fs::create_dir_all(dst)?;
+        for entry in std::fs::read_dir(src)? {
+            let entry = entry?;
+            let file_type = entry.file_type()?;
+            let src_path = entry.path();
+            let dst_path = dst.join(entry.file_name());
+            if file_type.is_dir() {
+                copy_recursively(&src_path, &dst_path)?;
+            } else {
+                println!("Copying file from {:?} to {:?}", src_path, dst_path);
+                std::fs::copy(&src_path, &dst_path)?;
+            }
+        }
+    }
+    Ok(())
+}
+
 pub fn setup_remote_graph(
     graph_root_location: &GraphRootLocation,
     git_graph_url: &str,
@@ -327,7 +346,7 @@ pub fn setup_remote_graph(
 
     let folders_to_empty = ["journals", "pages", "assets", ".git"];
     for folder in folders_to_empty {
-        let folder_path = tmp_dir.join(folder);
+        let folder_path = graph_root_location.path.join(folder);
         if folder_path.exists() {
             if let Err(e) = std::fs::remove_dir_all(&folder_path) {
                 return GitConnect::ConnectFailed(format!("Failed to remove folder {folder}: {e}"));
@@ -340,15 +359,17 @@ pub fn setup_remote_graph(
         if folder == ".git" {
             continue;
         }
-        let gitignore_path = folder_path.join(".gitignore");
-        if let Err(e) = std::fs::write(&gitignore_path, "*\n!.gitignore") {
-            return GitConnect::ConnectFailed(format!(
-                "Failed to create .gitignore file in {folder}: {e}"
-            ));
+        let gitkeep_path = folder_path.join(".gitkeep");
+        if !gitkeep_path.exists() {
+            if let Err(e) = std::fs::write(&gitkeep_path, "*\n!.gitkeep") {
+                return GitConnect::ConnectFailed(format!(
+                    "Failed to create .gitkeep file in {folder}: {e}"
+                ));
+            }
         }
     }
 
-    if let Err(e) = std::fs::copy(&tmp_dir, &graph_root_location.path) {
+    if let Err(e) = copy_recursively(&tmp_dir, &graph_root_location.path) {
         return GitConnect::ConnectFailed(format!(
             "Failed to copy files from temp directory to graph root location: {e}"
         ));
@@ -359,6 +380,10 @@ pub fn setup_remote_graph(
         return GitConnect::ConnectFailed(format!("Failed to configure git options: {e}"));
     }
 
+    if let Err(e) = std::fs::remove_dir_all(&tmp_dir) {
+        return GitConnect::ConnectFailed(format!("Failed to remove temp directory: {e}"));
+    }
+
     GitConnect::ConnectedSuccessfully
 }
 
@@ -366,6 +391,19 @@ pub fn connect_to_empty_git_repository(
     graph_root_location: &GraphRootLocation,
     git_graph_url: &str,
 ) -> GitConnect {
+    let folders_to_init_git_keep = ["journals", "pages", "assets"];
+    for folder in folders_to_init_git_keep {
+        let folder_path = graph_root_location.path.join(folder);
+        let gitkeep_path = folder_path.join(".gitkeep");
+        if !gitkeep_path.exists() {
+            if let Err(e) = std::fs::write(&gitkeep_path, "*\n!.gitkeep") {
+                return GitConnect::ConnectFailed(format!(
+                    "Failed to create .gitkeep file in {folder}: {e}"
+                ));
+            }
+        }
+    }
+
     let git_init_result = git_init(graph_root_location);
     if let Err(e) = git_init_result {
         return GitConnect::ConnectFailed(format!("Failed to initialize git repository: {e}"));
