@@ -12,6 +12,7 @@ use crate::sync::git::git_commands::{
 use crate::sync::git::git_services::UpdateResult::NothingToDo;
 use crate::sync::io::sync_application_port::{GraphChange, GraphChanges};
 use actix_web::web::Data;
+use std::collections::HashSet;
 
 pub fn create_checkpoint(
     git_config: &GitConfig,
@@ -268,12 +269,16 @@ fn calculate_git_commit_message(
 }
 
 fn calculate_headline(commit_initiator: CommitInitiator, graph_changes: &GraphChanges) -> String {
-    let content = graph_changes
+    let mut sorted_changes = graph_changes
         .get_changes()
         .iter()
         .map(|change| change.change_type.description())
-        .collect::<Vec<String>>()
-        .join(", ");
+        .collect::<HashSet<String>>()
+        .into_iter()
+        .collect::<Vec<String>>();
+    sorted_changes.sort();
+
+    let content = sorted_changes.join(", ");
 
     format!("{}: {}", commit_initiator.description(), content)
 }
@@ -466,5 +471,31 @@ mod tests {
         );
 
         assert_eq!(message, ("User Checkpoint: Wiki Page changed, Wiki Page renamed\n\nChanges:\n  * Wiki Page changed: Page1\n  * Wiki Page renamed: Page2"));
+    }
+
+    #[test]
+    fn test_calculate_headline_should_destinct_events() {
+        let headline = calculate_headline(
+            CommitInitiator::UserCheckpoint,
+            &GraphChanges::from_iter([
+                GraphChange {
+                    change_type: GraphChangeType::UserPageChanged,
+                    target: "Page1".to_string(),
+                },
+                GraphChange {
+                    change_type: GraphChangeType::UserPageRenamed,
+                    target: "Page2".to_string(),
+                },
+                GraphChange {
+                    change_type: GraphChangeType::UserPageChanged,
+                    target: "Page3".to_string(),
+                },
+            ]),
+        );
+
+        assert_eq!(
+            headline,
+            "User Checkpoint: Wiki Page changed, Wiki Page renamed"
+        );
     }
 }
