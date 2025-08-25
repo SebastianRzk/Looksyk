@@ -4,6 +4,17 @@ title: Changelog
 ---
 # Changelog
 
+### v1.14.0 (2025-08-??)
+
+Enhancements:
+
+* Increase max file size for assets (>10gb)
+* Add git sync feature
+
+Changes:
+
+* Remove flatpak build (not working properly with electron). Please use docker or native installation.
+
 ### v1.13.5 (2025-08-03)
 
 Internal refactoring / reduction of code duplication

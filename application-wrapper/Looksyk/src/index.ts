@@ -15,7 +15,6 @@ interface OptionsArgs {
     port?: number,
     devtools?: boolean,
     installed?: boolean,
-    "installed-flatpak"?: boolean,
     "window-width"?: number,
     "window-height"?: number
     "window-zoom"?: number
@@ -25,7 +24,6 @@ interface Config {
     "graph-location"?: string
     port?: number,
     installed?: boolean,
-    "installed-flatpak"?: boolean,
     devtools: boolean,
     "window-width": number,
     "window-height": number
@@ -35,7 +33,6 @@ interface Config {
 const DEFAULT_CONFIG: Config = {
     port: 11000,
     installed: false,
-    "installed-flatpak": false,
     devtools: false,
     "window-width": 1200,
     "window-height": 800,
@@ -56,8 +53,6 @@ function optionsToArgs(options: OptionsArgs): string[] {
     }
     if (options.installed) {
         args.push("--static-path=/usr/share/looksyk/static");
-    } else if (options["installed-flatpak"]) {
-        args.push("--static-path=/app/share/looksyk/static");
     }
     return args;
 }
@@ -67,7 +62,6 @@ const argumentConfig: ArgumentConfig<OptionsArgs> = {
     "graph-location": {type: String, optional: true},
     devtools: {type: Boolean, optional: true},
     installed: {type: Boolean, optional: true},
-    "installed-flatpak": {type: Boolean, optional: true},
     "window-width": {type: Number, optional: true},
     "window-height": {type: Number, optional: true},
     "window-zoom": {type: Number, optional: true}
@@ -78,7 +72,7 @@ console.log("args", options);
 const config = computeConfigFromOptions(options);
 console.log("computed config", config)
 
-const apiServerCmd = (options.installed || options["installed-flatpak"]) ? "looksyk-backend" : './looksyk';
+const apiServerCmd = options.installed ? "looksyk-backend" : './looksyk';
 const apiServerArgs: string[] = optionsToArgs(options);
 const pwd = process.env["PWD"];
 console.log("apiServerArgs", apiServerArgs)

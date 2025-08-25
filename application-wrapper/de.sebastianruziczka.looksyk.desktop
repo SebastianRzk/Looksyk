@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Looksyk
-StartupWMClass=looksyk
-GenericName=A markdown centric, fast and local personal knowledge platform
-Icon=de.sebastianruziczka.looksyk
-Terminal=false
-Exec=zypak-wrapper looksyk --installed-flatpak
-
