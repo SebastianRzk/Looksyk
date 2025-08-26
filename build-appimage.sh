@@ -26,12 +26,13 @@ cp application-wrapper/Looksyk.desktop "$APPDIR/looksyk.desktop"
 
 cp LICENSE "$APPDIR/usr/share/licenses/looksyk/LICENSE"
 
-if [ ! -f git-static ]; then
-  wget -O git-static https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
-  tar -xzf git-static -C .
-  cp git-2.45.1-linux-x86_64-static/bin/git "$APPDIR/usr/bin/git"
-  rm -rf git-2.45.1-linux-x86_64-static git-static
+if [ ! -f git/git ]; then
+  git clone --depth 1 https://github.com/git/git
+  cd git
+  make
+  cd ..
 fi
+cp git/git "$APPDIR/usr/bin/git"
 
 # AppImage bauen
 if [ ! -f linuxdeploy ]; then
