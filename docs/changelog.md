@@ -10,6 +10,7 @@ Enhancements:
 
 * Increase max file size for assets (>10gb)
 * Add git sync feature
+* Add AppImage build to CI
 
 Changes:
 

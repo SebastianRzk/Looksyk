@@ -11,9 +11,10 @@ echo "[Desktop Entry]
 Type=Application
 StartupWMClass=looksyk
 Name=Looksyk - $graphname
-GenericName=Markdown knowledge platform
-Icon=/usr/share/looksyk/icon.png
+GenericName=A markdown centric, fast and local personal knowledge platform
+Icon=de.sebastianruziczka.looksyk
 Terminal=false
+Categories=Office;Viewer;TextTools;TextEditor;Documentation;
 Exec=looksyk --graph-location $graphpath --port $graphport" >   ~/.local/share/applications/Looksyk-"$graphname".desktop
 
 echo "Done";

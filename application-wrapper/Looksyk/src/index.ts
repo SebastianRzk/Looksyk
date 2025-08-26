@@ -13,6 +13,7 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 interface OptionsArgs {
     "graph-location"?: string
     port?: number,
+    "custom-static-path"?: string,
     devtools?: boolean,
     installed?: boolean,
     "window-width"?: number,
@@ -24,6 +25,7 @@ interface Config {
     "graph-location"?: string
     port?: number,
     installed?: boolean,
+    "custom-static-path"?: string,
     devtools: boolean,
     "window-width": number,
     "window-height": number
@@ -51,8 +53,11 @@ function optionsToArgs(options: OptionsArgs): string[] {
     if (options["graph-location"]) {
         args.push(`--graph-location=${options["graph-location"]}`);
     }
-    if (options.installed) {
+    if (options.installed && !options["custom-static-path"]) {
         args.push("--static-path=/usr/share/looksyk/static");
+    }
+    if (options["custom-static-path"]) {
+        args.push(`--static-path=${options["custom-static-path"]}`);
     }
     return args;
 }
@@ -60,6 +65,7 @@ function optionsToArgs(options: OptionsArgs): string[] {
 const argumentConfig: ArgumentConfig<OptionsArgs> = {
     port: {type: Number, optional: true},
     "graph-location": {type: String, optional: true},
+    "custom-static-path": {type: String, optional: true},
     devtools: {type: Boolean, optional: true},
     installed: {type: Boolean, optional: true},
     "window-width": {type: Number, optional: true},
