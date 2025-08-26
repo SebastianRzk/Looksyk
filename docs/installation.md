@@ -7,14 +7,16 @@ title: Installation
 
 ## Run Looksyk
 
-| Operation System    | Installation Method                   | Status                                                                        |
-|---------------------|---------------------------------------|-------------------------------------------------------------------------------|
-| Arch Linux          | AUR                                   | ✅ recommended [Installation Guide](#arch-linux--aur)                          |
-| Arch Linux          | PKGBUILD                              | ✅ [Installation Guide](#arch-linux--pkgbuild)                                 |
-| Linux (any)         | manual build                          | ✅ [Installation Guide](#production-build--manual-installation)                |
-| Linux, Windows, Mac | docker / docker compose               | ✅ [Installation Guide](#docker--docker-compose)                               |
-| Windows native      | manual build  *)                      | untested / not working out of the box   *)                                    |
-| Mac native          | manual build  *)                      | untested / not working out of the box   *)                                    |
+| Operation System    | Installation Method     | Status                                                         |
+|---------------------|-------------------------|----------------------------------------------------------------|
+| Arch Linux          | AUR                     | ✅ recommended [Installation Guide](#arch-linux--aur)           |
+| Arch Linux          | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
+| Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
+| Linux (any)         | AppImage                | ✅ [Installation Guide](#appimage)                              |
+| Linux (any)         | AppImage manual build   | ✅ [Installation Guide](#appimage-manual-build)                 |
+| Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
+| Windows native      | manual build  *)        | untested / not working out of the box   *)                     |
+| Mac native          | manual build  *)        | untested / not working out of the box   *)                     |
 
 *) The application is programmed to be platform independent, but the build script and the installation process are not
 yet implemented on Windows and Mac. Mainly because I have no knowledge of packaging for Windows and Mac, and because I
@@ -42,6 +44,20 @@ The repository contains two docker-compose.yml's:
 * `docker-compose.local-build.yml` build the app locally
 
 Just run `docker compose up -d` to start Looksyk and visit with Chrome / Chromium the URL `http://localhost:11000`.
+
+### AppImage
+
+You can download the latest AppImage from the [releases](https://github.com/SebastianRzk/Looksyk/releases) page. Make
+the AppImage executable with `chmod +x Looksyk-x86_64.AppImage` and run it with
+`./Looksyk-x86_64.AppImage`.
+
+### AppImage manual build
+
+1. Build the components with `bash build.sh` (this will build the frontend and backend,and requires `npm` and `cargo`)
+2. Build the appimage with `bash build_appimage.sh`
+3. The AppImage is now in the root-folder of the repository
+4. Make the AppImage executable with `chmod +x Looksyk-x86_64.AppImage`.
+5. Start the application with `./Looksyk-x86_64.AppImage`.
 
 ### Production Build / Manual Installation
 

@@ -53,7 +53,7 @@ package() {
 
 	cp -r "frontend/looksyk/dist/looksyk/browser/" "${pkgdir}/usr/share/${_pkgnameshort}/static/"
 	install -D -m644 "application-wrapper/Looksyk/out/looksyk-linux-x64/resources/app.asar" "${pkgdir}/usr/share/${_pkgnameshort}/app.asar"
-	install -D -m644 "icon/Looksyk_256.png" "${pkgdir}/usr/share/${_pkgnameshort}/icon.png"
+	install -D -m644 "icon/Looksyk_256.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png"
 
 	install -D -m644 "application-wrapper/Looksyk.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
