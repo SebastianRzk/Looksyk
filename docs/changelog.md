@@ -4,17 +4,22 @@ title: Changelog
 ---
 # Changelog
 
-### v1.14.0 (2025-08-??)
+### v1.14.0 (2025-08-27)
 
 Enhancements:
 
 * Increase max file size for assets (>10gb)
 * Add git sync feature
 * Add AppImage build to CI
+* Update fav-icon for docker deployment
 
 Changes:
 
 * Remove flatpak build (not working properly with electron). Please use docker or native installation.
+
+Fixes:
+
+* Fontend-State gets refreshed on rename-page aswell as delete-page
 
 ### v1.13.5 (2025-08-03)
 

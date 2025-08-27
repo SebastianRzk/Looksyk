@@ -57,13 +57,16 @@ fn to_dto(create_checkpoint_result: GitActionResult) -> GitActionResultDto {
     GitActionResultDto {
         success: create_checkpoint_result.success,
         message: create_checkpoint_result.message,
+        changes_pulled_from_remote: create_checkpoint_result.changes_from_remote,
     }
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct GitActionResultDto {
     pub success: bool,
     pub message: Option<String>,
+    pub changes_pulled_from_remote: bool,
 }
 
 #[get("/api/sync/git/status")]
@@ -167,11 +170,13 @@ pub async fn post_clone_existing_graph(
             Ok(web::Json(GitActionResultDto {
                 success: true,
                 message: Some("Git repository cloned successfully.".to_string()),
+                changes_pulled_from_remote: true,
             }))
         }
         GitConnect::ConnectFailed(e) => Ok(web::Json(GitActionResultDto {
             success: false,
             message: Some(format!("Failed to clone git repository: {}", e)),
+            changes_pulled_from_remote: true,
         })),
     }
 }
@@ -199,11 +204,13 @@ pub async fn post_connect_to_git(
             Ok(web::Json(GitActionResultDto {
                 success: true,
                 message: Some("Connected to remote git repository successfully.".to_string()),
+                changes_pulled_from_remote: false,
             }))
         }
         GitConnect::ConnectFailed(e) => Ok(web::Json(GitActionResultDto {
             success: false,
             message: Some(format!("Failed to connect to remote git repository: {}", e)),
+            changes_pulled_from_remote: false,
         })),
     }
 }

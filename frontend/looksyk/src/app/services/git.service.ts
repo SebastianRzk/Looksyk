@@ -11,7 +11,7 @@ export class GitService {
 
   private syncStatus = SyncStatus.Unknown;
 
-  private locked = new BehaviorSubject<boolean>( false);
+  private locked = new BehaviorSubject<boolean>(false);
 
   public locked$ = this.locked.asObservable();
 
@@ -56,21 +56,28 @@ export class GitService {
   public createCheckpoint() {
     this.locked.next(true);
     this.changed = false;
-    this.http.post("/api/sync/git/checkpoint", {}).subscribe(() => {
+    this.http.post<GitActionResult>("/api/sync/git/checkpoint", {}).subscribe((result: GitActionResult) => {
+      if (result.changesPulledFromRemote) {
+        window.location.reload();
+      }
       this.update();
     });
   }
 
-  public pullUpdates(){
+
+  public pullUpdates() {
     this.locked.next(true);
-    this.http.post("/api/sync/git/update", {}).subscribe(() => {
+    this.http.post<GitActionResult>("/api/sync/git/update", {}).subscribe((result: GitActionResult) => {
+      if (result.changesPulledFromRemote) {
+        window.location.reload();
+      }
       this.update();
     });
   }
 
   public cloneExistingGit(repoUrl: string, haltOnMigrationWithoutInternet: boolean, gitConflictResolution: string) {
     this.locked.next(true);
-    this.http.post("/api/sync/git/clone_existing_git", {
+    this.http.post<GitActionResult>("/api/sync/git/clone_existing_git", {
       url: repoUrl,
       haltOnMigrationWithoutInternet: haltOnMigrationWithoutInternet,
       gitConflictResolution: gitConflictResolution
@@ -110,3 +117,6 @@ enum SyncStatus {
   Unknown
 }
 
+interface GitActionResult {
+  changesPulledFromRemote: boolean
+}

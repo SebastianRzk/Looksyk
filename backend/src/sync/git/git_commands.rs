@@ -268,7 +268,7 @@ pub fn git_config_default_no_edit(graph_root_location: &GraphRootLocation) -> Re
 
 pub fn git_config_default_merge(graph_root_location: &GraphRootLocation) -> Result<(), String> {
     let output = GitCommandExecutor::new("git config pull.rebase false", graph_root_location)
-        .args_str(&["git", "config", "pull.rebase", "false"])
+        .args_str(&["config", "pull.rebase", "false"])
         .execute();
     if output.is_ok() {
         Ok(())

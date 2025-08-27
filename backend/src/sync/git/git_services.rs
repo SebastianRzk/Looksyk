@@ -21,8 +21,12 @@ pub fn create_checkpoint(
     initiator: CommitInitiator,
     graph_changes: &GraphChanges,
 ) -> GitActionResult {
+    let mut changes_from_remote = false;
     if !git_config.git_sync_readyness.is_ready() {
-        return GitActionResult::error("Git configuration is not ready".to_string());
+        return GitActionResult::error(
+            "Git configuration is not ready".to_string(),
+            changes_from_remote,
+        );
     }
 
     let create_checkpoint_result = git_commit(
@@ -30,23 +34,33 @@ pub fn create_checkpoint(
         calculate_git_commit_message(initiator, graph_changes),
     );
     if let Err(e) = &create_checkpoint_result {
-        return GitActionResult::error(format!("Failed to create checkpoint: {e}"));
+        return GitActionResult::error(
+            format!("Failed to create checkpoint: {e}"),
+            changes_from_remote,
+        );
     }
 
     let update_result = check_remote_has_incoming_updates(graph_root_location);
     if let Error(e) = update_result {
-        return GitActionResult::error(format!("Failed to check for updates on remote: {e}"));
+        return GitActionResult::error(
+            format!("Failed to check for updates on remote: {e}"),
+            changes_from_remote,
+        );
     } else if update_result == RemoteUpdateResult::UpdatePending {
         let pull_result = pull_updates_from_remote(git_config, graph_root_location);
         if pull_result.is_err() {
-            return GitActionResult::error(format!(
-                "Failed to pull updates from remote: {}",
-                pull_result.unwrap_err()
-            ));
+            return GitActionResult::error(
+                format!(
+                    "Failed to pull updates from remote: {}",
+                    pull_result.unwrap_err()
+                ),
+                changes_from_remote,
+            );
         } else if let Some(app_state) = app_state {
             println!("Pulled updates from remote before pushing local changes.");
             println!("Updating internal state after pulling updates.");
             state::endpoints::refresh_internal_state(app_state);
+            changes_from_remote = true;
             println!("Internal state updated successfully.");
         } else {
             println!("No application state provided, skipping internal state update.");
@@ -55,9 +69,9 @@ pub fn create_checkpoint(
 
     let git_push_result = git_push(graph_root_location);
     if let Err(e) = &git_push_result {
-        return GitActionResult::error(format!("Failed to push: {e}"));
+        return GitActionResult::error(format!("Failed to push: {e}"), changes_from_remote);
     }
-    GitActionResult::success(true)
+    GitActionResult::success(true, changes_from_remote)
 }
 
 pub fn push_existing_commits(
@@ -66,28 +80,34 @@ pub fn push_existing_commits(
     graph_root_location: &GraphRootLocation,
 ) -> GitActionResult {
     if !git_config.git_sync_readyness.is_ready() {
-        return GitActionResult::error("Git configuration is not ready".to_string());
+        return GitActionResult::error("Git configuration is not ready".to_string(), false);
     }
 
     let update_result = check_remote_has_incoming_updates(graph_root_location);
 
+    let changes_pulled_from_remote = update_result == RemoteUpdateResult::UpdatePending;
     if let Error(e) = update_result {
-        return GitActionResult::error(format!("Failed to check for updates on remote: {e}"));
-    } else if update_result == RemoteUpdateResult::UpdatePending {
+        return GitActionResult::error(
+            format!("Failed to check for updates on remote: {e}"),
+            changes_pulled_from_remote,
+        );
+    } else if changes_pulled_from_remote {
         let pull_result = pull_updates_from_remote(git_config, graph_root_location);
         if pull_result.is_err() {
-            return GitActionResult::error(format!(
-                "Failed to pull updates from remote: {}",
-                pull_result.unwrap_err()
-            ));
+            return GitActionResult::error(
+                format!(
+                    "Failed to pull updates from remote: {}",
+                    pull_result.unwrap_err(),
+                ),
+                changes_pulled_from_remote,
+            );
         }
     }
-
     let create_checkpoint_result = git_push(graph_root_location);
     if let Err(e) = create_checkpoint_result {
-        return GitActionResult::error(format!("Failed to push: {e}"));
+        return GitActionResult::error(format!("Failed to push: {e}"), changes_pulled_from_remote);
     }
-    if update_result == RemoteUpdateResult::UpdatePending {
+    if changes_pulled_from_remote {
         if let Some(app_state) = app_state {
             println!("Updating internal state.");
             state::endpoints::refresh_internal_state(app_state);
@@ -95,12 +115,13 @@ pub fn push_existing_commits(
             println!("No application state provided, skipping internal state update.");
         }
     }
-    GitActionResult::success(false)
+    GitActionResult::success(false, changes_pulled_from_remote)
 }
 
 pub struct GitActionResult {
     pub success: bool,
     pub commit_was_done: bool,
+    pub changes_from_remote: bool,
     pub message: Option<String>,
 }
 
@@ -110,19 +131,21 @@ pub enum GitConnect {
 }
 
 impl GitActionResult {
-    pub fn error(message: String) -> Self {
+    pub fn error(message: String, changes_from_remote: bool) -> Self {
         GitActionResult {
             success: false,
             commit_was_done: false,
             message: Some(message),
+            changes_from_remote,
         }
     }
 
-    pub fn success(commit_was_done: bool) -> Self {
+    pub fn success(commit_was_done: bool, changes_from_remote: bool) -> Self {
         GitActionResult {
             message: None,
             commit_was_done,
             success: true,
+            changes_from_remote,
         }
     }
 }
@@ -137,14 +160,17 @@ pub fn pull_updates(
     let try_updating_result =
         try_updating(git_config, graph_root_location, initiator, graph_changes);
     if let UpdateResult::Error(e) = &try_updating_result {
-        return GitActionResult::error(format!("Failed to pull updates from remote: {e}"));
+        return GitActionResult::error(format!("Failed to pull updates from remote: {e}"), false);
     }
 
     if try_updating_result == UpdateResult::HasChangedSomething {
         state::endpoints::refresh_internal_state(app_state);
     }
 
-    GitActionResult::success(try_updating_result == UpdateResult::HasChangedSomething)
+    GitActionResult::success(
+        try_updating_result == UpdateResult::HasChangedSomething,
+        try_updating_result == UpdateResult::HasChangedSomething,
+    )
 }
 
 pub fn try_updating(

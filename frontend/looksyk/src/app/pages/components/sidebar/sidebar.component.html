@@ -72,7 +72,7 @@
           </div>
         </div>
       }
-      <button class="sync-icon unimportant" matTooltip="Sync" (click)="gitService.pullUpdates()" [disabled]="gitService.locked$ | async">
+      <button class="sync-icon unimportant" matTooltip="Sync with Repository" (click)="gitService.pullUpdates()" [disabled]="gitService.locked$ | async">
         @if (gitInfo.hasErrors) {
           <mat-icon>sync_problem</mat-icon>
         } @else {
@@ -85,7 +85,7 @@
           <mat-icon>arrow_upward_alt</mat-icon>
         }
       </button>
-      <button class="sync-icon unimportant" matTooltip="Checkpoint" (click)="gitService.createCheckpoint()" [disabled]="gitService.locked$ | async">
+      <button class="sync-icon unimportant" matTooltip="Create Checkpoint" (click)="gitService.createCheckpoint()" [disabled]="gitService.locked$ | async">
         @if (gitInfo.hasChanges) {
           <div class="double-sync-icon">
             <mat-icon>edit</mat-icon>
