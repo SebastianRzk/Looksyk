@@ -13,10 +13,6 @@ Enhancements:
 * Add AppImage build to CI
 * Update fav-icon for docker deployment
 
-Changes:
-
-* Remove flatpak build (not working properly with electron). Please use docker or native installation.
-
 Fixes:
 
 * Frontend-State gets refreshed on rename-page aswell as delete-page
