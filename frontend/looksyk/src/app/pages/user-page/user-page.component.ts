@@ -99,5 +99,12 @@ export class UserPageComponent implements OnInit, OnDestroy {
   async delete() {
     const pageName = await firstValueFrom(this.pageName$);
     await this.pageSerivce.deleteUserPage(pageName);
+    this.page_.unsubscribe();
+    this.page_ = this.pageSerivce.getUserPage(pageName).subscribe(
+      value => {
+        this.pageState.next(value)
+      }
+    );
+    this.pageSerivce.loadUserPage(pageName);
   }
 }

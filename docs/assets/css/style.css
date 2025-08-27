@@ -288,7 +288,12 @@ table {
     color: var(--dark-background);
 }
 
-
+.disclaimer-block {
+    background: #222;
+    border-left: 8px solid #0c884c;
+    padding: 1ex 2ex;
+    margin: 3ex 0;
+}
 
 @media (max-width: 600px) {
     main {

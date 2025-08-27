@@ -23,12 +23,14 @@ use crate::looksyk::serializer::serialize_page;
 use crate::state::application_state::{
     AppState, CurrentPageAssociatedState, CurrentPageOnDiskState,
 };
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 
 #[post("/api/pages/{page_name}")]
 async fn update_page(
     path: Path<String>,
     body: Json<UpdateMarkdownFileDto>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
     let page_name_from_input = path.into_inner();
@@ -64,8 +66,11 @@ async fn update_page(
         tag_index: &tag_guard,
     };
 
-    let new_page_associated_state =
-        update_index_for_file(page_id, &updated_page, current_page_associated_state);
+    let new_page_associated_state = update_index_for_file(
+        page_id.clone(),
+        &updated_page,
+        current_page_associated_state,
+    );
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
@@ -90,6 +95,11 @@ async fn update_page(
     drop(page_guard);
     drop(journal_guard);
 
+    document_change(
+        graph_changes,
+        GraphChange::user_page_changed(page_id.name.name),
+    );
+
     Ok(Json(map_markdown_file_to_dto(rendered_file, is_fav)))
 }
 
@@ -111,20 +121,21 @@ async fn get_page(
     let page = page_guard.entries.get(&simple_page_name);
 
     let data_root_location = &data.data_path;
-    if page.is_some() && !page.unwrap().blocks.is_empty() {
-        let parsed_page = page.unwrap();
-        let prepared_page = render_file(
-            parsed_page,
-            &StaticRenderContext {
-                user_pages: &page_guard,
-                journal_pages: &journal_guard,
-                todo_index: &todo_index_guard,
-                tag_index: &tag_guard,
-            },
-            &mut asset_cache,
-            data_root_location,
-        );
-        return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
+    if let Some(parsed_page) = page {
+        if !parsed_page.blocks.is_empty() {
+            let prepared_page = render_file(
+                parsed_page,
+                &StaticRenderContext {
+                    user_pages: &page_guard,
+                    journal_pages: &journal_guard,
+                    todo_index: &todo_index_guard,
+                    tag_index: &tag_guard,
+                },
+                &mut asset_cache,
+                data_root_location,
+            );
+            return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
+        }
     }
     let rendered_file = render_file(
         &generate_page_not_found(),
@@ -218,6 +229,7 @@ async fn append_page(
     body: Json<UpdateMarkdownFileDto>,
     data: Data<AppState>,
     page_name_from_path: Path<String>,
+    graph_change: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
     let page_name = page_name(page_name_from_path.into_inner());
@@ -261,11 +273,16 @@ async fn append_page(
         tag_index: &tag_guard,
     };
     let new_page_associated_state =
-        update_index_for_file(page_id, &merged_page, current_page_associated_state);
+        update_index_for_file(page_id.clone(), &merged_page, current_page_associated_state);
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+
+    document_change(
+        graph_change,
+        GraphChange::user_page_changed(page_id.name.name.clone()),
+    );
 
     Ok("")
 }
@@ -274,6 +291,7 @@ async fn append_page(
 async fn rename_page(
     body: Json<RenamePageDto>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let body = body.into_inner();
     let old_page_name = page_name(body.old_page_name);
@@ -291,7 +309,7 @@ async fn rename_page(
 
     let rename_tag_result = rename_page_across_all_files(
         OldPageName {
-            page_name: old_page_name,
+            page_name: old_page_name.clone(),
         },
         NewPageName {
             page_name: new_page_name.clone(),
@@ -358,6 +376,11 @@ async fn rename_page(
     drop(todo_guard);
     drop(tag_guard);
 
+    document_change(
+        graph_changes,
+        GraphChange::page_renamed(old_page_name.name, new_page_name.name.clone()),
+    );
+
     Ok(Json(RenamePageResultDto {
         new_page_name: new_page_name.name,
     }))
@@ -367,6 +390,7 @@ async fn rename_page(
 async fn delete_page(
     input_page_name: Path<String>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let page_name_from_input = input_page_name.into_inner();
     let simple_page_name = page_name(page_name_from_input);
@@ -386,7 +410,7 @@ async fn delete_page(
     let page_id = simple_page_name.as_user_page();
     let new_page_associated_state =
         remove_page_from_internal_state(&page_id, current_page_associated_state);
-    delete_user_file(&data.data_path, simple_page_name);
+    delete_user_file(&data.data_path, simple_page_name.clone());
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
@@ -397,6 +421,11 @@ async fn delete_page(
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+
+    document_change(
+        graph_changes,
+        GraphChange::user_page_deleted(simple_page_name.name),
+    );
 
     Ok(Json(PageDeletedDto {}))
 }

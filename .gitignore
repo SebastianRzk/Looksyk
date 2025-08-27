@@ -2,6 +2,9 @@ target/
 .idea/
 looksyk.flatpak
 looksyk-source.tar.gz
+Looksyk-x86_64.AppImage
+AppDir
+linuxdeploy
 .flatpak-builder
 repo
 **/npm-cache

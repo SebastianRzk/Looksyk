@@ -37,7 +37,7 @@ pub mod builder {
     }
 
     impl TestRenderContext {
-        pub fn to_static(&self) -> StaticRenderContext {
+        pub fn to_static(&self) -> StaticRenderContext<'_> {
             StaticRenderContext {
                 user_pages: &self.user_pages,
                 todo_index: &self.todo_index,

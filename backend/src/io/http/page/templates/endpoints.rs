@@ -5,13 +5,14 @@ use crate::io::http::page::templates::mapper::map_templates;
 use crate::io::http::page_type::get_page_id_from_external_string;
 use crate::looksyk::favourite::is_favourite;
 use crate::looksyk::index::index_operations::update_index_for_file;
-use crate::looksyk::model::ParsedMarkdownFile;
+use crate::looksyk::model::{PageType, ParsedMarkdownFile};
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::serializer::serialize_page;
 use crate::looksyk::templates;
 use crate::looksyk::templates::list::TemplateId;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Json};
 use actix_web::{get, post, Responder, Result};
 
@@ -30,6 +31,7 @@ async fn list_all_templates(data: Data<AppState>) -> Result<impl Responder> {
 async fn insert_template_into_page(
     data: Data<AppState>,
     body: Json<InsertTemplateDto>,
+    graph_changes: Data<GraphChangesState>,
 ) -> Result<impl Responder> {
     let insert_template_dto = body.into_inner();
     let template_id = TemplateId {
@@ -39,8 +41,8 @@ async fn insert_template_into_page(
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
     let page_id = get_page_id_from_external_string(&insert_template_dto.page_id);
     let page_to_update = match page_id.page_type {
-        crate::looksyk::model::PageType::UserPage => page_guard.entries.get(&page_id.name),
-        crate::looksyk::model::PageType::JournalPage => journal_guard.entries.get(&page_id.name),
+        PageType::UserPage => page_guard.entries.get(&page_id.name),
+        PageType::JournalPage => journal_guard.entries.get(&page_id.name),
     };
     let template = page_guard.entries.get(&template_id.into());
     let empty = ParsedMarkdownFile::empty();
@@ -100,10 +102,30 @@ async fn insert_template_into_page(
     drop(journal_guard);
 
     let is_fav = match page_id.page_type {
-        crate::looksyk::model::PageType::UserPage => {
-            is_favourite(&page_id.name, &data.g_config.lock().unwrap())
-        }
-        crate::looksyk::model::PageType::JournalPage => false,
+        PageType::UserPage => is_favourite(&page_id.name, &data.g_config.lock().unwrap()),
+        PageType::JournalPage => false,
     };
+
+    match page_id.page_type {
+        PageType::UserPage => {
+            document_change(
+                graph_changes,
+                GraphChange::user_page_changed(format!(
+                    "template inserted into user page: {}",
+                    page_id.name.name
+                )),
+            );
+        }
+        PageType::JournalPage => {
+            document_change(
+                graph_changes,
+                GraphChange::journal_page_changed(format!(
+                    "template inserted into journal page: {}",
+                    page_id.name.name
+                )),
+            );
+        }
+    }
+
     Ok(Json(map_markdown_file_to_dto(rendered_page, is_fav)))
 }

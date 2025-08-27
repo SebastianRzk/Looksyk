@@ -1,0 +1,64 @@
+---
+layout: base.njk
+title: Looksyk - Sync
+---
+
+
+<div class="disclaimer-block">
+<h2 class="disclaimer">Disclaimer:</h2>
+<h3>Please note: Git sync attempts to synchronize your data easily and reliably to a Git repository.
+Using multiple Looksyk installations in parallel and with little opportunity to synchronize can lead to editing conflicts,
+potentially resulting in data loss, or your changes are hidden in some old git-commit since Looksyk always tries to commit changes and merge afterwards.</h3>
+
+<h3>
+For a more stable synchronization method, you can synchronize the graph folder yourself using a synchronization tool of
+ your choice.</h3>
+</div>
+
+<h2>Configuration Parameters</h2>
+<ul>
+  <li>
+    <strong>Git Repository URL</strong>: The URL of the Git repository to synchronize with. This can be an HTTPS or SSH URL, but the git commands must be able to access the repository without user interaction (e.g. password prompt). For HTTPS URLs, this can be achieved by using a credential manager or embedding credentials in the URL (not recommended for security reasons). For SSH URLs, this can be achieved by using SSH keys.
+  </li>
+  <li>
+    <strong>Conflict Resolution Strategy</strong>: The strategy to use when a conflict occurs during synchronization. The following strategies are available:
+    <ul>
+      <li><strong>Use remote changes (theirs)</strong>: This strategy will <strong>discard local changes</strong> and use the changes from the remote repository.</li>
+      <li><strong>Use local changes (ours)</strong>: This strategy will <strong>discard remote changes</strong> and use the local changes.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>When running migrations, require update graph to be run successfully before</strong>
+    <ul>
+      <li><strong>Yes</strong>: When Looksyk is updated and wants to run migrations, it will first check if the graph is up to date with the remote repository. If the remote repository is not accessible (e.g. no internet connection), the migrations will not be run.</li>
+      <li><strong>No</strong>: Looksyk will run migrations regardless of whether the graph is up to date with the remote repository or not. This may cause merge conflicts, when another Looksyk application already migrated the graph to the new version.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Usage</h2>
+
+<div>
+<p>
+After connecting to the Git repository, the sidebar displays the current state of the graph. It can be viewed without changes (first image) or with local changes (second image). Clicking the sync icon loads changes from the remote repository. Clicking the graph icon makes a commit and attempts to upload the changes to the remote repository (pulling them first if necessary).
+</p>
+<img src="../git_clean.png" alt="Sync Sidebar Clean" style="max-width: 600px;">
+<img src="../git_changes.png" alt="Sync Sidebar Dirty" style="max-width: 600px;">
+</div>
+
+<p>Looksyk tries to create meaningful commit messages based on the changes made to the graph.</p>
+<img src="../git_log.png" alt="Meaningful Commit Messages" style="max-width: 600px;">
+
+<p>If a conflict occurs during synchronization, the configured conflict resolution strategy will be applied.</p>
+<p>Since Looksyk tries to commit before every merge, it is possible to revert to previous states of the graph using Git tools.</p>
+
+<p>In addition to this manual execution of pull, commit and push, Looksyk also tries to automatically update the graph at certain points in order to reduce conflicts.</p>
+
+<p>The following events lead to Git actions:
+<ul>
+    <li>When Looksyk starts, it will attempt to pull the latest changes from the remote repository.</li>
+    <li>When Looksyk is closed, it will attempt to commit and push any local changes to the remote repository.</li>
+    <li>When Looksyk wants to run migrations (e.g. after an update), it will first attempt to pull the latest changes from the remote repository. If the current graph contains unchecked changes, a commit is made. Then the migration is executed, committed, and all the changes are pushed.</li>
+</ul>
+</p>
+

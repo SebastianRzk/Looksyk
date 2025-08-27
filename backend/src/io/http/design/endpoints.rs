@@ -3,6 +3,7 @@ use crate::design::dtos::DesignConfigDto;
 use crate::io::fs::config::save_config_to_file;
 use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
 use crate::state::application_state::AppState;
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::http::header::ContentType;
 use actix_web::web::Data;
 use actix_web::{get, post, web, HttpResponse};
@@ -46,6 +47,7 @@ pub async fn get_appearance(app_state: Data<AppState>) -> HttpResponse {
 pub async fn set_design_config(
     app_state: Data<AppState>,
     design: web::Json<DesignConfigDto>,
+    changes: web::Data<GraphChangesState>,
 ) -> HttpResponse {
     let mut config = app_state.g_config.lock().unwrap();
     config.design.primary_color = design.primary_color.clone();
@@ -56,5 +58,10 @@ pub async fn set_design_config(
         Appearance::from_str(&design.appearance.appearance).unwrap_or(Appearance::Dark);
     save_config_to_file(&app_state.data_path, &config);
     drop(config);
+
+    document_change(
+        changes,
+        GraphChange::configuration_changed("design configuration updated".to_string()),
+    );
     HttpResponse::Ok().finish()
 }

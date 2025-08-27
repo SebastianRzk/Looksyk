@@ -6,4 +6,9 @@ services:
       - "11000:11000"
     restart: unless-stopped
     volumes:
-      - ./graph:/app/graph
+      - ./graph:/graph
+      # SSH keys for accessing private repositories. Make sure to set correct permissions and ownership (root) on these files.
+      #- ./my_id:/root/.ssh/id_rsa:ro
+      #- ./known_hosts:/root/.ssh/known_hosts:ro
+    # needed for accessing private repositories via SSH
+    #network_mode: host

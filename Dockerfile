@@ -8,7 +8,7 @@ RUN ls -la /app/target/release
 
 
 # Stage 1
-FROM node:22-slim as build-step-angular
+FROM node:24 as build-step-angular
 RUN mkdir -p /app
 WORKDIR /app
 COPY frontend/looksyk/package.json /app
@@ -20,7 +20,7 @@ RUN ls -la /app/dist
 
 # Assembly
 FROM debian:stable-slim
-RUN apt-get update && apt-get install openssl ca-certificates curl --yes && apt-get clean
+RUN apt-get update && apt-get install openssl ca-certificates curl git --yes && apt-get clean
 RUN mkdir /graph
 
 COPY --from=build-step-rust /app/target/release /app

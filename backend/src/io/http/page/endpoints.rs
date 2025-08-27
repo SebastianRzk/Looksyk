@@ -16,12 +16,14 @@ use crate::looksyk::renderer::renderer_deep::render_block;
 use crate::looksyk::serializer::update_and_serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::state::block::BlockReference;
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
 async fn update_block(
     path: Path<(String, usize)>,
     body: web::Json<UpdateBlockContentDto>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> Result<impl Responder> {
     let request_body = body.into_inner();
     let (file_id, block_number) = path.into_inner();
@@ -70,8 +72,11 @@ async fn update_block(
         tag_index: &tag_guard,
     };
 
-    let new_page_associated_state =
-        update_index_for_file(page_id, &updated_page, current_page_associated_state);
+    let new_page_associated_state = update_index_for_file(
+        page_id.clone(),
+        &updated_page,
+        current_page_associated_state,
+    );
 
     *todo_guard = new_page_associated_state.todo_index;
     *tag_guard = new_page_associated_state.tag_index;
@@ -100,6 +105,19 @@ async fn update_block(
     drop(page_guard);
     drop(journal_guard);
     drop(asset_cache);
+
+    match page_id.page_type {
+        PageType::JournalPage => document_change(
+            graph_changes,
+            GraphChange::journal_page_changed(page_id.name.name.clone()),
+        ),
+        PageType::UserPage => {
+            document_change(
+                graph_changes,
+                GraphChange::user_page_changed(page_id.name.name.clone()),
+            );
+        }
+    }
 
     Ok(web::Json(map_to_block_dto(&rendered_block)))
 }

@@ -11,6 +11,7 @@ import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
 import { RouterModule } from "@angular/router";
 import { MatIconRegistry } from "@angular/material/icon";
 import { SidenavService } from "./services/sidenav.service";
+import { GitService } from "./services/git.service";
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
   titleService = inject(TitleService);
+  gitService = inject(GitService);
   appearanceService = inject(AppearanceService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
   appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => this.loadHighlightTheme(x));
@@ -80,6 +82,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.fetchGraphTitle();
     this.appearanceService.fetchAppearance();
+    this.gitService.update();
   }
 
   private loadHighlightTheme(appearance: 'light' | 'dark' = 'dark'): void {

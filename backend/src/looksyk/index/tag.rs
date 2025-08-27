@@ -43,12 +43,7 @@ pub fn create_tag_index_file(
                 let payload = token.payload.clone();
                 let tag_name = page_name(payload).as_user_page();
                 let stored_list = result.get(&tag_name);
-                let mut tokenlist;
-                if stored_list.is_none() {
-                    tokenlist = HashSet::new();
-                } else {
-                    tokenlist = stored_list.unwrap().clone();
-                }
+                let mut tokenlist = stored_list.cloned().unwrap_or_default();
 
                 tokenlist.insert(current_page_name.clone());
                 result.insert(tag_name, tokenlist);

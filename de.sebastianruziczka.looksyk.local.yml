@@ -27,11 +27,13 @@ modules:
   - name: looksyk-desktop
     buildsystem: simple
     build-commands:
+      - cd git && make && cd ..
       - cd frontend/looksyk && npm install && cd ..
       - cd application-wrapper/Looksyk && npm install && cd ..
       - cd backend && cargo build --release && cd ..
       - cd frontend/looksyk && npm run build --configuration=production && cd ..
       - cd application-wrapper/Looksyk && npm run package && cd ..
+      - install -Dm755 git/git /app/bin/git
       - install -Dm755 backend/target/release/looksyk /app/bin/looksyk-backend
       - cp -r application-wrapper/Looksyk/out/looksyk-linux-x64/* /app/bin/
       - chmod +x /app/bin/looksyk
@@ -45,3 +47,7 @@ modules:
     sources:
       - type: dir
         path: ./
+      - type: git
+        url: https://github.com/git/git
+        commit: f814da676ae46aac5be0a98b99373a76dee6cedb
+        dest: 'git'

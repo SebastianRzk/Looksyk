@@ -1,6 +1,6 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, firstValueFrom, lastValueFrom, map, Observable, Subject, tap} from "rxjs";
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { BehaviorSubject, firstValueFrom, lastValueFrom, map, Observable, Subject, tap } from "rxjs";
 import {
   BlockContent,
   BlockDto,
@@ -52,7 +52,10 @@ export class PageService {
   public deleteUserPage(pageName: string): Promise<void> {
     const pageId = this.userpageId(pageName);
     return firstValueFrom(this.httpClient.delete<void>("/api/pages/" + encodeURIComponent(pageName).toString())
-      .pipe(tap(() => this.deletePage(pageId))));
+      .pipe(tap(() => {
+        this.deletePage(pageId);
+        this.somethingHasChanged.next(blockIdFromWholePage(pageName))
+      })));
   }
 
   public loadBuildInPage(pageName: string) {
@@ -168,7 +171,10 @@ export class PageService {
     return firstValueFrom(this.httpClient.post<RenameResultDto>("/api/rename-page", {
       oldPageName: pageName,
       newPageName: newName
-    }).pipe(map(x => x.newPageName)));
+    }).pipe(map(x => {
+      this.somethingHasChanged.next(blockIdFromWholePage(pageName));
+      return x.newPageName
+    })));
   }
 
   appendPage(pageName: string, content: BasicPageContent) {
@@ -177,12 +183,11 @@ export class PageService {
     return lastValueFrom(this.httpClient.post(url, {blocks: [content]}).pipe(
       tap(() => {
         this.savingState.next(SavingState.Saved);
-        this.somethingHasChanged.next({
-          blockId: this.userpageId(pageName)
-        });
+        this.somethingHasChanged.next(blockIdFromWholePage(pageName));
       })));
   }
-  async getBlockIndex(pageId: string, blockId: string) : Promise<number> {
+
+  async getBlockIndex(pageId: string, blockId: string): Promise<number> {
     const pageSubj = this.pageState.get(pageId);
     if (!pageSubj) {
       return -1;
@@ -220,4 +225,8 @@ export enum SavingState {
 
 export interface BlockId {
   blockId: string
+}
+
+export function blockIdFromWholePage(pageId: string): BlockId {
+  return {blockId: pageId};
 }

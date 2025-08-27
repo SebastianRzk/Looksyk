@@ -12,6 +12,7 @@ import { StateService } from "../../../services/state.service";
 import { AsyncPipe } from "@angular/common";
 import { SidebarTextComponent } from "../sidebar-text/sidebar-text.component";
 import { MatTooltip } from "@angular/material/tooltip";
+import { GitService } from "../../../services/git.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -24,8 +25,8 @@ export class SidebarComponent implements OnInit {
   favoriteService = inject(FavouriteService);
   titleService = inject(TitleService);
   favs$ = this.favoriteService.favourites$;
-  state = inject(StateService)
-
+  state = inject(StateService);
+  gitService = inject(GitService);
 
   private history: HistoryService = inject(HistoryService);
   public history$ = this.history.history$.pipe(map(x => [...x].reverse()));

@@ -1,7 +1,45 @@
+.sync-icon {
+  cursor: pointer;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: row;
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
+}
+
+.sync-icon > mat-icon, double-sync-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sync-icon:hover {
+  color: var(--primary-color);
+  background: var(--primary-shading);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+  0 2px 4px rgba(0, 0, 0, 0.1);
+
+  transition: all 0.3s ease-in-out;
+}
+
+.sync-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 1ex;
+  margin-bottom: 1ex;
+}
+
 .menu-button-list {
   display: flex;
   flex-direction: column;
 }
+
 
 .menu-element {
   margin-top: 5ex;
@@ -57,7 +95,6 @@ mat-divider {
 }
 
 
-
 .bottom {
   margin-top: auto;
 }
@@ -68,7 +105,7 @@ mat-divider {
   width: 33%;
 }
 
-.nav-fav{
+.nav-fav {
   padding-right: 0.5ex;
 }
 
@@ -86,4 +123,36 @@ mat-divider {
   font-weight: 300;
   margin: 0.5ex;
   font-style: italic;
+}
+
+.last-commit {
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.rotating {
+  -webkit-animation: rotating 4s linear infinite;
+  -moz-animation: rotating 4s linear infinite;
+  animation: rotating 4s linear infinite;
+}
+
+@-moz-keyframes rotating {
+  100% {
+    -moz-transform: rotate(-360deg);
+  }
+}
+
+@-webkit-keyframes rotating {
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+@keyframes rotating {
+  100% {
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+  }
 }

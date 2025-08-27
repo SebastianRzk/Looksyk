@@ -4,6 +4,20 @@ title: Changelog
 ---
 # Changelog
 
+### v1.14.0 (2025-08-27)
+
+Enhancements:
+
+* Increase max file size for assets (>10gb)
+* Add git sync feature
+* Add AppImage build to CI
+* Update fav-icon for docker deployment
+
+Fixes:
+
+* Frontend-State gets refreshed on rename-page aswell as delete-page
+* Fix Frontend-Caching in Electron Clients 
+
 ### v1.13.5 (2025-08-03)
 
 Internal refactoring / reduction of code duplication

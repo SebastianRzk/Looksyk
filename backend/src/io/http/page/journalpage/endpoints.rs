@@ -14,6 +14,7 @@ use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
 use crate::looksyk::serializer::serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
+use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Path};
 use actix_web::{get, post, web, Responder};
 
@@ -43,20 +44,21 @@ async fn get_journal(
 
     let fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
 
-    if page.is_some() && !page.unwrap().blocks.is_empty() {
-        let parsed_page = page.unwrap();
-        let prepared_page = render_file(
-            parsed_page,
-            &StaticRenderContext {
-                user_pages: &page_guard,
-                journal_pages: &journal_guard,
-                todo_index: &todo_index_guard,
-                tag_index: &data.d_tag_index.lock().unwrap(),
-            },
-            &mut asset_cache,
-            &data.data_path,
-        );
-        return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
+    if let Some(parsed_page) = page {
+        if !parsed_page.blocks.is_empty() {
+            let prepared_page = render_file(
+                parsed_page,
+                &StaticRenderContext {
+                    user_pages: &page_guard,
+                    journal_pages: &journal_guard,
+                    todo_index: &todo_index_guard,
+                    tag_index: &data.d_tag_index.lock().unwrap(),
+                },
+                &mut asset_cache,
+                &data.data_path,
+            );
+            return Ok(web::Json(map_markdown_file_to_dto(prepared_page, fav)));
+        }
     }
 
     let rendered_file = render_file(
@@ -84,6 +86,7 @@ async fn update_journal(
     path: Path<String>,
     body: web::Json<UpdateMarkdownFileDto>,
     data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
     let request_body = body.into_inner();
     let simple_page_name = page_name(path.into_inner());
@@ -144,6 +147,11 @@ async fn update_journal(
     drop(page_guard);
     drop(journal_guard);
     drop(asset_cache);
+
+    document_change(
+        graph_changes,
+        GraphChange::journal_page_changed(simple_page_name.name.clone()),
+    );
 
     Ok(web::Json(map_markdown_file_to_dto(rendered_file, is_fav)))
 }

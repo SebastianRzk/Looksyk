@@ -60,12 +60,63 @@
     </div>
   }
 }
-<div class="bottom">
+
+<div class="bottom"></div>
+@if (gitService.currentGitInfo$ | async; as gitInfo) {
+  @if (gitInfo && gitInfo.enabled && gitInfo.isReady) {
+    <div class="sync-info">
+      @if (gitService.locked$ | async){
+        <div class="bottom">
+          <div class="sync-icon">
+            <mat-icon class="rotating">sync</mat-icon>
+          </div>
+        </div>
+      }
+      <button class="sync-icon unimportant" matTooltip="Sync with Repository" (click)="gitService.pullUpdates()" [disabled]="gitService.locked$ | async">
+        @if (gitInfo.hasErrors) {
+          <mat-icon>sync_problem</mat-icon>
+        } @else {
+          <mat-icon>sync</mat-icon>
+        }
+        @if (gitInfo.hasIncomingUpdates) {
+          <mat-icon>arrow_downward_alt</mat-icon>
+        }
+        @if (gitInfo.hasOutgoingUpdates) {
+          <mat-icon>arrow_upward_alt</mat-icon>
+        }
+      </button>
+      <button class="sync-icon unimportant" matTooltip="Create Checkpoint" (click)="gitService.createCheckpoint()" [disabled]="(gitService.locked$ | async) || !gitInfo.hasChanges">
+        @if (gitInfo.hasChanges) {
+          <div class="double-sync-icon">
+            <mat-icon>edit</mat-icon>
+            <mat-icon>graph_1</mat-icon>
+          </div>
+        } @else {
+          <mat-icon>check_circle</mat-icon>
+        }
+      </button>
+    </div>
+  }
+  @if (gitInfo && gitInfo.enabled && !gitInfo.isReady) {
+    <div class="bottom">
+      <div class="sync-icon">
+        <mat-icon>sync_problem</mat-icon>
+      </div>
+    </div>
+  }
+  @if (gitInfo && gitInfo.enabled) {
+    <div class="unimportant last-commit">
+      Last commit: {{ gitInfo.lastCommit }}
+    </div>
+  }
+}
+<div>
   <button matTooltip="reload data from disk" mat-button (click)="reload()" class="unimportant">
     <mat-icon>sync</mat-icon>
-  </button>  <button matTooltip="configuration" mat-button routerLink="/special-page/configuration" class="unimportant">
-  <mat-icon>settings</mat-icon>
-</button>
+  </button>
+  <button matTooltip="configuration" mat-button routerLink="/special-page/configuration" class="unimportant">
+    <mat-icon>settings</mat-icon>
+  </button>
   <button matTooltip="help" mat-button routerLink="/special-page/help" class="unimportant">
     <mat-icon>help_center</mat-icon>
   </button>

@@ -10,7 +10,8 @@ A simple personal knowledge platform with a focus on clean markdown files, simpl
 
 ## Key Features
 
-- **Local Storage**: Your information is always exclusively in Markdown files.
+- **Local Storage**: Your information is always exclusively in Markdown files (currently in testing: sync with a git
+  repository).
 - **Fast and Efficient**: Scans and indexes large knowledge bases in under a second.
 - **Developer-Centric**: Insert code blocks with syntax highlighting, save and display existing code files. Save and
   display backups of websites in your pages.
@@ -53,15 +54,15 @@ own client: Looksyk (name may need to be changed).
 
 * Runs local on your computer.
 * Your information is always exclusively in the Markdown files. No replication in a database or similar. The files can
-  be easily synchronized with other sync tools.
+  be easily synchronized with the build-in git-sync other sync tools.
 * Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
 * Simple, use case based query language.
 * Multiple instances of Looksyk with different knowledge bases can be opened in parallel.
 * Developer-centric file support:
-    * Insert code blocks with syntax highlighting
-    * Save and display existing code files in your pages with syntax highlighting
-    * Save and display backups of websites in your pages (with single-file-downloader)
-    * Insert videos, audio files, images, text files and PDFs.
+	* Insert code blocks with syntax highlighting
+	* Save and display existing code files in your pages with syntax highlighting
+	* Save and display backups of websites in your pages (with single-file-downloader)
+	* Insert videos, audio files, images, text files and PDFs.
 * Custom styling of markdown content with html and css and support for custom themes.
 
 [Check out screenshots to see how each feature can be used!](https://sebastianrzk.github.io/Looksyk/usage/)
@@ -74,29 +75,31 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Journal (infinite scrolling page, single day page, journal overview page)
 * Todos
 * Content assist
-    * Creating links, inserting queries, tags, templates and media
+	* Creating links, inserting queries, tags, templates and media
 * View (and link) media
-    * Images
-    * PDFs
-    * HTML Files (e.g. SingleFile saved pages
-      from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
-      or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
-    * Video (html5 video player)
-    * Audio (html5 audio player)
-    * Code (with highlighting)
-    * Text files
+	* Images
+	* PDFs
+	* HTML Files (e.g. SingleFile saved pages
+	  from [SingleFile Firefox](https://addons.mozilla.org/en-US/firefox/addon/single-file/)
+	  or [SingleFile Chrome](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle))
+	* Video (html5 video player)
+	* Audio (html5 audio player)
+	* Code (with highlighting)
+	* Text files
 * Templates
 * Queries (placeholders for dynamic content):
-    * Query blocks
-    * Query todos / visualize progress of todos
-    * Query page hierarchy
-    * Query references
-    * Render video, audio, images, text files and code files (with highlighting)
+	* Query blocks
+	* Query todos / visualize progress of todos
+	* Query page hierarchy
+	* Query references
+	* Render video, audio, images, text files and code files (with highlighting)
 * Search across all pages and journals
 * Delete and rename pages (and update references across all pages and journals)
 * Favourites
 * History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
 * Custom styling of markdown content with html and css
+* Sync your graph with a git repository. Combine this feature with a docker deployment on a server to have a
+  simple web version of your knowledge base.
 
 Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or
 a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
@@ -113,12 +116,13 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Dynamic backend plugins
 * Server version / multi user / rcs
 * i18n
-* Sync with other devices. Please use other tools to sync your knowledge base such as
-    * [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/)
-    * [Dropbox](https://www.dropbox.com/)
-    * [Nextcloud](https://nextcloud.com/)
-    * [Syncthing](https://syncthing.net/)
-    * [git](https://git-scm.com/)
+* Sync with sophisticated conflict management. The Git-Sync implementation offers only basic conflict resolution
+  strategies. For more data security and sync options, choose a sync tool of your choice, such as
+	* [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/)
+	* [Dropbox](https://www.dropbox.com/)
+	* [Nextcloud](https://nextcloud.com/)
+	* [Syncthing](https://syncthing.net/)
+	* [git (manual approach)](https://git-scm.com/)
 
 ## Development
 

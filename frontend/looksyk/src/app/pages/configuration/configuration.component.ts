@@ -12,6 +12,7 @@ import { AppearanceService } from "../../services/appearance.service";
 import { ColorTheme, DesignService } from "../../services/design.service";
 import { MetaInfoService } from "../../services/meta-info.service";
 import { DefaultHeaderComponent } from "../components/default-header/default-header.component";
+import { GitService } from "../../services/git.service";
 
 
 const CURRENT_THEME_NAME = "Current Theme";
@@ -103,6 +104,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 
   private titleService = inject(TitleService);
   private designService = inject(DesignService);
+  gitService = inject(GitService);
 
 
   titleControl: FormControl<string | null> = new FormControl<string | null>("Looksyk Configuration");
@@ -172,6 +174,24 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     }
   });
 
+
+  gitImportControl: FormControl<string | null> = new FormControl<string | null>("");
+  importGitControl_ = this.gitImportControl.valueChanges.subscribe(value => {
+      if (value && value.length > 3) {
+        this.importGitDisable.next(false)
+      } else {
+        this.importGitDisable.next(true)
+      }
+    }
+  );
+
+  gitImportConflictStrategyControl: FormControl<string | null> = new FormControl<string>("theirs");
+
+  gitImportRequireUpdateGraphControl: FormControl<boolean | null> = new FormControl<boolean>(true);
+
+  private importGitDisable: Subject<boolean> = new BehaviorSubject<boolean>(true);
+  importGitDisable$ = this.importGitDisable.asObservable();
+
   async ngOnInit() {
     const title = await firstValueFrom(this.titleService.graphTitle$.pipe(filter(x => x !== TitleService.INITIAL_GRAPH_TITLE)));
     this.titleControl.setValue(title);
@@ -191,6 +211,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     this.primaryShadingControl_.unsubscribe();
     this.appearanceControl_.unsubscribe();
     this.titleControl_.unsubscribe();
+    this.importGitControl_.unsubscribe();
   }
 
   async saveConfiguration() {
@@ -213,6 +234,22 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   discardConfiguration() {
     this.setTheme(this.colorThemes[0]);
     this.colorThemeControl.setValue(CURRENT_THEME_NAME)
+  }
+
+  importFromGit() {
+    this.gitService.cloneExistingGit(
+      this.gitImportControl.value!,
+      this.gitImportRequireUpdateGraphControl.value || true,
+      this.gitImportConflictStrategyControl.value || "theirs"
+    )
+  }
+
+  attachGit(){
+    this.gitService.attachToExistingGitRepo(
+      this.gitImportControl.value!,
+      this.gitImportRequireUpdateGraphControl.value || true,
+      this.gitImportConflictStrategyControl.value || "theirs"
+    )
   }
 }
 

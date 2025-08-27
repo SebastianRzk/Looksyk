@@ -3,29 +3,46 @@ use std::path::{Path, PathBuf};
 use crate::looksyk::data::config::theme::custom_user_theme_path;
 use crate::state::application_state::AppState;
 use actix_files::NamedFile;
+use actix_web::http::header;
 use actix_web::http::header::{ContentDisposition, DispositionType};
-use actix_web::web;
 use actix_web::web::Data;
 use actix_web::{get, Error};
+use actix_web::{web, HttpRequest, HttpResponse};
 
 #[get("/")]
-pub async fn index_html(state: Data<AppState>) -> Result<NamedFile, Error> {
-    index_html_response(&state)
+pub async fn index_html(state: Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
+    index_html_response(&state, &req)
 }
 
-fn index_html_response(state: &Data<AppState>) -> Result<NamedFile, Error> {
+fn index_html_response(state: &Data<AppState>, req: &HttpRequest) -> Result<HttpResponse, Error> {
     let static_file_name = "index.html";
     let complete_path = to_static_path(&state.static_path, static_file_name);
-    Ok(NamedFile::open(complete_path)?
-        .use_last_modified(true)
+
+    let file = NamedFile::open(complete_path)?
+        .use_last_modified(false)
+        .use_etag(false)
         .set_content_disposition(ContentDisposition {
             disposition: DispositionType::Inline,
             parameters: vec![],
-        }))
+        });
+
+    let mut response = file.into_response(req);
+    response.headers_mut().insert(
+        header::CACHE_CONTROL,
+        header::HeaderValue::from_static("no-store, no-cache, must-revalidate"),
+    );
+    response
+        .headers_mut()
+        .insert(header::PRAGMA, header::HeaderValue::from_static("no-cache"));
+    response
+        .headers_mut()
+        .insert(header::EXPIRES, header::HeaderValue::from_static("0"));
+
+    Ok(response)
 }
 
-pub async fn index(state: Data<AppState>) -> Result<NamedFile, Error> {
-    index_html_response(&state)
+pub async fn index(state: Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
+    index_html_response(&state, &req)
 }
 
 #[get("/{filename}.js")]
