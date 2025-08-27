@@ -54,7 +54,7 @@ own client: Looksyk (name may need to be changed).
 
 * Runs local on your computer.
 * Your information is always exclusively in the Markdown files. No replication in a database or similar. The files can
-  be easily synchronized with other sync tools.
+  be easily synchronized with the build-in git-sync other sync tools.
 * Based on blocks, but these can also be larger, contain entire chapters and multiple queries.
 * Simple, use case based query language.
 * Multiple instances of Looksyk with different knowledge bases can be opened in parallel.
@@ -98,6 +98,8 @@ Install it and try it out! [Installation Guide](https://sebastianrzk.github.io/L
 * Favourites
 * History: Show, drop, navigate to previous and next page. Keyboard shortcuts available.
 * Custom styling of markdown content with html and css
+* Sync your graph with a git repository. Combine this feature with a docker deployment on a server to have a
+  simple web version of your knowledge base.
 
 Are you missing something? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues) and/or
 a [pull request](https://sebastianrzk.github.io/Looksyk/development_and_contribution.html)!
