@@ -1,8 +1,6 @@
 name: Test Build AppImage
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ stable ]
     types: [ opened, synchronize, reopened ]
