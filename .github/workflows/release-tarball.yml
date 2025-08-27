@@ -1,0 +1,18 @@
+name: Release Source Tarball
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-tarball:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sh ./deploy/create_tarball.sh || true
+      - name: Upload looksyk.flatpak zum Release
+        run: gh release upload "$GITHUB_REF_NAME" looksyk-source.tar.gz --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

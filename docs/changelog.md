@@ -19,7 +19,8 @@ Changes:
 
 Fixes:
 
-* Fontend-State gets refreshed on rename-page aswell as delete-page
+* Frontend-State gets refreshed on rename-page aswell as delete-page
+* Fix Frontend-Caching in Electron Clients 
 
 ### v1.13.5 (2025-08-03)
 

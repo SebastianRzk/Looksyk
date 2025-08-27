@@ -55,6 +55,21 @@ fn extract_version_from_pkgbuild(path: &str) -> Option<String> {
     None
 }
 
+fn extract_version_from_yaml_source_url(path: &str) -> Option<String> {
+    let content = fs::read_to_string(path).ok()?;
+    for line in content.lines() {
+        if line.contains("github.com") && line.contains("/releases/download/") {
+            let parts: Vec<&str> = line.split('/').collect();
+            for (i, part) in parts.iter().enumerate() {
+                if *part == "download" && i + 1 < parts.len() {
+                    return Some(parts[i + 1].trim_matches('\'').chars().skip(1).collect());
+                }
+            }
+        }
+    }
+    None
+}
+
 fn is_version_in_changelog(path: &str, version: &str) -> bool {
     let content = fs::read_to_string(path).unwrap_or_default();
     content.lines().any(|line| line.contains(version))
@@ -97,9 +112,14 @@ fn main() {
             extract_version_from_cargo_lock("backend/Cargo.lock", "looksyk"),
         ),
         ("PKGBUILD", extract_version_from_pkgbuild("PKGBUILD")),
+        (
+            "looksyk.yml",
+            extract_version_from_yaml_source_url("de.sebastianruziczka.looksyk.yml"),
+        ),
     ];
 
     let versions: Vec<_> = paths.iter().filter_map(|(_, v)| v.as_ref()).collect();
+
     if versions.windows(2).all(|w| w[0] == w[1]) {
         println!("All versions match {}", versions[0]);
     } else {

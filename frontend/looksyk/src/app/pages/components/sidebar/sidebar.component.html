@@ -85,7 +85,7 @@
           <mat-icon>arrow_upward_alt</mat-icon>
         }
       </button>
-      <button class="sync-icon unimportant" matTooltip="Create Checkpoint" (click)="gitService.createCheckpoint()" [disabled]="gitService.locked$ | async">
+      <button class="sync-icon unimportant" matTooltip="Create Checkpoint" (click)="gitService.createCheckpoint()" [disabled]="(gitService.locked$ | async) || !gitInfo.hasChanges">
         @if (gitInfo.hasChanges) {
           <div class="double-sync-icon">
             <mat-icon>edit</mat-icon>

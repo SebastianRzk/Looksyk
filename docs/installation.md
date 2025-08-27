@@ -7,6 +7,12 @@ title: Installation
 
 ## Run Looksyk
 
+If you're using Arch Linux, I highly recommend running either the AUR package or the PKGBUILD manually.
+
+Only use the Flatpak installation if other options, such as AppImage, aren't available.
+
+The Docker Compose variant can be used for mobile, but it's not yet fully optimized for smartphones.
+
 | Operation System    | Installation Method     | Status                                                         |
 |---------------------|-------------------------|----------------------------------------------------------------|
 | Arch Linux          | AUR                     | ✅ recommended [Installation Guide](#arch-linux--aur)           |
@@ -14,6 +20,8 @@ title: Installation
 | Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
 | Linux (any)         | AppImage                | ✅ [Installation Guide](#appimage)                              |
 | Linux (any)         | AppImage manual build   | ✅ [Installation Guide](#appimage-manual-build)                 |
+| Linux (any)         | Flatpak                 | ✅ [Installation Guide](#flatpak~~~~)                               |
+| Linux (any)         | Flatpak manual build    | ✅ [Installation Guide](#flatpak-manual-build)                  |
 | Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
 | Windows native      | manual build  *)        | untested / not working out of the box   *)                     |
 | Mac native          | manual build  *)        | untested / not working out of the box   *)                     |
@@ -58,6 +66,30 @@ the AppImage executable with `chmod +x Looksyk-x86_64.AppImage` and run it with
 3. The AppImage is now in the root-folder of the repository
 4. Make the AppImage executable with `chmod +x Looksyk-x86_64.AppImage`.
 5. Start the application with `./Looksyk-x86_64.AppImage`.
+
+### Flatpak
+
+A installation via flatpak is possible, but the least stable option. There may be issues. If you encounter problems,
+please create an [issue](https://github.com/SebastianRzk/Looksyk/issues).
+
+You can download the latest AppImage from the [releases](https://github.com/SebastianRzk/Looksyk/releases) page.
+
+Install it with `flatpak install --user Looksyk-x86_64.flatpak` and run it with clicking on the desktop-icon.
+
+Note, that flatpak only supports inserting files from the home-directory. So you have to copy your graph into your
+home-directory, and only insert assets from there.
+
+### Flatpak manual build
+
+A installation via flatpak is possible, but the least stable option. There may be issues. If you encounter problems,
+please create an [issue](https://github.com/SebastianRzk/Looksyk/issues).
+
+Build the flatpak with `sh build-flatpak.sh`.
+
+Install it with `flatpak install --user Looksyk-x86_64.flatpak` and run it with clicking on the desktop-icon.
+
+Note, that flatpak only supports inserting files from the home-directory. So you have to copy your graph into your
+home-directory, and only insert assets from there.
 
 ### Production Build / Manual Installation
 
