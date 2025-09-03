@@ -4,6 +4,12 @@ title: Changelog
 ---
 # Changelog
 
+### v1.14.1 (2025-09-03)
+
+Enhancements:
+
+* Add appinfo / metainfo xml for appstream build
+
 ### v1.14.0 (2025-08-27)
 
 Enhancements:

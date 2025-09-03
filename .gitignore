@@ -10,3 +10,4 @@ repo
 **/npm-cache
 **/cargo-cache
 **/electron-cache
+git
