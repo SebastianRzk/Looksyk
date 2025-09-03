@@ -41,13 +41,13 @@
     </ul>
   </description>
   <releases>
-    <release version="1.14.0" date="2025-08-27">
+    <release version="1.14.2" date="2025-09-03">
       <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1112-2025-07-01</url>
       <description>
         <p>Release description</p>
         <ul>
-          <li>Initial FlatHub Release</li>
-          <li>Update electron to fix security issues and shortcut issues</li>
+          <li>Initial FlatHub Release and AppImageHub Release</li>
+          <li>Add metadata xml in repo</li>
         </ul>
       </description>
     </release>

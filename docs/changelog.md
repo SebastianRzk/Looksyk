@@ -4,6 +4,13 @@ title: Changelog
 ---
 # Changelog
 
+### v1.14.2 (2025-09-03)
+
+Enhancements:
+
+* Add version in metadata
+
+
 ### v1.14.1 (2025-09-03)
 
 Enhancements:
