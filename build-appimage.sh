@@ -25,7 +25,7 @@ cp de.sebastianruziczka.looksyk.metainfo.xml "$APPDIR/usr/share/metainfo/de.seba
 
 cp icon/Looksyk_256.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png"
 
-cp application-wrapper/Looksyk.desktop "$APPDIR/looksyk.desktop"
+cp application-wrapper/Looksyk.desktop "$APPDIR/de.sebastianruziczka.looksyk.desktop"
 
 cp LICENSE "$APPDIR/usr/share/licenses/looksyk/LICENSE"
 
@@ -43,6 +43,6 @@ if [ ! -f linuxdeploy ]; then
   chmod +x linuxdeploy
 fi
 
-./linuxdeploy --appdir "$APPDIR" -d "$APPDIR/looksyk.desktop" -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png" --output appimage
+./linuxdeploy --appdir "$APPDIR" -d "$APPDIR/de.sebastianruziczka.looksyk.desktop" -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png" --output appimage
 
 echo "AppImage gebaut: $(ls *.AppImage)"
