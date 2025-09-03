@@ -62,3 +62,22 @@ After connecting to the Git repository, the sidebar displays the current state o
 </ul>
 </p>
 
+<h3>Behavior of Looksyk using git</h3>
+
+<ul>
+<li>When Looksyk tries to update the graph and there are incoming changes from the remote repository, Looksyk commits local changes. In the case of a merge conflict, all information will remain in the git-history</li>
+<li>Looksyk does not care about branches. When the sync gets initialized, it will use the default branch. The default branch can be anything, Looksyk does not care about the naming</li>
+<li>If you want Looksyk to use another branch, just change the branch manually in the graph-folder. Looksyk does not care or check, if the branch has changed. Please make sure the banch can be pushed and pulled.</li>
+<li>Looksyk does not create tags or releases in the git repository</li>
+<li>The following settings are applied, when Looksyk initializes the git repository:
+  <ul>
+    <li>push.default = current</li>
+    <li>core.mergeoptions = --no-edit</li>
+    <li>pull.rebase = false</li>
+    <li>user.name</li>
+    <li>user.email</li>
+  </ul>
+<li>Looksyk does not delete branches or repositories</li>
+
+</ul>
+
