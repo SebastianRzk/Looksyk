@@ -13,18 +13,18 @@ Only use the Flatpak installation if other options, such as AppImage, aren't ava
 
 The Docker Compose variant can be used for mobile, but it's not yet fully optimized for smartphones.
 
-| Operation System    | Installation Method     | Status                                                         |
-|---------------------|-------------------------|----------------------------------------------------------------|
-| Arch Linux          | AUR                     | ✅ recommended [Installation Guide](#arch-linux--aur)           |
-| Arch Linux          | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
-| Linux (any)         | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
-| Linux (any)         | AppImage                | ✅ [Installation Guide](#appimage)                              |
-| Linux (any)         | AppImage manual build   | ✅ [Installation Guide](#appimage-manual-build)                 |
-| Linux (any)         | Flatpak                 | ✅ [Installation Guide](#flatpak~~~~)                               |
-| Linux (any)         | Flatpak manual build    | ✅ [Installation Guide](#flatpak-manual-build)                  |
-| Linux, Windows, Mac | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
-| Windows native      | manual build  *)        | untested / not working out of the box   *)                     |
-| Mac native          | manual build  *)        | untested / not working out of the box   *)                     |
+| Operation System                   | Installation Method     | Status                                                         |
+|------------------------------------|-------------------------|----------------------------------------------------------------|
+| Arch Linux                         | AUR                     | ✅ recommended [Installation Guide](#arch-linux--aur)           |
+| Arch Linux                         | PKGBUILD                | ✅ [Installation Guide](#arch-linux--pkgbuild)                  |
+| Linux (any)                        | manual build            | ✅ [Installation Guide](#production-build--manual-installation) |
+| Linux (any)                        | AppImage                | ✅ [Installation Guide](#appimage)                              |
+| Linux (any)                        | AppImage manual build   | ✅ [Installation Guide](#appimage-manual-build)                 |
+| Linux (any)                        | Flatpak                 | ✅ [Installation Guide](#flatpak~~~~)                           |
+| Linux (any)                        | Flatpak manual build    | ✅ [Installation Guide](#flatpak-manual-build)                  |
+| Linux, Windows, Mac (amd64, arm64) | docker / docker compose | ✅ [Installation Guide](#docker--docker-compose)                |
+| Windows native                     | manual build  *)        | untested / not working out of the box   *)                     |
+| Mac native                         | manual build  *)        | untested / not working out of the box   *)                     |
 
 *) The application is programmed to be platform independent, but the build script and the installation process are not
 yet implemented on Windows and Mac. Mainly because I have no knowledge of packaging for Windows and Mac, and because I
