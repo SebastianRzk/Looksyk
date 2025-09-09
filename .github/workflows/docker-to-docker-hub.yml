@@ -28,12 +28,22 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build and push Looksyk
-        id: docker_build_looksyk
+        name: Build and push Looksyk amd64
+        id: docker_build_looksyk_amd64
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/looksyk:latest
+      -
+        name: Build and push Looksyk Arm64
+        id: docker_build_looksyk_arm64
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/looksyk:latest
