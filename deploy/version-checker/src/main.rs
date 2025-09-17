@@ -6,6 +6,16 @@ fn extract_version_from_json(path: &str) -> Option<String> {
     json.get("version")?.as_str().map(|s| s.to_string())
 }
 
+
+fn extract_version_from_metainfo_xml(path: &str) -> Option<String> {
+    let content = fs::read_to_string(path).ok()?;
+    let doc = roxmltree::Document::parse(&content).ok()?;
+    let releases = doc.descendants().find(|n| n.has_tag_name("releases"))?;
+    let release = releases
+        .children()
+        .find(|n| n.has_tag_name("release") && n.attribute("version").is_some())?;
+    release.attribute("version").map(|s| s.to_string())
+}
 fn extract_version_from_cargo(path: &str) -> Option<String> {
     let content = fs::read_to_string(path).ok()?;
     for line in content.lines() {
@@ -112,9 +122,13 @@ fn main() {
             extract_version_from_cargo_lock("backend/Cargo.lock", "looksyk"),
         ),
         ("PKGBUILD", extract_version_from_pkgbuild("PKGBUILD")),
+//        (
+//            "looksyk.yml",
+//            extract_version_from_yaml_source_url("de.sebastianruziczka.looksyk.yml"),
+//        ),
         (
-            "looksyk.yml",
-            extract_version_from_yaml_source_url("de.sebastianruziczka.looksyk.yml"),
+            "de.sebastianruziczka.looksyk.metainfo.xml",
+            extract_version_from_metainfo_xml("de.sebastianruziczka.looksyk.metainfo.xml"),
         ),
     ];
 

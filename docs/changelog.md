@@ -4,6 +4,19 @@ title: Changelog
 ---
 # Changelog
 
+
+### v1.14.3 (2025-09-17)
+
+Enhancements:
+
+* Change default graph location according to XDG base directory specification or `Documents/graphs` when xdg not set
+* Change default config location according to XDG base directory specification or `~/.config/looksyk/config.json` when xdg not set
+* Update dependencies of backend, frontend and application-wrapper
+
+Fixes:
+* De-duplicate history entries in sidebar again
+
+
 ### v1.14.2 (2025-09-03)
 
 Enhancements:

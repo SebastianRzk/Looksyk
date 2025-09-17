@@ -41,6 +41,18 @@
     </ul>
   </description>
   <releases>
+    <release version="1.14.3" date="2025-09-17">
+      <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1143-2025-09-17</url>
+      <description>
+        <p>Release description</p>
+        <ul>
+            <li>Change default locations of the graph-directory, aswell as the config directory (using environment variables first, then xdf environment variables and hard-coded paths)</li>
+            <li>Update dependencies of backend, frontend and application-wrapper</li>
+            <li>Bugfix: De-duplicate history entries in sidebar again</li>
+        </ul>
+      </description>
+
+    </release>
     <release version="1.14.2" date="2025-09-03">
       <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1112-2025-07-01</url>
       <description>

@@ -5,7 +5,7 @@ use std::string::ToString;
 use serde::{Deserialize, Serialize};
 
 use crate::io::fs::basic_file::{create_folder, exists_file, exists_folder, read_file};
-use crate::io::fs::basic_folder::home_directory;
+use crate::io::fs::basic_folder::documents_directory;
 use crate::state::application_state::GraphRootLocation;
 
 const CONFIG_FILE_NAME: &str = "config.json";
@@ -25,10 +25,7 @@ pub fn get_current_active_data_root_location(
     if !exists_file(file.clone()) {
         eprintln!("No config file found. Creating new one.");
         let config_file_content_as_str = serde_json::to_string(&RootPathConfig {
-            current_active: RootPath {
-                name: INITIAL_GRAPH_NAME.to_string(),
-                path: home_directory().join(INITIAL_GRAPH_PATH),
-            },
+            current_active: default_configuration(),
             available: vec![],
         })
         .unwrap();
@@ -39,6 +36,13 @@ pub fn get_current_active_data_root_location(
     let root_path_config: RootPathConfig = serde_json::from_str(&config_content).unwrap();
     GraphRootLocation {
         path: root_path_config.current_active.path,
+    }
+}
+
+fn default_configuration() -> RootPath {
+    RootPath {
+        name: INITIAL_GRAPH_NAME.to_string(),
+        path: documents_directory().join(INITIAL_GRAPH_PATH),
     }
 }
 

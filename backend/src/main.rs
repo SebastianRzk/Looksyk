@@ -4,7 +4,7 @@ use std::str::FromStr;
 use self::looksyk::data::config::init::graph::init_graph_if_needed;
 use self::looksyk::data::config::startup_configuration;
 use crate::io::cli::endpoints::get_cli_args;
-use crate::io::fs::basic_folder::home_directory;
+use crate::io::fs::basic_folder::config_directory;
 use crate::io::fs::env;
 use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
@@ -53,15 +53,8 @@ async fn main() -> std::io::Result<()> {
     println!("Computed configuration {config:?}");
 
     let graph_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
-        let initial_config_path = env::get_or_default(
-            LOOKSYK_CONFIG_PATH,
-            home_directory()
-                .join(".local")
-                .join("share")
-                .join("looksyk")
-                .to_str()
-                .unwrap(),
-        );
+        let initial_config_path =
+            env::get_or_default(LOOKSYK_CONFIG_PATH, config_directory().to_str().unwrap());
         get_current_active_data_root_location(&InitialConfigLocation {
             path: initial_config_path,
         })
