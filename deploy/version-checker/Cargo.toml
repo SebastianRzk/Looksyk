@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 serde_json = "1.0"
+roxmltree = "0.20.0"

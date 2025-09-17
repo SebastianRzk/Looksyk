@@ -65,6 +65,7 @@ pub fn delete_all_forbidden_chars_in_filename(filename: String) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::delete_all_forbidden_chars_in_filename;
 
     #[test]
     fn test_null_byte_is_len_1() {
@@ -75,27 +76,27 @@ mod tests {
     #[test]
     fn test_delete_all_forbidden_chars_in_filename() {
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test\0".to_string()),
+            delete_all_forbidden_chars_in_filename("test\0".to_string()),
             "test"
         );
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test\t".to_string()),
+            delete_all_forbidden_chars_in_filename("test\t".to_string()),
             "test"
         );
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test.html".to_string()),
+            delete_all_forbidden_chars_in_filename("test.html".to_string()),
             "test.html"
         );
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test-1".to_string()),
+            delete_all_forbidden_chars_in_filename("test-1".to_string()),
             "test-1"
         );
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test 1".to_string()),
+            delete_all_forbidden_chars_in_filename("test 1".to_string()),
             "test 1"
         );
         assert_eq!(
-            super::delete_all_forbidden_chars_in_filename("test[[1".to_string()),
+            delete_all_forbidden_chars_in_filename("test[[1".to_string()),
             "test1"
         );
     }

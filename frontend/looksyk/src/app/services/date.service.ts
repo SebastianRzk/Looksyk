@@ -6,6 +6,7 @@ import {Injectable} from '@angular/core';
 export class DateService {
 
   public convertDateToLocaleString(date_as_iso: string): string {
+    console.log("date as iso", date_as_iso);
     const splitted_date = date_as_iso.split("_");
 
     const localeString = splitted_date[2] + "." + splitted_date[1] + "." + splitted_date[0];

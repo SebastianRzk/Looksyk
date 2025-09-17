@@ -4,7 +4,7 @@ use std::str::FromStr;
 use self::looksyk::data::config::init::graph::init_graph_if_needed;
 use self::looksyk::data::config::startup_configuration;
 use crate::io::cli::endpoints::get_cli_args;
-use crate::io::fs::basic_folder::home_directory;
+use crate::io::fs::basic_folder::config_directory;
 use crate::io::fs::env;
 use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
@@ -28,6 +28,7 @@ mod io;
 use crate::io::actix::{json_form_config, multipart_form_config};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
+use crate::migration::migration_1_14_3::migriere_1_14_3;
 use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
     load_git_config, try_to_commit_and_push, try_to_update_graph, CommitInitiator,
@@ -52,16 +53,12 @@ async fn main() -> std::io::Result<()> {
     let config = default_config.overwrite(cli_args);
     println!("Computed configuration {config:?}");
 
+    //TODO remove again after some time
+    migriere_1_14_3();
+
     let graph_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
-        let initial_config_path = env::get_or_default(
-            LOOKSYK_CONFIG_PATH,
-            home_directory()
-                .join(".local")
-                .join("share")
-                .join("looksyk")
-                .to_str()
-                .unwrap(),
-        );
+        let initial_config_path =
+            env::get_or_default(LOOKSYK_CONFIG_PATH, config_directory().to_str().unwrap());
         get_current_active_data_root_location(&InitialConfigLocation {
             path: initial_config_path,
         })
