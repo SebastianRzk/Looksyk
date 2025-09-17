@@ -122,10 +122,10 @@ fn main() {
             extract_version_from_cargo_lock("backend/Cargo.lock", "looksyk"),
         ),
         ("PKGBUILD", extract_version_from_pkgbuild("PKGBUILD")),
-//        (
-//            "looksyk.yml",
-//            extract_version_from_yaml_source_url("de.sebastianruziczka.looksyk.yml"),
-//        ),
+        (
+            "looksyk.yml",
+            extract_version_from_yaml_source_url("de.sebastianruziczka.looksyk.yml"),
+        ),
         (
             "de.sebastianruziczka.looksyk.metainfo.xml",
             extract_version_from_metainfo_xml("de.sebastianruziczka.looksyk.metainfo.xml"),
