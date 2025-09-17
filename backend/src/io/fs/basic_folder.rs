@@ -8,7 +8,7 @@ pub fn home_directory() -> PathBuf {
 pub fn config_directory() -> PathBuf {
     let path = config_dir();
     if let Some(path) = path {
-        path
+        path.join("looksyk")
     } else {
         home_directory()
             .join(".local")

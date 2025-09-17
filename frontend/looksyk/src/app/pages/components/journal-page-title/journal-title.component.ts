@@ -16,10 +16,9 @@ export class JournalTitleComponent implements OnChanges {
   title!: JournalPageName;
 
   parsedTitle: Subject<TitleSegment> = new BehaviorSubject({
-    name: "", link: ""
+    name: "Loading...", link: ""
   });
   parsedTitle$ = this.parsedTitle.asObservable();
-
   ngOnChanges(): void {
     if (!this.title) {
       return;

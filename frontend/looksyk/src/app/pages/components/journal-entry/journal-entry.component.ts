@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+import {BehaviorSubject, filter, Observable, Subject, Subscription} from "rxjs";
 import { MarkdownPage } from "../../model";
 import { MatListModule } from "@angular/material/list";
 import { JournalTitleComponent } from "../journal-page-title/journal-title.component";
@@ -38,7 +38,7 @@ export class JournalEntryComponent implements  OnChanges{
       this.title_.unsubscribe();
     }
 
-    this.title_ = this.page.subscribe(page => {
+    this.title_ = this.page.pipe(filter(p => !!p && !!p.name)).subscribe(page => {
       this.title.next({
         iso_date: page.name,
         locale_string: this.dateService.convertDateToLocaleString(page.name)

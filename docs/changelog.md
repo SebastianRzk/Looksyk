@@ -15,7 +15,7 @@ Enhancements:
 
 Fixes:
 * De-duplicate history entries in sidebar again
-
+* Fix journal titles in loading state to show Loading... instead of undefined
 
 ### v1.14.2 (2025-09-03)
 

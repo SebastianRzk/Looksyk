@@ -49,6 +49,7 @@
             <li>Change default locations of the graph-directory, aswell as the config directory (using environment variables first, then xdf environment variables and hard-coded paths)</li>
             <li>Update dependencies of backend, frontend and application-wrapper</li>
             <li>Bugfix: De-duplicate history entries in sidebar again</li>
+            <li>Bugfix: Fix journal titles in loading state to show Loading... instead of undefined</li>
         </ul>
       </description>
 

@@ -28,6 +28,7 @@ mod io;
 use crate::io::actix::{json_form_config, multipart_form_config};
 use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::load_graph_version;
+use crate::migration::migration_1_14_3::migriere_1_14_3;
 use crate::migration::migrator::{run_migrations, MigrationResult};
 use crate::sync::git::application_port::git_sync_application_port::{
     load_git_config, try_to_commit_and_push, try_to_update_graph, CommitInitiator,
@@ -51,6 +52,9 @@ async fn main() -> std::io::Result<()> {
     println!("Provided CLI args {cli_args:?}");
     let config = default_config.overwrite(cli_args);
     println!("Computed configuration {config:?}");
+
+    //TODO remove again after some time
+    migriere_1_14_3();
 
     let graph_root_location = config.overwrite_graph_location.unwrap_or_else(|| {
         let initial_config_path =

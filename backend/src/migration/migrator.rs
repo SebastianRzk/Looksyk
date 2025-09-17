@@ -36,6 +36,7 @@ pub fn run_migrations(
 
     let version_1_14_3 = ApplicationVersion::new("1.14.3");
     if data_state_version < &version_1_14_3 {
+        // This migration has already been executed above in main.rs for now to avoid issues with the config file location
         print_running_migration(version_1_14_3);
         crate::migration::migration_1_14_3::migriere_1_14_3();
     }
