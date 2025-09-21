@@ -144,7 +144,7 @@ h2, h3, h4, h5, h6 {
   cursor: pointer;
 }
 
-progress{
+progress {
   width: 99%;
 
   border-radius: 10em;
@@ -152,7 +152,9 @@ progress{
   background-color: var(--primary-shading);
 }
 
-progress::-moz-progress-bar { background: var(--primary-color); }
+progress::-moz-progress-bar {
+  background: var(--primary-color);
+}
 
 progress::-webkit-progress-bar {
   background-color: var(--primary-shading);
@@ -163,12 +165,15 @@ progress::-webkit-progress-value {
   background: var(--primary-color);
   border-radius: 10em;
 }
-progress { color: var(--primary-color); }
+
+progress {
+  color: var(--primary-color);
+}
 
 
 .extension-card {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1ex 2ex 0 rgba(0,0,0,0.4);
+  box-shadow: 0 1ex 2ex 0 rgba(0, 0, 0, 0.4);
   transition: 0.3s;
   min-height: 5ex;
   padding: 2ex;
@@ -180,4 +185,28 @@ progress { color: var(--primary-color); }
 /* On mouse-over, add a deeper shadow */
 .extension-card:hover {
   box-shadow: 0 2ex 4ex 0 var(--primary-shading);
+}
+
+.filled-cal-item {
+  border: 2px solid var(--primary-color);
+  color: var(--foreground-color);
+}
+
+.cal-item {
+  align-content: center;
+  text-align: center;
+  border-radius: 50%;
+  height: 5ex;
+  margin: auto;
+  width: 5ex;
+}
+
+.cal-item:hover {
+  border: 1px solid var(--foreground-color);
+  box-sizing: border-box;
+}
+
+.filled-cal-item > a {
+  color: var(--foreground-color);
+  text-decoration: none;
 }

@@ -79,7 +79,7 @@ export class MarkdownService {
             clickEvent.stopPropagation();
             await router.navigateByUrl(originalDestination);
           }
-        } else if (originalDestination.startsWith("../assets/") || originalDestination.startsWith("/assets/")) {
+        } else if (originalDestination.startsWith("../assets/") || originalDestination.startsWith("/assets/") || originalDestination.startsWith("assets/")) {
           link.removeAttribute("href");
           link.onclick = async (clickEvent) => {
             clickEvent.stopImmediatePropagation();
