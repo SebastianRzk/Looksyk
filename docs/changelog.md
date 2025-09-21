@@ -4,6 +4,15 @@ title: Changelog
 ---
 # Changelog
 
+### v1.15.0 (2025-09-21)
+
+Enhancements:
+
+* Redesign of journal calendar view
+
+Bugfixes:
+
+* Navigate to internal links via angular router instead of reloading the whole page
 
 ### v1.14.3 (2025-09-17)
 

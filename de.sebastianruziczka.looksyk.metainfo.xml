@@ -1,94 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>de.sebastianruziczka.looksyk</id>
-  <content_rating type="oars-1.1"/>
-  <url type="homepage">https://sebastianrzk.github.io/Looksyk/</url>
-  <name>Looksyk</name>
-  <summary>A markdown centric, fast and local personal knowledge platform</summary>
-  <metadata_license>MIT</metadata_license>
-  <project_license>AGPL-3.0-or-later</project_license>
-  <categories>
-    <category>Office</category>
-    <category>Viewer</category>
-    <category>TextTools</category>
-    <category>TextEditor</category>
-    <category>Documentation</category>
-  </categories>
-  <supports>
-    <control>pointing</control>
-    <control>keyboard</control>
-    <control>touch</control>
-  </supports>
-  <description>
-    <p>The app is a modern note-taking and knowledge management tool that enables structured capture, management,
-      and search of notes and media. It offers numerous convenient features for efficient work and a customizable
-      user interface.
-    </p>
-    <p>
-      Key Features:
-    </p>
-    <ul>
-      <li>Create and organize notes and pages with flexible blocks</li>
-      <li>Journal function for daily entries</li>
-      <li>Templates for quick page creation</li>
-      <li>Intelligent search and suggestion functions (content assist)</li>
-      <li>Backlink and reference system for networked knowledge</li>
-      <li>Customizable design (e.g., light/dark mode, custom CSS)</li>
-      <li>Media management with detailed view and download</li>
-      <li>Keyboard shortcuts for quick operation</li>
-      <li>Support for large files and various file types</li>
-      <li>Sync your graph into a git repository</li>
-    </ul>
-  </description>
-  <releases>
-    <release version="1.14.3" date="2025-09-17">
-      <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1143-2025-09-17</url>
-      <description>
-        <p>Release description</p>
+    <id>de.sebastianruziczka.looksyk</id>
+    <content_rating type="oars-1.1"/>
+    <url type="homepage">https://sebastianrzk.github.io/Looksyk/</url>
+    <name>Looksyk</name>
+    <summary>A markdown centric, fast and local personal knowledge platform</summary>
+    <metadata_license>MIT</metadata_license>
+    <project_license>AGPL-3.0-or-later</project_license>
+    <categories>
+        <category>Office</category>
+        <category>Viewer</category>
+        <category>TextTools</category>
+        <category>TextEditor</category>
+        <category>Documentation</category>
+    </categories>
+    <supports>
+        <control>pointing</control>
+        <control>keyboard</control>
+        <control>touch</control>
+    </supports>
+    <description>
+        <p>The app is a modern note-taking and knowledge management tool that enables structured capture, management,
+            and search of notes and media. It offers numerous convenient features for efficient work and a customizable
+            user interface.
+        </p>
+        <p>
+            Key Features:
+        </p>
         <ul>
-            <li>Change default locations of the graph-directory, aswell as the config directory (using environment variables first, then xdf environment variables and hard-coded paths)</li>
-            <li>Update dependencies of backend, frontend and application-wrapper</li>
-            <li>Bugfix: De-duplicate history entries in sidebar again</li>
-            <li>Bugfix: Fix journal titles in loading state to show Loading... instead of undefined</li>
+            <li>Create and organize notes and pages with flexible blocks</li>
+            <li>Journal function for daily entries</li>
+            <li>Templates for quick page creation</li>
+            <li>Intelligent search and suggestion functions (content assist)</li>
+            <li>Backlink and reference system for networked knowledge</li>
+            <li>Customizable design (e.g., light/dark mode, custom CSS)</li>
+            <li>Media management with detailed view and download</li>
+            <li>Keyboard shortcuts for quick operation</li>
+            <li>Support for large files and various file types</li>
+            <li>Sync your graph into a git repository</li>
         </ul>
-      </description>
-
-    </release>
-    <release version="1.14.2" date="2025-09-03">
-      <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1112-2025-07-01</url>
-      <description>
-        <p>Release description</p>
-        <ul>
-          <li>Initial FlatHub Release and AppImageHub Release</li>
-          <li>Add metadata xml in repo</li>
-        </ul>
-      </description>
-    </release>
-  </releases>
-  <launchable type="desktop-id">de.sebastianruziczka.looksyk.desktop</launchable>
-  <screenshots>
-    <screenshot type="default">
-      <image>
-        https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation01.png?raw=true
-      </image>
-      <caption>Initial starting point of Looksyk: The journal page.</caption>
-    </screenshot>
-    <screenshot>
-      <image>
-        https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation02.png?raw=true
-      </image>
-      <caption>A content assist supports the insertion of content while typing</caption>
-    </screenshot>
-    <screenshot>
-      <image>
-        https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation12.png?raw=true
-      </image>
-      <caption>Many file types are supported: In addition to images, videos, audios and PDFs, also archived
-        websites
-      </caption>
-    </screenshot>
-  </screenshots>
-  <developer id="de.sebastianruziczka">
-    <name>Sebastian Ruziczka</name>
-  </developer>
+    </description>
+    <releases>
+        <release version="1.15.0" date="2025-09-21">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1150-2025-09-21</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Redesign journal calendar overview </li>
+                    <li>Bugfix: Navigate to internal pages via angular router</li>
+                </ul>
+            </description>
+        </release>
+        <release version="1.14.3" date="2025-09-17">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1143-2025-09-17</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Change default locations of the graph-directory, aswell as the config directory (using
+                        environment variables first, then xdf environment variables and hard-coded paths)
+                    </li>
+                    <li>Update dependencies of backend, frontend and application-wrapper</li>
+                    <li>Bugfix: De-duplicate history entries in sidebar again</li>
+                    <li>Bugfix: Fix journal titles in loading state to show Loading... instead of undefined</li>
+                </ul>
+            </description>
+        </release>
+        <release version="1.14.2" date="2025-09-03">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1112-2025-07-01</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Initial FlatHub Release and AppImageHub Release</li>
+                    <li>Add metadata xml in repo</li>
+                </ul>
+            </description>
+        </release>
+    </releases>
+    <launchable type="desktop-id">de.sebastianruziczka.looksyk.desktop</launchable>
+    <screenshots>
+        <screenshot type="default">
+            <image>
+                https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation01.png?raw=true
+            </image>
+            <caption>Initial starting point of Looksyk: The journal page.</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation02.png?raw=true
+            </image>
+            <caption>A content assist supports the insertion of content while typing</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/SebastianRzk/Looksyk/refs/tags/v1.14.0/docs/intro_animation/animation12.png?raw=true
+            </image>
+            <caption>Many file types are supported: In addition to images, videos, audios and PDFs, also archived
+                websites
+            </caption>
+        </screenshot>
+    </screenshots>
+    <developer id="de.sebastianruziczka">
+        <name>Sebastian Ruziczka</name>
+    </developer>
 </component>
