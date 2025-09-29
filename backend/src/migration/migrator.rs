@@ -1,3 +1,4 @@
+use crate::io::cargo::get_current_application_version;
 use crate::io::fs::version::save_graph_version;
 use crate::migration::migration_1_10_2::migriere_1_10_2;
 use crate::migration::migration_1_14_0::migriere_1_14_0;
@@ -47,8 +48,7 @@ pub fn run_migrations(
 }
 
 pub fn would_migrate_something(data_state_version: &ApplicationVersion) -> bool {
-    let version_1_14_0 = ApplicationVersion::new("1.14.0");
-    if data_state_version < &version_1_14_0 {
+    if data_state_version < &get_current_application_version() {
         return true;
     }
     false

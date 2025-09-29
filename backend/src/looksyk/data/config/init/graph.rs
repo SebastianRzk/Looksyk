@@ -27,9 +27,9 @@ fn init_empty_graph(data_root_location: &GraphRootLocation) {
         &Config {
             favourites: vec![],
             design: Design {
-                primary_color: "#0c884c".to_string(),
-                background_color: "#15212D".to_string(),
-                foreground_color: "white".to_string(),
+                primary_color: "#85b7d5".to_string(),
+                background_color: "#020d22".to_string(),
+                foreground_color: "#ffffff".to_string(),
                 primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
                 appearance: Appearance::Dark,
             },

@@ -45,7 +45,16 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   colorThemes: ColorTheme[] = [
     this.getCurrentTheme(),
     {
-      name: "Dark (default)",
+      name: "Glacier (default)",
+      primaryColor: "#85b7d5",
+      backgroundColor: "#020d22",
+      foregroundColor: "#ffffff",
+      primaryShading: "rgba(255, 255, 255, 0.1)",
+      appearance: "dark"
+
+    },
+    {
+      name: "Moss",
       primaryColor: "#0c884c",
       backgroundColor: "#15212D",
       foregroundColor: "#ffffff",
