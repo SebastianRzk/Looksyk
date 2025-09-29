@@ -1,5 +1,5 @@
 body {
-    background: #23272f;
+    background: #131519;
     color: #e6e6e6;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     margin: 0;
@@ -8,7 +8,7 @@ body {
 }
 
 body {
-    --primary-color: #f7cc6b;
+    --primary-color: #85b7d5;
     --secondary-color: #a6d69d;
     --dark-background: #314d6a;
 }
@@ -94,6 +94,17 @@ header > .logo {
     text-decoration: none;
 }
 
+.menu-list > li > a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.menu-list > li > a > img {
+    max-height: 4ex;
+    margin: 0;
+    margin-right: 1ex;
+}
 
 
 .github-link:hover, .github-link:focus {
@@ -104,9 +115,8 @@ header > .logo {
 main {
     max-width: 1100px;
     margin: 2rem auto 2rem auto;
-    background: #23272f;
+    background: #131519;
     border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
     padding: 2.5rem 2rem 2rem 2rem;
     min-height: 60vh;
 }

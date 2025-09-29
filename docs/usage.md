@@ -42,8 +42,11 @@ The `graph` folder in the home directory contains all data.
 * `journals` contains all journals
 * `assets` contains all media files (images, videos, audio files, text files, PDFs), deduplicated by checksum
 * `config` contains the configuration
-	* `config.json` contains the configuration (design, favourites)
-	* `media.json` contains all the checksums of the media files
+	* `config.json` contains the configuration: The design, favourites and the title
+	* `git-config.json` contains the configuration of the git integration (if enabled).
+	* `media.json` contains all the checksums of the media files. Is created automatically and should not be edited manually.
+    * `user-theme.css` contains the custom CSS
+    * `version.txt` contains the version of the knowledge graph. This is used to migrate the graph to a new version.
 
 ### Design
 
@@ -75,6 +78,7 @@ The design consists of the following elements:
 
 Inspire yourself with the following examples (all avaliable in the settings tab):
 
+![Theme0]({{config.pathPrefix}}usage/themes/theme0.png)
 ![Theme1]({{config.pathPrefix}}usage/themes/theme1.png)
 ![Theme2]({{config.pathPrefix}}usage/themes/theme2.png)
 ![Theme3]({{config.pathPrefix}}usage/themes/theme3.png)

@@ -41,6 +41,17 @@
         </ul>
     </description>
     <releases>
+        <release version="1.16.0" date="2025-09-21">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1160-2025-09-30</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Errors on startup show in the window (and not only in console)</li>
+                    <li>Add new theme "Glacier" and make it default</li>
+                    <li>Bugfix: Fix trigger "halt on startup when git not accessible"</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.15.0" date="2025-09-21">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1150-2025-09-21</url>
             <description>

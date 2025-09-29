@@ -4,6 +4,17 @@ title: Changelog
 ---
 # Changelog
 
+### v1.16.0 (2025-09-30)
+
+Enhancements:
+
+* Errors on startup show in the window (not only in console)
+* Add new theme "Glacier" (and made it default)
+
+Bugfixes:
+
+* Fix "halt on startup when git not accessible" switch to halt again
+
 ### v1.15.0 (2025-09-21)
 
 Enhancements:
