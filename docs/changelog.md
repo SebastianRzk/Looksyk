@@ -4,6 +4,12 @@ title: Changelog
 ---
 # Changelog
 
+### v1.16.1 (2025-10-07)
+
+Enhancements:
+
+* Show saving state on exit application when git sync is enabled
+
 ### v1.16.0 (2025-09-30)
 
 Enhancements:

@@ -171,6 +171,10 @@ footer {
     margin: 2rem 0 1rem 0;
 }
 
+footer > p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 .advanced-menu-title {
     font-size: medium;
@@ -305,6 +309,93 @@ table {
     margin: 3ex 0;
 }
 
+.app-image-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: smaller;
+    margin-top: min(-3vh, -3vw);
+    width: fit-content;
+}
+
+
+.image-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: smaller;
+    width: fit-content;
+}
+
+.iframe-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: smaller;
+    width: fit-content;
+    margin-top: 0.5rem;
+}
+
+
+.theme {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem;
+}
+
+.theme > img {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
+.usage-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+.usage-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--primary-color);
+    transition: box-shadow 0.2s;
+}
+.usage-card:hover {
+    background: var(--primary-color);
+}
+.usage-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.7rem;
+}
+.usage-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+}
+.usage-desc {
+    font-size: 0.97rem;
+    color: #555;
+    text-align: center;
+}
+
+.theme-overview > iframe {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.note {
+    border: 1px solid var(--primary-color);
+    border-left: 8px solid var(--primary-color);
+    padding: 1ex 2ex;
+    margin: 3ex 0;
+    border-radius: 8px;
+    font-style: italic;
+}
+
 @media (max-width: 600px) {
     main {
         padding: 1rem 0.5rem;
@@ -326,6 +417,10 @@ table {
     .main-menu, .advanced-menu {
         flex-direction: column !important;
         align-items: stretch;
+    }
+
+    .usage-overview-grid {
+        grid-template-columns: 1fr;
     }
 
     .main-menu ul {

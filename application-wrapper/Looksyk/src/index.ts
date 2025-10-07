@@ -9,6 +9,7 @@ import { ArgumentConfig, parse } from "ts-command-line-args";
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const ERROR_WEBPACK_ENTRY: string;
+declare const SAVING_WEBPACK_ENTRY: string;
 
 
 interface OptionsArgs {
@@ -119,7 +120,10 @@ function pollServer() {
 
 const serverUp: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 const serverErrored: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-const serverProcess = spawn(apiServerCmd, apiServerArgs, {cwd: pwd, env: {...process.env, "RUST_LOG": "actix_web=error"}});
+const serverProcess = spawn(apiServerCmd, apiServerArgs, {
+    cwd: pwd,
+    env: {...process.env, "RUST_LOG": "actix_web=error"}
+});
 let lastError = "No error detected, check logs";
 
 serverProcess.addListener("exit", (err) => {
@@ -142,16 +146,68 @@ if (require('electron-squirrel-startup')) {
     app.quit();
 }
 
+let mainWindow: BrowserWindow | null = null;
+let shutdownCalled = false;
+
 const createWindow = async (): Promise<void> => {
 
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         height: config["window-height"],
         width: config["window-width"],
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
     });
+    mainWindow.on('close', async (event) => {
+        if (shutdownCalled) {
+            return;
+        }
+        shutdownCalled = true;
+        event.preventDefault();
+
+        const preRequest = new Request(
+            `http://localhost:${config.port}/api/sync/git/shutdownstatus`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml'
+                }
+            });
+        const result = await fetch(preRequest);
+        console.log("Shutdown status", result.status)
+        console.log("Shutdown status headers", result.headers)
+        console.log("hole request", result)
+        if (result.status !== 200) {
+            shutdownApp()
+            return;
+        }
+        const resultBody = await result.json()
+        console.log("Shutdown status body", resultBody)
+        if (!resultBody['needsSaving']) {
+            shutdownApp();
+            return;
+        }
+
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            console.log("Loading saving screen")
+            await mainWindow.loadURL(SAVING_WEBPACK_ENTRY);
+            console.log("Loaded saving screen")
+        }
+
+        const request = new Request(
+            `http://localhost:${config.port}/api/sync/git/shutdown-checkpoint`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml'
+                }
+            });
+        console.log("Sending shutdown checkpoint request")
+        await fetch(request);
+        shutdownApp();
+    });
+
     await mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
     serverErrored.asObservable().pipe(filter(identity)).subscribe(
         async () => {
@@ -241,28 +297,10 @@ app.on('activate', async () => {
         await createWindow();
     }
 });
-let shutdownCalled = false;
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-app.on('before-quit', async (event) => {
-    if (shutdownCalled) {
-        return;
-    }
-    shutdownCalled = true;
-    event.preventDefault();
-    const request = new Request(
-        `http://localhost:${config.port}/api/sync/git/shutdown-checkpoint`,
-        {
-            method: 'POST',
-            headers: {
-                'Accept': 'text/html,application/xhtml+xml,application/xml'
-            }
-        });
-    await fetch(request);
 
+function shutdownApp() {
     if (serverProcess) {
         serverProcess.kill();
     }
-
     app.quit()
-});
+}

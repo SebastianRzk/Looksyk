@@ -214,3 +214,17 @@ pub async fn post_connect_to_git(
         })),
     }
 }
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ShutdownGitStatusDto {
+    pub needs_saving: bool,
+}
+
+#[get("/api/sync/git/shutdownstatus")]
+pub async fn get_shutdown_status(
+    git_config: Data<GitConfigData>,
+) -> actix_web::Result<impl Responder> {
+    Ok(web::Json(ShutdownGitStatusDto {
+        needs_saving: git_config.config.lock().unwrap().enabled,
+    }))
+}

@@ -178,6 +178,7 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::post_retry_upload)
             .service(sync::git::io::git_controller::post_clone_existing_graph)
             .service(sync::git::io::git_controller::post_connect_to_git)
+            .service(sync::git::io::git_controller::get_shutdown_status)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

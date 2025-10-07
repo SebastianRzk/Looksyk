@@ -29,17 +29,16 @@ const config: ForgeConfig = {
                         html: './src/index.html',
                         js: './src/renderer.ts',
                         name: 'main_window',
-                        preload: {
-                            js: './src/preload.ts',
-                        },
                     },
                     {
                         html: './src/error.html',
                         js: './src/error_renderer.ts',
                         name: 'error',
-                        preload: {
-                            js: './src/preload.ts',
-                        },
+                    },
+                    {
+                        html: './src/saving.html',
+                        js: './src/saving_renderer.ts',
+                        name: 'saving',
                     }
                 ],
             },

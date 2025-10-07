@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: Migration from Logseq
+title: Looksyk - Migration from Logseq
 ---
 
 # Migrate your existing Logseq graph to Looksyk
