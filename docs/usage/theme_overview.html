@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Theme Übersicht</title>
+  <style>
+      body{
+          width: 576px;
+          height: 287px;
+          margin: 0;
+      }
+    .theme-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      box-shadow: 0 6px 24px 0 rgba(0,0,0,0.18), 0 1.5px 6px 0 rgba(0,0,0,0.12);
+      transition: box-shadow 0.2s;
+    }
+    .img1 {
+      z-index: 1;
+      clip-path: polygon(0 0, 30% 0, 20% 100%, 0 100%);
+      -webkit-clip-path: polygon(0 0, 30% 0, 20% 100%, 0 100%);
+    }
+    .img2 {
+      z-index: 2;
+      clip-path: polygon(25% 0, 55% 0, 45% 100%, 15% 100%);
+      -webkit-clip-path: polygon(25% 0, 55% 0, 45% 100%, 15% 100%);
+    }
+    .img3 {
+      z-index: 3;
+      clip-path: polygon(50% 0, 80% 0, 70% 100%, 40% 100%);
+      -webkit-clip-path: polygon(50% 0, 80% 0, 70% 100%, 40% 100%);
+    }
+    .img4 {
+      z-index: 4;
+      clip-path: polygon(75% 0, 100% 0, 100% 100%, 65% 100%);
+      -webkit-clip-path: polygon(75% 0, 100% 0, 100% 100%, 65% 100%);
+    }
+    .img5 {
+      z-index: 5;
+      clip-path: polygon(90% 0, 100% 0, 100% 100%, 80% 100%);
+      -webkit-clip-path: polygon(90% 0, 100% 0, 100% 100%, 80% 100%);
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="theme-stack">
+      <img src="./themes/theme0.png" class="theme-img img1" alt="Theme 1">
+      <img src="./themes/theme1.png" class="theme-img img2" alt="Theme 2">
+      <img src="./themes/theme2.png" class="theme-img img3" alt="Theme 3">
+      <img src="./themes/theme6.png" class="theme-img img4" alt="Theme 4">
+      <img src="./themes/theme7.png" class="theme-img img5" alt="Theme 5">
+  </div>
+</body>
+</html>

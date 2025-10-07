@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: Idea and technical concept
+title: Looksyk - Idea and technical concept
 ---
 
 ## Technical concept
@@ -10,7 +10,9 @@ With Looksyk I want to create a local platform to collect information.
 Currently, the backend renders all content in Markdown, which is displayed with [Marked](https://marked.js.org/) in the
 frontend. This makes Looksyk relatively close to the Markdown standard. Code highlighting is done
 with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/). The application is
-wrapped in an electron app (with [electron forge](https://www.electronforge.io/)).
+wrapped in an electron app (with [electron forge](https://www.electronforge.io/)). If you want to synchronize your
+graph, you can use the integrated [Git](https://git-scm.com/) interface. Since the data is stored in Markdown files on disk, you can also use
+your own sync tool.
 
 Even if the project is currently a pure web project, I would not deploy it publicly because the project in its current
 state has not paid much attention to security (for example Injection-Attacks or Path-Traversal-Attacks).
@@ -35,12 +37,18 @@ Tested operating systems
 
 | OS                           | Compatibility                                                                                                                                                                                                                                                                       |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Arch Linux (AUR)             | work in progress (AUR package: `looksyk-desktop`)                                                                                                                                                                                                                                   |
-| Arch Linux manual (PKGBUILD) | works                                                                                                                                                                                                                                                                               |
-| Linux (any)                  | works                                                                                                                                                                                                                                                                               |
+| Arch Linux (AUR)             | works, preferred (AUR package: [looksyk-desktop](https://aur.archlinux.org/packages/looksyk-desktop))                                                                                                                                                                               |
+| Linux (any)                  | works, e.g. AppImage (download from [Releases](https://github.com/SebastianRzk/Looksyk/releases))                                                                                                                                                                                   |
 | docker (linux, windows, mac) | works                                                                                                                                                                                                                                                                               |
 | Windows                      | Not tested. The build script certainly doesn't work (at least not without WSL). In addition, the resolution of the home directory may fail (please specify `--graph-location`) and the desktop shortcut doesn't work. Otherwise, Looksyk should be programmed platform independent. |
 | MacOs                        | Not tested. Keyboard shortcuts are currently only designed for a Windows keyboard layout, but this can be changed via a pull request. There are also likely to be challenges in the build script. Otherwise, Looksyk is programmed to be platform-independent.                      |
+
+<div class="note">
+Note: It's possible that the Flatpak build won't work properly. Electron, Flatpak, and Wayland sometimes have compatibility issues when combined. However, I don't want the Flatpak build to hold back security updates for the other platforms.
+If you encounter any problems, please file an issue, ideally including an idea for how to fix the problem.
+
+If you want a distribution-independent installation, please prefer the AppImage build.
+</div>
 
 ## Project work and future
 
