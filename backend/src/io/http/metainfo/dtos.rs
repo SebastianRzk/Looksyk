@@ -16,3 +16,9 @@ pub struct TitleDto {
 pub struct GraphLocationDto {
     pub graph_location: String,
 }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ApplicationVersionDto {
+    pub application_version: String,
+}

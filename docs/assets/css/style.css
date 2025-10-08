@@ -45,6 +45,23 @@ header > .logo {
     margin-left: 2ex;
 }
 
+.landing-page, .feature-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    text-align: center
+}
+
+.feature-list {
+    align-items: unset;
+}
+
+li {
+    text-align: start;
+}
+
 .main-menu {
     display: flex;
     justify-content: space-between;
@@ -351,6 +368,7 @@ table {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin: 2rem 0;
+    width: 100%;
 }
 .usage-card {
     display: flex;

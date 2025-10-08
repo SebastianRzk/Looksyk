@@ -4,6 +4,16 @@ title: Changelog
 ---
 # Changelog
 
+### v1.16.2 (2025-10-08)
+
+Enhancements:
+
+* Show application version in configuration
+
+Bugfixes:
+
+* Fix theme name in configuration
+
 ### v1.16.1 (2025-10-07)
 
 Enhancements:

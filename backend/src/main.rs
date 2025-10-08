@@ -151,6 +151,7 @@ async fn main() -> std::io::Result<()> {
             .service(metainfo::endpoints::get_title)
             .service(metainfo::endpoints::set_title)
             .service(metainfo::endpoints::get_graph_location)
+            .service(metainfo::endpoints::get_application_version)
             .service(r#static::endpoints::fav)
             .service(r#static::endpoints::index_html)
             .service(r#static::endpoints::css)

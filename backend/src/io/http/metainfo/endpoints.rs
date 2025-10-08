@@ -1,5 +1,8 @@
+use crate::io::cargo::get_current_application_version;
 use crate::io::fs::config::save_config_to_file;
-use crate::io::http::metainfo::dtos::{GraphLocationDto, MetaInfoDto, TitleDto};
+use crate::io::http::metainfo::dtos::{
+    ApplicationVersionDto, GraphLocationDto, MetaInfoDto, TitleDto,
+};
 use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{get, post, web, Responder};
@@ -22,6 +25,13 @@ async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
 async fn get_graph_location(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     Ok(web::Json(GraphLocationDto {
         graph_location: data.data_path.path.to_string_lossy().to_string(),
+    }))
+}
+
+#[get("/api/application-version")]
+async fn get_application_version() -> actix_web::Result<impl Responder> {
+    Ok(web::Json(ApplicationVersionDto {
+        application_version: format!("{}", get_current_application_version()),
     }))
 }
 
