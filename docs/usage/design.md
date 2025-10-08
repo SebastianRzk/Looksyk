@@ -44,36 +44,36 @@ Inspire yourself with the following examples (all avaliable in the settings tab)
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme1.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Moss</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme2.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Light</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme3.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Extra Dark</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme4.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Modern Dark</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme5.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Solarized Dark</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme6.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Pastel Light</div>
 </div>
 
 <div class="theme">
 <img src="{{config.pathPrefix}}usage/themes/theme7.png">
-<div class="image-subtitle">Theme: Glacier (default)</div>
+<div class="image-subtitle">Theme: Icon based colors</div>
 </div>
 

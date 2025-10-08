@@ -41,6 +41,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 
   appearanceService = inject(AppearanceService);
   graphLocation = inject(MetaInfoService).getGraphLocation();
+  applicationVersion = inject(MetaInfoService).getApplicationVersion();
 
   colorThemes: ColorTheme[] = [
     this.getCurrentTheme(),
@@ -78,7 +79,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
       appearance: "dark"
     },
     {
-      name: "Modern dark",
+      name: "Modern Dark",
       primaryColor: "rgb(204, 213, 245)",
       backgroundColor: "#252739",
       primaryShading: "rgba(0, 0, 0, 0.1)",

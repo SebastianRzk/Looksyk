@@ -34,6 +34,10 @@ export class MetaInfoService {
     return firstValueFrom(this.http.get<GraphLocationDto>("/api/graph-location").pipe(map(x => x.graphLocation)));
   }
 
+  public getApplicationVersion(): Promise<string> {
+    return firstValueFrom(this.http.get<ApplicationVersionDto>("/api/application-version").pipe(map(x => x.applicationVersion)));
+  }
+
 }
 
 export interface MetaInformation {
@@ -44,6 +48,10 @@ export interface MetaInformation {
 
 interface GraphLocationDto {
   graphLocation: string
+}
+
+interface ApplicationVersionDto {
+  applicationVersion: string
 }
 
 export interface Suggestions {

@@ -41,8 +41,18 @@
         </ul>
     </description>
     <releases>
+        <release version="1.16.2" date="2025-10-08">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1162-2025-10-08</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Show application version in config</li>
+                    <li>Fix typo in design config</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.16.1" date="2025-10-07">
-            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1160-2025-10-07</url>
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1161-2025-10-07</url>
             <description>
                 <p>Release description</p>
                 <ul>
