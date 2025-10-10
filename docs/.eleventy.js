@@ -5,7 +5,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("usage");
   eleventyConfig.addPassthroughCopy("*.png");
   eleventyConfig.addPassthroughCopy("*.gif");
-  eleventyConfig.addPassthroughCopy("docs/google54a921dfd24bf498.html");
+  eleventyConfig.addPassthroughCopy("google54a921dfd24bf498.html");
   return {
     pathPrefix: config.pathPrefix,
     dir: {
