@@ -30,6 +30,11 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
             BlockTokenType::Todo => {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
+            BlockTokenType::Property => {
+                //FIXME : Proper rendering of property tokens
+                inline_markdown_result_list
+                    .push(format!("`{}`", token.payload).to_string());
+            }
         }
     }
     inline_markdown_result_list.join(" ")

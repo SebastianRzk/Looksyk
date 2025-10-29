@@ -86,7 +86,7 @@ pub fn combine_text_content(block: &ParsedBlock) -> String {
 mod tests {
     use super::*;
     use crate::looksyk::builder::test_builder::{
-        journal_page_id, text_block_content, user_page_id,
+        journal_page_id, user_page_id,
     };
     use crate::looksyk::model::PreparedBlockContent;
 
@@ -123,10 +123,7 @@ mod tests {
                 block_number: 1,
                 page_id: user_page_id("Test/Page"),
             },
-            content: ParsedBlock {
-                indentation: 0,
-                content: vec![text_block_content("Content")],
-            },
+            content: ParsedBlock::text_block_on_disk("Content"),
         };
 
         let serialized = serialize_reference(&reference);

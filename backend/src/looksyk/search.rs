@@ -62,7 +62,7 @@ fn search_in_index(
 #[cfg(test)]
 mod tests {
     use crate::looksyk::model::{
-        BlockContent, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
+        PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
     };
     use crate::looksyk::search::SearchTerm;
     use std::collections::HashMap;
@@ -75,13 +75,7 @@ mod tests {
 
         let mut pages = HashMap::new();
         let mut page = ParsedMarkdownFile { blocks: vec![] };
-        page.blocks.push(ParsedBlock {
-            content: vec![BlockContent {
-                as_text: "asf search alkj".to_string(),
-                as_tokens: vec![],
-            }],
-            indentation: 0,
-        });
+        page.blocks.push(ParsedBlock::text_block_on_disk("asf search alkj"));
         pages.insert(
             SimplePageName {
                 name: "page_name".to_string(),

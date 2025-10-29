@@ -73,6 +73,42 @@ pub mod test_builder {
             as_text: text.to_string(),
         }
     }
+
+    pub fn extract_very_first_textblock_line(
+        parsed_markdown_file: &ParsedMarkdownFile,
+    ) -> String {
+        parsed_markdown_file
+            .blocks
+            .get(0)
+            .unwrap()
+            .content
+            .get(0)
+            .unwrap()
+            .as_tokens
+            .get(0)
+            .unwrap()
+            .payload
+            .clone()
+    }
+
+    pub fn extract_textblock_line_at(
+        parsed_markdown_file: &ParsedMarkdownFile,
+        block_index: usize,
+    ) -> String {
+        parsed_markdown_file
+            .blocks
+            .get(block_index)
+            .unwrap()
+            .content
+            .get(0)
+            .unwrap()
+            .as_tokens
+            .get(0)
+            .unwrap()
+            .payload
+            .clone()
+    }
+
 }
 
 pub fn text_token_str(text: &str) -> BlockToken {

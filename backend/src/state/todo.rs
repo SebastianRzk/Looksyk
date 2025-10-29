@@ -38,10 +38,7 @@ pub mod builder {
                 page_id: any_page_id(),
                 block_number: 1,
             },
-            block: ParsedBlock {
-                indentation: 0,
-                content: vec![],
-            },
+            block: ParsedBlock::empty(),
             tags: vec![tag],
         }
     }

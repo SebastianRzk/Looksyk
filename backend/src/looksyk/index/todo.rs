@@ -81,7 +81,7 @@ mod tests {
         any_text_token, done_token, empty_journal_index, todo_token, user_page_id,
     };
     use crate::looksyk::index::todo::create_todo_index;
-    use crate::looksyk::model::{BlockContent, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::model::{ParsedBlock, ParsedMarkdownFile};
     use crate::state::block::BlockReference;
     use crate::state::todo::TodoState;
     use crate::state::userpage::UserPageIndex;
@@ -93,10 +93,7 @@ mod tests {
         data_state.insert(
             page_name_str("testfile"),
             ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![],
-                }],
+                blocks: vec![ParsedBlock::empty()],
             },
         );
 
@@ -116,13 +113,7 @@ mod tests {
         data_state.insert(
             page_name_str("testfile"),
             ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_tokens: vec![todo_token(), any_text_token()],
-                        as_text: "".to_string(),
-                    }],
-                }],
+                blocks: vec![ParsedBlock::from_tokens(vec![todo_token(), any_text_token()])],
             },
         );
 
@@ -152,13 +143,7 @@ mod tests {
         data_state.insert(
             page_name_str("testfile"),
             ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_tokens: vec![done_token(), any_text_token()],
-                        as_text: "".to_string(),
-                    }],
-                }],
+                blocks: vec![ParsedBlock::from_tokens(vec![done_token(), any_text_token()])],
             },
         );
 

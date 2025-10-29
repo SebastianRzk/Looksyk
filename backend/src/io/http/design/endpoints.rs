@@ -1,5 +1,3 @@
-use crate::design::dtos::AppearanceDto;
-use crate::design::dtos::DesignConfigDto;
 use crate::io::fs::config::save_config_to_file;
 use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
 use crate::state::application_state::AppState;
@@ -8,6 +6,7 @@ use actix_web::http::header::ContentType;
 use actix_web::web::Data;
 use actix_web::{get, post, web, HttpResponse};
 use std::str::FromStr;
+use crate::io::http::design::dtos::{AppearanceDto, DesignConfigDto};
 
 #[get("/api/design")]
 pub async fn get_css_theme(app_state: Data<AppState>) -> HttpResponse {

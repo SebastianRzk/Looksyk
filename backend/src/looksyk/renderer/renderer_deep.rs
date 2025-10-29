@@ -106,6 +106,11 @@ pub fn render_tokens_deep(
             BlockTokenType::Todo => {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token));
             }
+            BlockTokenType::Property => {
+                //FIXME : Proper rendering of property tokens
+                inline_markdown_result_list
+                    .push(format!("<code class=\"inline-property\">{}</code>", token.payload).to_string());
+            }
         }
     }
     RenderResult {
@@ -120,19 +125,14 @@ mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
+    use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::renderer::model::builder::create_empty_render_context;
     use crate::looksyk::renderer::renderer_deep::render_block;
     use crate::state::application_state::builder::empty_data_root_location;
 
     #[test]
     fn should_serialize_original_text() {
-        let input = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_tokens: vec![text_token_str("text")],
-                as_text: "text".to_string(),
-            }],
-        };
+        let input = ParsedBlock::text_block_on_disk("text");
 
         let result = render_block(
             &input,
@@ -157,6 +157,7 @@ mod tests {
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -185,6 +186,7 @@ mod tests {
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -209,6 +211,7 @@ mod tests {
                 as_tokens: vec![link_token("My Page")],
                 as_text: "[[My Page]]".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -237,6 +240,7 @@ mod tests {
                 ],
                 as_text: "[[link1]] asdf [[link2]]".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -274,6 +278,7 @@ mod tests {
                 ],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -297,6 +302,7 @@ mod tests {
                 }],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -321,6 +327,7 @@ mod tests {
                 }],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -351,6 +358,7 @@ mod tests {
                 ],
                 as_text: "[ ] Mein Todo".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -381,6 +389,7 @@ mod tests {
                 ],
                 as_text: "[x] Mein Todo".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(

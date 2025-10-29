@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use crate::looksyk::data::config::runtime_graph_configuration::Config;
 use crate::looksyk::index::media::MediaIndex;
 use crate::state::asset_cache::AssetCache;
+use crate::state::block_properties::BlockPropertiesIndex;
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
 use crate::state::todo::TodoIndex;
@@ -19,6 +20,7 @@ pub struct AppState {
     pub e_asset_cache: Mutex<AssetCache>,
     pub f_media_index: Mutex<MediaIndex>,
     pub g_config: Mutex<Config>,
+    pub h_block_properties: Mutex<BlockPropertiesIndex>
 }
 
 pub struct PureAppState {
@@ -30,6 +32,7 @@ pub struct PureAppState {
     pub e_asset_cache: AssetCache,
     pub f_media_index: MediaIndex,
     pub g_config: Config,
+    pub h_block_properties: BlockPropertiesIndex
 }
 
 #[derive(Clone, Debug)]

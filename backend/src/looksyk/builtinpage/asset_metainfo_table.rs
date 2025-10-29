@@ -1,6 +1,7 @@
 use crate::io::human::{filesize_as_human_string, timestamp_as_human_string};
 use crate::looksyk::builder::text_token;
 use crate::looksyk::model::{no_text_content, BlockContent, ParsedBlock, ParsedMarkdownFile};
+use crate::looksyk::parser::BlockProperties;
 
 pub fn get_asset_meta_info_table(size: u64, last_changed: i64) -> ParsedMarkdownFile {
     ParsedMarkdownFile {
@@ -17,6 +18,7 @@ pub fn get_asset_meta_info_table(size: u64, last_changed: i64) -> ParsedMarkdown
                     timestamp_as_human_string(last_changed),
                 ))],
             }],
+            properties: BlockProperties::empty()
         }],
     }
 }

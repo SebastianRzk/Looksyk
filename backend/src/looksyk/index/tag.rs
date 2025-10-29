@@ -4,18 +4,19 @@ use crate::looksyk::builder::{page_name, text_token_str};
 use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
 };
+use crate::looksyk::parser::BlockProperties;
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
 
 pub fn create_tag_index(
-    data_state: &UserPageIndex,
+    user_page_index: &UserPageIndex,
     journal_page_index: &JournalPageIndex,
 ) -> TagIndex {
     let mut result: HashMap<PageId, HashSet<PageId>> = HashMap::new();
 
-    for simple_page_name in data_state.entries.keys() {
-        let page = data_state.entries.get(simple_page_name).unwrap();
+    for simple_page_name in user_page_index.entries.keys() {
+        let page = user_page_index.entries.get(simple_page_name).unwrap();
         let id = simple_page_name.as_user_page();
         create_tag_index_file(&mut result, &id, page);
     }
@@ -99,21 +100,11 @@ pub fn render_tag_index_for_page(page_id: PageId, tag_index: &TagIndex) -> Parse
 }
 
 fn reference_entry_group(page_references: &Vec<&PageId>, name: &str) -> Vec<ParsedBlock> {
-    let mut blocks = vec![ParsedBlock {
-        indentation: 0,
-        content: vec![BlockContent {
-            as_tokens: vec![BlockToken {
-                payload: format!("{name} that reference this page"),
-                block_token_type: BlockTokenType::Text,
-            }],
-            as_text: format!("{name} that reference this page"),
-        }],
-    }];
+    let mut blocks = vec![ParsedBlock::artificial_text_block(&format!(
+        "{name} that reference this page"
+    ))];
 
-    let mut references_block = ParsedBlock {
-        indentation: 1,
-        content: vec![],
-    };
+    let mut references_block = ParsedBlock::empty_with_indentation(1);
 
     for tag in page_references {
         match tag.page_type {
@@ -161,6 +152,7 @@ fn no_references_found_text(indentation: usize) -> ParsedBlock {
             }],
             as_text: "No references found".to_string(),
         }],
+        properties: BlockProperties::empty(),
     }
 }
 
@@ -174,7 +166,8 @@ fn filter_tag(current_list: &HashSet<PageId>, page_to_remove: &PageId) -> HashSe
 mod tests {
     use super::{empty_line, render_tag_index_for_page};
     use crate::looksyk::builder::test_builder::{
-        any_text_token, done_token, journal_page_id, user_page_id,
+        any_text_token, done_token, extract_textblock_line_at, extract_very_first_textblock_line,
+        journal_page_id, user_page_id,
     };
     use crate::looksyk::builder::{journal_link_token, link_token, page_name_str};
     use crate::looksyk::index::tag::create_tag_index;
@@ -182,6 +175,7 @@ mod tests {
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
+    use crate::looksyk::parser::BlockProperties;
     use crate::state::journal::JournalPageIndex;
     use crate::state::tag::TagIndex;
     use crate::state::userpage::builder::empty_user_page_index;
@@ -218,6 +212,7 @@ mod tests {
                         }],
                         as_text: "".to_string(),
                     }],
+                    properties: BlockProperties::empty(),
                 }],
             },
         );
@@ -259,6 +254,7 @@ mod tests {
                         }],
                         as_text: "".to_string(),
                     }],
+                    properties: BlockProperties::empty(),
                 }],
             },
         );
@@ -319,6 +315,7 @@ mod tests {
                         ],
                         as_text: "".to_string(),
                     }],
+                    properties: BlockProperties::empty(),
                 }],
             },
         );
@@ -365,7 +362,7 @@ mod tests {
         assert_eq!(result.blocks.len(), 4);
         assert_eq!(result.blocks[0].content.len(), 1);
         assert_eq!(
-            result.blocks[0].content[0].as_text,
+            extract_very_first_textblock_line(&result),
             "Wiki-Pages that reference this page"
         );
         assert_eq!(result.blocks[1].content.len(), 2);
@@ -377,11 +374,11 @@ mod tests {
         assert_eq!(result.blocks[1].content[1], empty_line());
         assert_eq!(result.blocks[2].content.len(), 1);
         assert_eq!(
-            result.blocks[2].content[0].as_text,
+            extract_textblock_line_at(&result, 2),
             "Journal-Pages that reference this page"
         );
         assert_eq!(result.blocks[3].content.len(), 1);
-        assert_eq!(result.blocks[3].content[0].as_text, "No references found");
+        assert_eq!(extract_textblock_line_at(&result, 3), "No references found");
     }
 
     #[test]
@@ -398,15 +395,15 @@ mod tests {
         assert_eq!(result.blocks.len(), 4);
         assert_eq!(result.blocks[0].content.len(), 1);
         assert_eq!(
-            result.blocks[0].content[0].as_text,
+            extract_very_first_textblock_line(&result),
             "Wiki-Pages that reference this page"
         );
         assert_eq!(result.blocks[1].content.len(), 1);
-        assert_eq!(result.blocks[1].content[0].as_text, "No references found");
+        assert_eq!(extract_textblock_line_at(&result, 1), "No references found");
 
         assert_eq!(result.blocks[2].content.len(), 1);
         assert_eq!(
-            result.blocks[2].content[0].as_text,
+            extract_textblock_line_at(&result, 2),
             "Journal-Pages that reference this page"
         );
         assert_eq!(result.blocks[3].content.len(), 2);

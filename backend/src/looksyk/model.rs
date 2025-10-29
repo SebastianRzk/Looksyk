@@ -1,3 +1,4 @@
+use crate::looksyk::parser::BlockProperties;
 use crate::state::block::BlockReference;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -14,6 +15,7 @@ pub struct RawBlock {
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
+    pub properties: BlockProperties
 }
 
 impl ParsedBlock {
@@ -25,12 +27,60 @@ impl ParsedBlock {
             })
         })
     }
+
+    pub fn artificial_text_block(text: &str) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: String::default(),
+                as_tokens: vec![BlockToken {
+                    block_token_type: BlockTokenType::Text,
+                    payload: text.to_string(),
+                }],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn text_block_on_disk(text: &str) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: text.to_string(),
+                as_tokens: vec![BlockToken {
+                    block_token_type: BlockTokenType::Text,
+                    payload: text.to_string(),
+                }],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn from_tokens(tokens: Vec<BlockToken>) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: String::default(),
+                as_tokens: tokens,
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn empty_with_indentation(indentation: usize) -> Self {
+        ParsedBlock {
+            indentation,
+            content: vec![],
+            properties: BlockProperties::empty(),
+        }
+    }
 }
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::builder::text_token_str;
+    use crate::looksyk::builder::{link_token, text_token_str};
     use crate::looksyk::model::{BlockContent, BlockToken, ParsedBlock};
+    use crate::looksyk::parser::BlockProperties;
 
     pub fn block_with_text_content(content: &str) -> ParsedBlock {
         ParsedBlock {
@@ -39,6 +89,31 @@ pub mod builder {
                 as_text: content.to_string(),
                 as_tokens: vec![text_token_str(content)],
             }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn block_with_link_content(link: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: link.to_string(),
+                as_tokens: vec![link_token(link)],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn block_with_property(key: &str, value: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![],
+            properties: BlockProperties {
+                properties: vec![crate::looksyk::parser::BlockProperty {
+                    key: key.to_string(),
+                    value: value.to_string(),
+                }],
+            },
         }
     }
 
@@ -46,6 +121,16 @@ pub mod builder {
         BlockToken {
             block_token_type: super::BlockTokenType::Query,
             payload: query_payload.to_string(),
+        }
+    }
+
+    impl ParsedBlock {
+        pub fn empty()-> Self {
+            ParsedBlock {
+                indentation: 0,
+                content: vec![],
+                properties: BlockProperties::empty(),
+            }
         }
     }
 }
@@ -74,6 +159,7 @@ pub struct BlockContent {
 pub enum BlockTokenType {
     Text,
     Link,
+    Property,
     JournalLink,
     Query,
     Todo,
@@ -207,6 +293,13 @@ impl PageId {
     pub fn is_user_page(&self) -> bool {
         self.page_type == PageType::UserPage
     }
+
+    pub fn block_reference(&self, block_number: usize) -> BlockReference {
+        BlockReference {
+            page_id: self.clone(),
+            block_number,
+        }
+    }
 }
 
 impl PartialOrd<Self> for PageId {
@@ -224,8 +317,9 @@ impl Ord for PageId {
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::test_builder::user_page_id;
-    use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
-    use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::model::builder::{block_with_link_content, block_with_text_content};
+    use crate::looksyk::model::{PageId, PageType, ParsedBlock, ParsedMarkdownFile};
 
     #[test]
     fn test_journal_page_id_should_be_a_journal_page() {
@@ -290,10 +384,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_empty_block_return_false() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![],
-        };
+        let block = ParsedBlock::empty();
 
         assert!(!block.contains_reference(&page_id.name));
     }
@@ -302,13 +393,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_block_without_link_return_false() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: "my text".to_string(),
-                as_tokens: vec![text_token_str("my-page")],
-            }],
-        };
+        let block = block_with_text_content("my-page");
 
         assert!(!block.contains_reference(&page_id.name));
     }
@@ -317,13 +402,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_block_with_link_return_true() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: "my text".to_string(),
-                as_tokens: vec![link_token("my-page")],
-            }],
-        };
+        let block = block_with_link_content("my-page");
 
         assert!(block.contains_reference(&page_id.name));
     }

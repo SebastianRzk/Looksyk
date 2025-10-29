@@ -13,5 +13,6 @@ pub fn convert_to_app_state(state: PureAppState, static_path: &str) -> Data<AppS
         e_asset_cache: Mutex::new(state.e_asset_cache),
         f_media_index: Mutex::new(state.f_media_index),
         g_config: Mutex::new(state.g_config),
+        h_block_properties: Mutex::new(state.h_block_properties),
     })
 }

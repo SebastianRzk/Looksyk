@@ -6,3 +6,4 @@ pub mod rename;
 pub mod tag;
 pub mod todo;
 pub mod userpage;
+pub mod block_properties_index;

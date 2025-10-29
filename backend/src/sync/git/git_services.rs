@@ -1,4 +1,3 @@
-use crate::http::state;
 use crate::state::application_state::{AppState, GraphRootLocation};
 use crate::sync::git::application_port::git_sync_application_port::CommitInitiator;
 use crate::sync::git::config::{GitConfig, GitSyncReadynessTrait};
@@ -13,6 +12,7 @@ use crate::sync::git::git_services::UpdateResult::NothingToDo;
 use crate::sync::io::sync_application_port::{GraphChange, GraphChanges};
 use actix_web::web::Data;
 use std::collections::HashSet;
+use crate::io::http::state;
 
 pub fn create_checkpoint(
     git_config: &GitConfig,

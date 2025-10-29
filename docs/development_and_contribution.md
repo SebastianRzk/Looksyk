@@ -19,6 +19,19 @@ backend will need to be restarted manually.
 7. The frontend will be available at `http://localhost:4200`
 8. The backend will be available at `http://localhost:11000`
 
+## Run backend tests
+
+1. Navigate to the backend directory: `cd backend`
+2. Run the tests: `cargo test`
+
+If there are changes at the high-efficiency parts of the codebase (e.g. the parser), it's recommended to run the 
+benchmark tests as well:
+
+1. Navigate to the backend directory: `cd backend`
+2. Run the benchmark tests: `cargo bench`
+3. Make your changes
+4. Run the benchmark tests again to compare the results
+
 ## Build electron app
 
 1. Change into the application-wrapper directory `cd application-wrapper/Looksyk/`

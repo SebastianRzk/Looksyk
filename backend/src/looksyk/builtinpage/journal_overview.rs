@@ -1,5 +1,5 @@
 use crate::looksyk::model::{
-    BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
+    ParsedBlock, ParsedMarkdownFile, SimplePageName,
 };
 use chrono::{Datelike, NaiveDate};
 
@@ -13,16 +13,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
     sorted_journals.sort();
     if sorted_journals.is_empty() {
         return ParsedMarkdownFile {
-            blocks: vec![ParsedBlock {
-                indentation: 0,
-                content: vec![BlockContent {
-                    as_text: "No journal entries found.".to_string(),
-                    as_tokens: vec![BlockToken {
-                        block_token_type: BlockTokenType::Text,
-                        payload: "No journal entries found.".to_string(),
-                    }],
-                }],
-            }],
+            blocks: vec![ParsedBlock::artificial_text_block("No journal entries found.")],
         };
     }
 
@@ -40,16 +31,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
                 for _ in weekday..7 {
                     as_text.push_str(" | ");
                 }
-                result.push(ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_text: as_text.clone(),
-                        as_tokens: vec![BlockToken {
-                            block_token_type: BlockTokenType::Text,
-                            payload: as_text,
-                        }],
-                    }],
-                });
+                result.push(ParsedBlock::artificial_text_block(&as_text));
                 as_text = "".to_string();
             }
 
@@ -87,27 +69,9 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
         as_text.push_str(" | ");
     }
 
-    result.push(ParsedBlock {
-        indentation: 0,
-        content: vec![BlockContent {
-            as_text: as_text.clone(),
-            as_tokens: vec![BlockToken {
-                block_token_type: BlockTokenType::Text,
-                payload: as_text,
-            }],
-        }],
-    });
+    result.push(ParsedBlock::artificial_text_block(&as_text));
     if max_date.month() != 1 {
-        result.push(ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: format!("## {}\n\n", max_date.format("%Y")),
-                as_tokens: vec![BlockToken {
-                    block_token_type: BlockTokenType::Text,
-                    payload: format!("## {}\n\n", max_date.format("%Y")),
-                }],
-            }],
-        });
+        result.push(ParsedBlock::artificial_text_block(&format!("## {}\n\n", max_date.format("%Y"))));
     }
 
     result.reverse();
@@ -118,6 +82,7 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::{extract_textblock_line_at, extract_very_first_textblock_line};
 
     #[test]
     fn test_generate_journal_overview_with_entries() {
@@ -127,7 +92,7 @@ mod tests {
 
         assert_eq!(result.blocks.len(), 1);
         assert_eq!(result.blocks[0].content.len(), 1);
-        assert_eq!(result.blocks[0].content[0].as_text, "### January 2025
+        assert_eq!(extract_very_first_textblock_line(&result), "### January 2025
 
 | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -143,9 +108,9 @@ mod tests {
 
         assert_eq!(result.blocks.len(), 4);
         assert_eq!(result.blocks[0].content.len(), 1);
-        assert_eq!(result.blocks[0].content[0].as_text, "## 2025\n\n");
+        assert_eq!(extract_very_first_textblock_line(&result), "## 2025\n\n");
         assert_eq!(result.blocks[1].content.len(), 1);
-        assert_eq!(result.blocks[1].content[0].as_text, "### March 2025
+        assert_eq!(extract_textblock_line_at(&result, 1), "### March 2025
 
 | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -155,7 +120,7 @@ mod tests {
 |<div class=\"cal-item\">[17.](journal/2025_03_17)</div>|<div class=\"cal-item\">[18.](journal/2025_03_18)</div>|<div class=\"cal-item\">[19.](journal/2025_03_19)</div>|<div class=\"cal-item\">[20.](journal/2025_03_20)</div>|<div class=\"cal-item filled-cal-item\">[21.](journal/2025_03_21)</div>| |  | ");
 
         assert_eq!(result.blocks[2].content.len(), 1);
-        assert_eq!(result.blocks[2].content[0].as_text, "### February 2025
+        assert_eq!(extract_textblock_line_at(&result, 2), "### February 2025
 
 | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -165,7 +130,7 @@ mod tests {
 |<div class=\"cal-item\">[17.](journal/2025_02_17)</div>|<div class=\"cal-item\">[18.](journal/2025_02_18)</div>|<div class=\"cal-item\">[19.](journal/2025_02_19)</div>|<div class=\"cal-item\">[20.](journal/2025_02_20)</div>|<div class=\"cal-item\">[21.](journal/2025_02_21)</div>|<div class=\"cal-item\">[22.](journal/2025_02_22)</div>|<div class=\"cal-item\">[23.](journal/2025_02_23)</div>|
 |<div class=\"cal-item\">[24.](journal/2025_02_24)</div>|<div class=\"cal-item\">[25.](journal/2025_02_25)</div>|<div class=\"cal-item\">[26.](journal/2025_02_26)</div>|<div class=\"cal-item\">[27.](journal/2025_02_27)</div>|<div class=\"cal-item\">[28.](journal/2025_02_28)</div>| |  | ");
         assert_eq!(result.blocks[3].content.len(), 1);
-        assert_eq!(result.blocks[3].content[0].as_text, "### January 2025
+        assert_eq!(extract_textblock_line_at(&result, 3), "### January 2025
 
 | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -182,7 +147,7 @@ mod tests {
 
         assert_eq!(result.blocks.len(), 2);
         assert_eq!(result.blocks[0].content.len(), 1);
-        assert_eq!(result.blocks[0].content[0].as_text, "### January 2025
+        assert_eq!(extract_very_first_textblock_line(&result), "### January 2025
 
 | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -191,7 +156,7 @@ mod tests {
 |<div class=\"cal-item\">[13.](journal/2025_01_13)</div>|<div class=\"cal-item\">[14.](journal/2025_01_14)</div>|<div class=\"cal-item\">[15.](journal/2025_01_15)</div>|<div class=\"cal-item\">[16.](journal/2025_01_16)</div>|<div class=\"cal-item\">[17.](journal/2025_01_17)</div>|<div class=\"cal-item\">[18.](journal/2025_01_18)</div>|<div class=\"cal-item\">[19.](journal/2025_01_19)</div>|
 |<div class=\"cal-item\">[20.](journal/2025_01_20)</div>|<div class=\"cal-item filled-cal-item\">[21.](journal/2025_01_21)</div>| |  |  |  |  | ");
         assert_eq!(result.blocks[1].content.len(), 1);
-        assert_eq!(result.blocks[1].content[0].as_text, "## 2024
+        assert_eq!(extract_textblock_line_at(&result, 1), "## 2024
 
 ### December 2024
 
@@ -211,7 +176,7 @@ mod tests {
 
         assert_eq!(result.blocks.len(), 1);
         assert_eq!(
-            result.blocks[0].content[0].as_text,
+            result.blocks[0].content[0].as_tokens.get(0).unwrap().payload,
             "No journal entries found."
         );
     }
