@@ -108,8 +108,9 @@ pub fn render_tokens_deep(
             }
             BlockTokenType::Property => {
                 //FIXME : Proper rendering of property tokens
-                inline_markdown_result_list
-                    .push(format!("<code class=\"inline-property\">{}</code>", token.payload).to_string());
+                inline_markdown_result_list.push(
+                    format!("<code class=\"inline-property\">{}</code>", token.payload).to_string(),
+                );
             }
         }
     }

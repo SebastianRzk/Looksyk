@@ -15,7 +15,7 @@ async fn parse(
 ) -> actix_web::Result<impl Responder> {
     let raw_block = RawBlock {
         indentation: 0,
-        text_content: content.block.lines().into_iter().map(|x|x.to_string()).collect(),
+        text_content: content.block.lines().map(|x| x.to_string()).collect(),
     };
     let parsed_block = parse_block(&raw_block);
 

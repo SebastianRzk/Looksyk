@@ -21,10 +21,10 @@ pub fn render_user_link(destination: &SimplePageName) -> String {
 }
 pub fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedReferencedMarkdown {
     PreparedReferencedMarkdown {
-        reference: BlockReference {
-            block_number: referenced_markdown.reference.block_number,
-            page_id: referenced_markdown.reference.page_id.clone(),
-        },
+        reference: referenced_markdown
+            .reference
+            .page_id
+            .block_reference(referenced_markdown.reference.block_number),
         content: render_block_content_flat(&referenced_markdown.content),
     }
 }
@@ -85,9 +85,7 @@ pub fn combine_text_content(block: &ParsedBlock) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::looksyk::builder::test_builder::{
-        journal_page_id, user_page_id,
-    };
+    use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
     use crate::looksyk::model::PreparedBlockContent;
 
     #[test]

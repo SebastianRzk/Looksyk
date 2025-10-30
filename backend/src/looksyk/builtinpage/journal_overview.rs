@@ -1,6 +1,4 @@
-use crate::looksyk::model::{
-    ParsedBlock, ParsedMarkdownFile, SimplePageName,
-};
+use crate::looksyk::model::{ParsedBlock, ParsedMarkdownFile, SimplePageName};
 use chrono::{Datelike, NaiveDate};
 
 pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> ParsedMarkdownFile {
@@ -13,7 +11,9 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
     sorted_journals.sort();
     if sorted_journals.is_empty() {
         return ParsedMarkdownFile {
-            blocks: vec![ParsedBlock::artificial_text_block("No journal entries found.")],
+            blocks: vec![ParsedBlock::artificial_text_block(
+                "No journal entries found.",
+            )],
         };
     }
 
@@ -71,7 +71,10 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
 
     result.push(ParsedBlock::artificial_text_block(&as_text));
     if max_date.month() != 1 {
-        result.push(ParsedBlock::artificial_text_block(&format!("## {}\n\n", max_date.format("%Y"))));
+        result.push(ParsedBlock::artificial_text_block(&format!(
+            "## {}\n\n",
+            max_date.format("%Y")
+        )));
     }
 
     result.reverse();
@@ -82,7 +85,9 @@ pub fn generate_journal_overview(journal_entries: Vec<SimplePageName>) -> Parsed
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::page_name_str;
-    use crate::looksyk::builder::test_builder::{extract_textblock_line_at, extract_very_first_textblock_line};
+    use crate::looksyk::builder::test_builder::{
+        extract_textblock_line_at, extract_very_first_textblock_line,
+    };
 
     #[test]
     fn test_generate_journal_overview_with_entries() {
@@ -176,7 +181,11 @@ mod tests {
 
         assert_eq!(result.blocks.len(), 1);
         assert_eq!(
-            result.blocks[0].content[0].as_tokens.get(0).unwrap().payload,
+            result.blocks[0].content[0]
+                .as_tokens
+                .get(0)
+                .unwrap()
+                .payload,
             "No journal entries found."
         );
     }

@@ -145,7 +145,7 @@ fn rename_tag_in_block(old: &str, new: &str, parsed_block: &ParsedBlock) -> Pars
     ParsedBlock {
         indentation: parsed_block.indentation,
         content: new_content,
-        properties: parsed_block.properties.clone()
+        properties: parsed_block.properties.clone(),
     }
 }
 

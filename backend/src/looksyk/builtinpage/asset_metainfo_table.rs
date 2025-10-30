@@ -18,7 +18,7 @@ pub fn get_asset_meta_info_table(size: u64, last_changed: i64) -> ParsedMarkdown
                     timestamp_as_human_string(last_changed),
                 ))],
             }],
-            properties: BlockProperties::empty()
+            properties: BlockProperties::empty(),
         }],
     }
 }

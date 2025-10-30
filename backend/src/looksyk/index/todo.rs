@@ -1,6 +1,5 @@
 use crate::looksyk::index::hierachy::HierarchyParser;
 use crate::looksyk::model::{BlockTokenType, PageId, ParsedMarkdownFile, SimplePageName};
-use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 use crate::state::userpage::UserPageIndex;
@@ -44,10 +43,7 @@ pub fn create_todo_index_file(
                 if first_token.block_token_type == BlockTokenType::Todo {
                     result.push(TodoIndexEntry {
                         block: block.clone(),
-                        source: BlockReference {
-                            page_id: page_id.clone(),
-                            block_number,
-                        },
+                        source: page_id.block_reference(block_number),
                         state: state_from_payload(&first_token.payload),
                         tags: hierarchy_index.get_current_tag_set(),
                     })
@@ -113,7 +109,10 @@ mod tests {
         data_state.insert(
             page_name_str("testfile"),
             ParsedMarkdownFile {
-                blocks: vec![ParsedBlock::from_tokens(vec![todo_token(), any_text_token()])],
+                blocks: vec![ParsedBlock::from_tokens(vec![
+                    todo_token(),
+                    any_text_token(),
+                ])],
             },
         );
 
@@ -143,7 +142,10 @@ mod tests {
         data_state.insert(
             page_name_str("testfile"),
             ParsedMarkdownFile {
-                blocks: vec![ParsedBlock::from_tokens(vec![done_token(), any_text_token()])],
+                blocks: vec![ParsedBlock::from_tokens(vec![
+                    done_token(),
+                    any_text_token(),
+                ])],
             },
         );
 

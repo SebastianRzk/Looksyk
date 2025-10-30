@@ -2,7 +2,7 @@ use crate::io::fs::config::read_config_from_file;
 use crate::io::fs::media::{init_media, read_media_config, write_media_config};
 use crate::io::fs::pages::{read_all_journal_files, read_all_user_files};
 use crate::looksyk::index::asset::create_empty_asset_cache;
-use crate::looksyk::index::block_properties_index::create_block_properties_index;
+use crate::looksyk::index::block_properties::create_block_properties_index;
 use crate::looksyk::index::tag::create_tag_index;
 use crate::looksyk::index::todo::create_todo_index;
 use crate::looksyk::index::userpage::{create_journal_page_index, create_user_page_index};
@@ -21,7 +21,7 @@ pub fn load_graph_data(data_root_location: &GraphRootLocation) -> PureAppState {
     let todo_index = create_todo_index(&user_page_index, &journal_index);
     let tag_index = create_tag_index(&user_page_index, &journal_index);
     let asset_cache = create_empty_asset_cache();
-    let block_properties_index = create_block_properties_index( &journal_index, &user_page_index);
+    let block_properties_index = create_block_properties_index(&journal_index, &user_page_index);
 
     println!("all data refreshed");
 

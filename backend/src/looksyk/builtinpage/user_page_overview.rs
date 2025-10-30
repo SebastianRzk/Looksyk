@@ -1,7 +1,6 @@
 use crate::looksyk::builtinpage::generating_page_util::create_textblock;
 use crate::looksyk::model::{
-    BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
-    SimplePageName,
+    BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
 };
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;

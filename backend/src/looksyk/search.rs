@@ -45,10 +45,9 @@ fn search_in_index(
             for block_content in &block.content {
                 if block_content.as_text.contains(&search_term.as_string) {
                     result.push(SearchFinding {
-                        reference: BlockReference {
-                            page_id: simple_page_name.as_page_id(&page_type),
-                            block_number,
-                        },
+                        reference: simple_page_name
+                            .as_page_id(&page_type)
+                            .block_reference(block_number),
                         text_line: block_content.as_text.clone(),
                     });
                 }
@@ -61,9 +60,7 @@ fn search_in_index(
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::model::{
-        PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
-    };
+    use crate::looksyk::model::{PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName};
     use crate::looksyk::search::SearchTerm;
     use std::collections::HashMap;
 
@@ -75,7 +72,8 @@ mod tests {
 
         let mut pages = HashMap::new();
         let mut page = ParsedMarkdownFile { blocks: vec![] };
-        page.blocks.push(ParsedBlock::text_block_on_disk("asf search alkj"));
+        page.blocks
+            .push(ParsedBlock::text_block_on_disk("asf search alkj"));
         pages.insert(
             SimplePageName {
                 name: "page_name".to_string(),

@@ -94,9 +94,7 @@ fn generate_indentation(depth: usize) -> String {
 fn serialize_block_token(block_token: &BlockToken) -> String {
     match block_token.block_token_type {
         BlockTokenType::Text => block_token.payload.clone(),
-        BlockTokenType::Property => {
-            block_token.payload.clone()
-        }
+        BlockTokenType::Property => block_token.payload.clone(),
         BlockTokenType::Link => render_as_tag_str(&block_token.payload),
         BlockTokenType::JournalLink => {
             format!("[[journal::{}]]", block_token.payload.clone())

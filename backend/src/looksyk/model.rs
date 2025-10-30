@@ -15,7 +15,7 @@ pub struct RawBlock {
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
-    pub properties: BlockProperties
+    pub properties: BlockProperties,
 }
 
 impl ParsedBlock {
@@ -42,6 +42,7 @@ impl ParsedBlock {
         }
     }
 
+    #[cfg(test)]
     pub fn text_block_on_disk(text: &str) -> Self {
         ParsedBlock {
             indentation: 0,
@@ -125,7 +126,7 @@ pub mod builder {
     }
 
     impl ParsedBlock {
-        pub fn empty()-> Self {
+        pub fn empty() -> Self {
             ParsedBlock {
                 indentation: 0,
                 content: vec![],
@@ -316,8 +317,8 @@ impl Ord for PageId {
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::model::builder::{block_with_link_content, block_with_text_content};
     use crate::looksyk::model::{PageId, PageType, ParsedBlock, ParsedMarkdownFile};
 

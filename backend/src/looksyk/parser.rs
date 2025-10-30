@@ -60,7 +60,6 @@ const QUERY_END: &str = " }";
 const PROPERTY_START: &str = ":: ";
 const PROPERTY_END: &str = " ";
 
-const PROPERTY_MATCH: char = ':';
 const WORD_BREAKING_CHAR: char = ' ';
 
 pub fn parse_markdown_file(file: RawMarkdownFile) -> ParsedMarkdownFile {
@@ -106,8 +105,6 @@ pub fn parse_all_text_lines(all_lines: &Vec<String>) -> ParseBlockResult {
     let mut block_properties = BlockProperties::empty();
 
     for line in all_lines {
-        //FIXME remove
-        eprintln!("parsing line {}", line);
         let mut result = parse_text_content(line);
         parsed_content.push(BlockContent {
             as_text: line.clone(),
@@ -147,10 +144,12 @@ pub struct BlockProperties {
 }
 
 impl BlockProperties {
+    #[cfg(test)]
     pub fn len(&self) -> usize {
         self.properties.len()
     }
 
+    #[cfg(test)]
     pub fn get(&self, index: usize) -> Option<&BlockProperty> {
         self.properties.get(index)
     }
@@ -217,13 +216,9 @@ pub fn parse_text_content(text_content: &str) -> ParseTextResult {
 
     let mut property_seperator_ended_index = 0;
 
-    //let mut last_matching_word: Vec<char> = vec![];
-
     let mut last_matching_word_start = 0;
     let mut property_key_word: &str = "";
 
-    let mut property_matching_active = false;
-    let mut property_matching_key: Vec<char> = vec![];
     let mut properties: Vec<BlockProperty> = vec![];
 
     for char in remaining_text_content.chars() {
@@ -267,12 +262,12 @@ pub fn parse_text_content(text_content: &str) -> ParseTextResult {
                     })
                 }
                 property_key_word = &remaining_text_content
-                    [last_matching_word_start .. current_index- PROPERTY_START.len()];
+                    [last_matching_word_start..current_index - PROPERTY_START.len()];
                 current_matcher = Some(BlockTokenType::Property);
                 property_seperator_ended_index = current_index;
             }
             if char == WORD_BREAKING_CHAR {
-                last_matching_word_start=current_index;
+                last_matching_word_start = current_index;
             }
         } else {
             match current_matcher {
@@ -357,14 +352,12 @@ pub fn parse_text_content(text_content: &str) -> ParseTextResult {
                 }
             }
         }
-    } else {
-        if start_matching_index != remaining_text_content.len() {
-            parsed_tokens.push(remaining_as_text(
-                remaining_text_content,
-                start_matching_index,
-                end_matching_index,
-            ))
-        }
+    } else if start_matching_index != remaining_text_content.len() {
+        parsed_tokens.push(remaining_as_text(
+            remaining_text_content,
+            start_matching_index,
+            end_matching_index,
+        ))
     }
     ParseTextResult {
         tokens: parsed_tokens,
@@ -373,9 +366,9 @@ pub fn parse_text_content(text_content: &str) -> ParseTextResult {
 }
 
 fn remaining_as_text(
-    mut remaining_text_content: String,
-    mut start_matching_index: usize,
-    mut end_matching_index: usize,
+    remaining_text_content: String,
+    start_matching_index: usize,
+    end_matching_index: usize,
 ) -> BlockToken {
     BlockToken {
         payload: remaining_text_content[max(start_matching_index, end_matching_index)..]

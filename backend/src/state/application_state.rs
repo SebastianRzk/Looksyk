@@ -20,7 +20,7 @@ pub struct AppState {
     pub e_asset_cache: Mutex<AssetCache>,
     pub f_media_index: Mutex<MediaIndex>,
     pub g_config: Mutex<Config>,
-    pub h_block_properties: Mutex<BlockPropertiesIndex>
+    pub h_block_properties: Mutex<BlockPropertiesIndex>,
 }
 
 pub struct PureAppState {
@@ -32,7 +32,7 @@ pub struct PureAppState {
     pub e_asset_cache: AssetCache,
     pub f_media_index: MediaIndex,
     pub g_config: Config,
-    pub h_block_properties: BlockPropertiesIndex
+    pub h_block_properties: BlockPropertiesIndex,
 }
 
 #[derive(Clone, Debug)]
@@ -57,6 +57,7 @@ pub struct CurrentPageAssociatedState<'a> {
     pub journal_pages: &'a JournalPageIndex,
     pub todo_index: &'a TodoIndex,
     pub tag_index: &'a TagIndex,
+    pub block_properties_index: &'a BlockPropertiesIndex,
 }
 
 pub struct NewPageAssociatedState {
@@ -64,6 +65,7 @@ pub struct NewPageAssociatedState {
     pub journal_pages: JournalPageIndex,
     pub todo_index: TodoIndex,
     pub tag_index: TagIndex,
+    pub block_properties_index: BlockPropertiesIndex,
 }
 
 pub struct CurrentPageOnDiskState<'a> {

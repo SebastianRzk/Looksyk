@@ -8,10 +8,10 @@ pub struct UserPageIndex {
 
 #[cfg(test)]
 pub mod builder {
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
     use crate::state::userpage::UserPageIndex;
     use std::collections::HashMap;
-    use crate::looksyk::builder::page_name_str;
 
     pub fn empty_user_page_index() -> UserPageIndex {
         user_page_index_with(HashMap::new())
@@ -23,12 +23,9 @@ pub mod builder {
         UserPageIndex { entries: content }
     }
 
-    pub fn user_page_index(name: &str,entry: ParsedMarkdownFile) -> UserPageIndex {
+    pub fn user_page_index(name: &str, entry: ParsedMarkdownFile) -> UserPageIndex {
         let mut entries = HashMap::new();
-        entries.insert(
-            page_name_str(name),
-            entry,
-        );
+        entries.insert(page_name_str(name), entry);
         UserPageIndex { entries }
     }
 }

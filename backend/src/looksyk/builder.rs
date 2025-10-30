@@ -8,7 +8,9 @@ pub mod test_builder {
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedMarkdownFile,
     };
     use crate::state::application_state::GraphRootLocation;
+    use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
+    use std::collections::HashMap;
     use std::path::PathBuf;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
@@ -52,7 +54,13 @@ pub mod test_builder {
     }
     pub fn empty_journal_index() -> JournalPageIndex {
         JournalPageIndex {
-            entries: std::collections::HashMap::new(),
+            entries: HashMap::new(),
+        }
+    }
+
+    pub fn empty_block_properties_index() -> BlockPropertiesIndex {
+        BlockPropertiesIndex {
+            entries: HashMap::new(),
         }
     }
 
@@ -74,9 +82,7 @@ pub mod test_builder {
         }
     }
 
-    pub fn extract_very_first_textblock_line(
-        parsed_markdown_file: &ParsedMarkdownFile,
-    ) -> String {
+    pub fn extract_very_first_textblock_line(parsed_markdown_file: &ParsedMarkdownFile) -> String {
         parsed_markdown_file
             .blocks
             .get(0)
@@ -108,7 +114,6 @@ pub mod test_builder {
             .payload
             .clone()
     }
-
 }
 
 pub fn text_token_str(text: &str) -> BlockToken {

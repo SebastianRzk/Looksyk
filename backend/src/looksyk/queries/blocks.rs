@@ -115,10 +115,7 @@ fn resolve_blocks_in_page(
     for (index, block) in page.blocks.iter().enumerate() {
         if block.contains_reference(target) {
             result.push(BlockQueryResult {
-                block_reference: BlockReference {
-                    page_id: page_id.clone(),
-                    block_number: index,
-                },
+                block_reference: page_id.block_reference(index),
                 parsed_block: block.clone(),
             });
         }

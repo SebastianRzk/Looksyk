@@ -15,7 +15,6 @@ use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_block;
 use crate::looksyk::serializer::update_and_serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
-use crate::state::block::BlockReference;
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
@@ -28,19 +27,14 @@ async fn update_block(
     let request_body = body.into_inner();
     let (file_id, block_number) = path.into_inner();
     let page_id = get_page_id_from_external_string(&file_id);
-    let entity = map_markdown_block_dto(
-        &request_body,
-        BlockReference {
-            block_number,
-            page_id: page_id.clone(),
-        },
-    );
+    let entity = map_markdown_block_dto(&request_body, page_id.block_reference(block_number));
 
     let mut page_guard = data.a_user_pages.lock().unwrap();
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let selected_page = match page_id.page_type {
         PageType::JournalPage => journal_guard.entries.get(&page_id.name).unwrap().clone(),
@@ -70,6 +64,7 @@ async fn update_block(
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
 
     let new_page_associated_state = update_index_for_file(
@@ -82,6 +77,7 @@ async fn update_block(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     let parsed_block = parse_block(&RawBlock {
         indentation: 0,
@@ -105,6 +101,7 @@ async fn update_block(
     drop(page_guard);
     drop(journal_guard);
     drop(asset_cache);
+    drop(block_properties_guard);
 
     match page_id.page_type {
         PageType::JournalPage => document_change(

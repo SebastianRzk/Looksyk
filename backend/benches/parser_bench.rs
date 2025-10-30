@@ -23,7 +23,6 @@ fn bench_parse_text_content(c: &mut Criterion) {
         content: input_long.to_string(),
     }];
 
-
     group.bench_function("parse_text_content_short", |b| {
         b.iter(|| create_user_page_index(short_pages))
     });

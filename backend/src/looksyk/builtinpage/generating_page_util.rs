@@ -11,6 +11,6 @@ pub fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
             }],
             as_text: "".to_string(),
         }],
-        properties: BlockProperties::empty()
+        properties: BlockProperties::empty(),
     }
 }

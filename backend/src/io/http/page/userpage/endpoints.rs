@@ -57,6 +57,7 @@ async fn update_page(
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let page_id = page_name.as_user_page();
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -64,6 +65,7 @@ async fn update_page(
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
 
     let new_page_associated_state = update_index_for_file(
@@ -76,6 +78,7 @@ async fn update_page(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     let is_fav = is_favourite(&page_name, &data.g_config.lock().unwrap());
     let rendered_file = render_file(
@@ -94,6 +97,7 @@ async fn update_page(
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+    drop(block_properties_guard);
 
     document_change(
         graph_changes,
@@ -264,6 +268,7 @@ async fn append_page(
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let page_id = page_name.as_user_page();
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -271,6 +276,7 @@ async fn append_page(
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
     let new_page_associated_state =
         update_index_for_file(page_id.clone(), &merged_page, current_page_associated_state);
@@ -278,6 +284,7 @@ async fn append_page(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     document_change(
         graph_change,
@@ -301,6 +308,7 @@ async fn rename_page(
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageOnDiskState {
         user_pages: &page_guard,
@@ -332,6 +340,7 @@ async fn rename_page(
             journal_pages: &journal_guard,
             todo_index: &todo_guard,
             tag_index: &tag_guard,
+            block_properties_index: &block_properties_guard,
         };
 
         let serialized_page = serialize_page(page);
@@ -351,6 +360,7 @@ async fn rename_page(
         *tag_guard = new_page_associated_state.tag_index;
         *page_guard = new_page_associated_state.user_pages;
         *journal_guard = new_page_associated_state.journal_pages;
+        *block_properties_guard = new_page_associated_state.block_properties_index;
     }
 
     for file_to_delete in rename_tag_result.file_changes.file_to_delete {
@@ -359,6 +369,7 @@ async fn rename_page(
             journal_pages: &journal_guard,
             todo_index: &todo_guard,
             tag_index: &tag_guard,
+            block_properties_index: &block_properties_guard,
         };
 
         let new_page_associated_state =
@@ -369,12 +380,14 @@ async fn rename_page(
         *tag_guard = new_page_associated_state.tag_index;
         *page_guard = new_page_associated_state.user_pages;
         *journal_guard = new_page_associated_state.journal_pages;
+        *block_properties_guard = new_page_associated_state.block_properties_index;
     }
 
     drop(page_guard);
     drop(journal_guard);
     drop(todo_guard);
     drop(tag_guard);
+    drop(block_properties_guard);
 
     document_change(
         graph_changes,
@@ -399,12 +412,14 @@ async fn delete_page(
     let mut journal_guard = data.b_journal_pages.lock().unwrap();
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
 
     let page_id = simple_page_name.as_user_page();
@@ -416,11 +431,13 @@ async fn delete_page(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     drop(todo_guard);
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+    drop(block_properties_guard);
 
     document_change(
         graph_changes,

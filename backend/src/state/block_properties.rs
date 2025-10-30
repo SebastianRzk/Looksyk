@@ -6,12 +6,12 @@ pub struct BlockPropertiesIndex {
     pub entries: HashMap<BlockPropertyKey, Vec<BlockPropertyValue>>,
 }
 
-#[derive(Eq, PartialEq, Hash)]
+#[derive(Eq, PartialEq, Hash, Clone)]
 pub struct BlockPropertyKey {
     pub value: String,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct BlockPropertyValue {
     pub value: String,
     pub block: BlockReference,
@@ -45,7 +45,6 @@ pub mod builder {
     use crate::looksyk::builder::test_builder::user_page_id;
     use crate::state::block::BlockReference;
     use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
-
 
     pub fn block_property_key(value: &str) -> BlockPropertyKey {
         BlockPropertyKey {

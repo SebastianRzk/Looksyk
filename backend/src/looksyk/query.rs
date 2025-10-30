@@ -153,8 +153,8 @@ impl Display for QueryDisplayType {
 #[cfg(test)]
 mod tests {
     use crate::io::fs::media::MediaOnDisk;
-    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::builder::query_block_token;
     use crate::looksyk::model::{

@@ -1,5 +1,4 @@
 .markdown {
-  width: 100%;
   min-height: 3ex;
   align-items: center;
 }
@@ -7,12 +6,16 @@
 .flex-row {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .sourceref {
-  font-size: smaller;
-  color: grey;
+  font-size: small;
+  color: var(--primary-color);
   align-self: end;
+  margin-bottom: 0.5ex;
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 
