@@ -1,0 +1,62 @@
+<mat-accordion>
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>configure Kanban</mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="formGroup">
+      <div>
+        <div class="description">Title of the kanban</div>
+        <mat-form-field>
+          <mat-label>Titel</mat-label>
+          <input matInput formControlName="title"/>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="description">Tag to identify what blocks to include</div>
+        <mat-form-field>
+          <mat-label>Tag</mat-label>
+          <mat-select formControlName="tag">
+            <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="description">Page property key for column identification</div>
+        <mat-form-field>
+          <mat-label>Page property key</mat-label>
+          <mat-select formControlName="columnIdentifier">
+            @for (col of columnIdentifiers; track col) {
+              <mat-option [value]="col">{{ col }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="description">Page property keys for column identification (comma seperated list)</div>
+        <mat-form-field>
+          <mat-label>Page propety values</mat-label>
+          <input matInput formControlName="columnValues"/>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="description">Page property key for priority identification (value gets sorted in alphabetical
+          order)
+        </div>
+        <mat-form-field>
+          <mat-label>Page property key</mat-label>
+          <mat-select formControlName="priority">
+            @for (prio of priorityIdentifiers; track prio) {
+              <mat-option [value]="prio">{{ prio }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+

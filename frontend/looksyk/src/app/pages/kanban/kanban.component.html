@@ -1,0 +1,25 @@
+<h1>{{data.title}}</h1>
+<app-kanban-properties></app-kanban-properties>
+<div cdkDropListGroup  class="kanban-container">
+
+  @for (list of data.lists; track list.title) {
+    <div>
+      <h2>{{ list.title }}</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="list.items"
+        class="kanban-list"
+        cdkDropListSortingDisabled
+        (cdkDropListDropped)="drop($event)">
+        @for (item of list.items; track item.block.reference.fileId) {
+          <div cdkDrag>
+            <app-kanban-card
+              [markdown]="item.block"
+            ></app-kanban-card>
+          </div>
+        }
+      </div>
+    </div>
+
+  }
+</div>
