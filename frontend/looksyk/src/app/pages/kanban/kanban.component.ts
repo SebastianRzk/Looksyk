@@ -4,7 +4,6 @@ import {
   CdkDragDrop,
   CdkDropList,
   CdkDropListGroup,
-  moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { RefecencedBlockContent } from "../model";
@@ -30,19 +29,6 @@ export class KanbanComponent {
   basket = ['Oranges', 'Bananas', 'Cucumbers'];
 
   data: KanbanData = DEMO_DATA;
-
-  drop_alt(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
-  }
 
   drop(event: CdkDragDrop<KanbanItem[]>) {
     console.log("kanban event", event);

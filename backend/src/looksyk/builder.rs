@@ -12,6 +12,9 @@ pub mod test_builder {
     use crate::state::journal::JournalPageIndex;
     use std::collections::HashMap;
     use std::path::PathBuf;
+    use crate::state::markdown_file::MarkdownFileIndex;
+    use crate::state::userpage::builder::empty_user_page_index;
+    use crate::state::userpage::UserPageIndex;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
         AssetDescriptor::new(file_name.to_string())
@@ -55,6 +58,13 @@ pub mod test_builder {
     pub fn empty_journal_index() -> JournalPageIndex {
         JournalPageIndex {
             entries: HashMap::new(),
+        }
+    }
+
+    pub fn empty_markdown_file_index<'a>(journal_page_index: &'a JournalPageIndex, user_page_index: &'a UserPageIndex) -> MarkdownFileIndex<'a> {
+        MarkdownFileIndex{
+            journal_page_index,
+            user_page_index,
         }
     }
 

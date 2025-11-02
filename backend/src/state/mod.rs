@@ -7,3 +7,4 @@ pub mod tag;
 pub mod todo;
 pub mod userpage;
 mod version;
+pub mod markdown_file;

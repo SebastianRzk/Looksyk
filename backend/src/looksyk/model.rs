@@ -11,7 +11,7 @@ pub struct RawBlock {
     pub text_content: Vec<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
@@ -182,7 +182,7 @@ pub struct RawMarkdownFile {
     pub blocks: Vec<RawBlock>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ParsedMarkdownFile {
     pub blocks: Vec<ParsedBlock>,
 }
@@ -190,6 +190,10 @@ pub struct ParsedMarkdownFile {
 impl ParsedMarkdownFile {
     pub fn empty() -> Self {
         ParsedMarkdownFile { blocks: vec![] }
+    }
+
+    pub fn block(&self, block_number: usize) -> Option<&ParsedBlock> {
+        self.blocks.get(block_number)
     }
 }
 
