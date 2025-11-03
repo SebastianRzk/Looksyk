@@ -15,7 +15,7 @@ pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
@@ -23,7 +23,7 @@ pub fn render_file(
             original_block,
             render_context,
             asset_cache,
-            data_root_location,
+            graph_root_location,
         ));
     }
     PreparedMarkdownFile {
@@ -35,7 +35,7 @@ pub fn render_block(
     block: &ParsedBlock,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
@@ -48,7 +48,7 @@ pub fn render_block(
             &content_element.as_tokens,
             render_context,
             asset_cache,
-            data_root_location,
+            graph_root_location,
         );
         if render_result.has_dynamic_content {
             has_dynamic_content = true;
@@ -74,7 +74,7 @@ pub fn render_tokens_deep(
     tokens: &Vec<BlockToken>,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];
@@ -96,7 +96,7 @@ pub fn render_tokens_deep(
             }
             BlockTokenType::Query => {
                 let render_result =
-                    render_query(token, render_context, asset_cache, data_root_location);
+                    render_query(token, render_context, asset_cache, graph_root_location);
                 has_dynamic_content = render_result.has_dynamic_content;
                 for reference in render_result.referenced_markdown {
                     references.push(reference);

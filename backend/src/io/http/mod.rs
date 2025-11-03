@@ -9,3 +9,4 @@ pub mod page;
 mod page_type;
 pub mod state;
 pub mod r#static;
+pub mod kanban;

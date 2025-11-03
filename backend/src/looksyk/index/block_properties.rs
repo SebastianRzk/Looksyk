@@ -74,7 +74,7 @@ pub mod tests {
     use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
     use crate::looksyk::model::builder::block_with_property;
     use crate::looksyk::model::ParsedMarkdownFile;
-    use crate::state::block_properties::builder::{block_property_key, block_property_value};
+    use crate::state::block_properties::builder::{block_property_key, block_property_occurance};
     use crate::state::journal::builder::journal_page_index;
     use crate::state::userpage::builder::user_page_index;
 
@@ -102,7 +102,7 @@ pub mod tests {
 
         assert_eq!(
             index.entries.get(&block_property_key("key1")).unwrap(),
-            &vec![block_property_value(
+            &vec![block_property_occurance(
                 "value1",
                 journal_page_id("journal-page-name").block_reference(0)
             )]
@@ -111,11 +111,11 @@ pub mod tests {
         assert_eq!(
             index.entries.get(&block_property_key("key2")).unwrap(),
             &vec![
-                block_property_value(
+                block_property_occurance(
                     "key3",
                     journal_page_id("journal-page-name").block_reference(1)
                 ),
-                block_property_value("value2", user_page_id("user-page-name").block_reference(0)),
+                block_property_occurance("value2", user_page_id("user-page-name").block_reference(0)),
             ]
         );
     }
@@ -152,7 +152,7 @@ pub mod tests {
 
         assert_eq!(
             result.entries.get(&block_property_key("key2")).unwrap(),
-            &vec![block_property_value(
+            &vec![block_property_occurance(
                 "value2",
                 user_page_id("user-page-name").block_reference(0)
             ),]

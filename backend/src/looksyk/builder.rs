@@ -10,6 +10,8 @@ pub mod test_builder {
     use crate::state::application_state::GraphRootLocation;
     use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
+    use crate::state::markdown_file::MarkdownFileIndex;
+    use crate::state::userpage::UserPageIndex;
     use std::collections::HashMap;
     use std::path::PathBuf;
 
@@ -58,6 +60,13 @@ pub mod test_builder {
         }
     }
 
+    pub fn empty_markdown_file_index<'a>(journal_page_index: &'a JournalPageIndex, user_page_index: &'a UserPageIndex) -> MarkdownFileIndex<'a> {
+        MarkdownFileIndex{
+            journal_page_index,
+            user_page_index,
+        }
+    }
+
     pub fn empty_block_properties_index() -> BlockPropertiesIndex {
         BlockPropertiesIndex {
             entries: HashMap::new(),
@@ -69,13 +78,6 @@ pub mod test_builder {
     }
 
     pub fn block_content(text: &str) -> BlockContent {
-        BlockContent {
-            as_tokens: vec![text_token_str(text)],
-            as_text: text.to_string(),
-        }
-    }
-
-    pub fn text_block_content(text: &str) -> BlockContent {
         BlockContent {
             as_tokens: vec![text_token_str(text)],
             as_text: text.to_string(),
