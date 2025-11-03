@@ -100,3 +100,20 @@ export function fromDto(dto: MarkdownPageDto, name: string, pageid: string): Mar
     pageid: pageid
   }
 }
+
+
+
+export interface KanbanData {
+  title: string,
+  lists: KanbanList[]
+}
+
+export interface KanbanList {
+  title: string,
+  items: KanbanItem[]
+}
+
+export interface KanbanItem {
+  block: RefecencedBlockContent
+  priority: string
+}

@@ -11,9 +11,6 @@ pub mod test_builder {
     use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
     use crate::state::markdown_file::MarkdownFileIndex;
-    use crate::state::markdown_file::MarkdownFileIndex;
-    use crate::state::userpage::builder::empty_user_page_index;
-    use crate::state::userpage::UserPageIndex;
     use crate::state::userpage::UserPageIndex;
     use std::collections::HashMap;
     use std::path::PathBuf;

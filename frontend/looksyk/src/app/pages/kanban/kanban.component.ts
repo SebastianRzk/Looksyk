@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, signal, WritableSignal} from '@angular/core';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, transferArrayItem,} from '@angular/cdk/drag-drop';
+import {KanbanData, KanbanItem} from "../model";
+import {KanbanCardComponent} from "../components/kanban-card/kanban-card.component";
 import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDropList,
-  CdkDropListGroup,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { RefecencedBlockContent } from "../model";
-import { KanbanCardComponent } from "../components/kanban-card/kanban-card.component";
-import { KanbanPropertiesComponent } from "../components/kanban-properties/kanban-properties.component";
+  INITIAL_KANBAN_PROPERTIES,
+  KanbanProperties,
+  KanbanPropertiesComponent
+} from "../components/kanban-properties/kanban-properties.component";
+import {AsyncPipe} from "@angular/common";
+import {Observable, Subject} from "rxjs";
+import {KanbanService} from "../../services/kanban.service";
 
 @Component({
   selector: 'app-kanban-page',
@@ -17,18 +18,42 @@ import { KanbanPropertiesComponent } from "../components/kanban-properties/kanba
     CdkDropList,
     CdkDrag,
     KanbanCardComponent,
-    KanbanPropertiesComponent
+    KanbanPropertiesComponent,
+    AsyncPipe
   ],
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KanbanComponent {
-  items = ['Carrots', 'Tomatoes', 'Onions', 'Apples', 'Avocados'];
 
-  basket = ['Oranges', 'Bananas', 'Cucumbers'];
+  private kanbanService: KanbanService = inject(KanbanService);
 
-  data: KanbanData = DEMO_DATA;
+
+  private readonly kanbanData: Subject<KanbanData> = new Subject<KanbanData>();
+
+  readonly kanbanData$: Observable<KanbanData> = this.kanbanData.asObservable();
+
+  readonly initialFilter: WritableSignal<KanbanProperties> = signal(INITIAL_KANBAN_PROPERTIES);
+
+  readonly filter: WritableSignal<KanbanProperties> = signal(INITIAL_KANBAN_PROPERTIES);
+
+
+  constructor() {
+    effect(() => {
+      const filter = this.filter();
+      this.kanbanService.load_kanban_data(
+        filter.title,
+        filter.tag,
+        filter.columnIdentifier,
+        filter.columnValues,
+        filter.priorityIdentifier
+      ).then(data => {
+        this.kanbanData.next(data)
+      })
+    });
+  }
+
 
   drop(event: CdkDragDrop<KanbanItem[]>) {
     console.log("kanban event", event);
@@ -46,130 +71,3 @@ export class KanbanComponent {
 }
 
 
-export interface KanbanData {
-  title: string,
-  lists: KanbanList[]
-}
-
-export interface KanbanList {
-  title: string,
-  items: KanbanItem[]
-}
-
-export interface KanbanItem {
-  block: RefecencedBlockContent
-  priority: string
-}
-
-const DEMO_DATA: KanbanData = {
-  title: "My Kanban Board",
-  lists: [
-    {
-      title: "TODO",
-      items: [
-        {
-          block: {
-            content: {
-              originalText: "### Test \n\n This is a test task",
-              preparedMarkdown: "### Test \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name",
-              link: "//test.md",
-              fileId: "te1354st.md",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        },
-        {
-          block: {
-            content: {
-              originalText: "### Test 2 \n\n This is a test task",
-              preparedMarkdown: "### Test2 \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name2",
-              link: "//test.md",
-              fileId: "t5431est.md",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        }
-      ]
-    },
-
-    {
-      title: "DOING",
-      items: [
-        {
-          block: {
-            content: {
-              originalText: "### Test \n\n This is a test task",
-              preparedMarkdown: "### Test \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name",
-              link: "//test.md",
-              fileId: "test.5143",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        },
-        {
-          block: {
-            content: {
-              originalText: "### Test 2 \n\n This is a test task",
-              preparedMarkdown: "### Test2 \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name2",
-              link: "//test.md",
-              fileId: "test.md2134",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        }
-      ]
-    },
-
-    {
-      title: "DONE",
-      items: [
-        {
-          block: {
-            content: {
-              originalText: "### Test \n\n This is a test task",
-              preparedMarkdown: "### Test \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name",
-              link: "//test.md",
-              fileId: "test.md435",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        },
-        {
-          block: {
-            content: {
-              originalText: "### Test 2 \n\n This is a test task",
-              preparedMarkdown: "### Test2 \n\n This is a test task",
-            },
-            reference: {
-              fileName: "my file name2",
-              link: "//test.md",
-              fileId: "test.2341md",
-              blockNumber: 1
-            }
-          },
-          priority: "A"
-        }
-      ]
-    }
-  ]
-};

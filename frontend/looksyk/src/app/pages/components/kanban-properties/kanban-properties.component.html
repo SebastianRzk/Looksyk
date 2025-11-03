@@ -19,7 +19,11 @@
         <mat-form-field>
           <mat-label>Tag</mat-label>
           <mat-select formControlName="tag">
-            <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
+            @if (tags | async; as tags) {
+              @for (tag of tags.tags; track tag) {
+                <mat-option [value]="tag">{{ tag }}</mat-option>
+              }
+            }
           </mat-select>
         </mat-form-field>
       </div>
@@ -28,7 +32,7 @@
         <mat-form-field>
           <mat-label>Page property key</mat-label>
           <mat-select formControlName="columnIdentifier">
-            @for (col of columnIdentifiers; track col) {
+            @for (col of (columnIdentifierValues | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
             }
           </mat-select>
@@ -47,7 +51,7 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <mat-select formControlName="priority">
+          <mat-select formControlName="priorityIdentifier">
             @for (prio of priorityIdentifiers; track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
             }
