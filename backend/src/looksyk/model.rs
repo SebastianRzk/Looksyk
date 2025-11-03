@@ -153,7 +153,6 @@ impl PreparedBlock {
     }
 }
 
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct PreparedBlockContent {
     pub original_text: String,

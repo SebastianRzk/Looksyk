@@ -115,7 +115,10 @@ pub mod tests {
                     "key3",
                     journal_page_id("journal-page-name").block_reference(1)
                 ),
-                block_property_occurance("value2", user_page_id("user-page-name").block_reference(0)),
+                block_property_occurance(
+                    "value2",
+                    user_page_id("user-page-name").block_reference(0)
+                ),
             ]
         );
     }

@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::io::http::page::dtos::PreparedReferencedMarkdownDto;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 pub struct KanbanDataDto {

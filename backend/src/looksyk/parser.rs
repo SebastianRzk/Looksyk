@@ -165,8 +165,8 @@ impl BlockProperties {
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::parser::BlockProperties;
     use super::BlockProperty;
+    use crate::looksyk::parser::BlockProperties;
 
     pub fn any_block_property() -> BlockProperty {
         BlockProperty {

@@ -22,7 +22,6 @@ pub struct BlockPropertyValue {
     pub value: String,
 }
 
-
 impl BlockPropertiesIndex {
     pub fn append_elements(&mut self, block_reference: BlockReference, property: BlockProperty) {
         let key = BlockPropertyKey {
@@ -31,7 +30,7 @@ impl BlockPropertiesIndex {
 
         if let Some(value) = self.entries.get_mut(&key) {
             value.push(BlockPropertyOccurence {
-                value: BlockPropertyValue{
+                value: BlockPropertyValue {
                     value: property.value,
                 },
                 block: block_reference.clone(),
@@ -40,7 +39,7 @@ impl BlockPropertiesIndex {
             self.entries.insert(
                 key,
                 vec![BlockPropertyOccurence {
-                    value: BlockPropertyValue{
+                    value: BlockPropertyValue {
                         value: property.value,
                     },
                     block: block_reference.clone(),
@@ -50,11 +49,12 @@ impl BlockPropertiesIndex {
     }
 }
 
-
 #[cfg(test)]
 pub mod builder {
     use crate::state::block::BlockReference;
-    use crate::state::block_properties::{BlockPropertyKey, BlockPropertyOccurence, BlockPropertyValue};
+    use crate::state::block_properties::{
+        BlockPropertyKey, BlockPropertyOccurence, BlockPropertyValue,
+    };
 
     pub fn block_property_key(value: &str) -> BlockPropertyKey {
         BlockPropertyKey {
@@ -62,7 +62,10 @@ pub mod builder {
         }
     }
 
-    pub fn block_property_occurance(value: &str, reference: BlockReference) -> BlockPropertyOccurence {
+    pub fn block_property_occurance(
+        value: &str,
+        reference: BlockReference,
+    ) -> BlockPropertyOccurence {
         BlockPropertyOccurence {
             value: block_property_value(value),
             block: reference,
@@ -74,7 +77,6 @@ pub mod builder {
             value: value.to_string(),
         }
     }
-
 }
 
 #[cfg(test)]

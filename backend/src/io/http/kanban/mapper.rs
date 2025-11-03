@@ -1,13 +1,11 @@
 use crate::io::http::kanban::dtos::{KanbanDataDto, KanbanItemDto, KanbanListDto};
-use crate::looksyk::kanban::models::{
-    PreparedKanbanData, PreparedKanbanItem, PreparedKanbanList,
-};
+use crate::looksyk::kanban::models::{PreparedKanbanData, PreparedKanbanItem, PreparedKanbanList};
 
-impl Into<KanbanDataDto> for PreparedKanbanData {
-    fn into(self) -> KanbanDataDto {
+impl From<PreparedKanbanData> for KanbanDataDto {
+    fn from(val: PreparedKanbanData) -> Self {
         KanbanDataDto {
-            title: self.title.title,
-            lists: self
+            title: val.title.title,
+            lists: val
                 .lists
                 .into_iter()
                 .map(|list_dto| list_dto.into())
@@ -16,20 +14,20 @@ impl Into<KanbanDataDto> for PreparedKanbanData {
     }
 }
 
-impl Into<KanbanListDto> for PreparedKanbanList {
-    fn into(self) -> KanbanListDto {
+impl From<PreparedKanbanList> for KanbanListDto {
+    fn from(val: PreparedKanbanList) -> Self {
         KanbanListDto {
-            title: self.title.title,
-            items: self.items.into_iter().map(|item| item.into()).collect(),
+            title: val.title.title,
+            items: val.items.into_iter().map(|item| item.into()).collect(),
         }
     }
 }
 
-impl Into<KanbanItemDto> for PreparedKanbanItem {
-    fn into(self) -> KanbanItemDto {
+impl From<PreparedKanbanItem> for KanbanItemDto {
+    fn from(val: PreparedKanbanItem) -> Self {
         KanbanItemDto {
-            block: (&self.block).into(),
-            priority: self.priority.priority,
+            block: (&val.block).into(),
+            priority: val.priority.priority,
         }
     }
 }

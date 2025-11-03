@@ -15,7 +15,6 @@ pub struct PreparedKanbanItem {
     pub priority: KanbanItemPriority,
 }
 
-
 pub struct KanbanData {
     pub title: KanbanTitle,
     pub lists: Vec<KanbanList>,

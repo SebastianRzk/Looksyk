@@ -1,5 +1,5 @@
 use crate::io::http::kanban::dtos::{GetKanbanRequestDto, KanbanDataDto};
-use crate::looksyk::kanban::kanban::get_kanban_from_tag;
+use crate::looksyk::kanban::get_kanban_from_tag;
 use crate::looksyk::kanban::models::KanbanTitle;
 use crate::looksyk::kanban::renderer::render_kanban;
 use crate::looksyk::model::SimplePageName;

@@ -1,5 +1,4 @@
-use crate::looksyk::model::{PageId, SimplePageName};
-use crate::state::block::BlockReference;
+use crate::looksyk::model::PageId;
 use std::collections::{HashMap, HashSet};
 
 #[derive(Clone)]

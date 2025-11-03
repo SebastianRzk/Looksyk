@@ -7,23 +7,22 @@ pub struct MarkdownFileIndex<'a> {
     pub user_page_index: &'a UserPageIndex,
 }
 
-
 impl MarkdownFileIndex<'_> {
     pub fn resolve(&self, id: &PageId) -> Option<&ParsedMarkdownFile> {
         match id.page_type {
             crate::looksyk::model::PageType::JournalPage => {
                 self.journal_page_index.entries.get(&id.name)
             }
-            crate::looksyk::model::PageType::UserPage => {
-                self.user_page_index.entries.get(&id.name)
-            }
+            crate::looksyk::model::PageType::UserPage => self.user_page_index.entries.get(&id.name),
         }
     }
 }
 
 #[cfg(test)]
 pub mod tests {
-    use crate::looksyk::builder::test_builder::{any_parsed_markdown_file, empty_journal_index, journal_page_id, user_page_id};
+    use crate::looksyk::builder::test_builder::{
+        any_parsed_markdown_file, empty_journal_index, journal_page_id, user_page_id,
+    };
     use crate::state::journal::builder::journal_page_index;
     use crate::state::markdown_file::MarkdownFileIndex;
     use crate::state::userpage::builder::{empty_user_page_index, user_page_index};
