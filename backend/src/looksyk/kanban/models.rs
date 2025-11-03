@@ -42,3 +42,14 @@ pub struct KanbanListTitle {
 pub struct KanbanItemPriority {
     pub priority: String,
 }
+
+#[cfg(test)]
+pub mod builder {
+    use super::KanbanTitle;
+
+    pub fn kanban_title(title: &str) -> KanbanTitle {
+        KanbanTitle {
+            title: title.to_string(),
+        }
+    }
+}

@@ -50,6 +50,7 @@ impl BlockPropertiesIndex {
     }
 }
 
+
 #[cfg(test)]
 pub mod builder {
     use crate::state::block::BlockReference;

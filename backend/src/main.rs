@@ -9,7 +9,7 @@ use crate::io::fs::env;
 use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http;
-use crate::io::http::design;
+use crate::io::http::{design, kanban};
 use crate::io::http::favourites;
 use crate::io::http::help;
 use crate::io::http::markdown;
@@ -172,6 +172,7 @@ async fn main() -> std::io::Result<()> {
             .service(search::endpoints::search_in_files)
             .service(http::state::endpoints::post_refresh_internal_state)
             .service(help::help)
+            .service(kanban::endpoints::get_kanban)
             .service(sync::git::io::git_controller::get_current_git_status)
             .service(sync::git::io::git_controller::update_current_data)
             .service(sync::git::io::git_controller::post_create_checkpoint)

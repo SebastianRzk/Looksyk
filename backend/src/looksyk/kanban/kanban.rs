@@ -5,7 +5,7 @@ use crate::state::block_properties::{
 };
 use crate::state::markdown_file::MarkdownFileIndex;
 
-pub fn get_kanban(
+pub fn get_kanban_from_tag(
     title: KanbanTitle,
     tag: SimplePageName,
     column_identifier: BlockPropertyKey,
@@ -99,15 +99,21 @@ fn block_contains_tag(
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::builder::test_builder::empty_journal_index;
     use crate::looksyk::builder::test_builder::{any_page_id, empty_markdown_file_index};
-    use crate::looksyk::kanban::kanban::block_contains_tag;
-    use crate::looksyk::model::builder::{block_with_link_content, block_with_property, block_with_text_content};
-    use crate::looksyk::model::ParsedMarkdownFile;
+    use crate::looksyk::builder::{link_token, page_name_str};
+    use crate::looksyk::kanban::kanban::{block_contains_tag, get_kanban_from_tag};
+    use crate::looksyk::kanban::models::builder::kanban_title;
+    use crate::looksyk::model::builder::{
+        block_with_link_content, block_with_property, block_with_text_content,
+    };
+    use crate::looksyk::model::{BlockContent, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::parser::builder::{block_properties_from, block_property};
     use crate::state::block::BlockReference;
-    use crate::state::block_properties::builder::block_property_occurance;
-    use crate::state::block_properties::BlockPropertyKey;
+    use crate::state::block_properties::builder::{
+        block_property_key, block_property_occurance, block_property_value,
+    };
+    use crate::state::block_properties::{BlockPropertiesIndex, BlockPropertyKey};
     use crate::state::userpage::builder::{empty_user_page_index, user_page_index};
 
     #[test]
@@ -186,12 +192,64 @@ mod tests {
 
     #[test]
     fn test_extract_priority_with_priority() {
-        let  block = block_with_property("priority", "high");
+        let block = block_with_property("priority", "high");
         let priority_key = BlockPropertyKey {
             value: "priority".to_string(),
         };
 
         let priority = super::extract_priority(&block, &priority_key);
         assert_eq!(priority.priority, "high");
+    }
+
+    #[test]
+    fn test_get_kanban_from_tag() {
+        let result = get_kanban_from_tag(
+            kanban_title("Test Kanban"),
+            page_name_str("tag"),
+            block_property_key("status"),
+            vec![block_property_value("To Do"), block_property_value("Done")],
+            &{
+                let mut index = BlockPropertiesIndex {
+                    entries: std::collections::HashMap::new(),
+                };
+                index.entries.insert(
+                    block_property_key("status"),
+                    vec![block_property_occurance(
+                        "To Do",
+                        page_name_str("page-1").as_user_page().block_reference(0),
+                    )],
+                );
+                index
+            },
+            &block_property_key("priority"),
+            &empty_markdown_file_index(
+                &empty_journal_index(),
+                &user_page_index(
+                    "page-1",
+                    ParsedMarkdownFile {
+                        blocks: vec![ParsedBlock {
+                            content: vec![BlockContent {
+                                as_tokens: vec![link_token("tag")],
+                                as_text: "".to_string(),
+                            }],
+                            indentation: 0,
+                            properties: block_properties_from(vec![
+                                block_property("priority", "high"),
+                                block_property("status", "To Do"),
+                            ]),
+                        }],
+                    },
+                ),
+            ),
+        );
+
+
+        assert_eq!(result.title.title, "Test Kanban");
+        assert_eq!(result.lists.len(), 2);
+        assert_eq!(result.lists[0].title.title, "To Do");
+        assert_eq!(result.lists[0].items.len(), 1);
+        assert_eq!(result.lists[0].items[0].priority.priority, "high");
+        assert_eq!(result.lists[1].title.title, "Done");
+        assert_eq!(result.lists[1].items.len(), 0);
     }
 }

@@ -1,3 +1,3 @@
+pub mod kanban;
 pub mod models;
-mod kanban;
-mod renderer;
+pub mod renderer;

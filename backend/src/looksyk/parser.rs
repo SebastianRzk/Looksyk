@@ -166,20 +166,23 @@ impl BlockProperties {
 #[cfg(test)]
 pub mod builder {
     use crate::looksyk::parser::BlockProperties;
+    use super::BlockProperty;
 
-    pub fn any_block_property() -> super::BlockProperty {
-        super::BlockProperty {
+    pub fn any_block_property() -> BlockProperty {
+        BlockProperty {
             key: "key".to_string(),
             value: "value".to_string(),
         }
     }
 
-    pub fn block_properties_from(key: &str, value: &str) -> BlockProperties {
-        BlockProperties {
-            properties: vec![super::BlockProperty {
-                key: key.to_string(),
-                value: value.to_string(),
-            }],
+    pub fn block_properties_from(properties: Vec<BlockProperty>) -> BlockProperties {
+        BlockProperties { properties }
+    }
+
+    pub fn block_property(key: &str, value: &str) -> BlockProperty {
+        BlockProperty {
+            key: key.to_string(),
+            value: value.to_string(),
         }
     }
 }

@@ -10,6 +10,8 @@ pub mod test_builder {
     use crate::state::application_state::GraphRootLocation;
     use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
+    use crate::state::markdown_file::MarkdownFileIndex;
+    use crate::state::userpage::UserPageIndex;
     use std::collections::HashMap;
     use std::path::PathBuf;
     use crate::state::markdown_file::MarkdownFileIndex;
@@ -79,13 +81,6 @@ pub mod test_builder {
     }
 
     pub fn block_content(text: &str) -> BlockContent {
-        BlockContent {
-            as_tokens: vec![text_token_str(text)],
-            as_text: text.to_string(),
-        }
-    }
-
-    pub fn text_block_content(text: &str) -> BlockContent {
         BlockContent {
             as_tokens: vec![text_token_str(text)],
             as_text: text.to_string(),

@@ -144,6 +144,16 @@ pub struct PreparedBlock {
     pub has_dynamic_content: bool,
 }
 
+impl PreparedBlock {
+    pub fn reference(self, reference: BlockReference) -> PreparedReferencedMarkdown {
+        PreparedReferencedMarkdown {
+            content: self.content,
+            reference,
+        }
+    }
+}
+
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct PreparedBlockContent {
     pub original_text: String,
