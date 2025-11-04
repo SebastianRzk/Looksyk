@@ -3,6 +3,7 @@ use crate::looksyk::model::{
     BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, RawBlock,
     RawMarkdownFile, UpdateMarkdownFile,
 };
+use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
 use std::cmp::max;
 use std::string::ToString;
 
@@ -161,12 +162,34 @@ impl BlockProperties {
     pub fn append(&mut self, other: &mut BlockProperties) {
         self.properties.append(&mut other.properties);
     }
+
+    pub fn copy_and_rename(
+        &self,
+        key: &BlockPropertyKey,
+        old_value: &BlockPropertyValue,
+        new_value: &BlockPropertyValue,
+    ) -> Self {
+        BlockProperties {
+            properties: self
+                .properties
+                .iter()
+                .map(|x| {
+                    if x.key == key.value && x.value == old_value.value {
+                        return BlockProperty {
+                            value: new_value.value.clone(),
+                            key: key.value.clone(),
+                        };
+                    }
+                    x.clone()
+                })
+                .collect(),
+        }
+    }
 }
 
 #[cfg(test)]
 pub mod builder {
     use super::BlockProperty;
-    use crate::looksyk::parser::BlockProperties;
 
     pub fn any_block_property() -> BlockProperty {
         BlockProperty {
@@ -390,10 +413,11 @@ fn remaining_as_text(
 #[cfg(test)]
 mod tests {
     use crate::looksyk::model::BlockTokenType;
-    use crate::looksyk::parser::builder::any_block_property;
+    use crate::looksyk::parser::builder::{any_block_property, block_property};
     use crate::looksyk::parser::{
         parse_text_content, BlockProperties, BlockProperty, ParseTextResult,
     };
+    use crate::state::block_properties::builder::{block_property_key, block_property_value};
 
     fn test_not_properties(result: &ParseTextResult) {
         assert_eq!(result.properties.properties.len(), 0);
@@ -680,5 +704,33 @@ mod tests {
         let prop2 = props1.get(1).unwrap();
         assert_eq!(prop2.key, "key2");
         assert_eq!(prop2.value, "value2");
+    }
+
+    #[test]
+    fn test_copy_and_rename() {
+        let first_property = block_property("key1", "value1");
+        let third_property = block_property("key2", "value3");
+        let properties = BlockProperties {
+            properties: vec![
+                first_property.clone(),
+                block_property("key1", "value2"),
+                third_property.clone(),
+            ],
+        };
+
+        let result = properties.copy_and_rename(
+            &block_property_key("key1"),
+            &block_property_value("value2"),
+            &block_property_value("value4"),
+        );
+
+        assert_eq!(
+            result.properties,
+            vec![
+                first_property,
+                block_property("key1", "value4"),
+                third_property,
+            ]
+        );
     }
 }

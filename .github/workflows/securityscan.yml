@@ -27,7 +27,7 @@ jobs:
       - name: npm install and scan
         run: |
           npm i
-          npm audit --audit-level=moderate
+          npm audit --audit-level=high
         working-directory: ./frontend/looksyk
   application-wrapper-scan:
     name: application-wrapper scan

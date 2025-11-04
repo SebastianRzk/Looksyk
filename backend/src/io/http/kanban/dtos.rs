@@ -28,3 +28,18 @@ pub struct GetKanbanRequestDto {
     pub column_values: Vec<String>,
     pub priority_identifier: String,
 }
+
+#[derive(Deserialize)]
+pub struct MoveKanbanItemRequestDto {
+    pub reference: ReferenceDto,
+    pub key: String,
+    pub from: String,
+    pub to: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ReferenceDto {
+    pub file_id: String,
+    pub block_number: usize,
+}

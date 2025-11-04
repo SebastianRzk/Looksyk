@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { firstValueFrom, map } from "rxjs";
-import { KanbanData, ReferencedBlockContent, Reference, ReferencedBlockContentDto } from "../pages/model";
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {firstValueFrom, map} from "rxjs";
+import {KanbanData, ReferencedBlockContent, Reference, ReferencedBlockContentDto} from "../pages/model";
+import {PageService} from "./page.service";
 
 
 @Injectable({
@@ -10,6 +11,8 @@ import { KanbanData, ReferencedBlockContent, Reference, ReferencedBlockContentDt
 export class KanbanService {
 
   httpClient = inject(HttpClient);
+
+  pageService: PageService = inject(PageService);
 
 
   async loadKanbanData(title: string, tag: string, columnIdentifier: string, columnValues: string[], priorityIdentifier: string): Promise<KanbanData> {
@@ -36,9 +39,12 @@ export class KanbanService {
     return firstValueFrom(
       this.httpClient.post<ReferencedBlockContentDto>("/api/kanban/move_card", moveRequest).pipe(map(
         dto => {
+          this.pageService.somethingHasChanged.next({
+            blockId: reference.fileId + reference.blockNumber
+          })
           return {
             content: dto.content,
-            reference: dto.reference
+            reference: reference
           }
         }
       ))

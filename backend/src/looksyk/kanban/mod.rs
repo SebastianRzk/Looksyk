@@ -100,6 +100,25 @@ fn block_contains_tag(
     false
 }
 
+pub fn move_kanban_card(
+    page: &ParsedMarkdownFile,
+    block_index: usize,
+    key: &BlockPropertyKey,
+    value_old: &BlockPropertyValue,
+    value_new: &BlockPropertyValue,
+) -> ParsedMarkdownFile {
+    let mut result = vec![];
+
+    for (index, block) in page.blocks.iter().enumerate() {
+        if index == block_index {
+            result.push(block.rename_property(key, value_old, value_new));
+        } else {
+            result.push(block.clone());
+        }
+    }
+    ParsedMarkdownFile { blocks: result }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::looksyk::builder::test_builder::{

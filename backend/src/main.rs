@@ -174,6 +174,7 @@ async fn main() -> std::io::Result<()> {
             .service(http::state::endpoints::post_refresh_internal_state)
             .service(help::help)
             .service(kanban::endpoints::get_kanban)
+            .service(kanban::endpoints::move_card)
             .service(block_properties::get_block_properties)
             .service(sync::git::io::git_controller::get_current_git_status)
             .service(sync::git::io::git_controller::update_current_data)

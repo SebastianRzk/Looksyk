@@ -1,4 +1,5 @@
 use crate::looksyk::model::{BlockToken, SimplePageName};
+use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
 
 pub fn render_as_tag(simple_page_name: &SimplePageName) -> String {
     render_as_tag_str(&simple_page_name.name)
@@ -20,10 +21,15 @@ pub fn render_as_query(token: &BlockToken) -> String {
     format!("{{query: {} }}", token.payload)
 }
 
+pub fn render_property(key: &BlockPropertyKey, value: &BlockPropertyValue) -> String {
+    format!("{}:: {}", key.value, value.value)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::looksyk::model::{BlockTokenType, SimplePageName};
+    use crate::state::block_properties::builder::{block_property_key, block_property_value};
 
     #[test]
     fn test_render_as_tag_with_simple_page_name_should_render_tag() {
@@ -77,5 +83,12 @@ mod tests {
         });
 
         assert_eq!(result, "[X]");
+    }
+
+    #[test]
+    fn test_render_property() {
+        let result = render_property(&block_property_key("key1"), &block_property_value("value1"));
+
+        assert_eq!(result, "key1:: value1");
     }
 }

@@ -1,5 +1,7 @@
 use crate::looksyk::parser::BlockProperties;
+use crate::looksyk::syntax::looksyk_markdown::render_property;
 use crate::state::block::BlockReference;
+use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
@@ -39,6 +41,66 @@ impl ParsedBlock {
                 }],
             }],
             properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn rename_property(
+        &self,
+        property_key: &BlockPropertyKey,
+        old_value: &BlockPropertyValue,
+        new_value: &BlockPropertyValue,
+    ) -> ParsedBlock {
+        ParsedBlock {
+            indentation: self.indentation,
+            properties: self
+                .properties
+                .copy_and_rename(property_key, old_value, new_value),
+            content: self
+                .content
+                .iter()
+                .map(|x| {
+                    ParsedBlock::rename_property_in_block_content(
+                        x,
+                        property_key,
+                        old_value,
+                        new_value,
+                    )
+                })
+                .collect(),
+        }
+    }
+
+    fn rename_property_in_block_content(
+        content: &BlockContent,
+        property_key: &BlockPropertyKey,
+        old_value: &BlockPropertyValue,
+        new_value: &BlockPropertyValue,
+    ) -> BlockContent {
+        let mut token = vec![];
+        let mut text = content.as_text.clone();
+
+        let format_with_whitespace = render_property(property_key, old_value);
+
+        for t in content.as_tokens.iter() {
+            if t.block_token_type == BlockTokenType::Property {
+                if t.payload == format_with_whitespace {
+                    let new_property_as_text = render_property(property_key, new_value);
+                    text = text.replace(&format_with_whitespace, &new_property_as_text);
+                    token.push(BlockToken {
+                        payload: new_property_as_text,
+                        block_token_type: BlockTokenType::Property,
+                    });
+                } else {
+                    token.push(t.clone());
+                }
+            } else {
+                token.push(t.clone());
+            }
+        }
+
+        BlockContent {
+            as_tokens: token,
+            as_text: text,
         }
     }
 
@@ -323,7 +385,7 @@ impl PartialOrd<Self> for PageId {
 }
 
 impl Ord for PageId {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.name.name.cmp(&other.name.name)
     }
 }
@@ -333,7 +395,9 @@ mod tests {
     use crate::looksyk::builder::page_name_str;
     use crate::looksyk::builder::test_builder::user_page_id;
     use crate::looksyk::model::builder::{block_with_link_content, block_with_text_content};
-    use crate::looksyk::model::{PageId, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::parser::parse_text_content;
+    use crate::state::block_properties::builder::{block_property_key, block_property_value};
 
     #[test]
     fn test_journal_page_id_should_be_a_journal_page() {
@@ -424,5 +488,28 @@ mod tests {
     #[test]
     fn test_empty_should_return_empty() {
         assert_eq!(ParsedMarkdownFile::empty().blocks.len(), 0);
+    }
+
+    #[test]
+    fn test_rename_property_in_block_content_should_rename() {
+        let input_text = "asdf key:: value wqert".to_string();
+        let expected_text = "asdf key:: value2 wqert".to_string();
+        let block_content = BlockContent {
+            as_tokens: parse_text_content(&input_text).tokens,
+            as_text: input_text,
+        };
+
+        let result = ParsedBlock::rename_property_in_block_content(
+            &block_content,
+            &block_property_key("key"),
+            &block_property_value("value"),
+            &block_property_value("value2"),
+        );
+
+        assert_eq!(&result.as_text, &expected_text);
+        assert_eq!(
+            &result.as_tokens,
+            &parse_text_content(&expected_text).tokens
+        )
     }
 }
