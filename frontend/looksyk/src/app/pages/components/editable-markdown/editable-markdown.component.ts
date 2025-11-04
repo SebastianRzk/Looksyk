@@ -9,7 +9,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Block, RefecencedBlockContent } from "../../model";
+import { Block, ReferencedBlockContent } from "../../model";
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, Subject } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -91,7 +91,7 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
   renderedMarkdown: Subject<SafeHtml> = new BehaviorSubject<SafeHtml>(this.markdownService.EMPTY_MARKDOWN);
   renderedMarkdown$: Observable<SafeHtml> = this.renderedMarkdown.asObservable();
 
-  referencedMarkdown: Subject<RefecencedBlockContent[]> = new BehaviorSubject<RefecencedBlockContent[]>([]);
+  referencedMarkdown: Subject<ReferencedBlockContent[]> = new BehaviorSubject<ReferencedBlockContent[]>([]);
   referencedMarkdown$ = this.referencedMarkdown.asObservable();
 
   editText: Subject<string> = new BehaviorSubject("");

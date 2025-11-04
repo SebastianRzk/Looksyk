@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { RefecencedBlockContent } from "../../model";
+import { ReferencedBlockContent } from "../../model";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -40,7 +40,7 @@ export class KanbanCardComponent implements OnChanges, OnDestroy {
   }
 
   @Input({required: true})
-  markdown!: RefecencedBlockContent;
+  markdown!: ReferencedBlockContent;
 
   @ViewChild("markdownComponent")
   markdownRef!: ElementRef;
@@ -58,7 +58,7 @@ export class KanbanCardComponent implements OnChanges, OnDestroy {
     this.renderedMarkdown_.unsubscribe();
   }
 
-  private updateContent(newBlockInfo: RefecencedBlockContent) {
+  private updateContent(newBlockInfo: ReferencedBlockContent) {
     this.renderedMarkdown.next(this.markdownService.renderMarkdown(newBlockInfo.content.preparedMarkdown));
   }
 }

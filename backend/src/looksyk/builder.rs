@@ -5,8 +5,9 @@ pub mod test_builder {
     use crate::looksyk::builder::{page_name_str, text_token_str};
     use crate::looksyk::datatypes::AssetDescriptor;
     use crate::looksyk::model::{
-        BlockContent, BlockToken, BlockTokenType, PageId, ParsedMarkdownFile,
+        BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
+    use crate::looksyk::parser::{BlockProperties, BlockProperty};
     use crate::state::application_state::GraphRootLocation;
     use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
@@ -118,6 +119,20 @@ pub mod test_builder {
             .unwrap()
             .payload
             .clone()
+    }
+
+    pub fn parsed_block_with(
+        token: Vec<BlockToken>,
+        properties: Vec<BlockProperty>,
+    ) -> ParsedBlock {
+        ParsedBlock {
+            content: vec![BlockContent {
+                as_tokens: token,
+                as_text: "".to_string(),
+            }],
+            indentation: 0,
+            properties: BlockProperties { properties },
+        }
     }
 }
 

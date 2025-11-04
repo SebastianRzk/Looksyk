@@ -175,10 +175,6 @@ pub mod builder {
         }
     }
 
-    pub fn block_properties_from(properties: Vec<BlockProperty>) -> BlockProperties {
-        BlockProperties { properties }
-    }
-
     pub fn block_property(key: &str, value: &str) -> BlockProperty {
         BlockProperty {
             key: key.to_string(),

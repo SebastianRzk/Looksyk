@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { RefecencedBlockContent } from "../../model";
+import { ReferencedBlockContent } from "../../model";
 import * as marked from 'marked';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -54,7 +54,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   }
 
   @Input({required: true})
-  markdown!: RefecencedBlockContent;
+  markdown!: ReferencedBlockContent;
 
   @Input({required: true})
   parentId!: string;
@@ -77,7 +77,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
-  private updateContent(newBlockInfo: RefecencedBlockContent) {
+  private updateContent(newBlockInfo: ReferencedBlockContent) {
     if (isTodoTodoBlock(newBlockInfo.content.preparedMarkdown)) {
       this.todo.next(TODO_TODO);
       newBlockInfo.content.preparedMarkdown = chopTodo(newBlockInfo.content.preparedMarkdown)

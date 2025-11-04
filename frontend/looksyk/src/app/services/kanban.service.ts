@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { firstValueFrom } from "rxjs";
-import { KanbanData } from "../pages/model";
+import { firstValueFrom, map } from "rxjs";
+import { KanbanData, ReferencedBlockContent, Reference, ReferencedBlockContentDto } from "../pages/model";
 
 
 @Injectable({
@@ -12,7 +12,7 @@ export class KanbanService {
   httpClient = inject(HttpClient);
 
 
-  async load_kanban_data(title: string, tag: string, columnIdentifier: string, columnValues: string[], priorityIdentifier: string): Promise<KanbanData> {
+  async loadKanbanData(title: string, tag: string, columnIdentifier: string, columnValues: string[], priorityIdentifier: string): Promise<KanbanData> {
     const body: GetKanbanRequestDto = {
       title,
       tag,
@@ -25,6 +25,25 @@ export class KanbanService {
     )
   }
 
+  async moveKanbanItem(reference: Reference, key: string, from: string, to: string): Promise<ReferencedBlockContent> {
+    const moveRequest: MoveKanbanItemRequestDto = {
+      reference,
+      key,
+      from,
+      to
+    };
+
+    return firstValueFrom(
+      this.httpClient.post<ReferencedBlockContentDto>("/api/kanban/move_card", moveRequest).pipe(map(
+        dto => {
+          return {
+            content: dto.content,
+            reference: dto.reference
+          }
+        }
+      ))
+    )
+  }
 }
 
 interface GetKanbanRequestDto {
@@ -33,4 +52,12 @@ interface GetKanbanRequestDto {
   columnIdentifier: string,
   columnValues: string[],
   priorityIdentifier: string,
+}
+
+
+interface MoveKanbanItemRequestDto {
+  reference: Reference,
+  key: string,
+  from: string,
+  to: string,
 }

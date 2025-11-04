@@ -32,7 +32,7 @@
         <mat-form-field>
           <mat-label>Page property key</mat-label>
           <mat-select formControlName="columnIdentifier">
-            @for (col of (columnIdentifierValues | async); track col) {
+            @for (col of (blockProperties$ | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
             }
           </mat-select>
@@ -52,13 +52,20 @@
         <mat-form-field>
           <mat-label>Page property key</mat-label>
           <mat-select formControlName="priorityIdentifier">
-            @for (prio of priorityIdentifiers; track prio) {
+            @for (prio of (blockProperties$| async); track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
       </div>
     </form>
+    <div>
+      <h3>Generated Query</h3>
+      &#123;query: kanban title:"{{formGroup.get("title")?.value}}" tag:"{{formGroup.get("tag")?.value}}"  columnKey:"{{formGroup.get("columnIdentifier")?.value}}" columnValues:"{{formGroup.get("columnValues")?.value}}" priorityKey:"{{formGroup.get("priorityIdentifier")?.value}}" &#125;
+      <code>
+      </code>
+    </div>
+
   </mat-expansion-panel>
 </mat-accordion>
 

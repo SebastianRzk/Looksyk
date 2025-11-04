@@ -12,6 +12,7 @@
           [cdkDropListData]="list.items"
           class="kanban-list"
           cdkDropListSortingDisabled
+          id="{{list.title}}"
           (cdkDropListDropped)="drop($event)">
           @for (item of list.items; track item.block.reference.fileId) {
             <div cdkDrag>

@@ -30,10 +30,12 @@ pub struct KanbanItem {
     pub priority: KanbanItemPriority,
 }
 
+#[derive(PartialEq, Eq, Debug)]
 pub struct KanbanTitle {
     pub title: String,
 }
 
+#[derive(PartialEq, Eq, Debug)]
 pub struct KanbanListTitle {
     pub title: String,
 }
@@ -44,10 +46,16 @@ pub struct KanbanItemPriority {
 
 #[cfg(test)]
 pub mod builder {
-    use super::KanbanTitle;
+    use super::{KanbanListTitle, KanbanTitle};
 
     pub fn kanban_title(title: &str) -> KanbanTitle {
         KanbanTitle {
+            title: title.to_string(),
+        }
+    }
+
+    pub fn kanban_list_title(title: &str) -> KanbanListTitle {
+        KanbanListTitle {
             title: title.to_string(),
         }
     }

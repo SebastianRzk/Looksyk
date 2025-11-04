@@ -1,3 +1,4 @@
+pub mod block_properties;
 pub mod design;
 pub mod favourites;
 pub(crate) mod help;

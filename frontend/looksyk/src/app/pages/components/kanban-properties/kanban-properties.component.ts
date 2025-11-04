@@ -8,15 +8,15 @@ import {
   Output,
   signal
 } from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {NonNullableFormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatIconModule} from "@angular/material/icon";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatSelect} from "@angular/material/select";
-import {MatOption} from "@angular/material/core";
-import {MatInput} from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { NonNullableFormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatSelect } from "@angular/material/select";
+import { MatOption } from "@angular/material/core";
+import { MatInput } from "@angular/material/input";
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -24,9 +24,9 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
-import {MetaInformation, MetaInfoService} from "../../../services/meta-info.service";
-import {AsyncPipe} from "@angular/common";
-import {map} from "rxjs";
+import { MetaInfoService } from "../../../services/meta-info.service";
+import { AsyncPipe } from "@angular/common";
+import { BlockPropertiesService } from "../../../services/block-properties.service";
 
 @Component({
   selector: 'app-kanban-properties',
@@ -39,16 +39,12 @@ export class KanbanPropertiesComponent implements OnDestroy {
 
 
   tags = inject(MetaInfoService).currentmetaInfo$;
-  columnIdentifierValues = inject(MetaInfoService).currentmetaInfo$.pipe(map((x: MetaInformation) => x.tags));
-  priorityIdentifiers = ["Low", "Medium", "High"];
 
   readonly panelOpenState = signal(false);
 
   formBuilder = inject(NonNullableFormBuilder);
 
-  @Output()
-  readonly formChanged: EventEmitter<KanbanProperties> = new EventEmitter<KanbanProperties>()
-
+  blockProperties$ = inject(BlockPropertiesService).load_block_properties();
 
   formGroup = this.formBuilder.group({
     title: this.formBuilder.control(''),
@@ -74,6 +70,12 @@ export class KanbanPropertiesComponent implements OnDestroy {
       priorityIdentifier: value.priorityIdentifier,
     });
   }
+
+
+
+  @Output()
+  readonly formChanged: EventEmitter<KanbanProperties> = new EventEmitter<KanbanProperties>()
+
 
   subscription = this.formGroup.valueChanges.subscribe(value => {
     const formData: KanbanProperties = {...value as KanbanProperties};

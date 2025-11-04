@@ -12,7 +12,7 @@ export interface Reference {
   blockNumber: number
 }
 
-export interface RefecencedBlockContent {
+export interface ReferencedBlockContent {
   content: BlockContent,
   reference: Reference
 }
@@ -23,7 +23,7 @@ export class Block {
   public indentation$: Observable<number>;
 
   constructor(public content: BlockContent,
-              public referencedContent: RefecencedBlockContent[],
+              public referencedContent: ReferencedBlockContent[],
               public hasDynamicContent: boolean,
               indentation: Subject<number>,
               public indentification: string) {
@@ -49,7 +49,7 @@ export interface BlockDto {
   hasDynamicContent: boolean;
   content: BlockContentDto;
   indentation: number;
-  referencedContent: RefecencedBlockContentDto[]
+  referencedContent: ReferencedBlockContentDto[]
 }
 
 export interface ReferenceDto {
@@ -57,7 +57,7 @@ export interface ReferenceDto {
   blockNumber: number
 }
 
-export interface RefecencedBlockContentDto {
+export interface ReferencedBlockContentDto {
   content: BlockContent,
   reference: Reference
 }
@@ -114,6 +114,6 @@ export interface KanbanList {
 }
 
 export interface KanbanItem {
-  block: RefecencedBlockContent
+  block: ReferencedBlockContent
   priority: string
 }

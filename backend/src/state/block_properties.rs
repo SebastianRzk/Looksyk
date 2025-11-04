@@ -23,6 +23,10 @@ pub struct BlockPropertyValue {
 }
 
 impl BlockPropertiesIndex {
+    pub fn get_all_keys(&self) -> Vec<BlockPropertyKey> {
+        self.entries.keys().cloned().collect()
+    }
+
     pub fn append_elements(&mut self, block_reference: BlockReference, property: BlockProperty) {
         let key = BlockPropertyKey {
             value: property.key,
@@ -77,13 +81,22 @@ pub mod builder {
             value: value.to_string(),
         }
     }
+
+    pub fn block_properties_index_with(
+        key: BlockPropertyKey,
+        occurences: Vec<BlockPropertyOccurence>,
+    ) -> super::BlockPropertiesIndex {
+        super::BlockPropertiesIndex {
+            entries: vec![(key, occurences)].into_iter().collect(),
+        }
+    }
 }
 
 #[cfg(test)]
 pub mod tests {
     use super::BlockPropertyKey;
     use crate::looksyk::builder::test_builder::user_page_id;
-    use crate::state::block_properties::builder::block_property_value;
+    use crate::state::block_properties::builder::{block_property_key, block_property_value};
 
     #[test]
     fn test_append_elements() {
@@ -133,5 +146,21 @@ pub mod tests {
                 .value,
             block_property_value("open")
         );
+    }
+
+    #[test]
+    fn test_get_all_keys() {
+        let mut index = super::BlockPropertiesIndex {
+            entries: std::collections::HashMap::new(),
+        };
+
+        index.entries.insert(block_property_key("priority"), vec![]);
+
+        index.entries.insert(block_property_key("status"), vec![]);
+
+        let keys = index.get_all_keys();
+        assert_eq!(keys.len(), 2);
+        assert!(keys.contains(&block_property_key("priority")));
+        assert!(keys.contains(&block_property_key("status")));
     }
 }
