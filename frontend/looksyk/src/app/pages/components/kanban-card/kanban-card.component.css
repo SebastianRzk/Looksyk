@@ -19,8 +19,3 @@
   display: flex;
   flex-direction: column;
 }
-
-.reference {
-  font-size: x-small;
-  color: var(--primary-color);
-}

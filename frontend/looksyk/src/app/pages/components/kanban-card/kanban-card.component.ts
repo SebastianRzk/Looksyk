@@ -20,10 +20,11 @@ import { MarkdownService } from "../../../services/markdown.service";
 import { AsyncPipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { SafeHtml } from "@angular/platform-browser";
+import { MarkdownReferenceComponent } from "../markdown-reference/markdown-reference.component";
 
 @Component({
   selector: 'app-kanban-card',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, AsyncPipe],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, AsyncPipe, MarkdownReferenceComponent],
   templateUrl: './kanban-card.component.html',
   styleUrls: ['./kanban-card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

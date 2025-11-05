@@ -12,3 +12,24 @@
   min-width: 30ex;
   min-height: 90vh;
 }
+
+.kanban-column-content {
+  display: flex;
+  flex-direction: column;
+  padding: 2ex;
+}
+
+.kanban-column-title {
+  margin: 1ex;
+}
+
+app-kanban-properties {
+  margin: 3ex;
+}
+
+
+.kanban-column {
+  display: flex;
+  flex-direction: row;
+  color: var(--primary-color);
+}

@@ -1,15 +1,5 @@
 <div class="header">
-  @if (sidenav.opened$ | async; ) {
-    <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.close()">left_panel_close
-      </mat-icon>
-    </h1>
-  } @else {
-    <h1>
-      <mat-icon class="menu-toggle material-symbols-outlined pointer" (click)="sidenav.open()">left_panel_open
-      </mat-icon>
-    </h1>
-  }
+  <app-sidebar-toggle></app-sidebar-toggle>
   <h1>{{ pageName$ | async }} </h1>
   <h1>
     <mat-icon (click)="download()" class="pointer download-button">download</mat-icon>

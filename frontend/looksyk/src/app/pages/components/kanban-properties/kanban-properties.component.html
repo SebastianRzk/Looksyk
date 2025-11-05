@@ -1,11 +1,10 @@
 <mat-accordion>
   <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
     <mat-expansion-panel-header>
-      <mat-panel-title>configure Kanban</mat-panel-title>
+      <mat-panel-title>Configure Kanban-Board</mat-panel-title>
       <mat-panel-description>
       </mat-panel-description>
     </mat-expansion-panel-header>
-
     <form [formGroup]="formGroup">
       <div>
         <div class="description">Title of the kanban</div>
@@ -15,7 +14,9 @@
         </mat-form-field>
       </div>
       <div>
-        <div class="description">Tag to identify what blocks to include</div>
+        <div class="description">Tag to identify what blocks to include. All tags that are in the current graph can be
+          used.
+        </div>
         <mat-form-field>
           <mat-label>Tag</mat-label>
           <mat-select formControlName="tag">
@@ -23,23 +24,29 @@
               @for (tag of tags.tags; track tag) {
                 <mat-option [value]="tag">{{ tag }}</mat-option>
               }
+              <mat-option value="kanban">kanban (fallback)</mat-option>
+
             }
           </mat-select>
         </mat-form-field>
       </div>
       <div>
-        <div class="description">Page property key for column identification</div>
+        <div class="description">Page property key for column identification. All property-keys that are in the current
+          graph can be used.
+        </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
           <mat-select formControlName="columnIdentifier">
             @for (col of (blockProperties$ | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
             }
+            <mat-option [value]="'state'">state (fallback)</mat-option>
+
           </mat-select>
         </mat-form-field>
       </div>
       <div>
-        <div class="description">Page property keys for column identification (comma seperated list)</div>
+        <div class="description">Page property keys for column association (comma seperated list)</div>
         <mat-form-field>
           <mat-label>Page propety values</mat-label>
           <input matInput formControlName="columnValues"/>
@@ -55,15 +62,26 @@
             @for (prio of (blockProperties$| async); track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
             }
+            <mat-option [value]="'priority'">priority (fallback)</mat-option>
+
           </mat-select>
         </mat-form-field>
       </div>
     </form>
     <div>
       <h3>Generated Query</h3>
-      &#123;query: kanban title:"{{formGroup.get("title")?.value}}" tag:"{{formGroup.get("tag")?.value}}"  columnKey:"{{formGroup.get("columnIdentifier")?.value}}" columnValues:"{{formGroup.get("columnValues")?.value}}" priorityKey:"{{formGroup.get("priorityIdentifier")?.value}}" &#125;
       <code>
+        &#123;query: kanban title:"{{ formGroup.get("title")?.value }}" tag:"{{ formGroup.get("tag")?.value }}"
+        columnKey:"{{ formGroup.get("columnIdentifier")?.value }}"
+        columnValues:"{{ formGroup.get("columnValues")?.value }}"
+        priorityKey:"{{ formGroup.get("priorityIdentifier")?.value }}" &#125;
       </code>
+      <h3>Usage</h3>
+      To use the kanban, insert the tag <code>[[{{ formGroup.get("tag")?.value }}]]</code> in the blocks you want to
+      include
+      in the kanban. Also, set the page properties <code>{{ formGroup.get("columnIdentifier")?.value }}:: </code> (and
+      optional
+      <code>{{ formGroup.get("priorityIdentifier")?.value }}:: </code>) accordingly.
     </div>
 
   </mat-expansion-panel>

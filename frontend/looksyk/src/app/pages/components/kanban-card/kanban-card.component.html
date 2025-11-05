@@ -2,5 +2,5 @@
   <div class="full-width">
     <div [innerHTML]="renderedMarkdown$ | async" class="markdown" #markdownComponent></div>
   </div>
-  <div class="reference">Source: {{markdown.reference.fileName}}::{{markdown.reference.blockNumber}}</div>
+  <app-markdown-reference [reference]="markdown.reference"></app-markdown-reference>
 </div>

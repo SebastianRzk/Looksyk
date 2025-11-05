@@ -11,6 +11,8 @@ import { AsyncPipe } from "@angular/common";
 import { Observable, Subject } from "rxjs";
 import { KanbanService } from "../../services/kanban.service";
 import { ActivatedRoute } from "@angular/router";
+import { DefaultHeaderComponent } from "../components/default-header/default-header.component";
+import { MatDivider } from "@angular/material/divider";
 
 @Component({
   selector: 'app-kanban-page',
@@ -20,7 +22,9 @@ import { ActivatedRoute } from "@angular/router";
     CdkDrag,
     KanbanCardComponent,
     KanbanPropertiesComponent,
-    AsyncPipe
+    AsyncPipe,
+    DefaultHeaderComponent,
+    MatDivider
   ],
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.css'],
