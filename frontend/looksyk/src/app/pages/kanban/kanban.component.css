@@ -33,3 +33,7 @@ app-kanban-properties {
   flex-direction: row;
   color: var(--primary-color);
 }
+
+app-kanban-card {
+  color: var(--foreground-color);
+}
