@@ -353,6 +353,7 @@ pub fn parse_text_content(text_content: &str) -> ParseTextResult {
                         });
                         current_matcher = None;
                         end_matching_index = current_index - PROPERTY_END.len();
+                        last_matching_word_start = current_index;
                         link_matcher = create_inactive_matcher_state();
                         query_matcher = create_inactive_matcher_state();
                         property_matcher = create_inactive_matcher_state();
@@ -613,6 +614,20 @@ mod tests {
         let element = result.tokens.get(2).unwrap();
         assert_eq!(element.payload, " with property");
         assert_eq!(element.block_token_type, BlockTokenType::Text);
+    }
+
+    #[test]
+    fn should_parse_property_next_to_each_other() {
+        let input_text = "key:: value key2:: value2".to_string();
+        let result = parse_text_content(&input_text);
+
+        assert_eq!(result.properties.len(), 2);
+        let property1 = result.properties.get(0).unwrap();
+        assert_eq!(property1.key, "key");
+        assert_eq!(property1.value, "value");
+        let property2 = result.properties.get(1).unwrap();
+        assert_eq!(property2.key, "key2");
+        assert_eq!(property2.value, "value2");
     }
 
     #[test]
