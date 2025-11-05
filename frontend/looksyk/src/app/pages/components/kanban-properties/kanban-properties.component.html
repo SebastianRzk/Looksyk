@@ -1,7 +1,7 @@
 <mat-accordion>
   <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
     <mat-expansion-panel-header>
-      <mat-panel-title>Configure Kanban-Board</mat-panel-title>
+      <mat-panel-title>Configure Board</mat-panel-title>
       <mat-panel-description>
       </mat-panel-description>
     </mat-expansion-panel-header>
@@ -36,11 +36,11 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <mat-select formControlName="columnIdentifier">
+          <mat-select formControlName="columnKey">
             @for (col of (blockProperties$ | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
             }
-            <mat-option [value]="'state'">state (fallback)</mat-option>
+            <mat-option value="state">state (fallback)</mat-option>
 
           </mat-select>
         </mat-form-field>
@@ -58,7 +58,7 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <mat-select formControlName="priorityIdentifier">
+          <mat-select formControlName="priorityKey">
             @for (prio of (blockProperties$| async); track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
             }
@@ -71,10 +71,12 @@
     <div>
       <h3>Generated Query</h3>
       <code>
-        &#123;query: kanban title:"{{ formGroup.get("title")?.value }}" tag:"{{ formGroup.get("tag")?.value }}"
-        columnKey:"{{ formGroup.get("columnIdentifier")?.value }}"
+        &#123;query: board title:"{{ formGroup.get("title")?.value }}" tag:"{{ formGroup.get("tag")?.value }}"
+        columnKey:"{{ formGroup.get("columnKey")?.value }}"
         columnValues:"{{ formGroup.get("columnValues")?.value }}"
-        priorityKey:"{{ formGroup.get("priorityIdentifier")?.value }}" &#125;
+        priorityKey:"{{ formGroup.get("priorityKey")?.value }}"
+        display:"link"
+        &#125;
       </code>
       <h3>Usage</h3>
       To use the kanban, insert the tag <code>[[{{ formGroup.get("tag")?.value }}]]</code> in the blocks you want to

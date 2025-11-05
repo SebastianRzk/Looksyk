@@ -47,11 +47,11 @@ export class KanbanPropertiesComponent implements OnDestroy {
   blockProperties$ = inject(BlockPropertiesService).load_block_properties();
 
   formGroup = this.formBuilder.group({
-    title: this.formBuilder.control(''),
-    tag: this.formBuilder.control(''),
-    columnIdentifier: this.formBuilder.control(''),
-    columnValues: this.formBuilder.control([""]),
-    priorityIdentifier: this.formBuilder.control(''),
+    title: this.formBuilder.control('My first kanban board'),
+    tag: this.formBuilder.control('kanban'),
+    columnKey: this.formBuilder.control('state'),
+    columnValues: this.formBuilder.control(["TODO", "DOING", "DONE"]),
+    priorityKey: this.formBuilder.control('priority'),
   });
 
   @Input({
@@ -65,9 +65,9 @@ export class KanbanPropertiesComponent implements OnDestroy {
     this.formGroup.setValue({
       title: value.title,
       tag: value.tag,
-      columnIdentifier: value.columnIdentifier,
+      columnKey: value.columnKey,
       columnValues: value.columnValues,
-      priorityIdentifier: value.priorityIdentifier,
+      priorityKey: value.priorityKey,
     });
   }
 
@@ -92,16 +92,16 @@ export class KanbanPropertiesComponent implements OnDestroy {
 export interface KanbanProperties {
   title: string,
   tag: string,
-  columnIdentifier: string,
+  columnKey: string,
   columnValues: string[],
-  priorityIdentifier: string,
+  priorityKey: string,
 }
 
 export const INITIAL_KANBAN_PROPERTIES: KanbanProperties = {
   title: "My first Kanban",
   tag: "kanban",
-  priorityIdentifier: "priority",
-  columnIdentifier: "state",
+  priorityKey: "priority",
+  columnKey: "state",
   columnValues: ["TODO", "DOING", "DONE"]
 }
 

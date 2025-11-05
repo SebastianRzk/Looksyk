@@ -9,6 +9,7 @@ use crate::looksyk::queries::insert_file_content::{
     parse_query_insert_file_content, render_query_insert_file_content,
     QUERY_NAME_INSERT_FILE_CONTENT,
 };
+use crate::looksyk::queries::kanban::{parse_query_board, render_board_query, QUERY_NAME_BOARD};
 use crate::looksyk::queries::pagehierarchy::{
     parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY,
 };
@@ -61,6 +62,8 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
         return parse_query_blocks(query_str);
     } else if query_str.starts_with(QUERY_NAME_TODO_PROGRESS) {
         return parse_query_todo_progress(query_str);
+    } else if query_str.starts_with(QUERY_NAME_BOARD) {
+        return parse_query_board(query_str);
     }
     Ok(Query {
         query_type: QueryType::Unknown,
@@ -89,6 +92,7 @@ pub fn render_parsed_query(
             render_context.journal_pages,
         ),
         QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
+        QueryType::Board => render_board_query(query),
         QueryType::Unknown => QueryRenderResult {
             inplace_markdown: format!(
                 "Query type unknown. Allowed types: {}",
@@ -114,6 +118,7 @@ pub enum QueryType {
     TodoProgress,
     Blocks,
     InsertFileContent,
+    Board,
     Unknown,
 }
 

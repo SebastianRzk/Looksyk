@@ -64,9 +64,9 @@ export class KanbanComponent {
       this.kanbanService.loadKanbanData(
         filter.title,
         filter.tag,
-        filter.columnIdentifier,
+        filter.columnKey,
         filter.columnValues,
-        filter.priorityIdentifier
+        filter.priorityKey
       ).then(data => {
         this.kanbanData.next(data)
       })
@@ -94,7 +94,7 @@ export class KanbanComponent {
     const kanbanItem : KanbanItem= event.previousContainer.data[event.previousIndex];
     kanbanItem.block = await this.kanbanService.moveKanbanItem(
       kanbanItem.block.reference,
-      this.filter().columnIdentifier,
+      this.filter().columnKey,
       containerNameFrom,
       containerNameTo
     );
