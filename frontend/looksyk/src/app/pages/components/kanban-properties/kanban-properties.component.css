@@ -1,0 +1,26 @@
+.markdown {
+  padding-left: 1ex;
+  min-height: 3ex;
+  scroll-margin-block-start: 3ex;
+  scroll-margin-top: 3ex;
+}
+
+.markdown-block {
+  display: flex;
+  flex-direction: row;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+.kanban-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.reference {
+  font-size: x-small;
+  color: var(--primary-color);
+}

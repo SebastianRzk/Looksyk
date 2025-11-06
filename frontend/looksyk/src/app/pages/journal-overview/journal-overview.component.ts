@@ -1,14 +1,14 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
-import {PageService} from "../../services/page.service";
-import {Observable} from "rxjs";
-import {MarkdownPage} from "../model";
-import {AsyncPipe} from "@angular/common";
-import {TitleService} from "../../services/title.service";
-import {DisplayPageComponent} from "../components/display-markdown-page/display-page.component";
-import {MatDivider} from "@angular/material/divider";
-import {RouterLink} from "@angular/router";
-import {MatIcon} from "@angular/material/icon";
-import {SidenavService} from "../../services/sidenav.service";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { PageService } from "../../services/page.service";
+import { Observable } from "rxjs";
+import { MarkdownPage } from "../model";
+import { AsyncPipe } from "@angular/common";
+import { TitleService } from "../../services/title.service";
+import { DisplayPageComponent } from "../components/display-markdown-page/display-page.component";
+import { MatDivider } from "@angular/material/divider";
+import { RouterLink } from "@angular/router";
+import { MatIcon } from "@angular/material/icon";
+import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
 
 @Component({
     selector: 'app-journal-single-entry',
@@ -17,7 +17,8 @@ import {SidenavService} from "../../services/sidenav.service";
     DisplayPageComponent,
     MatDivider,
     MatIcon,
-    RouterLink
+    RouterLink,
+    SidebarToggleComponent
   ],
     templateUrl: './journal-overview.component.html',
     styleUrl: './journal-overview.component.css',
@@ -26,7 +27,6 @@ import {SidenavService} from "../../services/sidenav.service";
 export class JournalOverviewComponent implements OnInit{
 
   private pageSerivce: PageService = inject(PageService);
-  sidenav = inject(SidenavService);
   public page: Observable<MarkdownPage> = this.pageSerivce.getBuildInPage("journal-overview");
   private titleService = inject(TitleService);
 

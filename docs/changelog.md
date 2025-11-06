@@ -2,7 +2,22 @@
 layout: base.njk
 title: Changelog
 ---
+
 # Changelog
+
+### v1.17.0 (2025-11-06)
+
+Enhancements:
+
+* Add Boards 🎉
+* Add block properties (currently only used for boards, and highlighted in the markdown)
+* Internal refactoring of backend and frontend. Homogenization of the rendering of the built-in pages. Improves
+  load-time of built-in pages (slightly).
+* Add performance test for Markdown parser to track performance changes over time
+
+Bugfixes:
+
+* After a partial render update, the block is displayed in the same way as if the entire page were re-rendered.
 
 ### v1.16.2 (2025-10-08)
 
@@ -46,10 +61,12 @@ Bugfixes:
 Enhancements:
 
 * Change default graph location according to XDG base directory specification or `Documents/graphs` when xdg not set
-* Change default config location according to XDG base directory specification or `~/.config/looksyk/config.json` when xdg not set
+* Change default config location according to XDG base directory specification or `~/.config/looksyk/config.json` when
+  xdg not set
 * Update dependencies of backend, frontend and application-wrapper
 
 Fixes:
+
 * De-duplicate history entries in sidebar again
 * Fix journal titles in loading state to show Loading... instead of undefined
 
@@ -58,7 +75,6 @@ Fixes:
 Enhancements:
 
 * Add version in metadata
-
 
 ### v1.14.1 (2025-09-03)
 
@@ -78,7 +94,7 @@ Enhancements:
 Fixes:
 
 * Frontend-State gets refreshed on rename-page aswell as delete-page
-* Fix Frontend-Caching in Electron Clients 
+* Fix Frontend-Caching in Electron Clients
 
 ### v1.13.5 (2025-08-03)
 
@@ -113,13 +129,11 @@ Bugfixes:
 
 * Skip folders an non-markdown files in `journal` and `pages` folder.
 
-
 ### v1.13.0 (2025-07-08)
 
 Enhancements:
 
 * Add settings page
-
 
 ### v1.12.0 (2025-07-06)
 
@@ -130,7 +144,6 @@ Enhancements:
 * Add help page
 * Change markdown rendering to allow html in markdown (allows custom styling)
 * Improve overall design of the application
-
 
 ### v1.11.3 (2025-07-02)
 
@@ -208,7 +221,6 @@ Enhancements:
 * Refactor content assist / search UI / UX, thanks to @mschmidtkorth
 * Add keyboard shortcuts for MacOS/Arc
 
-
 ### v1.9.0 (2025-06-15)
 
 Enhancements:
@@ -218,7 +230,6 @@ Enhancements:
 * Fix pages without blocks (not possible anymore, treated as empty page)
 * Improve backlink formatting for journal backlinks
 * Improve design of backlinks
-
 
 ### v1.8.0 (2025-06-12)
 
@@ -246,7 +257,7 @@ Enhancements:
 * Enhance documentation with more example screenshots
 * Change "rename page" dialog to pop-up dialog
 
-###  v1.5.6 (2025-06-01)
+### v1.5.6 (2025-06-01)
 
 Enhancements:
 
@@ -262,7 +273,6 @@ Enhancements:
 * Update page title
 
 ### v1.5.4 (2025-05-27)
-
 
 Enhancements:
 
@@ -306,8 +316,6 @@ Bugfixes:
 
 * fix font loading
 
-
-
 ### v1.4.6 (2025-03-08)
 
 Enhancements:
@@ -345,7 +353,6 @@ Internal:
 
 * Prepare pkgbuild
 
-
 ### v1.4.1. (2025-03-01)
 
 Enhancements:
@@ -366,7 +373,6 @@ Enhancements:
 * Insert filename in content assist input on select file
 
 Bugfixes:
-
 
 ### v1.3.4 (2025-02-12)
 
@@ -409,7 +415,6 @@ Enhancements:
 * Add trigger to hide / show menu bar
 * Improve performance of content-assist filtering
 
-
 Bugfixes:
 
 * Change sidebar to global sidenav
@@ -425,7 +430,6 @@ Enhancements:
 Bugfixes:
 
 * Fix horizontal scrolling in journal view
-
 
 ### v1.2.0 (2025-01-21)
 
@@ -452,7 +456,7 @@ Enhancements:
 Bugfixes:
 
 * Names of file upload files get sanitized
-* Disable rich-text editor when copy/paste 
+* Disable rich-text editor when copy/paste
 
 ### v1.0.2 (2025-01-15)
 

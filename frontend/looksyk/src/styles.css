@@ -210,3 +210,10 @@ progress {
   color: var(--foreground-color);
   text-decoration: none;
 }
+
+
+.inline-property {
+  font-size: smaller;
+  margin-left: 1ex;
+  margin-right: 1ex;
+}

@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { RefecencedBlockContent } from "../../model";
+import { ReferencedBlockContent } from "../../model";
 import * as marked from 'marked';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -18,14 +18,15 @@ import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { PageService } from "../../../services/page.service";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { chopTodo, computeNewTodoState, isTodoDoneBlock, isTodoTodoBlock, Todo, TODO_DONE, TODO_TODO } from "../todo";
 import { MarkdownService } from "../../../services/markdown.service";
 import { AsyncPipe } from "@angular/common";
+import { MarkdownReferenceComponent } from "../markdown-reference/markdown-reference.component";
 
 @Component({
   selector: 'app-referenced-markdown',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, RouterLink, AsyncPipe],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, AsyncPipe, MarkdownReferenceComponent],
   templateUrl: './referenced-markdown.component.html',
   styleUrls: ['./referenced-markdown.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,7 +55,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
   }
 
   @Input({required: true})
-  markdown!: RefecencedBlockContent;
+  markdown!: ReferencedBlockContent;
 
   @Input({required: true})
   parentId!: string;
@@ -77,7 +78,7 @@ export class ReferencedMarkdownComponent implements OnChanges, OnDestroy {
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
-  private updateContent(newBlockInfo: RefecencedBlockContent) {
+  private updateContent(newBlockInfo: ReferencedBlockContent) {
     if (isTodoTodoBlock(newBlockInfo.content.preparedMarkdown)) {
       this.todo.next(TODO_TODO);
       newBlockInfo.content.preparedMarkdown = chopTodo(newBlockInfo.content.preparedMarkdown)

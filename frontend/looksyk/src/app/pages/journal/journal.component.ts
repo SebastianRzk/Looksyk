@@ -1,29 +1,27 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {ScrollingModule} from '@angular/cdk/scrolling';
-import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
-import {JournalEntryComponent} from "../components/journal-entry/journal-entry.component";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {MarkdownPage} from "../model";
-import {PageService} from "../../services/page.service";
-import {MatIconModule} from "@angular/material/icon";
-import {RouterLink} from "@angular/router";
-import {MatButtonModule} from "@angular/material/button";
-import {TitleService} from "../../services/title.service";
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-experimental/scrolling';
+import { JournalEntryComponent } from "../components/journal-entry/journal-entry.component";
+import { CollectionViewer, DataSource } from "@angular/cdk/collections";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { MarkdownPage } from "../model";
+import { PageService } from "../../services/page.service";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { TitleService } from "../../services/title.service";
 import { MatDivider } from "@angular/material/divider";
-import { SidenavService } from "../../services/sidenav.service";
-import { AsyncPipe } from "@angular/common";
+import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
 
 @Component({
     selector: 'app-journal',
-  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule, MatDivider, AsyncPipe],
+  imports: [ScrollingModule, ExperimentalScrollingModule, JournalEntryComponent, MatIconModule, RouterLink, MatButtonModule, MatDivider, SidebarToggleComponent],
     templateUrl: './journal.component.html',
     styleUrls: ['./journal.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalComponent {
   pageService = inject(PageService);
-  sidenav: SidenavService = inject(SidenavService);
   items = new MyDataSource(this.pageService)
   title = inject(TitleService);
 

@@ -1,4 +1,5 @@
 use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
+use crate::looksyk::parser::BlockProperties;
 
 pub fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
     ParsedBlock {
@@ -10,5 +11,6 @@ pub fn create_textblock(text: &str, indentation: usize) -> ParsedBlock {
             }],
             as_text: "".to_string(),
         }],
+        properties: BlockProperties::empty(),
     }
 }

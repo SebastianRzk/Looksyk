@@ -1,0 +1,9 @@
+
+.sourceref {
+  font-size: x-small;
+  color: var(--primary-color);
+  align-self: end;
+  margin-bottom: 0.5ex;
+  white-space: nowrap;
+  margin-left: auto;
+}

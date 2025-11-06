@@ -5,7 +5,7 @@ use crate::looksyk::model::{
 use crate::looksyk::renderer::atomics::{
     combine_text_content, render_journal_link, render_user_link,
 };
-use crate::looksyk::syntax::looksyk_markdown::render_as_todo_without_padding;
+use crate::looksyk::syntax::looksyk_markdown::{render_as_todo_without_padding, render_property};
 
 pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
     let mut inline_markdown_result_list = vec![];
@@ -29,6 +29,9 @@ pub fn render_tokens_flat(tokens: &Vec<BlockToken>) -> String {
             }
             BlockTokenType::Todo => {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
+            }
+            BlockTokenType::Property => {
+                inline_markdown_result_list.push(render_property(token));
             }
         }
     }
@@ -67,5 +70,20 @@ pub fn render_file_flat(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownF
     }
     PreparedMarkdownFile {
         blocks: result_blocks,
+    }
+}
+
+#[cfg(test)]
+pub mod tests {
+    use crate::looksyk::model::builder::block_with_block_property_token;
+    use crate::looksyk::renderer::renderer_flat::render_tokens_flat;
+
+    #[test]
+    fn render_property_as_property() {
+        let input = block_with_block_property_token("key:: value");
+
+        let result = render_tokens_flat(&input.content[0].as_tokens);
+
+        assert_eq!(result, "<code class=\"inline-property\">key:: value</code>");
     }
 }

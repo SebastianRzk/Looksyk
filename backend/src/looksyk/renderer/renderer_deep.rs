@@ -7,7 +7,7 @@ use crate::looksyk::renderer::atomics::{
     render_journal_link, render_user_link, serialize_reference,
 };
 use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
-use crate::looksyk::syntax::looksyk_markdown::render_as_todo_without_padding;
+use crate::looksyk::syntax::looksyk_markdown::{render_as_todo_without_padding, render_property};
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
@@ -15,7 +15,7 @@ pub fn render_file(
     markdown_file: &ParsedMarkdownFile,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
@@ -23,7 +23,7 @@ pub fn render_file(
             original_block,
             render_context,
             asset_cache,
-            data_root_location,
+            graph_root_location,
         ));
     }
     PreparedMarkdownFile {
@@ -35,7 +35,7 @@ pub fn render_block(
     block: &ParsedBlock,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
@@ -48,7 +48,7 @@ pub fn render_block(
             &content_element.as_tokens,
             render_context,
             asset_cache,
-            data_root_location,
+            graph_root_location,
         );
         if render_result.has_dynamic_content {
             has_dynamic_content = true;
@@ -74,7 +74,7 @@ pub fn render_tokens_deep(
     tokens: &Vec<BlockToken>,
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
-    data_root_location: &GraphRootLocation,
+    graph_root_location: &GraphRootLocation,
 ) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];
@@ -96,7 +96,7 @@ pub fn render_tokens_deep(
             }
             BlockTokenType::Query => {
                 let render_result =
-                    render_query(token, render_context, asset_cache, data_root_location);
+                    render_query(token, render_context, asset_cache, graph_root_location);
                 has_dynamic_content = render_result.has_dynamic_content;
                 for reference in render_result.referenced_markdown {
                     references.push(reference);
@@ -105,6 +105,9 @@ pub fn render_tokens_deep(
             }
             BlockTokenType::Todo => {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token));
+            }
+            BlockTokenType::Property => {
+                inline_markdown_result_list.push(render_property(token));
             }
         }
     }
@@ -119,20 +122,16 @@ pub fn render_tokens_deep(
 mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
+    use crate::looksyk::model::builder::block_with_block_property_token;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
+    use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::renderer::model::builder::create_empty_render_context;
     use crate::looksyk::renderer::renderer_deep::render_block;
     use crate::state::application_state::builder::empty_data_root_location;
 
     #[test]
     fn should_serialize_original_text() {
-        let input = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_tokens: vec![text_token_str("text")],
-                as_text: "text".to_string(),
-            }],
-        };
+        let input = ParsedBlock::text_block_on_disk("text");
 
         let result = render_block(
             &input,
@@ -157,6 +156,7 @@ mod tests {
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -185,6 +185,7 @@ mod tests {
                 ],
                 as_text: "before [[MyPage]] after".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -209,6 +210,7 @@ mod tests {
                 as_tokens: vec![link_token("My Page")],
                 as_text: "[[My Page]]".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -237,6 +239,7 @@ mod tests {
                 ],
                 as_text: "[[link1]] asdf [[link2]]".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -274,6 +277,7 @@ mod tests {
                 ],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -297,6 +301,7 @@ mod tests {
                 }],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -321,6 +326,7 @@ mod tests {
                 }],
                 as_text: does_not_matter(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -351,6 +357,7 @@ mod tests {
                 ],
                 as_text: "[ ] Mein Todo".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -381,6 +388,7 @@ mod tests {
                 ],
                 as_text: "[x] Mein Todo".to_string(),
             }],
+            properties: BlockProperties::empty(),
         };
 
         let result = render_block(
@@ -392,5 +400,21 @@ mod tests {
 
         assert_eq!(result.content.original_text, "[x] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[x] Mein Todo");
+    }
+
+    #[test]
+    fn render_property_as_property() {
+        let result = render_block(
+            &block_with_block_property_token("key:: value"),
+            &create_empty_render_context().to_static(),
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
+
+        assert_eq!(result.content.original_text, "key:: value");
+        assert_eq!(
+            result.content.prepared_markdown,
+            "<code class=\"inline-property\">key:: value</code>"
+        );
     }
 }

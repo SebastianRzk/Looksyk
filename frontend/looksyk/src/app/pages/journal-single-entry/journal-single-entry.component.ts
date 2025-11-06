@@ -10,8 +10,7 @@ import { TitleService } from "../../services/title.service";
 import { DateService } from "../../services/date.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
 import { MatDivider } from "@angular/material/divider";
-import { MatIcon } from "@angular/material/icon";
-import { SidenavService } from "../../services/sidenav.service";
+import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
 
 @Component({
   selector: 'app-journal-single-entry',
@@ -21,7 +20,7 @@ import { SidenavService } from "../../services/sidenav.service";
     JournalTitleComponent,
     JournalTitleComponent,
     MatDivider,
-    MatIcon,
+    SidebarToggleComponent,
   ],
   templateUrl: './journal-single-entry.component.html',
   styleUrl: './journal-single-entry.component.css',
@@ -30,7 +29,6 @@ import { SidenavService } from "../../services/sidenav.service";
 export class JournalSingleEntryComponent implements OnInit {
 
   public pageSerivce: PageService = inject(PageService);
-  public sidenav = inject(SidenavService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private historyService = inject(HistoryService);
   private titleService = inject(TitleService);

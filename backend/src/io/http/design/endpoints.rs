@@ -1,6 +1,5 @@
-use crate::design::dtos::AppearanceDto;
-use crate::design::dtos::DesignConfigDto;
 use crate::io::fs::config::save_config_to_file;
+use crate::io::http::design::dtos::{AppearanceDto, DesignConfigDto};
 use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
 use crate::state::application_state::AppState;
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};

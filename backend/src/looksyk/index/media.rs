@@ -29,7 +29,7 @@ pub struct MediaIndex {
 }
 
 #[cfg(test)]
-pub mod test_builder {
+pub mod builder {
     use crate::looksyk::index::media::IndexedMedia;
 
     pub fn indexed_media(file_name: &str, sha3: &str) -> IndexedMedia {

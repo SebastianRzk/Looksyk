@@ -1,6 +1,8 @@
+pub mod block_properties;
 pub mod design;
 pub mod favourites;
 pub(crate) mod help;
+pub mod kanban;
 mod link_encoding;
 pub mod markdown;
 pub mod media;

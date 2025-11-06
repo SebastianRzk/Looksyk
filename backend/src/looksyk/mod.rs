@@ -4,6 +4,7 @@ pub mod data;
 pub mod datatypes;
 pub mod favourite;
 pub mod index;
+pub mod kanban;
 pub mod media;
 pub mod model;
 pub mod parser;

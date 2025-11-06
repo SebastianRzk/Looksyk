@@ -1,20 +1,20 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
-import {BehaviorSubject, firstValueFrom, Subject} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
-import {MediaPreview, MediaService} from "../../services/media.service";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {HistoryService} from "../../services/history.service";
-import {MarkdownPage} from "../model";
-import {MatIconModule} from "@angular/material/icon";
-import {AsyncPipe} from "@angular/common";
-import {TitleService} from "../../services/title.service";
-import {DisplayMarkdownComponent} from "../components/display-markdown/display-markdown.component";
-import {MatDivider} from "@angular/material/divider";
-import {SidenavService} from "../../services/sidenav.service";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { BehaviorSubject, firstValueFrom, Subject } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { MediaPreview, MediaService } from "../../services/media.service";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { HistoryService } from "../../services/history.service";
+import { MarkdownPage } from "../model";
+import { MatIconModule } from "@angular/material/icon";
+import { AsyncPipe } from "@angular/common";
+import { TitleService } from "../../services/title.service";
+import { DisplayMarkdownComponent } from "../components/display-markdown/display-markdown.component";
+import { MatDivider } from "@angular/material/divider";
+import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
 
 @Component({
   selector: 'app-media-details-overview',
-  imports: [DisplayMarkdownComponent, MatIconModule, AsyncPipe, MatDivider],
+  imports: [DisplayMarkdownComponent, MatIconModule, AsyncPipe, MatDivider, SidebarToggleComponent],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,7 +25,6 @@ export class DetailsComponent implements OnInit {
   private mediaService: MediaService = inject(MediaService);
   private titleService = inject(TitleService);
   public sanitizer: DomSanitizer = inject(DomSanitizer);
-  public sidenav = inject(SidenavService);
 
   public pageName: Subject<string> = new BehaviorSubject("");
   public pageName$ = this.pageName.asObservable();

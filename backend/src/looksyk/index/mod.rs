@@ -1,4 +1,5 @@
 pub mod asset;
+pub mod block_properties;
 mod hierachy;
 pub mod index_operations;
 pub mod media;

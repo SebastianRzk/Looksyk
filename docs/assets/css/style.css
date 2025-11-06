@@ -414,6 +414,10 @@ table {
     font-style: italic;
 }
 
+.small-code{
+    font-size: small;
+}
+
 @media (max-width: 600px) {
     main {
         padding: 1rem 0.5rem;

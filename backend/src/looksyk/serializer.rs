@@ -94,6 +94,7 @@ fn generate_indentation(depth: usize) -> String {
 fn serialize_block_token(block_token: &BlockToken) -> String {
     match block_token.block_token_type {
         BlockTokenType::Text => block_token.payload.clone(),
+        BlockTokenType::Property => block_token.payload.clone(),
         BlockTokenType::Link => render_as_tag_str(&block_token.payload),
         BlockTokenType::JournalLink => {
             format!("[[journal::{}]]", block_token.payload.clone())
@@ -110,6 +111,7 @@ mod tests {
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, ParsedBlock, ParsedMarkdownFile, UpdateBlock,
     };
+    use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::serializer::{serialize_block_token, update_and_serialize_page};
     use crate::state::block::BlockReference;
 
@@ -220,17 +222,11 @@ mod tests {
             &ParsedMarkdownFile {
                 blocks: vec![
                     parsed_text_block("This is Line 1", 1),
-                    ParsedBlock {
-                        indentation: 0,
-                        content: vec![BlockContent {
-                            as_text: "".to_string(),
-                            as_tokens: vec![
-                                todo_block("x"),
-                                text_token_str("mytodo "),
-                                link_block("my link"),
-                            ],
-                        }],
-                    },
+                    ParsedBlock::from_tokens(vec![
+                        todo_block("x"),
+                        text_token_str("mytodo "),
+                        link_block("my link"),
+                    ]),
                 ],
             },
         );
@@ -266,6 +262,7 @@ mod tests {
                                 as_tokens: vec![text_token_str("2my text2")],
                             },
                         ],
+                        properties: BlockProperties::empty(),
                     },
                 ],
             },
@@ -302,6 +299,7 @@ mod tests {
                                 as_tokens: vec![text_token_str("-2my text2")],
                             },
                         ],
+                        properties: BlockProperties::empty(),
                     },
                 ],
             },
@@ -337,6 +335,7 @@ mod tests {
                             as_text: "".to_string(),
                             as_tokens: vec![text_token_str("")],
                         }],
+                        properties: BlockProperties::empty(),
                     },
                     ParsedBlock {
                         indentation: 1,
@@ -350,6 +349,7 @@ mod tests {
                                 as_tokens: vec![text_token_str("-2my text2\n\n")],
                             },
                         ],
+                        properties: BlockProperties::empty(),
                     },
                 ],
             },
@@ -376,6 +376,7 @@ mod tests {
                 as_tokens: vec![text_token_str(text)],
             }],
             indentation,
+            properties: BlockProperties::empty(),
         }
     }
 

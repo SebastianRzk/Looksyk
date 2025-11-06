@@ -1,0 +1,6 @@
+<div class="markdown-block extension-card kanban-card">
+  <div class="full-width">
+    <div [innerHTML]="renderedMarkdown$ | async" class="markdown" #markdownComponent></div>
+  </div>
+  <app-markdown-reference [reference]="markdown.reference"></app-markdown-reference>
+</div>

@@ -65,12 +65,14 @@ async fn insert_template_into_page(
 
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
 
     let new_page_associated_state = update_index_for_file(
@@ -83,6 +85,7 @@ async fn insert_template_into_page(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     let rendered_page = render_file(
         &updated_page,
@@ -100,6 +103,7 @@ async fn insert_template_into_page(
     drop(tag_guard);
     drop(page_guard);
     drop(journal_guard);
+    drop(block_properties_guard);
 
     let is_fav = match page_id.page_type {
         PageType::UserPage => is_favourite(&page_id.name, &data.g_config.lock().unwrap()),

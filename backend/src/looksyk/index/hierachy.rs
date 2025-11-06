@@ -59,6 +59,7 @@ mod tests {
     use crate::looksyk::builder::page_name_str;
     use crate::looksyk::index::hierachy::HierarchyParser;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
+    use crate::looksyk::parser::BlockProperties;
 
     #[test]
     fn empty_parser_should_return_empty_taglist_only_pagename() {
@@ -86,6 +87,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         assert_eq!(
@@ -110,6 +112,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         cut.feed(&ParsedBlock {
@@ -121,6 +124,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         assert_eq!(
@@ -149,6 +153,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         cut.feed(&ParsedBlock {
@@ -160,6 +165,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         cut.feed(&ParsedBlock {
@@ -171,6 +177,7 @@ mod tests {
                 }],
                 as_text: "".to_string(),
             }],
+            properties: BlockProperties::empty(),
         });
 
         assert_eq!(

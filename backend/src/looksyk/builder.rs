@@ -5,10 +5,15 @@ pub mod test_builder {
     use crate::looksyk::builder::{page_name_str, text_token_str};
     use crate::looksyk::datatypes::AssetDescriptor;
     use crate::looksyk::model::{
-        BlockContent, BlockToken, BlockTokenType, PageId, ParsedMarkdownFile,
+        BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
+    use crate::looksyk::parser::{BlockProperties, BlockProperty};
     use crate::state::application_state::GraphRootLocation;
+    use crate::state::block_properties::BlockPropertiesIndex;
     use crate::state::journal::JournalPageIndex;
+    use crate::state::markdown_file::MarkdownFileIndex;
+    use crate::state::userpage::UserPageIndex;
+    use std::collections::HashMap;
     use std::path::PathBuf;
 
     pub fn asset_descriptor(file_name: &str) -> AssetDescriptor {
@@ -52,7 +57,23 @@ pub mod test_builder {
     }
     pub fn empty_journal_index() -> JournalPageIndex {
         JournalPageIndex {
-            entries: std::collections::HashMap::new(),
+            entries: HashMap::new(),
+        }
+    }
+
+    pub fn empty_markdown_file_index<'a>(
+        journal_page_index: &'a JournalPageIndex,
+        user_page_index: &'a UserPageIndex,
+    ) -> MarkdownFileIndex<'a> {
+        MarkdownFileIndex {
+            journal_page_index,
+            user_page_index,
+        }
+    }
+
+    pub fn empty_block_properties_index() -> BlockPropertiesIndex {
+        BlockPropertiesIndex {
+            entries: HashMap::new(),
         }
     }
 
@@ -67,10 +88,50 @@ pub mod test_builder {
         }
     }
 
-    pub fn text_block_content(text: &str) -> BlockContent {
-        BlockContent {
-            as_tokens: vec![text_token_str(text)],
-            as_text: text.to_string(),
+    pub fn extract_very_first_textblock_line(parsed_markdown_file: &ParsedMarkdownFile) -> String {
+        parsed_markdown_file
+            .blocks
+            .get(0)
+            .unwrap()
+            .content
+            .get(0)
+            .unwrap()
+            .as_tokens
+            .get(0)
+            .unwrap()
+            .payload
+            .clone()
+    }
+
+    pub fn extract_textblock_line_at(
+        parsed_markdown_file: &ParsedMarkdownFile,
+        block_index: usize,
+    ) -> String {
+        parsed_markdown_file
+            .blocks
+            .get(block_index)
+            .unwrap()
+            .content
+            .get(0)
+            .unwrap()
+            .as_tokens
+            .get(0)
+            .unwrap()
+            .payload
+            .clone()
+    }
+
+    pub fn parsed_block_with(
+        token: Vec<BlockToken>,
+        properties: Vec<BlockProperty>,
+    ) -> ParsedBlock {
+        ParsedBlock {
+            content: vec![BlockContent {
+                as_tokens: token,
+                as_text: "".to_string(),
+            }],
+            indentation: 0,
+            properties: BlockProperties { properties },
         }
     }
 }

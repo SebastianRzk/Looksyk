@@ -25,6 +25,12 @@ pub struct FileSizeViolation {
     pub max_size: u64,
 }
 
+impl Default for AssetCache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AssetCache {
     pub fn new() -> AssetCache {
         AssetCache {

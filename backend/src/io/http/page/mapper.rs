@@ -26,6 +26,18 @@ pub fn map_to_block_dto(prepared_block: &PreparedBlock) -> PreparedBlockDto {
     }
 }
 
+impl From<&PreparedBlock> for PreparedBlockDto {
+    fn from(prepared_block: &PreparedBlock) -> Self {
+        map_to_block_dto(prepared_block)
+    }
+}
+
+impl From<&PreparedReferencedMarkdown> for PreparedReferencedMarkdownDto {
+    fn from(prepared_referenced_markdown: &PreparedReferencedMarkdown) -> Self {
+        map_to_prepared_reference_to(prepared_referenced_markdown)
+    }
+}
+
 pub fn map_to_prepared_reference_to(
     prepared_referenced_markdown: &PreparedReferencedMarkdown,
 ) -> PreparedReferencedMarkdownDto {

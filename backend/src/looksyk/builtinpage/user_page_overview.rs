@@ -1,7 +1,6 @@
 use crate::looksyk::builtinpage::generating_page_util::create_textblock;
 use crate::looksyk::model::{
-    BlockContent, BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile,
-    SimplePageName,
+    BlockToken, BlockTokenType, PageId, PageType, ParsedBlock, ParsedMarkdownFile, SimplePageName,
 };
 use crate::state::tag::TagIndex;
 use crate::state::userpage::UserPageIndex;
@@ -48,13 +47,7 @@ pub fn generate_overview_page(
             }
         }
 
-        result.push(ParsedBlock {
-            content: vec![BlockContent {
-                as_tokens: result_table,
-                as_text: "".to_string(),
-            }],
-            indentation: 0,
-        })
+        result.push(ParsedBlock::from_tokens(result_table))
     }
 
     ParsedMarkdownFile { blocks: result }

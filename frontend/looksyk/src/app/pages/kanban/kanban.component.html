@@ -1,0 +1,43 @@
+@if (kanbanData$ | async; as data) {
+  <app-default-header [headerTitle]="data.title"></app-default-header>
+} @else {
+  <app-default-header headerTitle="Kanban Board"></app-default-header>
+}
+
+<app-kanban-properties [initialProperties]="initialFilter()"
+                       (formChanged)="filter.set($event)"></app-kanban-properties>
+
+@if (kanbanData$| async; as data) {
+  <div cdkDropListGroup class="kanban-container">
+    @for (list of data.lists; track list.title) {
+      <div>
+        <div class="kanban-column">
+          @if (!$first) {
+            <mat-divider [vertical]="true"></mat-divider>
+          }
+          <div class="kanban-column-content">
+            <h2 class="kanban-column-title">{{ list.title }}</h2>
+            <div
+              cdkDropList
+              [cdkDropListData]="list.items"
+              class="kanban-list"
+              cdkDropListSortingDisabled
+              id="{{list.title}}"
+              (cdkDropListDropped)="drop($event)">
+              @for (item of list.items; track item.block.reference.fileId) {
+                <div cdkDrag>
+                  <app-kanban-card
+                    [markdown]="item.block"
+                  ></app-kanban-card>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+    }
+  </div>
+}
+
+

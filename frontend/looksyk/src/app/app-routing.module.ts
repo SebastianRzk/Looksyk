@@ -8,6 +8,7 @@ import {DetailsComponent} from "./pages/media-details/details.component";
 import {JournalOverviewComponent} from "./pages/journal-overview/journal-overview.component";
 import { HelpComponent } from "./pages/help/help.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
+import { KanbanComponent } from "./pages/kanban/kanban.component";
 
 export const routes: Routes = [
   {path: "page/:name", component: UserPageComponent},
@@ -15,6 +16,7 @@ export const routes: Routes = [
   {path: "special-page/journal-overview", component: JournalOverviewComponent},
   {path: "special-page/configuration", component: ConfigurationComponent},
   {path: "special-page/media-overview", component: MediaOverviewComponent},
+  {path: "special-page/kanban", component: KanbanComponent},
   {path: "special-page/help", component: HelpComponent},
   {path: "journal", component: JournalComponent},
   {path: "journal/:name", component: JournalSingleEntryComponent},

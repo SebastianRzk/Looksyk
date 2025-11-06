@@ -1,3 +1,7 @@
+use crate::looksyk::index::block_properties::{
+    insert_journal_page_to_block_properties, insert_user_page_to_block_properties,
+    remove_file_from_index,
+};
 use crate::looksyk::index::tag::{create_tag_index_file, remove_file_from_tag_index};
 use crate::looksyk::index::todo::{create_todo_index_file, remove_file_from_todo_index};
 use crate::looksyk::index::userpage::{
@@ -22,18 +26,29 @@ pub fn update_index_for_file(
     let mut tag_index_entries = new_page_associated_state.tag_index.entries;
     create_tag_index_file(&mut tag_index_entries, &page_id, update);
 
+    let mut block_properties_index = new_page_associated_state.block_properties_index;
     match page_id.page_type {
         PageType::UserPage => {
             new_page_associated_state
                 .user_pages
                 .entries
                 .insert(page_id.name.clone(), update.clone());
+            insert_user_page_to_block_properties(
+                &mut block_properties_index,
+                &page_id.name,
+                update,
+            );
         }
         PageType::JournalPage => {
             new_page_associated_state
                 .journal_pages
                 .entries
                 .insert(page_id.name.clone(), update.clone());
+            insert_journal_page_to_block_properties(
+                &mut block_properties_index,
+                &page_id.name,
+                update,
+            );
         }
     }
 
@@ -46,6 +61,7 @@ pub fn update_index_for_file(
         tag_index: TagIndex {
             entries: tag_index_entries,
         },
+        block_properties_index,
     }
 }
 
@@ -68,25 +84,30 @@ pub fn remove_page_from_internal_state(
     let new_todo_index =
         remove_file_from_todo_index(page_associated_state.todo_index, &page_id.name);
 
+    let new_block_properties_index =
+        remove_file_from_index(page_associated_state.block_properties_index, page_id);
+
     NewPageAssociatedState {
         user_pages: new_page_index,
         journal_pages: new_journal_index,
         todo_index: new_todo_index,
         tag_index: new_tag_index,
+        block_properties_index: new_block_properties_index,
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::looksyk::builder::test_builder::user_page_id;
+    use crate::looksyk::builder::test_builder::{
+        empty_block_properties_index, empty_journal_index, user_page_id,
+    };
     use crate::looksyk::index::index_operations::update_index_for_file;
     use crate::looksyk::model::{ParsedMarkdownFile, RawBlock};
     use crate::looksyk::parser::parse_block;
     use crate::state::application_state::CurrentPageAssociatedState;
-    use crate::state::journal::JournalPageIndex;
     use crate::state::tag::TagIndex;
-    use crate::state::todo::TodoIndex;
-    use crate::state::userpage::UserPageIndex;
+    use crate::state::todo::builder::empty_todo_index;
+    use crate::state::userpage::builder::empty_user_page_index;
     use std::collections::{HashMap, HashSet};
 
     #[test]
@@ -112,13 +133,10 @@ mod tests {
         };
         let current_page_associated_state = CurrentPageAssociatedState {
             tag_index: &tag_index,
-            todo_index: &TodoIndex { entries: vec![] },
-            user_pages: &UserPageIndex {
-                entries: HashMap::new(),
-            },
-            journal_pages: &JournalPageIndex {
-                entries: HashMap::new(),
-            },
+            todo_index: &empty_todo_index(),
+            user_pages: &empty_user_page_index(),
+            journal_pages: &empty_journal_index(),
+            block_properties_index: &empty_block_properties_index(),
         };
 
         let result = update_index_for_file(

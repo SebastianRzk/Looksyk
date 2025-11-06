@@ -14,11 +14,11 @@ import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
 import { DialogService } from "../../services/dialog.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
-import { SidenavService } from "../../services/sidenav.service";
+import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
 
 @Component({
   selector: 'app-user-page',
-  imports: [TitleComponent, EditablePageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, AsyncPipe],
+  imports: [TitleComponent, EditablePageComponent, FavStarComponent, ReferencedByComponent, MatDivider, MatIcon, MatMenu, MatMenuItem, MatMenuTrigger, AsyncPipe, SidebarToggleComponent],
   templateUrl: './user-page.component.html',
   styleUrls: ['./user-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,7 +33,6 @@ export class UserPageComponent implements OnInit, OnDestroy {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private titleService: TitleService = inject(TitleService);
   private dialogService: DialogService = inject(DialogService);
-  public sidenav = inject(SidenavService);
   private router: Router = inject(Router);
 
   private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({

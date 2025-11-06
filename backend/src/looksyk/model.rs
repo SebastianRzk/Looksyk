@@ -1,4 +1,7 @@
+use crate::looksyk::parser::BlockProperties;
+use crate::looksyk::syntax::looksyk_markdown::serialize_property;
 use crate::state::block::BlockReference;
+use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
@@ -10,10 +13,11 @@ pub struct RawBlock {
     pub text_content: Vec<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ParsedBlock {
     pub indentation: usize,
     pub content: Vec<BlockContent>,
+    pub properties: BlockProperties,
 }
 
 impl ParsedBlock {
@@ -25,12 +29,136 @@ impl ParsedBlock {
             })
         })
     }
+
+    pub fn artificial_text_block(text: &str) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: String::default(),
+                as_tokens: vec![BlockToken {
+                    block_token_type: BlockTokenType::Text,
+                    payload: text.to_string(),
+                }],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn rename_property(
+        &self,
+        property_key: &BlockPropertyKey,
+        old_value: &BlockPropertyValue,
+        new_value: &BlockPropertyValue,
+    ) -> ParsedBlock {
+        ParsedBlock {
+            indentation: self.indentation,
+            properties: self
+                .properties
+                .copy_and_rename(property_key, old_value, new_value),
+            content: self
+                .content
+                .iter()
+                .map(|x| {
+                    ParsedBlock::rename_property_in_block_content(
+                        x,
+                        property_key,
+                        old_value,
+                        new_value,
+                    )
+                })
+                .collect(),
+        }
+    }
+
+    fn rename_property_in_block_content(
+        content: &BlockContent,
+        property_key: &BlockPropertyKey,
+        old_value: &BlockPropertyValue,
+        new_value: &BlockPropertyValue,
+    ) -> BlockContent {
+        let mut token = vec![];
+        let mut text = content.as_text.clone();
+
+        let property_as_text = serialize_property(property_key, old_value);
+
+        for t in content.as_tokens.iter() {
+            if t.block_token_type == BlockTokenType::Property {
+                if t.payload == property_as_text {
+                    let new_property_as_text = serialize_property(property_key, new_value);
+                    text = text.replace(&property_as_text, &new_property_as_text);
+                    token.push(BlockToken {
+                        payload: new_property_as_text,
+                        block_token_type: BlockTokenType::Property,
+                    });
+                } else {
+                    token.push(t.clone());
+                }
+            } else {
+                token.push(t.clone());
+            }
+        }
+
+        BlockContent {
+            as_tokens: token,
+            as_text: text,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn text_block_on_disk(text: &str) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: text.to_string(),
+                as_tokens: vec![BlockToken {
+                    block_token_type: BlockTokenType::Text,
+                    payload: text.to_string(),
+                }],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn from_tokens(tokens: Vec<BlockToken>) -> Self {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: String::default(),
+                as_tokens: tokens,
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn empty_with_indentation(indentation: usize) -> Self {
+        ParsedBlock {
+            indentation,
+            content: vec![],
+            properties: BlockProperties::empty(),
+        }
+    }
 }
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::builder::text_token_str;
+    use super::BlockTokenType;
+    use crate::looksyk::builder::{link_token, text_token_str};
     use crate::looksyk::model::{BlockContent, BlockToken, ParsedBlock};
+    use crate::looksyk::parser::{BlockProperties, BlockProperty};
+
+    pub fn block_with_block_property_token(block_property_text: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_tokens: vec![BlockToken {
+                    payload: block_property_text.to_string(),
+                    block_token_type: BlockTokenType::Property,
+                }],
+                as_text: block_property_text.to_string(),
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
 
     pub fn block_with_text_content(content: &str) -> ParsedBlock {
         ParsedBlock {
@@ -39,13 +167,48 @@ pub mod builder {
                 as_text: content.to_string(),
                 as_tokens: vec![text_token_str(content)],
             }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn block_with_link_content(link: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_text: link.to_string(),
+                as_tokens: vec![link_token(link)],
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
+
+    pub fn block_with_property(key: &str, value: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![],
+            properties: BlockProperties {
+                properties: vec![BlockProperty {
+                    key: key.to_string(),
+                    value: value.to_string(),
+                }],
+            },
         }
     }
 
     pub fn query_block_token(query_payload: &str) -> BlockToken {
         BlockToken {
-            block_token_type: super::BlockTokenType::Query,
+            block_token_type: BlockTokenType::Query,
             payload: query_payload.to_string(),
+        }
+    }
+
+    impl ParsedBlock {
+        pub fn empty() -> Self {
+            ParsedBlock {
+                indentation: 0,
+                content: vec![],
+                properties: BlockProperties::empty(),
+            }
         }
     }
 }
@@ -56,6 +219,15 @@ pub struct PreparedBlock {
     pub content: PreparedBlockContent,
     pub referenced_markdown: Vec<PreparedReferencedMarkdown>,
     pub has_dynamic_content: bool,
+}
+
+impl PreparedBlock {
+    pub fn reference(self, reference: BlockReference) -> PreparedReferencedMarkdown {
+        PreparedReferencedMarkdown {
+            content: self.content,
+            reference,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -74,6 +246,7 @@ pub struct BlockContent {
 pub enum BlockTokenType {
     Text,
     Link,
+    Property,
     JournalLink,
     Query,
     Todo,
@@ -95,7 +268,7 @@ pub struct RawMarkdownFile {
     pub blocks: Vec<RawBlock>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ParsedMarkdownFile {
     pub blocks: Vec<ParsedBlock>,
 }
@@ -103,6 +276,10 @@ pub struct ParsedMarkdownFile {
 impl ParsedMarkdownFile {
     pub fn empty() -> Self {
         ParsedMarkdownFile { blocks: vec![] }
+    }
+
+    pub fn block(&self, block_number: usize) -> Option<&ParsedBlock> {
+        self.blocks.get(block_number)
     }
 }
 
@@ -207,6 +384,13 @@ impl PageId {
     pub fn is_user_page(&self) -> bool {
         self.page_type == PageType::UserPage
     }
+
+    pub fn block_reference(&self, block_number: usize) -> BlockReference {
+        BlockReference {
+            page_id: self.clone(),
+            block_number,
+        }
+    }
 }
 
 impl PartialOrd<Self> for PageId {
@@ -216,16 +400,19 @@ impl PartialOrd<Self> for PageId {
 }
 
 impl Ord for PageId {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.name.name.cmp(&other.name.name)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::builder::test_builder::user_page_id;
-    use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
+    use crate::looksyk::model::builder::{block_with_link_content, block_with_text_content};
     use crate::looksyk::model::{BlockContent, PageId, PageType, ParsedBlock, ParsedMarkdownFile};
+    use crate::looksyk::parser::parse_text_content;
+    use crate::state::block_properties::builder::{block_property_key, block_property_value};
 
     #[test]
     fn test_journal_page_id_should_be_a_journal_page() {
@@ -290,10 +477,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_empty_block_return_false() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![],
-        };
+        let block = ParsedBlock::empty();
 
         assert!(!block.contains_reference(&page_id.name));
     }
@@ -302,13 +486,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_block_without_link_return_false() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: "my text".to_string(),
-                as_tokens: vec![text_token_str("my-page")],
-            }],
-        };
+        let block = block_with_text_content("my-page");
 
         assert!(!block.contains_reference(&page_id.name));
     }
@@ -317,13 +495,7 @@ mod tests {
     fn test_parsed_block_contains_reference_with_block_with_link_return_true() {
         let page_id = user_page_id("my-page");
 
-        let block = ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: "my text".to_string(),
-                as_tokens: vec![link_token("my-page")],
-            }],
-        };
+        let block = block_with_link_content("my-page");
 
         assert!(block.contains_reference(&page_id.name));
     }
@@ -331,5 +503,28 @@ mod tests {
     #[test]
     fn test_empty_should_return_empty() {
         assert_eq!(ParsedMarkdownFile::empty().blocks.len(), 0);
+    }
+
+    #[test]
+    fn test_rename_property_in_block_content_should_rename() {
+        let input_text = "asdf key:: value wqert".to_string();
+        let expected_text = "asdf key:: value2 wqert".to_string();
+        let block_content = BlockContent {
+            as_tokens: parse_text_content(&input_text).tokens,
+            as_text: input_text,
+        };
+
+        let result = ParsedBlock::rename_property_in_block_content(
+            &block_content,
+            &block_property_key("key"),
+            &block_property_value("value"),
+            &block_property_value("value2"),
+        );
+
+        assert_eq!(&result.as_text, &expected_text);
+        assert_eq!(
+            &result.as_tokens,
+            &parse_text_content(&expected_text).tokens
+        )
     }
 }

@@ -9,6 +9,7 @@ use crate::looksyk::queries::insert_file_content::{
     parse_query_insert_file_content, render_query_insert_file_content,
     QUERY_NAME_INSERT_FILE_CONTENT,
 };
+use crate::looksyk::queries::kanban::{parse_query_board, render_board_query, QUERY_NAME_BOARD};
 use crate::looksyk::queries::pagehierarchy::{
     parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY,
 };
@@ -61,12 +62,10 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
         return parse_query_blocks(query_str);
     } else if query_str.starts_with(QUERY_NAME_TODO_PROGRESS) {
         return parse_query_todo_progress(query_str);
+    } else if query_str.starts_with(QUERY_NAME_BOARD) {
+        return parse_query_board(query_str);
     }
-    Ok(Query {
-        query_type: QueryType::Unknown,
-        display: QueryDisplayType::Unknown,
-        args: HashMap::new(),
-    })
+    Ok(Query::unknown())
 }
 
 pub fn render_parsed_query(
@@ -89,6 +88,7 @@ pub fn render_parsed_query(
             render_context.journal_pages,
         ),
         QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
+        QueryType::Board => render_board_query(query),
         QueryType::Unknown => QueryRenderResult {
             inplace_markdown: format!(
                 "Query type unknown. Allowed types: {}",
@@ -106,6 +106,16 @@ pub struct Query {
     pub display: QueryDisplayType,
 }
 
+impl Query {
+    pub fn unknown() -> Query {
+        Query {
+            args: HashMap::new(),
+            display: QueryDisplayType::Unknown,
+            query_type: QueryType::Unknown,
+        }
+    }
+}
+
 #[derive(PartialEq, Debug)]
 pub enum QueryType {
     PageHierarchy,
@@ -114,6 +124,7 @@ pub enum QueryType {
     TodoProgress,
     Blocks,
     InsertFileContent,
+    Board,
     Unknown,
 }
 
@@ -153,13 +164,14 @@ impl Display for QueryDisplayType {
 #[cfg(test)]
 mod tests {
     use crate::io::fs::media::MediaOnDisk;
+    use crate::looksyk::builder::page_name_str;
     use crate::looksyk::builder::test_builder::user_page_id;
-    use crate::looksyk::builder::{page_name_str, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
     use crate::looksyk::model::builder::query_block_token;
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
+    use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::query::{parse_query, render_query, QueryDisplayType, QueryType};
     use crate::looksyk::renderer::model::builder::{
         create_empty_render_context, create_render_context, create_render_context_with_tag_index,
@@ -282,6 +294,7 @@ mod tests {
                         as_tokens: vec![],
                         as_text: "".to_string(),
                     }],
+                    properties: BlockProperties::empty(),
                 },
                 tags: vec![page_name_str("parent")],
                 state: TodoState::Todo,
@@ -308,13 +321,7 @@ mod tests {
         let todo_index = TodoIndex {
             entries: vec![
                 TodoIndexEntry {
-                    block: ParsedBlock {
-                        indentation: 0,
-                        content: vec![BlockContent {
-                            as_tokens: vec![text_token_str("[ ] todo not done")],
-                            as_text: "[ ] todo not done".to_string(),
-                        }],
-                    },
+                    block: ParsedBlock::text_block_on_disk("[ ] todo not done"),
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
                     source: BlockReference {
@@ -323,13 +330,7 @@ mod tests {
                     },
                 },
                 TodoIndexEntry {
-                    block: ParsedBlock {
-                        content: vec![BlockContent {
-                            as_tokens: vec![text_token_str("[x] todo done")],
-                            as_text: "[x] todo done".to_string(),
-                        }],
-                        indentation: 0,
-                    },
+                    block: ParsedBlock::text_block_on_disk("[x] todo done"),
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,
                     source: BlockReference {
@@ -362,13 +363,7 @@ mod tests {
         let todo_index = TodoIndex {
             entries: vec![
                 TodoIndexEntry {
-                    block: ParsedBlock {
-                        indentation: 0,
-                        content: vec![BlockContent {
-                            as_tokens: vec![text_token_str("[ ] todo not done")],
-                            as_text: "[ ] todo not done".to_string(),
-                        }],
-                    },
+                    block: ParsedBlock::text_block_on_disk("[ ] todo not done"),
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
                     source: BlockReference {
@@ -377,13 +372,7 @@ mod tests {
                     },
                 },
                 TodoIndexEntry {
-                    block: ParsedBlock {
-                        indentation: 0,
-                        content: vec![BlockContent {
-                            as_tokens: vec![text_token_str("[x] todo done")],
-                            as_text: "[x] todo done".to_string(),
-                        }],
-                    },
+                    block: ParsedBlock::text_block_on_disk("[x] todo done"),
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,
                     source: BlockReference {
@@ -422,6 +411,7 @@ mod tests {
                             as_tokens: vec![],
                             as_text: "todo not done".to_string(),
                         }],
+                        properties: BlockProperties::empty(),
                     },
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Todo,
@@ -437,6 +427,7 @@ mod tests {
                             as_tokens: vec![],
                             as_text: "todo done".to_string(),
                         }],
+                        properties: BlockProperties::empty(),
                     },
                     tags: vec![page_name_str("parent")],
                     state: TodoState::Done,

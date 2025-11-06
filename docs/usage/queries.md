@@ -19,6 +19,18 @@ Queries are particularly suitable for three problems:
 
 Currently,all queries must be inserted exactly as described. Parameters cannot yet be swapped or omitted.
 
+## Query Board
+
+Quick example.
+
+```
+{query: board title:"My first Kanban" tag:"kanban" columnKey:"state" columnValues:"TODO,DOING,DONE" priorityKey:"priority" display:"link" } 
+```
+
+The query generates a link that points to a suitably configured board.
+
+For more information, see [Boards]({{config.pathPrefix}}usage/board/).
+
 ## Query Page Hierarchy
 
 Quick examples:

@@ -9,8 +9,7 @@
   <div class="flex-row">
     <div [innerHTML]="renderedMarkdown$ | async" #markdownComponent class="markdown">
     </div>
-    <a class="sourceref" [routerLink]="markdown.reference.link">Source: {{ markdown.reference.fileName }}
-      :{{ markdown.reference.blockNumber }}</a>
+    <app-markdown-reference [reference]="markdown.reference"></app-markdown-reference>
   </div>
 </div>
 

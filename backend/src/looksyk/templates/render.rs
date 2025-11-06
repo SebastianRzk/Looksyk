@@ -98,6 +98,7 @@ fn render_template_block(
     ParsedBlock {
         content: template_block.content.clone(),
         indentation: target_root_indentation + template_block.indentation,
+        properties: template_block.properties.clone(),
     }
 }
 
@@ -107,6 +108,7 @@ mod tests {
     use crate::looksyk::builder::test_builder::block_content;
     use crate::looksyk::builder::text_token_str;
     use crate::looksyk::model::builder::block_with_text_content;
+    use crate::looksyk::parser::BlockProperties;
 
     #[test]
     fn should_append_template_to_page_should_append_last_line() {
@@ -148,6 +150,7 @@ mod tests {
                     block_content("template content"),
                     block_content("more template content"),
                 ],
+                properties: BlockProperties::empty(),
             }],
         };
 
@@ -182,18 +185,18 @@ mod tests {
             blocks: vec![ParsedBlock {
                 indentation: 1,
                 content: vec![block_content("existing content")],
+
+                properties: BlockProperties::empty(),
             }],
         };
 
         let template = ParsedMarkdownFile {
             blocks: vec![
-                ParsedBlock {
-                    indentation: 0,
-                    content: vec![block_content("template content")],
-                },
+                ParsedBlock::text_block_on_disk("template content"),
                 ParsedBlock {
                     indentation: 2,
                     content: vec![block_content("template content block 2")],
+                    properties: BlockProperties::empty(),
                 },
             ],
         };

@@ -112,12 +112,14 @@ async fn update_journal(
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
         user_pages: &page_guard,
         journal_pages: &journal_guard,
         todo_index: &todo_guard,
         tag_index: &tag_guard,
+        block_properties_index: &block_properties_guard,
     };
 
     let page_id = simple_page_name.as_journal_page();
@@ -128,6 +130,7 @@ async fn update_journal(
     *tag_guard = new_page_associated_state.tag_index;
     *page_guard = new_page_associated_state.user_pages;
     *journal_guard = new_page_associated_state.journal_pages;
+    *block_properties_guard = new_page_associated_state.block_properties_index;
 
     let is_fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
     let rendered_file = render_file(

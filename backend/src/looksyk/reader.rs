@@ -16,7 +16,7 @@ pub fn calculate_indentation(string: &str) -> usize {
     tab_count
 }
 
-pub fn read_file_contents(file_content: String) -> RawMarkdownFile {
+pub fn read_file_contents(file_content: &str) -> RawMarkdownFile {
     let lines = file_content.lines();
     RawMarkdownFile {
         blocks: parse_lines(lines),
@@ -58,7 +58,7 @@ mod tests {
 
     #[test]
     fn should_parse_two_lines_as_blocks() {
-        let result = read_file_contents("- line 1\n- line 2".to_string());
+        let result = read_file_contents("- line 1\n- line 2");
         assert_eq!(result.blocks.len(), 2);
         let block1 = result.blocks.first().unwrap();
         assert_eq!(block1.text_content, vec!["line 1"]);
@@ -70,7 +70,7 @@ mod tests {
 
     #[test]
     fn should_parse_two_nested_blocks() {
-        let result = read_file_contents("- parent\n\t- child".to_string());
+        let result = read_file_contents("- parent\n\t- child");
 
         assert_eq!(result.blocks.len(), 2);
         let parent = result.blocks.first().unwrap();
@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn should_add_following_line_to_block() {
-        let result = read_file_contents("- line1\nline2".to_string());
+        let result = read_file_contents("- line1\nline2");
         assert_eq!(result.blocks.len(), 1);
         let block = result.blocks.first().unwrap();
         assert_eq!(block.text_content, vec!["line1", "line2"]);

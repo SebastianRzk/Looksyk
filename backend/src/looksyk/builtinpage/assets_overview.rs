@@ -132,7 +132,7 @@ struct AssetDescription {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::looksyk::index::media::test_builder::indexed_media;
+    use crate::looksyk::index::media::builder::indexed_media;
 
     #[test]
     fn test_sort_assets_should_sort_assets_by_filesize() {

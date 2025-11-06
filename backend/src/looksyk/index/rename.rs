@@ -145,6 +145,7 @@ fn rename_tag_in_block(old: &str, new: &str, parsed_block: &ParsedBlock) -> Pars
     ParsedBlock {
         indentation: parsed_block.indentation,
         content: new_content,
+        properties: parsed_block.properties.clone(),
     }
 }
 
@@ -152,7 +153,7 @@ fn rename_tag_in_line(old: &str, new: &str, p2: &BlockContent) -> BlockContent {
     let new_text = p2.as_text.replace(old, new);
 
     BlockContent {
-        as_tokens: parse_text_content(&new_text),
+        as_tokens: parse_text_content(&new_text).tokens,
         as_text: new_text,
     }
 }

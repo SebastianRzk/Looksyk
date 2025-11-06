@@ -115,10 +115,7 @@ fn resolve_blocks_in_page(
     for (index, block) in page.blocks.iter().enumerate() {
         if block.contains_reference(target) {
             result.push(BlockQueryResult {
-                block_reference: BlockReference {
-                    page_id: page_id.clone(),
-                    block_number: index,
-                },
+                block_reference: page_id.block_reference(index),
                 parsed_block: block.clone(),
             });
         }
@@ -231,7 +228,7 @@ mod tests {
     use super::render_blocks_query;
     use crate::looksyk::builder::test_builder::empty_journal_index;
     use crate::looksyk::builder::{link_token, page_name_str, text_token_str};
-    use crate::looksyk::model::{BlockContent, ParsedBlock};
+    use crate::looksyk::model::ParsedBlock;
     use crate::looksyk::queries::args::PARAM_TARGET;
     use crate::looksyk::query::Query;
     use crate::looksyk::renderer::renderer_flat::render_block_flat;
@@ -285,17 +282,11 @@ mod tests {
     }
 
     fn matching_text_block() -> ParsedBlock {
-        ParsedBlock {
-            indentation: 0,
-            content: vec![BlockContent {
-                as_text: "".to_string(),
-                as_tokens: vec![
-                    text_token_str("before"),
-                    link_token("foo"),
-                    text_token_str("after"),
-                ],
-            }],
-        }
+        ParsedBlock::from_tokens(vec![
+            text_token_str("before"),
+            link_token("foo"),
+            text_token_str("after"),
+        ])
     }
 
     #[test]

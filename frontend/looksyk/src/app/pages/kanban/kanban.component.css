@@ -1,0 +1,39 @@
+.kanban-container {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  flex-direction: row;
+}
+
+
+.kanban-list {
+  min-width: 30ex;
+  min-height: 90vh;
+}
+
+.kanban-column-content {
+  display: flex;
+  flex-direction: column;
+  padding: 2ex;
+}
+
+.kanban-column-title {
+  margin: 1ex;
+}
+
+app-kanban-properties {
+  margin: 3ex;
+}
+
+
+.kanban-column {
+  display: flex;
+  flex-direction: row;
+  color: var(--primary-color);
+}
+
+app-kanban-card {
+  color: var(--foreground-color);
+}

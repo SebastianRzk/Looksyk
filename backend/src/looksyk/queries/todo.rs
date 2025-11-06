@@ -11,7 +11,6 @@ use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::atomics::render_link;
 use crate::looksyk::renderer::renderer_flat::render_block_flat_as_string;
-use crate::state::block::BlockReference;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
 pub const QUERY_NAME_TODOS: &str = "todos";
@@ -79,10 +78,7 @@ fn render_as_references(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResu
             .iter()
             .map(|x| ReferencedMarkdown {
                 content: x.block.clone(),
-                reference: BlockReference {
-                    page_id: x.source.page_id.clone(),
-                    block_number: x.source.block_number,
-                },
+                reference: x.source.page_id.block_reference(x.source.block_number),
             })
             .collect(),
     }

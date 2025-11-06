@@ -97,6 +97,16 @@ impl GraphChange {
         }
     }
 
+    pub fn kanban_item_moved(target: String, block_index: usize, from: String, to: String) -> Self {
+        GraphChange {
+            change_type: GraphChangeType::JournalPageChanged,
+            target: format!(
+                "Kanban item ({}:{}) moved from {} to {}",
+                target, block_index, from, to
+            ),
+        }
+    }
+
     pub fn user_page_changed(target: String) -> Self {
         GraphChange {
             change_type: GraphChangeType::UserPageChanged,

@@ -41,6 +41,20 @@
         </ul>
     </description>
     <releases>
+        <release version="1.17.0" date="2025-11-06">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1170-2025-11-06</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Add Boards 🎉</li>
+                    <li>Add block properties (currently only used for boards, and highlighted in the markdown)</li>
+                    <li>Internal refactoring of backend and frontend. Homogenization of the rendering of the built-in pages. Improves
+                        load-time of built-in pages (slightly).
+                    </li>
+                    <li>Add performance test for Markdown parser to track performance changes over time</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.16.2" date="2025-10-08">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1162-2025-10-08</url>
             <description>

@@ -8,24 +8,24 @@ use crate::looksyk::reader::read_file_contents;
 use crate::state::journal::JournalPageIndex;
 use crate::state::userpage::UserPageIndex;
 
-pub fn create_user_page_index(all_files: Vec<PageOnDisk>) -> UserPageIndex {
+pub fn create_user_page_index(all_files: &[PageOnDisk]) -> UserPageIndex {
     UserPageIndex {
         entries: parse_files(all_files),
     }
 }
 
-pub fn create_journal_page_index(all_files: Vec<PageOnDisk>) -> JournalPageIndex {
+pub fn create_journal_page_index(all_files: &[PageOnDisk]) -> JournalPageIndex {
     JournalPageIndex {
         entries: parse_files(all_files),
     }
 }
 
-fn parse_files(all_files: Vec<PageOnDisk>) -> HashMap<SimplePageName, ParsedMarkdownFile> {
+fn parse_files(all_files: &[PageOnDisk]) -> HashMap<SimplePageName, ParsedMarkdownFile> {
     let mut parsed_file_index = HashMap::new();
     for file in all_files {
-        let raw_markdown_file = read_file_contents(file.content);
+        let raw_markdown_file = read_file_contents(&file.content);
         let parsed_markdown_file = parse_markdown_file(raw_markdown_file);
-        parsed_file_index.insert(page_name(file.name), parsed_markdown_file);
+        parsed_file_index.insert(page_name(file.name.clone()), parsed_markdown_file);
     }
     parsed_file_index
 }

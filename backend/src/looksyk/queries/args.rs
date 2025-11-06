@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::io::Error;
 
 use crate::looksyk::query::QueryDisplayType;
@@ -64,6 +65,41 @@ pub fn parse_display_type(input_string: String) -> Result<QueryDisplayType, Erro
         PARAM_DISPLAY_CARDS => Ok(QueryDisplayType::Cards),
         _ => Ok(QueryDisplayType::Unknown),
     }
+}
+
+pub struct ParamBuilder {
+    current_value: String,
+    parsed_args: HashMap<String, String>,
+}
+
+impl ParamBuilder {
+    pub fn init(content: String) -> ParamBuilder {
+        ParamBuilder {
+            parsed_args: HashMap::new(),
+            current_value: content,
+        }
+    }
+
+    pub fn next(mut self, key: &str) -> Result<ParamBuilder, Error> {
+        let result = parse_property(&self.current_value, key)?;
+        self.parsed_args.insert(key.to_owned(), result.value);
+        Ok(ParamBuilder {
+            current_value: result.remaining_text,
+            parsed_args: self.parsed_args,
+        })
+    }
+
+    pub fn build(self) -> ParamBuilderResult {
+        ParamBuilderResult {
+            parsed_args: self.parsed_args,
+            remaining_value: self.current_value,
+        }
+    }
+}
+
+pub struct ParamBuilderResult {
+    pub remaining_value: String,
+    pub parsed_args: HashMap<String, String>,
 }
 
 pub struct PropertyParsed {

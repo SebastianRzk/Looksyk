@@ -3,7 +3,9 @@ use crate::looksyk::model::{
     PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
 };
 use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link};
-use crate::looksyk::syntax::looksyk_markdown::{render_as_tag_str, render_as_todo_without_padding};
+use crate::looksyk::syntax::looksyk_markdown::{
+    render_as_tag_str, render_as_todo_without_padding, render_property,
+};
 
 pub fn render_file_basic_markdown(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
@@ -58,6 +60,9 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
             BlockTokenType::Todo => {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
+            BlockTokenType::Property => {
+                inline_markdown_result_list.push(render_property(token));
+            }
         }
     }
     inline_markdown_result_list.join(" ")
@@ -66,19 +71,14 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::looksyk::builder::{link_token, text_token_str};
-    use crate::looksyk::model::{BlockContent, ParsedMarkdownFile};
+    use crate::looksyk::builder::link_token;
+    use crate::looksyk::model::builder::block_with_block_property_token;
+    use crate::looksyk::model::ParsedMarkdownFile;
 
     #[test]
     fn test_render_file_basic_markdown() {
         let markdown_file = ParsedMarkdownFile {
-            blocks: vec![ParsedBlock {
-                indentation: 0,
-                content: vec![BlockContent {
-                    as_text: "Test content".to_string(),
-                    as_tokens: vec![text_token_str("Test content")],
-                }],
-            }],
+            blocks: vec![ParsedBlock::artificial_text_block("Test content")],
         };
         let rendered = render_file_basic_markdown(&markdown_file);
         assert_eq!(rendered.blocks.len(), 1);
@@ -88,19 +88,28 @@ mod tests {
     #[test]
     fn test_render_file_basic_markdown_should_preserve_links_as_tag_link() {
         let markdown_file = ParsedMarkdownFile {
-            blocks: vec![ParsedBlock {
-                indentation: 0,
-                content: vec![BlockContent {
-                    as_text: "Test content".to_string(),
-                    as_tokens: vec![link_token("Test link")],
-                }],
-            }],
+            blocks: vec![ParsedBlock::from_tokens(vec![link_token("Test link")])],
         };
         let rendered = render_file_basic_markdown(&markdown_file);
         assert_eq!(rendered.blocks.len(), 1);
         assert_eq!(
             rendered.blocks[0].content.prepared_markdown,
             "[[Test link]]"
+        );
+    }
+
+    #[test]
+    fn render_property_as_property() {
+        let input = block_with_block_property_token("key:: value");
+
+        let result = render_file_basic_markdown(&ParsedMarkdownFile {
+            blocks: vec![input],
+        });
+
+        assert_eq!(result.blocks[0].content.original_text, "key:: value");
+        assert_eq!(
+            result.blocks[0].content.prepared_markdown,
+            "<code class=\"inline-property\">key:: value</code>"
         );
     }
 }
