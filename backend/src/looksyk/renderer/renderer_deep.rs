@@ -7,7 +7,7 @@ use crate::looksyk::renderer::atomics::{
     render_journal_link, render_user_link, serialize_reference,
 };
 use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
-use crate::looksyk::syntax::looksyk_markdown::render_as_todo_without_padding;
+use crate::looksyk::syntax::looksyk_markdown::{render_as_todo_without_padding, render_property};
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
@@ -107,10 +107,7 @@ pub fn render_tokens_deep(
                 inline_markdown_result_list.push(render_as_todo_without_padding(token));
             }
             BlockTokenType::Property => {
-                //FIXME : Proper rendering of property tokens
-                inline_markdown_result_list.push(
-                    format!("<code class=\"inline-property\">{}</code>", token.payload).to_string(),
-                );
+                inline_markdown_result_list.push(render_property(token));
             }
         }
     }
@@ -125,6 +122,7 @@ pub fn render_tokens_deep(
 mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
+    use crate::looksyk::model::builder::{block_with_block_property_token, block_with_property};
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::renderer::model::builder::create_empty_render_context;
@@ -402,5 +400,21 @@ mod tests {
 
         assert_eq!(result.content.original_text, "[x] Mein Todo");
         assert_eq!(result.content.prepared_markdown, "[x] Mein Todo");
+    }
+
+    #[test]
+    fn render_property_as_property() {
+        let result = render_block(
+            &block_with_block_property_token("key:: value"),
+            &create_empty_render_context().to_static(),
+            &mut create_empty_asset_cache(),
+            &empty_data_root_location(),
+        );
+
+        assert_eq!(result.content.original_text, "key:: value");
+        assert_eq!(
+            result.content.prepared_markdown,
+            "<code class=\"inline-property\">key:: value</code>"
+        );
     }
 }

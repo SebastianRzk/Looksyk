@@ -3,7 +3,9 @@ use crate::looksyk::model::{
     PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
 };
 use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link};
-use crate::looksyk::syntax::looksyk_markdown::{render_as_tag_str, render_as_todo_without_padding};
+use crate::looksyk::syntax::looksyk_markdown::{
+    render_as_tag_str, render_as_todo_without_padding, render_property,
+};
 
 pub fn render_file_basic_markdown(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
@@ -59,8 +61,7 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
                 inline_markdown_result_list.push(render_as_todo_without_padding(token).to_string());
             }
             BlockTokenType::Property => {
-                //FIXME: Proper rendering of property tokens
-                inline_markdown_result_list.push(format!("`{}`", token.payload).to_string());
+                inline_markdown_result_list.push(render_property(token));
             }
         }
     }
@@ -71,6 +72,7 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
 mod tests {
     use super::*;
     use crate::looksyk::builder::link_token;
+    use crate::looksyk::model::builder::block_with_block_property_token;
     use crate::looksyk::model::ParsedMarkdownFile;
 
     #[test]
@@ -93,6 +95,21 @@ mod tests {
         assert_eq!(
             rendered.blocks[0].content.prepared_markdown,
             "[[Test link]]"
+        );
+    }
+
+    #[test]
+    fn render_property_as_property() {
+        let input = block_with_block_property_token("key:: value");
+
+        let result = render_file_basic_markdown(&ParsedMarkdownFile {
+            blocks: vec![input],
+        });
+
+        assert_eq!(result.blocks[0].content.original_text, "key:: value");
+        assert_eq!(
+            result.blocks[0].content.prepared_markdown,
+            "<code class=\"inline-property\">key:: value</code>"
         );
     }
 }

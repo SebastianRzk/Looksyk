@@ -3,7 +3,6 @@ use looksyk::io::fs::pages::PageOnDisk;
 use looksyk::looksyk::index::userpage::create_user_page_index;
 
 fn bench_parse_text_content(c: &mut Criterion) {
-    // Beispieltext, kann durch größere Datei ersetzt werden
     let mut group = c.benchmark_group("Text Parsing");
     let input_short = include_str!("../tests/test_input_short.txt");
     let short_pages = &[PageOnDisk {

@@ -1,5 +1,5 @@
 use crate::looksyk::parser::BlockProperties;
-use crate::looksyk::syntax::looksyk_markdown::render_property;
+use crate::looksyk::syntax::looksyk_markdown::serialize_property;
 use crate::state::block::BlockReference;
 use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
 use serde::{Deserialize, Serialize};
@@ -79,13 +79,13 @@ impl ParsedBlock {
         let mut token = vec![];
         let mut text = content.as_text.clone();
 
-        let format_with_whitespace = render_property(property_key, old_value);
+        let property_as_text = serialize_property(property_key, old_value);
 
         for t in content.as_tokens.iter() {
             if t.block_token_type == BlockTokenType::Property {
-                if t.payload == format_with_whitespace {
-                    let new_property_as_text = render_property(property_key, new_value);
-                    text = text.replace(&format_with_whitespace, &new_property_as_text);
+                if t.payload == property_as_text {
+                    let new_property_as_text = serialize_property(property_key, new_value);
+                    text = text.replace(&property_as_text, &new_property_as_text);
                     token.push(BlockToken {
                         payload: new_property_as_text,
                         block_token_type: BlockTokenType::Property,
@@ -141,9 +141,24 @@ impl ParsedBlock {
 
 #[cfg(test)]
 pub mod builder {
+    use super::BlockTokenType;
     use crate::looksyk::builder::{link_token, text_token_str};
     use crate::looksyk::model::{BlockContent, BlockToken, ParsedBlock};
-    use crate::looksyk::parser::BlockProperties;
+    use crate::looksyk::parser::{BlockProperties, BlockProperty};
+
+    pub fn block_with_block_property_token(block_property_text: &str) -> ParsedBlock {
+        ParsedBlock {
+            indentation: 0,
+            content: vec![BlockContent {
+                as_tokens: vec![BlockToken {
+                    payload: block_property_text.to_string(),
+                    block_token_type: BlockTokenType::Property,
+                }],
+                as_text: block_property_text.to_string(),
+            }],
+            properties: BlockProperties::empty(),
+        }
+    }
 
     pub fn block_with_text_content(content: &str) -> ParsedBlock {
         ParsedBlock {
@@ -172,7 +187,7 @@ pub mod builder {
             indentation: 0,
             content: vec![],
             properties: BlockProperties {
-                properties: vec![crate::looksyk::parser::BlockProperty {
+                properties: vec![BlockProperty {
                     key: key.to_string(),
                     value: value.to_string(),
                 }],
@@ -182,7 +197,7 @@ pub mod builder {
 
     pub fn query_block_token(query_payload: &str) -> BlockToken {
         BlockToken {
-            block_token_type: super::BlockTokenType::Query,
+            block_token_type: BlockTokenType::Query,
             payload: query_payload.to_string(),
         }
     }

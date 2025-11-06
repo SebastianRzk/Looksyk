@@ -21,8 +21,12 @@ pub fn render_as_query(token: &BlockToken) -> String {
     format!("{{query: {} }}", token.payload)
 }
 
-pub fn render_property(key: &BlockPropertyKey, value: &BlockPropertyValue) -> String {
+pub fn serialize_property(key: &BlockPropertyKey, value: &BlockPropertyValue) -> String {
     format!("{}:: {}", key.value, value.value)
+}
+
+pub fn render_property(token: &BlockToken) -> String {
+    format!("<code class=\"inline-property\">{}</code>", token.payload).to_string()
 }
 
 #[cfg(test)]
@@ -86,9 +90,20 @@ mod tests {
     }
 
     #[test]
-    fn test_render_property() {
-        let result = render_property(&block_property_key("key1"), &block_property_value("value1"));
+    fn test_serialize_property() {
+        let result =
+            serialize_property(&block_property_key("key1"), &block_property_value("value1"));
 
         assert_eq!(result, "key1:: value1");
+    }
+
+    #[test]
+    fn test_render_property() {
+        let result = render_property(&BlockToken {
+            payload: "key:: value".to_string(),
+            block_token_type: BlockTokenType::Property,
+        });
+
+        assert_eq!(result, "<code class=\"inline-property\">key:: value</code>");
     }
 }

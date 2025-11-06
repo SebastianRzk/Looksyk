@@ -75,22 +75,14 @@ export class KanbanComponent {
 
 
   async drop(event: CdkDragDrop<KanbanItem[]>) {
-    console.log("kanban event", event);
 
     if (event.previousContainer === event.container) {
       return;
     }
-    console.log("moved", event);
-    console.log("from", event.previousContainer.data);
-    console.log("to", event.container.data);
 
     const containerNameFrom = event.previousContainer.id;
     const containerNameTo = event.container.id;
 
-
-    console.log("from column", containerNameFrom);
-    console.log("to column", containerNameTo);
-    console.log("data from", event.currentIndex);
     const kanbanItem : KanbanItem= event.previousContainer.data[event.previousIndex];
     kanbanItem.block = await this.kanbanService.moveKanbanItem(
       kanbanItem.block.reference,
@@ -98,9 +90,6 @@ export class KanbanComponent {
       containerNameFrom,
       containerNameTo
     );
-
-    console.log("container data", kanbanItem);
-    console.log("item id", kanbanItem.block.reference);
 
     transferArrayItem(
       event.previousContainer.data,
