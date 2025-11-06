@@ -172,54 +172,33 @@ mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, page_name_str};
     use crate::looksyk::index::tag::create_tag_index;
     use crate::looksyk::index::todo::create_todo_index;
+    use crate::looksyk::model::builder::block_with_link_content;
     use crate::looksyk::model::{
         BlockContent, BlockToken, BlockTokenType, PageId, ParsedBlock, ParsedMarkdownFile,
     };
     use crate::looksyk::parser::BlockProperties;
+    use crate::state::journal::builder::journal_page_index;
     use crate::state::journal::JournalPageIndex;
     use crate::state::tag::TagIndex;
-    use crate::state::userpage::builder::empty_user_page_index;
-    use crate::state::userpage::UserPageIndex;
+    use crate::state::userpage::builder::{empty_user_page_index, user_page_index};
     use std::collections::{HashMap, HashSet};
 
     #[test]
     pub fn should_create_tag_index_with_empty_state() {
-        let data_state = HashMap::new();
-        let result = create_tag_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
-            &JournalPageIndex {
-                entries: HashMap::new(),
-            },
-        );
+        let result = create_tag_index(&empty_user_page_index(), &empty_journal_index());
 
         assert_eq!(result.entries.len(), 0);
     }
 
     #[test]
     pub fn should_create_tag_index_with_tag() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("source-page"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_tokens: vec![BlockToken {
-                            payload: "target-page".to_string(),
-                            block_token_type: BlockTokenType::Link,
-                        }],
-                        as_text: "".to_string(),
-                    }],
-                    properties: BlockProperties::empty(),
-                }],
-            },
-        );
         let result = create_tag_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
+            &user_page_index(
+                "source-page",
+                ParsedMarkdownFile {
+                    blocks: vec![block_with_link_content("target-page")],
+                },
+            ),
             &empty_journal_index(),
         );
 
@@ -241,30 +220,14 @@ mod tests {
 
     #[test]
     pub fn should_create_tag_index_with_journal_tag() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("source-page"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_tokens: vec![BlockToken {
-                            payload: "target-page".to_string(),
-                            block_token_type: BlockTokenType::Link,
-                        }],
-                        as_text: "".to_string(),
-                    }],
-                    properties: BlockProperties::empty(),
-                }],
-            },
-        );
         let result = create_tag_index(
-            &UserPageIndex {
-                entries: HashMap::new(),
-            },
-            &JournalPageIndex {
-                entries: data_state,
-            },
+            &empty_user_page_index(),
+            &journal_page_index(
+                "source-page",
+                ParsedMarkdownFile {
+                    blocks: vec![block_with_link_content("target-page")],
+                },
+            ),
         );
 
         assert_eq!(result.entries.len(), 1);
@@ -280,12 +243,7 @@ mod tests {
 
     #[test]
     pub fn render_tag_index_for_page_with_no_tags_should_render_empty_page() {
-        let tag_index = create_tag_index(
-            &UserPageIndex {
-                entries: HashMap::new(),
-            },
-            &empty_journal_index(),
-        );
+        let tag_index = create_tag_index(&empty_user_page_index(), &empty_journal_index());
 
         let result = render_tag_index_for_page(user_page_id("testpage"), &tag_index);
 
@@ -298,32 +256,27 @@ mod tests {
 
     #[test]
     pub fn with_tags_in_line_should_insert_index_entry() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("testfile"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock {
-                    indentation: 0,
-                    content: vec![BlockContent {
-                        as_tokens: vec![
-                            done_token(),
-                            any_text_token(),
-                            BlockToken {
-                                payload: "MyTag".to_string(),
-                                block_token_type: BlockTokenType::Link,
-                            },
-                        ],
-                        as_text: "".to_string(),
-                    }],
-                    properties: BlockProperties::empty(),
-                }],
-            },
-        );
-
         let result = create_todo_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
+            &user_page_index(
+                "testfile",
+                ParsedMarkdownFile {
+                    blocks: vec![ParsedBlock {
+                        indentation: 0,
+                        content: vec![BlockContent {
+                            as_tokens: vec![
+                                done_token(),
+                                any_text_token(),
+                                BlockToken {
+                                    payload: "MyTag".to_string(),
+                                    block_token_type: BlockTokenType::Link,
+                                },
+                            ],
+                            as_text: "".to_string(),
+                        }],
+                        properties: BlockProperties::empty(),
+                    }],
+                },
+            ),
             &empty_journal_index(),
         );
 
@@ -382,7 +335,7 @@ mod tests {
     }
 
     #[test]
-    fn should_render_tag_index_for_page_with_journal_page_refernece() {
+    fn should_render_tag_index_for_page_with_journal_page_reference() {
         let mut tag_index = HashMap::new();
         tag_index.insert(
             user_page_id("testpage"),

@@ -65,11 +65,7 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
     } else if query_str.starts_with(QUERY_NAME_BOARD) {
         return parse_query_board(query_str);
     }
-    Ok(Query {
-        query_type: QueryType::Unknown,
-        display: QueryDisplayType::Unknown,
-        args: HashMap::new(),
-    })
+    Ok(Query::unknown())
 }
 
 pub fn render_parsed_query(
@@ -108,6 +104,16 @@ pub struct Query {
     pub query_type: QueryType,
     pub args: HashMap<String, String>,
     pub display: QueryDisplayType,
+}
+
+impl Query {
+    pub fn unknown() -> Query {
+        Query {
+            args: HashMap::new(),
+            display: QueryDisplayType::Unknown,
+            query_type: QueryType::Unknown,
+        }
+    }
 }
 
 #[derive(PartialEq, Debug)]

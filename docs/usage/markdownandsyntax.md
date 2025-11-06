@@ -6,7 +6,8 @@ title: Looksyk - Markdown and Syntax
 ## Overview
 
 * `[[a link]]` creates a link to a page, typing `[[` opens the content assist in "insert link mode"
-* `key:: value` creates a block property
+* `key:: value` creates a block property with the key `key` and the value `value`. Please note the two colons and the
+  following space `:: `
 * <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
 * <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>
@@ -23,7 +24,6 @@ title: Looksyk - Markdown and Syntax
   all pages and journals)
 * <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>.</kbd> and <kbd>Ctrl</kbd>+<kbd>-</kbd> zoom in and out, <kbd>Ctrl</kbd>+<kbd>
   0</kbd> resets the zoom
-
 
 ## Page names and hierarchy
 

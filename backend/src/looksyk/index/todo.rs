@@ -5,13 +5,13 @@ use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 use crate::state::userpage::UserPageIndex;
 
 pub fn create_todo_index(
-    data_state: &UserPageIndex,
+    user_page_index: &UserPageIndex,
     journal_state: &JournalPageIndex,
 ) -> TodoIndex {
     let mut result = vec![];
 
-    for simple_page_name in data_state.entries.keys() {
-        if let Some(file) = data_state.entries.get(simple_page_name) {
+    for simple_page_name in user_page_index.entries.keys() {
+        if let Some(file) = user_page_index.entries.get(simple_page_name) {
             create_todo_index_file(&mut result, &simple_page_name.as_user_page(), file);
         }
     }
@@ -80,23 +80,17 @@ mod tests {
     use crate::looksyk::model::{ParsedBlock, ParsedMarkdownFile};
     use crate::state::block::BlockReference;
     use crate::state::todo::TodoState;
-    use crate::state::userpage::UserPageIndex;
-    use std::collections::HashMap;
+    use crate::state::userpage::builder::user_page_index;
 
     #[test]
     pub fn non_todo_file_should_return_empty_index() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("testfile"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock::empty()],
-            },
-        );
-
         let result = create_todo_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
+            &user_page_index(
+                "testfile",
+                ParsedMarkdownFile {
+                    blocks: vec![ParsedBlock::empty()],
+                },
+            ),
             &empty_journal_index(),
         );
 
@@ -105,21 +99,16 @@ mod tests {
 
     #[test]
     pub fn todo_without_tags_should_insert_index_entry() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("testfile"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock::from_tokens(vec![
-                    todo_token(),
-                    any_text_token(),
-                ])],
-            },
-        );
-
         let result = create_todo_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
+            &user_page_index(
+                "testfile",
+                ParsedMarkdownFile {
+                    blocks: vec![ParsedBlock::from_tokens(vec![
+                        todo_token(),
+                        any_text_token(),
+                    ])],
+                },
+            ),
             &empty_journal_index(),
         );
 
@@ -138,21 +127,16 @@ mod tests {
 
     #[test]
     pub fn todo_done_without_tags_should_insert_index_entry() {
-        let mut data_state = HashMap::new();
-        data_state.insert(
-            page_name_str("testfile"),
-            ParsedMarkdownFile {
-                blocks: vec![ParsedBlock::from_tokens(vec![
-                    done_token(),
-                    any_text_token(),
-                ])],
-            },
-        );
-
         let result = create_todo_index(
-            &UserPageIndex {
-                entries: data_state,
-            },
+            &user_page_index(
+                "testfile",
+                ParsedMarkdownFile {
+                    blocks: vec![ParsedBlock::from_tokens(vec![
+                        done_token(),
+                        any_text_token(),
+                    ])],
+                },
+            ),
             &empty_journal_index(),
         );
 
