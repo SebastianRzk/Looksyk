@@ -122,7 +122,7 @@ pub fn render_tokens_deep(
 mod tests {
     use crate::looksyk::builder::{journal_link_token, link_token, text_token_str};
     use crate::looksyk::index::asset::create_empty_asset_cache;
-    use crate::looksyk::model::builder::{block_with_block_property_token, block_with_property};
+    use crate::looksyk::model::builder::block_with_block_property_token;
     use crate::looksyk::model::{BlockContent, BlockToken, BlockTokenType, ParsedBlock};
     use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::renderer::model::builder::create_empty_render_context;
