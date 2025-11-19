@@ -1,9 +1,8 @@
 use crate::looksyk::model::SimplePageName;
 use crate::looksyk::title::DateType;
-use chrono::{Local, NaiveDate};
 #[cfg(test)]
 use chrono::Datelike;
-
+use chrono::{Local, NaiveDate};
 
 pub fn today() -> TodayContainer {
     TodayContainer {
