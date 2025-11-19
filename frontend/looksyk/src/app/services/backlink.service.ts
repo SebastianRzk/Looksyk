@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
-import { fromDto, MarkdownPage, MarkdownPageDto } from "../pages/model";
+import { EMPTY_MARKDOWN_PAGE, fromDto, MarkdownPage, MarkdownPageDto } from "../pages/model";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -10,12 +10,7 @@ export class BacklinkService {
 
   private http = inject(HttpClient);
 
-  private backlinks: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
-    name: "",
-    blocks: [],
-    pageid: "",
-    isFavourite: false,
-  })
+  private backlinks: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>(EMPTY_MARKDOWN_PAGE)
 
   backlinks$ = this.backlinks.asObservable();
 

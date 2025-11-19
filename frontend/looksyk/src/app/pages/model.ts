@@ -37,8 +37,44 @@ export interface MarkdownPage {
   name: string
   pageid: string,
   isFavourite: boolean,
-  blocks: Block[]
+  blocks: Block[],
+  title: MarkdownPageTitle
 }
+
+export function emptyMarkdownPageWithId(pageId: string): MarkdownPage {
+  return {
+    name: "",
+    blocks: [],
+    pageid: pageId,
+    isFavourite: false,
+    title: {
+      title: "",
+      segments: []
+    }
+  }
+}
+
+export const EMPTY_MARKDOWN_PAGE: MarkdownPage = {
+  name: "",
+  blocks: [],
+  pageid: "",
+  isFavourite: false,
+  title: {
+    title: "",
+    segments: []
+  }
+};
+
+export interface MarkdownPageTitle {
+  title: string,
+  segments: MarkdownPageTitleSegment[]
+}
+
+export interface MarkdownPageTitleSegment {
+  title: string,
+  url: string
+}
+
 
 export interface BlockContentDto {
   originalText: string;
@@ -64,7 +100,18 @@ export interface ReferencedBlockContentDto {
 
 export interface MarkdownPageDto {
   blocks: BlockDto[],
-  isFavourite: boolean
+  isFavourite: boolean,
+  pageTitle: MarkdownPageTitleDto
+}
+
+export interface MarkdownPageTitleDto {
+  title: string,
+  segments: MarkdownPageTitleSegmentDto[]
+}
+
+export interface MarkdownPageTitleSegmentDto {
+  title: string,
+  url: string
 }
 
 export function fromBlockContentDto(block: BlockDto): BlockContent {
@@ -97,10 +144,13 @@ export function fromDto(dto: MarkdownPageDto, name: string, pageid: string): Mar
     isFavourite: dto.isFavourite,
     blocks: result,
     name: name,
-    pageid: pageid
+    pageid: pageid,
+    title: {
+      title: dto.pageTitle.title,
+      segments: dto.pageTitle.segments
+    }
   }
 }
-
 
 
 export interface KanbanData {

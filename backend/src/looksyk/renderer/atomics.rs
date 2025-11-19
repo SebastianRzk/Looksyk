@@ -16,7 +16,7 @@ pub fn render_link(destination: &PageId) -> String {
 pub fn render_user_link(destination: &SimplePageName) -> String {
     markdown_link(
         &decode_destination(&destination.name),
-        &page_path(destination),
+        &user_page_path(destination),
     )
 }
 pub fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedReferencedMarkdown {
@@ -36,7 +36,7 @@ pub fn render_journal_link(destination: &SimplePageName) -> String {
 pub fn render_block_link(block_reference: &BlockReference) -> String {
     let name = &block_reference.page_id.name;
     let link = match block_reference.page_id.page_type {
-        PageType::UserPage => page_path(name),
+        PageType::UserPage => user_page_path(name),
         PageType::JournalPage => journal_path(name),
     };
 
@@ -50,11 +50,11 @@ pub fn render_block_link(block_reference: &BlockReference) -> String {
     )
 }
 
-fn journal_path(name: &SimplePageName) -> String {
+pub fn journal_path(name: &SimplePageName) -> String {
     format!("journal/{}", encode(&name.name))
 }
 
-fn page_path(name: &SimplePageName) -> String {
+pub fn user_page_path(name: &SimplePageName) -> String {
     format!("page/{}", encode(&name.name))
 }
 

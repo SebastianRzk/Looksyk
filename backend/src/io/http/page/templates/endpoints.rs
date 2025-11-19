@@ -1,3 +1,4 @@
+use crate::io::date::today;
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::mapper::map_markdown_file_to_dto;
 use crate::io::http::page::templates::dtos::InsertTemplateDto;
@@ -11,6 +12,7 @@ use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::serializer::serialize_page;
 use crate::looksyk::templates;
 use crate::looksyk::templates::list::TemplateId;
+use crate::looksyk::title::calculate_page_title;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Json};
@@ -65,6 +67,8 @@ async fn insert_template_into_page(
 
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_guard = data.e_asset_cache.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -95,7 +99,7 @@ async fn insert_template_into_page(
             todo_index: &todo_guard,
             tag_index: &tag_guard,
         },
-        &mut data.e_asset_cache.lock().unwrap(),
+        &mut asset_guard,
         &data.data_path,
     );
 
@@ -109,6 +113,7 @@ async fn insert_template_into_page(
         PageType::UserPage => is_favourite(&page_id.name, &data.g_config.lock().unwrap()),
         PageType::JournalPage => false,
     };
+    let title = calculate_page_title(&page_id, &config_guard.journal_configuration, today());
 
     match page_id.page_type {
         PageType::UserPage => {
@@ -131,5 +136,5 @@ async fn insert_template_into_page(
         }
     }
 
-    Ok(Json(map_markdown_file_to_dto(rendered_page, is_fav)))
+    Ok(Json(map_markdown_file_to_dto(rendered_page, is_fav, title)))
 }

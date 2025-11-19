@@ -1,6 +1,7 @@
 pub mod actix;
 pub mod cargo;
 pub mod cli;
+pub mod date;
 pub mod fs;
 mod hash;
 pub mod http;

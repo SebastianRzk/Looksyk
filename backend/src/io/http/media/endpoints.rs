@@ -17,6 +17,7 @@ use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
+use crate::looksyk::model::PageTitle;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
@@ -108,6 +109,7 @@ pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Resu
         return Ok(Json(map_markdown_file_to_dto(
             render_file_flat(&get_asset_meta_info_table(0, 0)),
             false,
+            PageTitle::internal_page_title(format!("Asset not found: {}", filename)),
         )));
     }
     let metadata = read_metadata(path);
@@ -117,6 +119,7 @@ pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Resu
     Ok(Json(map_markdown_file_to_dto(
         render_file_flat(&get_asset_meta_info_table(size, last_modified)),
         false,
+        PageTitle::internal_page_title(filename),
     )))
 }
 
@@ -153,7 +156,11 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
     drop(asset_cache_guard);
     drop(media_index_guard);
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        false,
+        PageTitle::internal_page_title("Media Overview".to_string()),
+    )))
 }
 
 #[get("/assets/{filename:.*}")]

@@ -5,6 +5,9 @@ use crate::io::fs::media::write_media_config;
 use crate::io::fs::version::save_graph_version;
 use crate::looksyk::data::config::init::theme::init_empty_user_theme_if_non_existent;
 use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Config, Design};
+use crate::looksyk::data::config::runtime_graph_configuration::{
+    JournalConfigration, JournalTitleFormat, ShowWeekdayInTitle,
+};
 use crate::looksyk::index::media::MediaIndex;
 use crate::state::application_state::GraphRootLocation;
 
@@ -22,21 +25,30 @@ fn init_empty_graph(data_root_location: &GraphRootLocation) {
     create_folder(data_root_location.path.join("config"));
     save_graph_version(data_root_location, &get_current_application_version());
     write_media_config(data_root_location, &MediaIndex { media: vec![] });
-    save_config_to_file(
-        data_root_location,
-        &Config {
-            favourites: vec![],
-            design: Design {
-                primary_color: "#85b7d5".to_string(),
-                background_color: "#020d22".to_string(),
-                foreground_color: "#ffffff".to_string(),
-                primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
-                appearance: Appearance::Dark,
-            },
-            title: Some("No Graph Title".to_string()),
-        },
-    );
+    save_config_to_file(data_root_location, &default_configuration());
 
     create_folder(data_root_location.path.join("journals"));
     create_folder(data_root_location.path.join("pages"));
+}
+
+fn default_configuration() -> Config {
+    Config {
+        favourites: vec![],
+        design: Design {
+            primary_color: "#85b7d5".to_string(),
+            background_color: "#020d22".to_string(),
+            foreground_color: "#ffffff".to_string(),
+            primary_shading: "rgba(255, 255, 255, 0.1)".to_string(),
+            appearance: Appearance::Dark,
+        },
+        title: Some("No Graph Title".to_string()),
+        journal_configuration: default_journal_configuration(),
+    }
+}
+
+pub fn default_journal_configuration() -> JournalConfigration {
+    JournalConfigration {
+        show_weekday_in_title: ShowWeekdayInTitle::None,
+        journal_title_format: JournalTitleFormat::World,
+    }
 }

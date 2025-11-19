@@ -1,11 +1,12 @@
 use crate::io::http::link_encoding::encode_link_component;
 use crate::io::http::page::dtos::{
-    MarkdownReferenceDto, PreparedBlockContentDto, PreparedBlockDto, PreparedMarkdownFileDto,
-    PreparedReferencedMarkdownDto, UpdateBlockContentDto, UpdateMarkdownFileDto,
+    MarkdownReferenceDto, PageTitleDto, PageTitleSegmentDto, PreparedBlockContentDto,
+    PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto,
+    UpdateBlockContentDto, UpdateMarkdownFileDto,
 };
 use crate::io::http::page_type::page_id_to_external_string;
 use crate::looksyk::model::{
-    PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock,
+    PageTitle, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock,
     UpdateBlock, UpdateMarkdownFile,
 };
 use crate::state::block::BlockReference;
@@ -79,9 +80,21 @@ pub fn from_markdown_reference_to_link(markdown_reference: &BlockReference) -> S
 pub fn map_markdown_file_to_dto(
     prepared_markdown_file: PreparedMarkdownFile,
     is_fav: bool,
+    page_title: PageTitle,
 ) -> PreparedMarkdownFileDto {
     PreparedMarkdownFileDto {
         is_favourite: is_fav,
+        page_title: PageTitleDto {
+            title: page_title.title,
+            segments: page_title
+                .title_segments
+                .iter()
+                .map(|segment| PageTitleSegmentDto {
+                    title: segment.title.clone(),
+                    url: segment.link.clone(),
+                })
+                .collect(),
+        },
         blocks: prepared_markdown_file
             .blocks
             .iter()

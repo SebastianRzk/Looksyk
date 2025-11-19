@@ -35,7 +35,20 @@ pub struct PreparedReferencedMarkdownDto {
 #[serde(rename_all = "camelCase")]
 pub struct PreparedMarkdownFileDto {
     pub is_favourite: bool,
+    pub page_title: PageTitleDto,
     pub blocks: Vec<PreparedBlockDto>,
+}
+
+#[derive(Serialize)]
+pub struct PageTitleSegmentDto {
+    pub title: String,
+    pub url: String,
+}
+
+#[derive(Serialize)]
+pub struct PageTitleDto {
+    pub title: String,
+    pub segments: Vec<PageTitleSegmentDto>,
 }
 
 #[derive(Deserialize)]

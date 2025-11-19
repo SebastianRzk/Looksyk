@@ -14,12 +14,13 @@ use crate::looksyk::index::index_operations::{
 };
 use crate::looksyk::index::rename::{rename_page_across_all_files, NewPageName, OldPageName};
 use crate::looksyk::index::tag::render_tag_index_for_page;
-use crate::looksyk::model::{PageType, ParsedMarkdownFile, RawMarkdownFile};
+use crate::looksyk::model::{PageTitle, PageType, ParsedMarkdownFile, RawMarkdownFile};
 use crate::looksyk::parser::{parse_markdown_file, parse_markdown_update_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::serializer::serialize_page;
+use crate::looksyk::title::calculate_user_page_title;
 use crate::state::application_state::{
     AppState, CurrentPageAssociatedState, CurrentPageOnDiskState,
 };
@@ -57,6 +58,7 @@ async fn update_page(
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let page_id = page_name.as_user_page();
@@ -80,7 +82,7 @@ async fn update_page(
     *journal_guard = new_page_associated_state.journal_pages;
     *block_properties_guard = new_page_associated_state.block_properties_index;
 
-    let is_fav = is_favourite(&page_name, &data.g_config.lock().unwrap());
+    let is_fav = is_favourite(&page_name, &config_guard);
     let rendered_file = render_file(
         &updated_page,
         &StaticRenderContext {
@@ -92,6 +94,7 @@ async fn update_page(
         &mut asset_cache,
         &data.data_path,
     );
+    let page_title = calculate_user_page_title(&page_id);
 
     drop(todo_guard);
     drop(tag_guard);
@@ -104,7 +107,11 @@ async fn update_page(
         GraphChange::user_page_changed(page_id.name.name),
     );
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, is_fav)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        is_fav,
+        page_title,
+    )))
 }
 
 #[get("/api/pages/{page_name}")]
@@ -120,7 +127,9 @@ async fn get_page(
     let todo_index_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
-    let is_fav = is_favourite(&simple_page_name, &data.g_config.lock().unwrap());
+    let config_guard = data.g_config.lock().unwrap();
+    let is_fav = is_favourite(&simple_page_name, &config_guard);
+    let page_title = calculate_user_page_title(&simple_page_name.as_user_page());
 
     let page = page_guard.entries.get(&simple_page_name);
 
@@ -138,7 +147,11 @@ async fn get_page(
                 &mut asset_cache,
                 data_root_location,
             );
-            return Ok(Json(map_markdown_file_to_dto(prepared_page, is_fav)));
+            return Ok(Json(map_markdown_file_to_dto(
+                prepared_page,
+                is_fav,
+                page_title,
+            )));
         }
     }
     let rendered_file = render_file(
@@ -158,7 +171,11 @@ async fn get_page(
     drop(tag_guard);
     drop(asset_cache);
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, is_fav)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        is_fav,
+        page_title,
+    )))
 }
 
 #[get("/api/backlinks/{page_name}")]
@@ -195,7 +212,11 @@ async fn get_backlinks(
     drop(tag_guard);
     drop(asset_cache_guard);
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        false,
+        PageTitle::internal_page_title("".to_string()),
+    )))
 }
 
 #[get("/api/builtin-pages/user-page-overview")]
@@ -225,7 +246,11 @@ async fn get_overview_page(data: Data<AppState>) -> actix_web::Result<impl Respo
     drop(tag_index_guard);
     drop(asset_cache);
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        false,
+        PageTitle::internal_page_title("User Page Overview".to_string()),
+    )))
 }
 
 #[post("/api/append-page/{page_name}")]

@@ -263,6 +263,27 @@ pub struct PreparedMarkdownFile {
     pub blocks: Vec<PreparedBlock>,
 }
 
+#[derive(PartialEq, Eq, Debug)]
+pub struct PageTitleSegment {
+    pub title: String,
+    pub link: String,
+}
+
+#[derive(PartialEq, Eq, Debug)]
+pub struct PageTitle {
+    pub title: String,
+    pub title_segments: Vec<PageTitleSegment>,
+}
+
+impl PageTitle {
+    pub fn internal_page_title(title: String) -> Self {
+        PageTitle {
+            title,
+            title_segments: vec![],
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct RawMarkdownFile {
     pub blocks: Vec<RawBlock>,

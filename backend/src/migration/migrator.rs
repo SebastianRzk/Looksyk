@@ -42,6 +42,12 @@ pub fn run_migrations(
         crate::migration::migration_1_14_3::migriere_1_14_3();
     }
 
+    let version_1_18_0 = ApplicationVersion::new("1.18.0");
+    if data_state_version < &version_1_18_0 {
+        print_running_migration(version_1_18_0);
+        crate::migration::migration_1_18_0::migriere_1_18_0(user_application_directory);
+    }
+
     save_graph_version(user_application_directory, current_version);
     println!("Migrated from version {data_state_version} to {current_version}");
     MigrationResult::MigratedSomething

@@ -20,6 +20,7 @@ pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Confi
         favourites: new_favourites,
         design: config.design.clone(),
         title: config.title.clone(),
+        journal_configuration: config.journal_configuration.clone(),
     }
 }
 
@@ -34,6 +35,7 @@ pub fn set_favourites(new_favourites: Vec<SimplePageName>, config: &Config) -> C
         favourites: result,
         design: config.design.clone(),
         title: config.title.clone(),
+        journal_configuration: config.journal_configuration.clone(),
     }
 }
 
@@ -51,11 +53,13 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
         favourites: new_favourites,
         design: config.design.clone(),
         title: config.title.clone(),
+        journal_configuration: config.journal_configuration.clone(),
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::looksyk::data::config::init::graph::default_journal_configuration;
     use crate::looksyk::data::config::runtime_graph_configuration::builder::{
         config_with_fav, empty_config, empty_design,
     };
@@ -123,6 +127,7 @@ mod tests {
             ],
             design: empty_design(),
             title: None,
+            journal_configuration: default_journal_configuration(),
         };
 
         let result = remove_favourite(

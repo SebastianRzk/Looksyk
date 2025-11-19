@@ -7,6 +7,7 @@ use std::str::FromStr;
 pub struct Config {
     pub favourites: Vec<Favourite>,
     pub design: Design,
+    pub journal_configuration: JournalConfigration,
     pub title: Option<String>,
 }
 
@@ -17,6 +18,72 @@ pub struct Design {
     pub foreground_color: String,
     pub primary_shading: String,
     pub appearance: Appearance,
+}
+
+#[derive(Clone)]
+pub struct JournalConfigration {
+    pub journal_title_format: JournalTitleFormat,
+    pub show_weekday_in_title: ShowWeekdayInTitle,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum JournalTitleFormat {
+    World,
+    American,
+    Iso,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ShowWeekdayInTitle {
+    AsPrefix,
+    AsSuffix,
+    None,
+}
+
+impl FromStr for JournalTitleFormat {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "world" => Ok(JournalTitleFormat::World),
+            "american" => Ok(JournalTitleFormat::American),
+            "iso" => Ok(JournalTitleFormat::Iso),
+            _ => Err(format!("Unknown journal title format: {s}")),
+        }
+    }
+}
+
+impl FromStr for ShowWeekdayInTitle {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "as_prefix" => Ok(ShowWeekdayInTitle::AsPrefix),
+            "as_suffix" => Ok(ShowWeekdayInTitle::AsSuffix),
+            "none" => Ok(ShowWeekdayInTitle::None),
+            _ => Err(format!("Unknown show weekday in title option: {s}")),
+        }
+    }
+}
+
+impl Display for JournalTitleFormat {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            JournalTitleFormat::World => write!(f, "world"),
+            JournalTitleFormat::American => write!(f, "american"),
+            JournalTitleFormat::Iso => write!(f, "iso"),
+        }
+    }
+}
+
+impl Display for ShowWeekdayInTitle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ShowWeekdayInTitle::AsPrefix => write!(f, "as_prefix"),
+            ShowWeekdayInTitle::AsSuffix => write!(f, "as_suffix"),
+            ShowWeekdayInTitle::None => write!(f, "none"),
+        }
+    }
 }
 
 #[derive(Clone, Default, Debug, PartialEq, Eq)]
@@ -61,6 +128,7 @@ impl Favourite {
 #[cfg(test)]
 pub mod builder {
     use crate::looksyk::builder::page_name_str;
+    use crate::looksyk::data::config::init::graph::default_journal_configuration;
     use crate::looksyk::data::config::runtime_graph_configuration::{
         Appearance, Config, Design, Favourite,
     };
@@ -76,6 +144,7 @@ pub mod builder {
             design: empty_design(),
             favourites: vec![favourite_str(fav)],
             title: None,
+            journal_configuration: default_journal_configuration(),
         }
     }
 
@@ -84,6 +153,7 @@ pub mod builder {
             favourites: vec![],
             design: empty_design(),
             title: None,
+            journal_configuration: default_journal_configuration(),
         }
     }
 
@@ -100,6 +170,9 @@ pub mod builder {
 
 #[cfg(test)]
 mod tests {
+    use crate::looksyk::data::config::runtime_graph_configuration::{
+        JournalTitleFormat, ShowWeekdayInTitle,
+    };
     use std::str::FromStr;
 
     #[test]
@@ -117,5 +190,53 @@ mod tests {
 
         assert_eq!(Appearance::Dark.to_string(), "dark");
         assert_eq!(Appearance::Light.to_string(), "light");
+    }
+
+    #[test]
+    fn test_journal_title_format_from_str() {
+        assert_eq!(
+            JournalTitleFormat::from_str("world").unwrap(),
+            JournalTitleFormat::World
+        );
+        assert_eq!(
+            JournalTitleFormat::from_str("american").unwrap(),
+            JournalTitleFormat::American
+        );
+        assert_eq!(
+            JournalTitleFormat::from_str("iso").unwrap(),
+            JournalTitleFormat::Iso
+        );
+        assert!(JournalTitleFormat::from_str("unknown").is_err());
+    }
+
+    #[test]
+    fn test_journal_title_format_display() {
+        assert_eq!(JournalTitleFormat::World.to_string(), "world");
+        assert_eq!(JournalTitleFormat::American.to_string(), "american");
+        assert_eq!(JournalTitleFormat::Iso.to_string(), "iso");
+    }
+
+    #[test]
+    fn test_show_weekday_in_title_from_str() {
+        assert_eq!(
+            ShowWeekdayInTitle::from_str("as_prefix").unwrap(),
+            ShowWeekdayInTitle::AsPrefix
+        );
+        assert_eq!(
+            ShowWeekdayInTitle::from_str("as_suffix").unwrap(),
+            ShowWeekdayInTitle::AsSuffix
+        );
+        assert_eq!(
+            ShowWeekdayInTitle::from_str("none").unwrap(),
+            ShowWeekdayInTitle::None
+        );
+        assert!(ShowWeekdayInTitle::from_str("unknown").is_err());
+    }
+
+    #[test]
+    fn test_show_weekday_in_title_display() {
+        assert_eq!(ShowWeekdayInTitle::AsPrefix.to_string(), "as_prefix");
+        assert_eq!(ShowWeekdayInTitle::AsSuffix.to_string(), "as_suffix");
+        assert_eq!(ShowWeekdayInTitle::None.to_string(), "none");
     }
 }

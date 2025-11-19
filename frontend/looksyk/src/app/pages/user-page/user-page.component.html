@@ -1,6 +1,6 @@
 <div class="header">
   <app-sidebar-toggle></app-sidebar-toggle>
-  <app-user-page-title [title]="pageName$ | async"></app-user-page-title>
+  <app-page-title [title]="(page$ | async)?.title"></app-page-title>
   @if (data | async; as d) {
     <app-fav-star [isFavInitial]="d.page.isFavourite" [pageName]="d.pageName"></app-fav-star>
   }

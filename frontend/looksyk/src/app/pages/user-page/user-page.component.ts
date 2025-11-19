@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@
 import { PageService } from "../../services/page.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from "rxjs";
-import { MarkdownPage } from "../model";
+import { EMPTY_MARKDOWN_PAGE, MarkdownPage } from "../model";
 import { TitleComponent } from "../components/user-page-title/title.component";
 import { FavStarComponent } from "../components/fav-star/fav-star.component";
 import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
@@ -35,12 +35,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   private dialogService: DialogService = inject(DialogService);
   private router: Router = inject(Router);
 
-  private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
-    name: "",
-    pageid: "",
-    blocks: [],
-    isFavourite: false
-  })
+  private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>(EMPTY_MARKDOWN_PAGE)
 
   public page$: Observable<MarkdownPage> = this.pageState.asObservable();
   public page_: Subscription = new Subscription();
