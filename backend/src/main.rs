@@ -10,6 +10,7 @@ use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http;
 use crate::io::http::block_properties;
+use crate::io::http::config;
 use crate::io::http::favourites;
 use crate::io::http::help;
 use crate::io::http::markdown;
@@ -184,6 +185,8 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::post_clone_existing_graph)
             .service(sync::git::io::git_controller::post_connect_to_git)
             .service(sync::git::io::git_controller::get_shutdown_status)
+            .service(config::endpoints::get_journal_title_format)
+            .service(config::endpoints::set_journal_title_format)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

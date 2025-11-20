@@ -1,0 +1,38 @@
+<h2>
+  <mat-icon class="material-symbols-outlined">my_location</mat-icon>
+  Graph Location
+</h2>
+<p>Current graph location: <em>{{ graphLocation | async }}</em></p>
+<p>Current application and graph version: <em>{{ applicationVersion | async }}</em></p>
+<p>To change the current graph location, please look into the <a href="https://sebastianrzk.github.io/Looksyk/">online
+  documentation</a></p>
+<h2 class="inner-heading">
+  <mat-icon class="material-symbols-outlined">page_header</mat-icon>
+  Title
+</h2>
+<mat-form-field>
+  <mat-label>Title</mat-label>
+  <input type="text" matInput [formControl]="titleControl" placeholder="Enter title here"/>
+</mat-form-field>
+
+<h3>Journal Configuration</h3>
+<p>
+  <mat-form-field>
+    <mat-label>Date format</mat-label>
+    <mat-select [formControl]="journalDateFormatControl">
+      <mat-option value="world"> World / Europe (DD.MM.YYYY)</mat-option>
+      <mat-option value="american"> American (MM/DD/YYYY)</mat-option>
+      <mat-option value="iso"> ISO (YYYY-MM-DD)</mat-option>
+    </mat-select>
+  </mat-form-field>
+</p>
+<p>
+  <mat-form-field>
+    <mat-label>Weekday in title</mat-label>
+    <mat-select [formControl]="journalWeekdayControl">
+      <mat-option value="none"> none</mat-option>
+      <mat-option value="as_prefix"> as prefix</mat-option>
+      <mat-option value="as_suffix"> as suffix</mat-option>
+    </mat-select>
+  </mat-form-field>
+</p>

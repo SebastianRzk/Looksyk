@@ -1,0 +1,10 @@
+
+
+
+h2 {
+  margin-top: 5ex;
+}
+
+input, mat-select, mat-form-field{
+  min-width: 50ex;
+}

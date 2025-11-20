@@ -1,0 +1,49 @@
+<h2 class="inner-heading">
+  <mat-icon class="material-symbols-outlined">format_paint</mat-icon>
+  Color Theme
+</h2>
+<h3>Apply pre-configured themes</h3>
+<mat-form-field>
+  <mat-select [formControl]="colorThemeControl">
+    @for (theme of colorThemes; track theme.name) {
+      <mat-option [value]="theme.name">
+        {{ theme.name }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+<h3>Pick colors yourself</h3>
+<div class="form-fields">
+  <mat-form-field>
+    <mat-label>Primary color</mat-label>
+    <input type="color" class="color-input" matInput [formControl]="primaryColorControl"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Background color</mat-label>
+    <input type="color" class="color-input" matInput [formControl]="backgroundColorControl"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Foreground color</mat-label>
+    <input type="color" class="color-input" matInput [formControl]="foregroundColorControl"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Primary shading</mat-label>
+    <input type="color" class="color-input" matInput [formControl]="primaryShadingControl"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Appearance</mat-label>
+    <mat-select [formControl]="appearanceControl">
+      <mat-option value="dark">dark</mat-option>
+      <mat-option value="light">light</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<p>You want to change more? Create your own css-theme in the <em>user-theme.css</em> file in the <em>config</em>
+  folder of your
+  graph.</p>
+<h3>Design Preview</h3>
+<div class="extension-card"><h3>DEMO</h3> <a href="/journal">LINK</a></div>
+<h3>Save or discard</h3>
+<button mat-raised-button (click)="saveConfiguration()">Save</button>
+<button mat-button (click)="discardConfiguration()">Discard and reset changes</button>
+
