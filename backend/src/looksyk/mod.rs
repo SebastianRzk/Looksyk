@@ -16,4 +16,3 @@ pub mod search;
 pub mod serializer;
 pub mod syntax;
 pub mod templates;
-pub mod title;

@@ -8,13 +8,12 @@ use chrono::NaiveDate;
 
 pub fn calculate_page_title(
     page_id: &PageId,
-    design: &JournalConfigration,
-    today_container: TodayContainer,
+    journal_title_metadata: &JournalTitleCalculatorMetadata,
 ) -> PageTitle {
     match page_id.page_type {
         crate::looksyk::model::PageType::UserPage => calculate_user_page_title(page_id),
         crate::looksyk::model::PageType::JournalPage => {
-            calculate_journal_page_title(page_id, design, today_container)
+            calculate_journal_page_title(page_id, journal_title_metadata)
         }
     }
 }
@@ -60,20 +59,22 @@ pub enum DateType {
 
 pub fn calculate_journal_page_title(
     page_id: &PageId,
-    design: &JournalConfigration,
-    today: TodayContainer,
+    journal_title_metadata: &JournalTitleCalculatorMetadata,
 ) -> PageTitle {
     let splitted_date: Vec<&str> = page_id.name.name.split("_").collect();
     let year = splitted_date[0];
     let month = splitted_date[1];
     let day = splitted_date[2];
-    let mut title = match design.journal_title_format {
+    let mut title = match journal_title_metadata
+        .journal_configurataion
+        .journal_title_format
+    {
         JournalTitleFormat::World => format!("{day}.{month}.{year}"),
         JournalTitleFormat::American => format!("{month}/{day}/{year}"),
         JournalTitleFormat::Iso => format!("{year}-{month}-{day}"),
     };
 
-    match calculate_journal_date_property(&page_id.name, today) {
+    match calculate_journal_date_property(&page_id.name, &journal_title_metadata.today) {
         DateType::Today => {
             title = format!("{} (today)", title);
         }
@@ -86,7 +87,10 @@ pub fn calculate_journal_page_title(
         DateType::Other => {}
     }
 
-    match design.show_weekday_in_title {
+    match journal_title_metadata
+        .journal_configurataion
+        .show_weekday_in_title
+    {
         crate::looksyk::data::config::runtime_graph_configuration::ShowWeekdayInTitle::AsPrefix => {
             let weekday = calculate_weekday(year, month, day);
             title = format!("{} {}", weekday, title);
@@ -119,16 +123,40 @@ fn calculate_weekday(year: &str, month: &str, day: &str) -> String {
     }
 }
 
+pub struct JournalTitleCalculatorMetadata<'a> {
+    pub journal_configurataion: &'a JournalConfigration,
+    pub today: TodayContainer,
+}
+
+#[cfg(test)]
+pub mod builder {
+    use crate::io::date::builder::today;
+    use crate::looksyk::data::config::runtime_graph_configuration::{
+        JournalConfigration, JournalTitleFormat, ShowWeekdayInTitle,
+    };
+
+    pub fn world_journal_title_calculator_metadata(
+    ) -> super::JournalTitleCalculatorMetadata<'static> {
+        super::JournalTitleCalculatorMetadata {
+            journal_configurataion: &JournalConfigration {
+                journal_title_format: JournalTitleFormat::World,
+                show_weekday_in_title: ShowWeekdayInTitle::None,
+            },
+            today: today(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::io::date::builder::{other_date, today, tomorrow, yesterday};
     use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
-    use crate::looksyk::data::config::init::graph::default_journal_configuration;
     use crate::looksyk::data::config::runtime_graph_configuration::{
         JournalConfigration, JournalTitleFormat, ShowWeekdayInTitle,
     };
     use crate::looksyk::model::{PageId, PageType, SimplePageName};
-    use crate::looksyk::title::calculate_page_title;
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
+    use crate::looksyk::renderer::title::{calculate_page_title, JournalTitleCalculatorMetadata};
 
     #[test]
     fn test_calculate_page_title_world_format() {
@@ -142,7 +170,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::World,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, other_date());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: other_date(),
+            },
+        );
         assert_eq!(title.title, "15.06.2024");
     }
     #[test]
@@ -157,7 +191,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::American,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, other_date());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: other_date(),
+            },
+        );
         assert_eq!(title.title, "06/15/2024");
     }
 
@@ -173,7 +213,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::Iso,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, other_date());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: other_date(),
+            },
+        );
         assert_eq!(title.title, "2024-06-15");
     }
 
@@ -189,7 +235,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::American,
             show_weekday_in_title: ShowWeekdayInTitle::AsPrefix,
         };
-        let title = calculate_page_title(&page_id, &design, other_date());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: other_date(),
+            },
+        );
         assert_eq!(title.title, "Saturday 06/15/2024");
     }
 
@@ -205,7 +257,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::World,
             show_weekday_in_title: ShowWeekdayInTitle::AsSuffix,
         };
-        let title = calculate_page_title(&page_id, &design, other_date());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: other_date(),
+            },
+        );
         assert_eq!(title.title, "15.06.2024 Saturday");
     }
 
@@ -213,8 +271,7 @@ mod tests {
     fn test_calculate_user_page_title_without_hierarchy() {
         let title = calculate_page_title(
             &user_page_id("MyPage"),
-            &default_journal_configuration(),
-            today(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(title.title, "MyPage");
         assert_eq!(title.title_segments.len(), 1);
@@ -226,8 +283,7 @@ mod tests {
     fn test_calculate_user_page_title_with_hierarchy() {
         let title = calculate_page_title(
             &user_page_id("Folder/Subfolder/MyPage"),
-            &default_journal_configuration(),
-            today(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(title.title, "Folder/Subfolder/MyPage");
         assert_eq!(title.title_segments.len(), 3);
@@ -246,8 +302,7 @@ mod tests {
     fn test_calculate_user_page_title_with_hierarchy_should_trim_whitespace() {
         let title = calculate_page_title(
             &user_page_id("Folder / Subfolder / MyPage"),
-            &default_journal_configuration(),
-            today(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(title.title, "Folder / Subfolder / MyPage");
         assert_eq!(title.title_segments.len(), 3);
@@ -278,7 +333,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::Iso,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, today);
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today,
+            },
+        );
         assert!(title.title.ends_with("(today)"));
         assert!(!title.title.ends_with("(tomorrow)"));
         assert!(!title.title.ends_with("(yesterday)"));
@@ -297,7 +358,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::Iso,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, today());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: today(),
+            },
+        );
         assert!(!title.title.ends_with("(today)"));
         assert!(!title.title.ends_with("(tomorrow)"));
         assert!(title.title.ends_with("(yesterday)"));
@@ -316,7 +383,13 @@ mod tests {
             journal_title_format: JournalTitleFormat::Iso,
             show_weekday_in_title: ShowWeekdayInTitle::None,
         };
-        let title = calculate_page_title(&page_id, &design, today());
+        let title = calculate_page_title(
+            &page_id,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &design,
+                today: today(),
+            },
+        );
         assert!(!title.title.ends_with("(today)"));
         assert!(title.title.ends_with("(tomorrow)"));
         assert!(!title.title.ends_with("(yesterday)"));

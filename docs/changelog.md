@@ -5,6 +5,16 @@ title: Changelog
 
 # Changelog
 
+
+
+### v1.18.0 (2025-11-22)
+
+Enhancements:
+
+* The date of journal entries can be adjusted to different date formats.
+* Improvement of the configuration interface of the board view
+* Revision of the Global Configuration Interface
+
 ### v1.17.0 (2025-11-06)
 
 Enhancements:

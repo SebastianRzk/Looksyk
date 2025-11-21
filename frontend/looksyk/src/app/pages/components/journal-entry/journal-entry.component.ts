@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges } from '@angular/core';
-import {BehaviorSubject, filter, Observable, Subject, Subscription} from "rxjs";
+import { BehaviorSubject, filter, Observable, Subject, Subscription } from "rxjs";
 import { MarkdownPage } from "../../model";
 import { MatListModule } from "@angular/material/list";
 import { AsyncPipe } from "@angular/common";
 import { JournalPageName } from "../../journal-single-entry/journal-single-entry.component";
 import { DateService } from "../../../services/date.service";
 import { EditablePageComponent } from "../editable-markdown-page/editable-page.component";
-import { TitleComponent } from "../user-page-title/title.component";
+import { TitleComponent } from "../page-title/title.component";
 
 @Component({
   selector: 'app-journal-entry',
@@ -15,7 +15,7 @@ import { TitleComponent } from "../user-page-title/title.component";
   styleUrls: ['./journal-entry.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JournalEntryComponent implements  OnChanges{
+export class JournalEntryComponent implements OnChanges {
 
   private dateService = inject(DateService);
 
@@ -45,7 +45,6 @@ export class JournalEntryComponent implements  OnChanges{
       });
     });
   }
-
 
 
 }

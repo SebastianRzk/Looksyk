@@ -8,6 +8,7 @@ use crate::looksyk::queries::args::{
 use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::atomics::{render_link, render_user_link};
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::tag::TagIndex;
 
 pub const QUERY_NAME_REFERENCES_TO: &str = "references-to";
@@ -30,7 +31,11 @@ pub fn parse_query_references_to(query_str: &str) -> Result<Query, Error> {
     })
 }
 
-pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderResult {
+pub fn render_references_of_query(
+    query: Query,
+    data: &TagIndex,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let target = SimplePageName {
         name: query.args.get(PARAM_TARGET).unwrap().clone(),
     };
@@ -42,7 +47,9 @@ pub fn render_references_of_query(query: Query, data: &TagIndex) -> QueryRenderR
         .unwrap_or(&empty_set);
 
     match query.display {
-        QueryDisplayType::InplaceList => render_as_list(&target, references),
+        QueryDisplayType::InplaceList => {
+            render_as_list(&target, references, journal_title_calculator_metadata)
+        }
         QueryDisplayType::Count => render_as_count(references),
         _ => render_display_unknown(
             query.display,
@@ -59,10 +66,16 @@ pub fn render_as_count(refs: &HashSet<PageId>) -> QueryRenderResult {
     }
 }
 
-fn render_as_list(page_name: &SimplePageName, refs: &HashSet<PageId>) -> QueryRenderResult {
+fn render_as_list(
+    page_name: &SimplePageName,
+    refs: &HashSet<PageId>,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let mut result = format!("Pages that reference {}\n", render_user_link(page_name));
     for r in refs.iter() {
-        result.push_str(format!("* {}\n", render_link(r)).as_str());
+        result.push_str(
+            format!("* {}\n", render_link(r, journal_title_calculator_metadata)).as_str(),
+        );
     }
     if refs.is_empty() {
         result.push_str("* No references found!\n");

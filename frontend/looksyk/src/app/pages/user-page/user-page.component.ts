@@ -3,7 +3,6 @@ import { PageService } from "../../services/page.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from "rxjs";
 import { EMPTY_MARKDOWN_PAGE, MarkdownPage } from "../model";
-import { TitleComponent } from "../components/user-page-title/title.component";
 import { FavStarComponent } from "../components/fav-star/fav-star.component";
 import { ReferencedByComponent } from "../components/referenced-by/referenced-by.component";
 import { MatDivider } from "@angular/material/divider";
@@ -15,6 +14,7 @@ import { TitleService } from "../../services/title.service";
 import { DialogService } from "../../services/dialog.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
 import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
+import { TitleComponent } from "../components/page-title/title.component";
 
 @Component({
   selector: 'app-user-page',

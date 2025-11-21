@@ -9,7 +9,7 @@ import { DateService } from "../../services/date.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
 import { MatDivider } from "@angular/material/divider";
 import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
-import { TitleComponent } from "../components/user-page-title/title.component";
+import { TitleComponent } from "../components/page-title/title.component";
 
 @Component({
   selector: 'app-journal-single-entry',

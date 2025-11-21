@@ -24,3 +24,8 @@
   font-size: x-small;
   color: var(--primary-color);
 }
+
+
+input, mat-input, mat-autocomplete, mat-form-field {
+  min-width: 50ex;
+}

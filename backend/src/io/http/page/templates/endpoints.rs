@@ -9,10 +9,10 @@ use crate::looksyk::index::index_operations::update_index_for_file;
 use crate::looksyk::model::{PageType, ParsedMarkdownFile};
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
+use crate::looksyk::renderer::title::{calculate_page_title, JournalTitleCalculatorMetadata};
 use crate::looksyk::serializer::serialize_page;
 use crate::looksyk::templates;
 use crate::looksyk::templates::list::TemplateId;
-use crate::looksyk::title::calculate_page_title;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Json};
@@ -91,6 +91,11 @@ async fn insert_template_into_page(
     *journal_guard = new_page_associated_state.journal_pages;
     *block_properties_guard = new_page_associated_state.block_properties_index;
 
+    let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {
+        journal_configurataion: &config_guard.journal_configuration,
+        today: today(),
+    };
+
     let rendered_page = render_file(
         &updated_page,
         &StaticRenderContext {
@@ -101,6 +106,7 @@ async fn insert_template_into_page(
         },
         &mut asset_guard,
         &data.data_path,
+        &journal_title_calculator_metadata,
     );
 
     drop(todo_guard);
@@ -113,7 +119,8 @@ async fn insert_template_into_page(
         PageType::UserPage => is_favourite(&page_id.name, &data.g_config.lock().unwrap()),
         PageType::JournalPage => false,
     };
-    let title = calculate_page_title(&page_id, &config_guard.journal_configuration, today());
+
+    let title = calculate_page_title(&page_id, &journal_title_calculator_metadata);
 
     match page_id.page_type {
         PageType::UserPage => {

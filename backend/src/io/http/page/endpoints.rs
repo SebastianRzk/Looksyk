@@ -1,8 +1,6 @@
 extern crate urlencoding;
 
-use actix_web::web::{Data, Path};
-use actix_web::{post, web, Responder, Result};
-
+use crate::io::date::today;
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::dtos::UpdateBlockContentDto;
 use crate::io::http::page::mapper::{map_markdown_block_dto, map_to_block_dto};
@@ -13,9 +11,12 @@ use crate::looksyk::parser::{parse_block, parse_markdown_file};
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_block;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::looksyk::serializer::update_and_serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
+use actix_web::web::{Data, Path};
+use actix_web::{post, web, Responder, Result};
 
 #[post("/api/pagesbyid/{page_id}/block/{block_number}")]
 async fn update_block(
@@ -34,6 +35,7 @@ async fn update_block(
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let selected_page = match page_id.page_type {
@@ -94,6 +96,10 @@ async fn update_block(
         },
         &mut asset_cache,
         &data.data_path,
+        &JournalTitleCalculatorMetadata {
+            journal_configurataion: &config_guard.journal_configuration,
+            today: today(),
+        },
     );
 
     drop(todo_guard);

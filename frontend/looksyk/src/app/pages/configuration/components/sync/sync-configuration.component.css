@@ -1,5 +1,4 @@
 
-
 .form-fields {
   display: flex;
   flex-wrap: wrap;
@@ -27,7 +26,7 @@
 }
 
 
-section{
+section {
   display: flex;
   flex-direction: column;
   gap: 2ex;

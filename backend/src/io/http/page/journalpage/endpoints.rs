@@ -13,8 +13,10 @@ use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
+use crate::looksyk::renderer::title::{
+    calculate_journal_page_title, calculate_page_title, JournalTitleCalculatorMetadata,
+};
 use crate::looksyk::serializer::serialize_page;
-use crate::looksyk::title::{calculate_journal_page_title, calculate_page_title};
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_web::web::{Data, Path};
@@ -23,9 +25,16 @@ use actix_web::{get, post, web, Responder};
 #[get("/api/builtin-pages/journal-overview")]
 async fn journal_overview(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     let journals = data.b_journal_pages.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let journal_overview = generate_journal_overview(journals.entries.keys().cloned().collect());
     Ok(web::Json(map_markdown_file_to_dto(
-        render_file_flat(&journal_overview),
+        render_file_flat(
+            &journal_overview,
+            &JournalTitleCalculatorMetadata {
+                journal_configurataion: &config_guard.journal_configuration,
+                today: today(),
+            },
+        ),
         false,
         PageTitle::internal_page_title("Journal Overview".to_string()),
     )))
@@ -47,10 +56,14 @@ async fn get_journal(
     let page = journal_guard.entries.get(&simple_page_name);
 
     let fav = is_favourite(&simple_page_name, &config_guard);
+    let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {
+        journal_configurataion: &config_guard.journal_configuration,
+        today: today(),
+    };
+
     let page_title = calculate_journal_page_title(
         &simple_page_name.as_journal_page(),
-        &config_guard.journal_configuration,
-        today(),
+        &journal_title_calculator_metadata,
     );
 
     if let Some(parsed_page) = page {
@@ -65,6 +78,7 @@ async fn get_journal(
                 },
                 &mut asset_cache,
                 &data.data_path,
+                &journal_title_calculator_metadata,
             );
             return Ok(web::Json(map_markdown_file_to_dto(
                 prepared_page,
@@ -84,6 +98,7 @@ async fn get_journal(
         },
         &mut asset_cache,
         &data.data_path,
+        &journal_title_calculator_metadata,
     );
 
     drop(page_guard);
@@ -154,7 +169,11 @@ async fn update_journal(
     *block_properties_guard = new_page_associated_state.block_properties_index;
 
     let is_fav = is_favourite(&simple_page_name, &config_guard);
-    let page_title = calculate_page_title(&page_id, &config_guard.journal_configuration, today());
+    let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {
+        journal_configurataion: &config_guard.journal_configuration,
+        today: today(),
+    };
+    let page_title = calculate_page_title(&page_id, &journal_title_calculator_metadata);
     let rendered_file = render_file(
         &updated_page,
         &StaticRenderContext {
@@ -165,6 +184,7 @@ async fn update_journal(
         },
         &mut asset_cache,
         &data.data_path,
+        &journal_title_calculator_metadata,
     );
 
     drop(todo_guard);

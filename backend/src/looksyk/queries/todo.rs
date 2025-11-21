@@ -11,6 +11,7 @@ use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::atomics::render_link;
 use crate::looksyk::renderer::renderer_flat::render_block_flat_as_string;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::todo::{TodoIndex, TodoIndexEntry, TodoState};
 
 pub const QUERY_NAME_TODOS: &str = "todos";
@@ -35,7 +36,11 @@ pub fn parse_query_todo(query_str: &str) -> Result<Query, Error> {
     })
 }
 
-pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
+pub fn render_todo_query(
+    query: Query,
+    data: &TodoIndex,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let expected_tag = query.args.get(PARAM_TAG).unwrap();
     let expected_tag_page = page_name(expected_tag.clone());
     let expected_state = state_from_string(query.args.get(PARAM_STATE).unwrap());
@@ -49,7 +54,7 @@ pub fn render_todo_query(query: Query, data: &TodoIndex) -> QueryRenderResult {
     }
 
     match query.display {
-        QueryDisplayType::InplaceList => render_as_list(result),
+        QueryDisplayType::InplaceList => render_as_list(result, journal_title_calculator_metadata),
         QueryDisplayType::Count => render_as_count(result),
         QueryDisplayType::ReferencedList => render_as_references(result),
         _ => render_display_unknown(
@@ -92,25 +97,32 @@ fn render_as_count(selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
     }
 }
 
-fn render_as_list(selected_selected_todos: Vec<&TodoIndexEntry>) -> QueryRenderResult {
+fn render_as_list(
+    selected_selected_todos: Vec<&TodoIndexEntry>,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let mut result = "\n\n".to_string();
     for todo in selected_selected_todos {
         if todo.state == TodoState::Done {
             result.push_str("* :check mark: ");
-            result.push_str(render_link(&todo.source.page_id).as_str());
+            result.push_str(
+                render_link(&todo.source.page_id, journal_title_calculator_metadata).as_str(),
+            );
             result.push_str(": ");
             result.push_str(
-                render_block_flat_as_string(&todo.block)
+                render_block_flat_as_string(&todo.block, journal_title_calculator_metadata)
                     .strip_prefix("[x] ")
                     .unwrap(),
             );
             result.push_str("\n\n")
         } else {
             result.push_str("* :white large square: ");
-            result.push_str(render_link(&todo.source.page_id).as_str());
+            result.push_str(
+                render_link(&todo.source.page_id, journal_title_calculator_metadata).as_str(),
+            );
             result.push_str(": ");
             result.push_str(
-                render_block_flat_as_string(&todo.block)
+                render_block_flat_as_string(&todo.block, journal_title_calculator_metadata)
                     .strip_prefix("[ ] ")
                     .unwrap(),
             );

@@ -1,5 +1,5 @@
 use crate::looksyk::model::SimplePageName;
-use crate::looksyk::title::DateType;
+use crate::looksyk::renderer::title::DateType;
 #[cfg(test)]
 use chrono::Datelike;
 use chrono::{Local, NaiveDate};
@@ -14,7 +14,7 @@ pub struct TodayContainer {
     today: NaiveDate,
 }
 
-pub fn calculate_journal_date_property(name: &SimplePageName, today: TodayContainer) -> DateType {
+pub fn calculate_journal_date_property(name: &SimplePageName, today: &TodayContainer) -> DateType {
     let splitted_date: Vec<&str> = name.name.split("_").collect();
     let year = splitted_date[0];
     let month = splitted_date[1];
@@ -85,7 +85,7 @@ mod tests {
     use crate::io::date::builder::today;
     use crate::io::date::calculate_journal_date_property;
     use crate::looksyk::model::SimplePageName;
-    use crate::looksyk::title::DateType;
+    use crate::looksyk::renderer::title::DateType;
 
     #[test]
     fn test_get_journal_date_property_for_today() {
@@ -93,7 +93,7 @@ mod tests {
             name: "2024_06_15".to_string(),
         };
         assert_eq!(
-            calculate_journal_date_property(&today_page, today()),
+            calculate_journal_date_property(&today_page, &today()),
             DateType::Today
         );
     }
@@ -105,7 +105,7 @@ mod tests {
         };
 
         assert_eq!(
-            calculate_journal_date_property(&tomorrow_page, today()),
+            calculate_journal_date_property(&tomorrow_page, &today()),
             DateType::Tomorrow
         );
     }
@@ -117,7 +117,7 @@ mod tests {
         };
 
         assert_eq!(
-            calculate_journal_date_property(&yesterday_page, today()),
+            calculate_journal_date_property(&yesterday_page, &today()),
             DateType::Yesterday
         );
     }
@@ -129,7 +129,7 @@ mod tests {
         };
 
         assert_eq!(
-            calculate_journal_date_property(&other_page, today()),
+            calculate_journal_date_property(&other_page, &today()),
             DateType::Other
         );
     }

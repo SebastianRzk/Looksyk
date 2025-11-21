@@ -19,15 +19,15 @@
         </div>
         <mat-form-field>
           <mat-label>Tag</mat-label>
-          <mat-select formControlName="tag">
-            @if (tags | async; as tags) {
-              @for (tag of tags.tags; track tag) {
+          <input matInput formControlName="tag" [matAutocomplete]="tagAuto" />
+          <mat-autocomplete #tagAuto="matAutocomplete">
+            @if (tags$ | async; as tags) {
+              @for (tag of tags; track tag) {
                 <mat-option [value]="tag">{{ tag }}</mat-option>
               }
               <mat-option value="kanban">kanban (fallback)</mat-option>
-
             }
-          </mat-select>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
       <div>
@@ -36,13 +36,14 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <mat-select formControlName="columnKey">
-            @for (col of (blockProperties$ | async); track col) {
+          <input matInput formControlName="columnKey" [matAutocomplete]="propertyKeyAuto" />
+          <mat-autocomplete #propertyKeyAuto="matAutocomplete">
+            @for (col of (blockPropertiesForKey$ | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
             }
             <mat-option value="state">state (fallback)</mat-option>
 
-          </mat-select>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
       <div>
@@ -58,13 +59,14 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <mat-select formControlName="priorityKey">
-            @for (prio of (blockProperties$| async); track prio) {
+          <input matInput formControlName="priorityKey" [matAutocomplete]="propertyKeyPrioAuto" />
+          <mat-autocomplete #propertyKeyPrioAuto="matAutocomplete">
+            @for (prio of (blockPropertiesForPrio$| async); track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
             }
             <mat-option [value]="'priority'">priority (fallback)</mat-option>
 
-          </mat-select>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
     </form>
