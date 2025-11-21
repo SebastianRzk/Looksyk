@@ -1,0 +1,43 @@
+
+.form-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2ex 3ex;
+  align-items: flex-end;
+  margin-bottom: 2ex;
+}
+
+.form-fields mat-form-field {
+  min-width: 220px;
+  flex: 1 1 220px;
+}
+
+.color-input {
+  padding: 0;
+  border: none;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.inner-heading {
+  margin-top: 5ex;
+}
+
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 2ex;
+  margin-bottom: 5ex;
+}
+
+h2 {
+  margin-top: 5ex;
+}
+
+
+h3 {
+  margin-top: 5ex;
+}

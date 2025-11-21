@@ -3,25 +3,38 @@ use crate::looksyk::model::{
     PreparedBlockContent, PreparedMarkdownFile, SimplePageName,
 };
 use crate::looksyk::renderer::atomics::{combine_text_content, render_journal_link};
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::looksyk::syntax::looksyk_markdown::{
     render_as_tag_str, render_as_todo_without_padding, render_property,
 };
 
-pub fn render_file_basic_markdown(markdown_file: &ParsedMarkdownFile) -> PreparedMarkdownFile {
+pub fn render_file_basic_markdown(
+    markdown_file: &ParsedMarkdownFile,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
-        result_blocks.push(render_block_basic_markdown(original_block));
+        result_blocks.push(render_block_basic_markdown(
+            original_block,
+            journal_title_calculator_metadata,
+        ));
     }
     PreparedMarkdownFile {
         blocks: result_blocks,
     }
 }
 
-fn render_block_basic_markdown(block: &ParsedBlock) -> PreparedBlock {
+fn render_block_basic_markdown(
+    block: &ParsedBlock,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> PreparedBlock {
     PreparedBlock {
         indentation: block.indentation,
         content: PreparedBlockContent {
-            prepared_markdown: render_block_basic_markdown_as_string(block),
+            prepared_markdown: render_block_basic_markdown_as_string(
+                block,
+                journal_title_calculator_metadata,
+            ),
             original_text: combine_text_content(block),
         },
         referenced_markdown: vec![],
@@ -29,16 +42,25 @@ fn render_block_basic_markdown(block: &ParsedBlock) -> PreparedBlock {
     }
 }
 
-pub fn render_block_basic_markdown_as_string(block: &ParsedBlock) -> String {
+pub fn render_block_basic_markdown_as_string(
+    block: &ParsedBlock,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> String {
     let mut result_list = vec![];
 
     for content in &block.content {
-        result_list.push(render_tokens_text_only(&content.as_tokens));
+        result_list.push(render_tokens_text_only(
+            &content.as_tokens,
+            journal_title_calculator_metadata,
+        ));
     }
     result_list.join("\n")
 }
 
-fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
+fn render_tokens_text_only(
+    tokens: &Vec<BlockToken>,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> String {
     let mut inline_markdown_result_list = vec![];
     for token in tokens {
         match token.block_token_type {
@@ -49,9 +71,12 @@ fn render_tokens_text_only(tokens: &Vec<BlockToken>) -> String {
                 inline_markdown_result_list.push(render_as_tag_str(&token.payload).to_string());
             }
             BlockTokenType::JournalLink => {
-                inline_markdown_result_list.push(render_journal_link(&SimplePageName {
-                    name: token.payload.clone(),
-                }));
+                inline_markdown_result_list.push(render_journal_link(
+                    &SimplePageName {
+                        name: token.payload.clone(),
+                    },
+                    journal_title_calculator_metadata,
+                ));
             }
             BlockTokenType::Query => {
                 inline_markdown_result_list
@@ -74,13 +99,15 @@ mod tests {
     use crate::looksyk::builder::link_token;
     use crate::looksyk::model::builder::block_with_block_property_token;
     use crate::looksyk::model::ParsedMarkdownFile;
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
 
     #[test]
     fn test_render_file_basic_markdown() {
         let markdown_file = ParsedMarkdownFile {
             blocks: vec![ParsedBlock::artificial_text_block("Test content")],
         };
-        let rendered = render_file_basic_markdown(&markdown_file);
+        let rendered =
+            render_file_basic_markdown(&markdown_file, &world_journal_title_calculator_metadata());
         assert_eq!(rendered.blocks.len(), 1);
         assert_eq!(rendered.blocks[0].content.prepared_markdown, "Test content");
     }
@@ -90,7 +117,8 @@ mod tests {
         let markdown_file = ParsedMarkdownFile {
             blocks: vec![ParsedBlock::from_tokens(vec![link_token("Test link")])],
         };
-        let rendered = render_file_basic_markdown(&markdown_file);
+        let rendered =
+            render_file_basic_markdown(&markdown_file, &world_journal_title_calculator_metadata());
         assert_eq!(rendered.blocks.len(), 1);
         assert_eq!(
             rendered.blocks[0].content.prepared_markdown,
@@ -102,9 +130,12 @@ mod tests {
     fn render_property_as_property() {
         let input = block_with_block_property_token("key:: value");
 
-        let result = render_file_basic_markdown(&ParsedMarkdownFile {
-            blocks: vec![input],
-        });
+        let result = render_file_basic_markdown(
+            &ParsedMarkdownFile {
+                blocks: vec![input],
+            },
+            &world_journal_title_calculator_metadata(),
+        );
 
         assert_eq!(result.blocks[0].content.original_text, "key:: value");
         assert_eq!(

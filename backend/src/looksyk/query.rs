@@ -21,6 +21,7 @@ use crate::looksyk::queries::todo_progress::{
     parse_query_todo_progress, render_todo_query_progress, QUERY_NAME_TODO_PROGRESS,
 };
 use crate::looksyk::renderer::model::StaticRenderContext;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
 
@@ -29,6 +30,7 @@ pub fn render_query(
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
     data_root_location: &GraphRootLocation,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> QueryRenderResult {
     let query = parse_query(&block.payload);
     if query.is_err() {
@@ -45,6 +47,7 @@ pub fn render_query(
         render_context,
         asset_cache,
         data_root_location,
+        journal_title_calculator_metadata,
     )
 }
 
@@ -73,11 +76,20 @@ pub fn render_parsed_query(
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
     data_root_location: &GraphRootLocation,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> QueryRenderResult {
     match query.query_type {
         QueryType::PageHierarchy => render_page_hierarchy(query, render_context.user_pages),
-        QueryType::Todo => render_todo_query(query, render_context.todo_index),
-        QueryType::ReferencesTo => render_references_of_query(query, render_context.tag_index),
+        QueryType::Todo => render_todo_query(
+            query,
+            render_context.todo_index,
+            journal_title_calculator_metadata,
+        ),
+        QueryType::ReferencesTo => render_references_of_query(
+            query,
+            render_context.tag_index,
+            journal_title_calculator_metadata,
+        ),
         QueryType::InsertFileContent => {
             render_query_insert_file_content(query, asset_cache, data_root_location)
         }
@@ -86,6 +98,7 @@ pub fn render_parsed_query(
             render_context.tag_index,
             render_context.user_pages,
             render_context.journal_pages,
+            journal_title_calculator_metadata,
         ),
         QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
         QueryType::Board => render_board_query(query),
@@ -177,6 +190,7 @@ mod tests {
         create_empty_render_context, create_render_context, create_render_context_with_tag_index,
         create_render_context_with_todo_index, create_render_context_with_user_page_index,
     };
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
     use crate::state::application_state::builder::empty_data_root_location;
     use crate::state::asset_cache::{AssetFileContent, AssetState, FileSizeViolation};
     use crate::state::block::BlockReference;
@@ -198,6 +212,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(result.inplace_markdown, "Query type unknown. Allowed types: blocks, page-hierarchy, references-to, todos, insert-file-content");
         assert_eq!(result.referenced_markdown.len(), 0);
@@ -216,6 +231,7 @@ mod tests {
                 .to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "parent:\n- [parent / sub1](page/parent%20%2F%20sub1)\n- [parent / sub2](page/parent%20%2F%20sub2)\n");
@@ -235,6 +251,7 @@ mod tests {
                 .to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(
@@ -274,6 +291,7 @@ mod tests {
                 .to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "2");
@@ -310,6 +328,7 @@ mod tests {
             &create_render_context_with_todo_index(todo_index).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "1");
@@ -349,6 +368,7 @@ mod tests {
             &create_render_context(page_index, todo_index, empty_tag_index()).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(
@@ -391,6 +411,7 @@ mod tests {
             &create_render_context(page_index, todo_index, empty_tag_index()).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(
@@ -444,6 +465,7 @@ mod tests {
             &create_render_context_with_todo_index(todo_index).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "");
@@ -474,6 +496,7 @@ mod tests {
             &create_render_context_with_tag_index(tag_index).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "1");
@@ -495,6 +518,7 @@ mod tests {
             &create_render_context_with_tag_index(tag_index).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(
@@ -511,6 +535,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(
@@ -539,6 +564,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut asset_cache,
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "myFileContent");
@@ -562,6 +588,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut asset_cache,
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "File not found");
@@ -588,6 +615,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut asset_cache,
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "File is too large. Max size is 512. File size is 1025. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
@@ -611,6 +639,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut asset_cache,
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "File is not a text file. Can not inline a binary file. Try display type \"link\" to render a link: [myfile](/assets/myfile)");
@@ -636,6 +665,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut asset_cache,
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "```rust\nmyFileContent\n```");
@@ -649,6 +679,7 @@ mod tests {
             &create_render_context_with_todo_index(empty_todo_index()).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "<label>\nbernd -Todos : 0/0 done (100%)\n <progress value=\"100\" max=\"100\"></progress>\n</label>");
@@ -671,6 +702,7 @@ mod tests {
             &create_render_context_with_todo_index(todo_index).to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.inplace_markdown, "<label>\nbernd -Todos : 2/3 done (67%)\n <progress value=\"67\" max=\"100\"></progress>\n</label>");

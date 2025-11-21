@@ -11,6 +11,7 @@ use crate::looksyk::queries::basic::unknown::render_display_unknown;
 use crate::looksyk::query::{Query, QueryDisplayType, QueryType};
 use crate::looksyk::renderer::atomics::{render_block_link, render_user_link};
 use crate::looksyk::renderer::renderer_flat::render_block_flat;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
 use crate::state::tag::TagIndex;
@@ -44,6 +45,7 @@ pub fn render_blocks_query(
     tag_index: &TagIndex,
     user_page_index: &UserPageIndex,
     journal_page_index: &JournalPageIndex,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> QueryRenderResult {
     let target = SimplePageName {
         name: query.args.get(PARAM_TARGET).unwrap().clone(),
@@ -61,11 +63,17 @@ pub fn render_blocks_query(
     let resolved_blocks = resolve_blocks(&target, &references, user_page_index, journal_page_index);
 
     match query.display {
-        QueryDisplayType::InplaceList => render_as_list(&target, &resolved_blocks),
+        QueryDisplayType::InplaceList => {
+            render_as_list(&target, &resolved_blocks, journal_title_calculator_metadata)
+        }
         QueryDisplayType::Count => render_as_count(&resolved_blocks),
         QueryDisplayType::ReferencedList => render_as_referenced_list(&resolved_blocks),
-        QueryDisplayType::Paragraphs => render_as_paragraph(&target, &resolved_blocks),
-        QueryDisplayType::Cards => render_as_cards(&target, &resolved_blocks),
+        QueryDisplayType::Paragraphs => {
+            render_as_paragraph(&target, &resolved_blocks, journal_title_calculator_metadata)
+        }
+        QueryDisplayType::Cards => {
+            render_as_cards(&target, &resolved_blocks, journal_title_calculator_metadata)
+        }
         _ => render_display_unknown(
             query.display,
             vec![
@@ -128,14 +136,20 @@ struct BlockQueryResult {
     block_reference: BlockReference,
 }
 
-fn render_as_list(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+fn render_as_list(
+    tag: &SimplePageName,
+    refs: &[BlockQueryResult],
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
     for r in refs.iter() {
         result.push_str(
             format!(
                 "* {}:{}\n",
                 render_block_link(&r.block_reference),
-                render_block_flat(&r.parsed_block).content.prepared_markdown
+                render_block_flat(&r.parsed_block, journal_title_calculator_metadata)
+                    .content
+                    .prepared_markdown
             )
             .as_str(),
         );
@@ -151,14 +165,20 @@ fn render_as_list(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRende
     }
 }
 
-fn render_as_paragraph(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+fn render_as_paragraph(
+    tag: &SimplePageName,
+    refs: &[BlockQueryResult],
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
     for r in refs.iter() {
         result.push_str(
             format!(
                 "### {}\n\n{}\n\n---\n\n",
                 render_block_link(&r.block_reference),
-                render_block_flat(&r.parsed_block).content.prepared_markdown
+                render_block_flat(&r.parsed_block, journal_title_calculator_metadata)
+                    .content
+                    .prepared_markdown
             )
             .as_str(),
         );
@@ -174,10 +194,17 @@ fn render_as_paragraph(tag: &SimplePageName, refs: &[BlockQueryResult]) -> Query
     }
 }
 
-fn render_as_cards(tag: &SimplePageName, refs: &[BlockQueryResult]) -> QueryRenderResult {
+fn render_as_cards(
+    tag: &SimplePageName,
+    refs: &[BlockQueryResult],
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> QueryRenderResult {
     let mut result = format!("Blocks that reference {}:\n\n", render_user_link(tag));
     for r in refs.iter() {
-        let mut prepared_markdown = render_block_flat(&r.parsed_block).content.prepared_markdown;
+        let mut prepared_markdown =
+            render_block_flat(&r.parsed_block, journal_title_calculator_metadata)
+                .content
+                .prepared_markdown;
         prepared_markdown = prepared_markdown.replace("\n", "<br>").replace("\n", "");
         result.push_str(
             format!(
@@ -232,6 +259,7 @@ mod tests {
     use crate::looksyk::queries::args::PARAM_TARGET;
     use crate::looksyk::query::Query;
     use crate::looksyk::renderer::renderer_flat::render_block_flat;
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
     use crate::state::tag::builder::empty_tag_index;
     use crate::state::tag::TagIndex;
     use crate::state::userpage::builder::empty_user_page_index;
@@ -254,6 +282,7 @@ mod tests {
             &empty_tag_index(),
             &empty_user_page_index(),
             &empty_journal_index(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(
             result.inplace_markdown,
@@ -296,6 +325,7 @@ mod tests {
             &tag_index_with_existing_tag(),
             &user_page_index_with_existing_page(),
             &empty_journal_index(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n* [referencing:0](page/referencing):before [foo](page/foo) after\n");
     }
@@ -307,6 +337,7 @@ mod tests {
             &tag_index_with_existing_tag(),
             &user_page_index_with_existing_page(),
             &empty_journal_index(),
+            &world_journal_title_calculator_metadata(),
         );
         assert_eq!(result.inplace_markdown, "Blocks that reference [foo](page/foo):\n\n### [referencing:0](page/referencing)\n\nbefore [foo](page/foo) after\n\n---\n\n");
     }
@@ -339,13 +370,17 @@ mod tests {
             &tag_index_with_existing_tag(),
             &user_page_index_with_existing_page(),
             &empty_journal_index(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.referenced_markdown.len(), 1);
         assert_eq!(
-            render_block_flat(&result.referenced_markdown[0].content)
-                .content
-                .prepared_markdown,
+            render_block_flat(
+                &result.referenced_markdown[0].content,
+                &world_journal_title_calculator_metadata()
+            )
+            .content
+            .prepared_markdown,
             "before [foo](page/foo) after"
         );
         assert_eq!(

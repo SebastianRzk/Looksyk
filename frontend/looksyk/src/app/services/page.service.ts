@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, firstValueFrom, lastValueFrom, map, Observable, Subject, tap } from "rxjs";
 import {
   BlockContent,
-  BlockDto,
+  BlockDto, emptyMarkdownPageWithId,
   fromBlockContentDto,
   fromDto,
   MarkdownPage,
@@ -102,12 +102,7 @@ export class PageService {
       throw new Error("pageId is undefined")
     }
     if (!this.pageState.has(pageId)) {
-      this.pageState.set(pageId, new BehaviorSubject<MarkdownPage>({
-        name: "",
-        blocks: [],
-        pageid: pageId,
-        isFavourite: false
-      }));
+      this.pageState.set(pageId, new BehaviorSubject<MarkdownPage>(emptyMarkdownPageWithId(pageId)));
     }
     return this.pageState.get(pageId)!;
   }

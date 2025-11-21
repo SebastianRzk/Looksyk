@@ -2,25 +2,23 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { PageService } from "../../services/page.service";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from "rxjs";
-import { MarkdownPage } from "../model";
+import { EMPTY_MARKDOWN_PAGE, MarkdownPage } from "../model";
 import { AsyncPipe } from "@angular/common";
-import { JournalTitleComponent } from "../components/journal-page-title/journal-title.component";
-import { HistoryService } from "../../services/history.service";
 import { TitleService } from "../../services/title.service";
 import { DateService } from "../../services/date.service";
 import { EditablePageComponent } from "../components/editable-markdown-page/editable-page.component";
 import { MatDivider } from "@angular/material/divider";
 import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
+import { TitleComponent } from "../components/page-title/title.component";
 
 @Component({
   selector: 'app-journal-single-entry',
   imports: [
     AsyncPipe,
     EditablePageComponent,
-    JournalTitleComponent,
-    JournalTitleComponent,
     MatDivider,
     SidebarToggleComponent,
+    TitleComponent,
   ],
   templateUrl: './journal-single-entry.component.html',
   styleUrl: './journal-single-entry.component.css',
@@ -30,16 +28,10 @@ export class JournalSingleEntryComponent implements OnInit {
 
   public pageSerivce: PageService = inject(PageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private historyService = inject(HistoryService);
   private titleService = inject(TitleService);
   private dateService = inject(DateService);
 
-  private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
-    name: "",
-    pageid: "",
-    blocks: [],
-    isFavourite: false
-  })
+  private pageState: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>(EMPTY_MARKDOWN_PAGE)
 
   public page$: Observable<MarkdownPage> = this.pageState.asObservable();
   public page_?: Subscription = undefined;
@@ -73,9 +65,6 @@ export class JournalSingleEntryComponent implements OnInit {
         this.pageSerivce.loadJournalPage(
           iso_page_date
         )
-        this.historyService.pushEntry(
-          localeString,
-          ["/journal/", iso_page_date]);
         this.titleService.pushCurrentPageTitle(localeString);
       });
   }

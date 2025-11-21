@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MediaPreview, MediaService } from "../../services/media.service";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { HistoryService } from "../../services/history.service";
-import { MarkdownPage } from "../model";
+import { EMPTY_MARKDOWN_PAGE, MarkdownPage } from "../model";
 import { MatIconModule } from "@angular/material/icon";
 import { AsyncPipe } from "@angular/common";
 import { TitleService } from "../../services/title.service";
@@ -40,12 +40,7 @@ export class DetailsComponent implements OnInit {
   public mediaInfo$ = this.mediaInfo.asObservable();
 
 
-  public mediaMetadata: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>({
-    name: "",
-    pageid: "",
-    isFavourite: false,
-    blocks: []
-  });
+  public mediaMetadata: Subject<MarkdownPage> = new BehaviorSubject<MarkdownPage>(EMPTY_MARKDOWN_PAGE);
   public mediaMetadata$ = this.mediaMetadata.asObservable();
 
   bypass(trustedUrl: string): SafeResourceUrl {

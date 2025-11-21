@@ -1,3 +1,4 @@
+use crate::io::date::today;
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::kanban::dtos::{GetKanbanRequestDto, KanbanDataDto, MoveKanbanItemRequestDto};
 use crate::io::http::page::mapper::map_to_block_dto;
@@ -9,6 +10,7 @@ use crate::looksyk::kanban::{get_kanban_from_tag, move_kanban_card};
 use crate::looksyk::model::{PageType, ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_block;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::looksyk::serializer::serialize_page;
 use crate::state::application_state::{AppState, CurrentPageAssociatedState};
 use crate::state::block_properties::{BlockPropertyKey, BlockPropertyValue};
@@ -28,6 +30,7 @@ async fn get_kanban(
     let journal_guard = data.b_journal_pages.lock().unwrap();
     let todo_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let block_properties_guard = data.h_block_properties.lock().unwrap();
     let kanban = get_kanban_from_tag(
         KanbanTitle {
@@ -64,6 +67,10 @@ async fn get_kanban(
         },
         &mut data.e_asset_cache.lock().unwrap(),
         &data.data_path,
+        &JournalTitleCalculatorMetadata {
+            today: today(),
+            journal_configurataion: &config_guard.journal_configuration,
+        },
     );
 
     drop(user_pages_guard);
@@ -91,6 +98,7 @@ async fn move_card(
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let resolved_page: &ParsedMarkdownFile = match page_id.page_type {
@@ -153,6 +161,10 @@ async fn move_card(
         },
         &mut asset_cache,
         &data.data_path,
+        &JournalTitleCalculatorMetadata {
+            today: today(),
+            journal_configurataion: &config_guard.journal_configuration,
+        },
     );
 
     drop(todo_guard);

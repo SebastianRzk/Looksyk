@@ -21,20 +21,6 @@ async fn get_title(data: Data<AppState>) -> actix_web::Result<impl Responder> {
     }))
 }
 
-#[get("/api/graph-location")]
-async fn get_graph_location(data: Data<AppState>) -> actix_web::Result<impl Responder> {
-    Ok(web::Json(GraphLocationDto {
-        graph_location: data.data_path.path.to_string_lossy().to_string(),
-    }))
-}
-
-#[get("/api/application-version")]
-async fn get_application_version() -> actix_web::Result<impl Responder> {
-    Ok(web::Json(ApplicationVersionDto {
-        application_version: format!("{}", get_current_application_version()),
-    }))
-}
-
 #[post("/api/title")]
 async fn set_title(
     data: Data<AppState>,
@@ -46,6 +32,20 @@ async fn set_title(
     drop(config_guard);
     Ok(web::Json(TitleDto {
         title: title.title.clone(),
+    }))
+}
+
+#[get("/api/graph-location")]
+async fn get_graph_location(data: Data<AppState>) -> actix_web::Result<impl Responder> {
+    Ok(web::Json(GraphLocationDto {
+        graph_location: data.data_path.path.to_string_lossy().to_string(),
+    }))
+}
+
+#[get("/api/application-version")]
+async fn get_application_version() -> actix_web::Result<impl Responder> {
+    Ok(web::Json(ApplicationVersionDto {
+        application_version: format!("{}", get_current_application_version()),
     }))
 }
 

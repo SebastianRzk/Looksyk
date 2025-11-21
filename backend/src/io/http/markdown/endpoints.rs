@@ -1,9 +1,11 @@
+use crate::io::date::today;
 use crate::io::http::page::dtos::ToValidateDto;
 use crate::io::http::page::mapper::map_to_block_dto;
 use crate::looksyk::model::RawBlock;
 use crate::looksyk::parser::parse_block;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_block;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::application_state::AppState;
 use actix_web::web::Data;
 use actix_web::{post, web, Responder};
@@ -23,6 +25,7 @@ async fn parse(
     let journal_page_guard = data.b_journal_pages.lock().unwrap();
     let todo_index_guard = data.c_todo_index.lock().unwrap();
     let tag_guard = data.d_tag_index.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut asset_guard = data.e_asset_cache.lock().unwrap();
 
     let serialized_block = render_block(
@@ -35,6 +38,10 @@ async fn parse(
         },
         &mut asset_guard,
         &data.data_path,
+        &JournalTitleCalculatorMetadata {
+            journal_configurataion: &config_guard.journal_configuration,
+            today: today(),
+        },
     );
 
     drop(user_page_guard);

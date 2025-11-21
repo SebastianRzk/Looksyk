@@ -41,6 +41,17 @@
         </ul>
     </description>
     <releases>
+        <release version="1.18.0" date="2025-11-22">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1180-2025-11-22</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>The date of journal entries can be adjusted to different date formats.</li>
+                    <li>Improvement of the configuration interface of the board view</li>
+                    <li>Revision of the Global Configuration Interface</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.17.0" date="2025-11-06">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1170-2025-11-06</url>
             <description>

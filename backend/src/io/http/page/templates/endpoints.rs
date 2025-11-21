@@ -1,3 +1,4 @@
+use crate::io::date::today;
 use crate::io::fs::pages::{write_page, PageOnDisk};
 use crate::io::http::page::mapper::map_markdown_file_to_dto;
 use crate::io::http::page::templates::dtos::InsertTemplateDto;
@@ -8,6 +9,7 @@ use crate::looksyk::index::index_operations::update_index_for_file;
 use crate::looksyk::model::{PageType, ParsedMarkdownFile};
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
+use crate::looksyk::renderer::title::{calculate_page_title, JournalTitleCalculatorMetadata};
 use crate::looksyk::serializer::serialize_page;
 use crate::looksyk::templates;
 use crate::looksyk::templates::list::TemplateId;
@@ -65,6 +67,8 @@ async fn insert_template_into_page(
 
     let mut todo_guard = data.c_todo_index.lock().unwrap();
     let mut tag_guard = data.d_tag_index.lock().unwrap();
+    let mut asset_guard = data.e_asset_cache.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let current_page_associated_state = CurrentPageAssociatedState {
@@ -87,6 +91,11 @@ async fn insert_template_into_page(
     *journal_guard = new_page_associated_state.journal_pages;
     *block_properties_guard = new_page_associated_state.block_properties_index;
 
+    let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {
+        journal_configurataion: &config_guard.journal_configuration,
+        today: today(),
+    };
+
     let rendered_page = render_file(
         &updated_page,
         &StaticRenderContext {
@@ -95,8 +104,9 @@ async fn insert_template_into_page(
             todo_index: &todo_guard,
             tag_index: &tag_guard,
         },
-        &mut data.e_asset_cache.lock().unwrap(),
+        &mut asset_guard,
         &data.data_path,
+        &journal_title_calculator_metadata,
     );
 
     drop(todo_guard);
@@ -109,6 +119,8 @@ async fn insert_template_into_page(
         PageType::UserPage => is_favourite(&page_id.name, &data.g_config.lock().unwrap()),
         PageType::JournalPage => false,
     };
+
+    let title = calculate_page_title(&page_id, &journal_title_calculator_metadata);
 
     match page_id.page_type {
         PageType::UserPage => {
@@ -131,5 +143,5 @@ async fn insert_template_into_page(
         }
     }
 
-    Ok(Json(map_markdown_file_to_dto(rendered_page, is_fav)))
+    Ok(Json(map_markdown_file_to_dto(rendered_page, is_fav, title)))
 }

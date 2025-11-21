@@ -1,7 +1,7 @@
 <div class="header">
   <app-sidebar-toggle></app-sidebar-toggle>
   @if (pageName$ | async; as p) {
-    <app-journal-page-title [title]="p"></app-journal-page-title>
+    <app-page-title [title]="(page$ | async)?.title"></app-page-title>
   }
 </div>
 <mat-divider></mat-divider>

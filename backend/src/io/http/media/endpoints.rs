@@ -1,3 +1,4 @@
+use crate::io::date::today;
 use crate::io::fs::basic_file::{
     delete_all_forbidden_chars_in_filename, exists_file, get_file_size, read_binary_file,
     read_metadata,
@@ -17,9 +18,11 @@ use crate::looksyk::index::media::{find_file_by_hash, IndexedMedia};
 use crate::looksyk::media::asset_preview::generate_asset_preview;
 use crate::looksyk::media::autodetect::inver_markdown_media_link;
 use crate::looksyk::media::suggestion::get_suggestion_for_file;
+use crate::looksyk::model::PageTitle;
 use crate::looksyk::renderer::model::StaticRenderContext;
 use crate::looksyk::renderer::renderer_deep::render_file;
 use crate::looksyk::renderer::renderer_flat::render_file_flat;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::state::application_state::AppState;
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 use actix_files::NamedFile;
@@ -98,6 +101,12 @@ pub async fn compute_asset_suggestion(req: HttpRequest) -> error::Result<impl Re
 #[get("/api/assets/metadata/{filename:.*}")]
 pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Result<impl Responder> {
     let filename = req.match_info().query("filename").to_string();
+
+    let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {
+        journal_configurataion: &data.g_config.lock().unwrap().journal_configuration,
+        today: today(),
+    };
+
     let path = create_absolute_media_path(
         &MediaOnDisk {
             name: filename.clone(),
@@ -106,8 +115,12 @@ pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Resu
     );
     if !exists_file(path.clone()) {
         return Ok(Json(map_markdown_file_to_dto(
-            render_file_flat(&get_asset_meta_info_table(0, 0)),
+            render_file_flat(
+                &get_asset_meta_info_table(0, 0),
+                &journal_title_calculator_metadata,
+            ),
             false,
+            PageTitle::internal_page_title(format!("Asset not found: {}", filename)),
         )));
     }
     let metadata = read_metadata(path);
@@ -115,8 +128,12 @@ pub async fn get_metadata(req: HttpRequest, data: Data<AppState>) -> error::Resu
     let last_modified = metadata.mtime();
 
     Ok(Json(map_markdown_file_to_dto(
-        render_file_flat(&get_asset_meta_info_table(size, last_modified)),
+        render_file_flat(
+            &get_asset_meta_info_table(size, last_modified),
+            &journal_title_calculator_metadata,
+        ),
         false,
+        PageTitle::internal_page_title(filename),
     )))
 }
 
@@ -130,6 +147,7 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
     let tag_index_guard = data.d_tag_index.lock().unwrap();
     let mut asset_cache_guard = data.e_asset_cache.lock().unwrap();
     let media_index_guard = data.f_media_index.lock().unwrap();
+    let config_guard = data.g_config.lock().unwrap();
 
     let generate_assets_overview = generate_assets_overview_page(&media_index_guard, file_sizes);
 
@@ -145,6 +163,10 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
         &render_context,
         &mut asset_cache_guard,
         &data.data_path,
+        &JournalTitleCalculatorMetadata {
+            journal_configurataion: &config_guard.journal_configuration,
+            today: today(),
+        },
     );
 
     drop(user_page_guard);
@@ -153,7 +175,11 @@ pub async fn generate_assets_overview(data: Data<AppState>) -> error::Result<imp
     drop(asset_cache_guard);
     drop(media_index_guard);
 
-    Ok(Json(map_markdown_file_to_dto(rendered_file, false)))
+    Ok(Json(map_markdown_file_to_dto(
+        rendered_file,
+        false,
+        PageTitle::internal_page_title("Media Overview".to_string()),
+    )))
 }
 
 #[get("/assets/{filename:.*}")]

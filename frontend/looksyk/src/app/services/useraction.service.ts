@@ -98,7 +98,8 @@ export class UseractionService {
           name: currentPage.name,
           blocks: newBlocks,
           pageid: currentPage.pageid,
-          isFavourite: currentPage.isFavourite
+          isFavourite: currentPage.isFavourite,
+          title: currentPage.title
         });
         this.savePage.next({
           target: event.target
@@ -115,7 +116,8 @@ export class UseractionService {
           blocks: newBlocks,
           name: currentPage.name,
           pageid: currentPage.pageid,
-          isFavourite: currentPage.isFavourite
+          isFavourite: currentPage.isFavourite,
+          title: currentPage.title
         })
         this.savePage.next({
           target: event.target
@@ -150,7 +152,8 @@ export class UseractionService {
           name: currentPage.name,
           blocks: newBlockList,
           pageid: currentPage.pageid,
-          isFavourite: currentPage.isFavourite
+          isFavourite: currentPage.isFavourite,
+          title: currentPage.title
         });
         setTimeout(() => {
           this.openMarkdown.next({

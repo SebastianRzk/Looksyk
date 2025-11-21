@@ -1,7 +1,7 @@
 @if (page | async; as p) {
   <div class="page">
-    @if (title$ | async; as t ){
-      <app-journal-page-title [title]="t" >{{p.name}}</app-journal-page-title>
+    @if (title$ | async; as t) {
+      <app-page-title [title]="p.title" [disableHistory]="true">{{ p.name }}</app-page-title>
     }
     <app-editable-markdown-page [page]="p"></app-editable-markdown-page>
   </div>

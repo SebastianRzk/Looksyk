@@ -7,6 +7,7 @@ use crate::looksyk::renderer::atomics::{
     render_journal_link, render_user_link, serialize_reference,
 };
 use crate::looksyk::renderer::model::{RenderResult, StaticRenderContext};
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 use crate::looksyk::syntax::looksyk_markdown::{render_as_todo_without_padding, render_property};
 use crate::state::application_state::GraphRootLocation;
 use crate::state::asset_cache::AssetCache;
@@ -16,6 +17,7 @@ pub fn render_file(
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
     graph_root_location: &GraphRootLocation,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> PreparedMarkdownFile {
     let mut result_blocks = vec![];
     for original_block in &markdown_file.blocks {
@@ -24,6 +26,7 @@ pub fn render_file(
             render_context,
             asset_cache,
             graph_root_location,
+            journal_title_calculator_metadata,
         ));
     }
     PreparedMarkdownFile {
@@ -36,6 +39,7 @@ pub fn render_block(
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
     graph_root_location: &GraphRootLocation,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> PreparedBlock {
     let mut block_content_original_list = vec![];
     let mut block_content_markdown_list = vec![];
@@ -49,13 +53,17 @@ pub fn render_block(
             render_context,
             asset_cache,
             graph_root_location,
+            journal_title_calculator_metadata,
         );
         if render_result.has_dynamic_content {
             has_dynamic_content = true;
         }
         block_content_markdown_list.push(render_result.inline_markdown);
         for reference in &render_result.referenced_markdown {
-            references.push(serialize_reference(reference));
+            references.push(serialize_reference(
+                reference,
+                journal_title_calculator_metadata,
+            ));
         }
     }
 
@@ -75,6 +83,7 @@ pub fn render_tokens_deep(
     render_context: &StaticRenderContext,
     asset_cache: &mut AssetCache,
     graph_root_location: &GraphRootLocation,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
 ) -> RenderResult {
     let mut inline_markdown_result_list = vec![];
     let mut references = vec![];
@@ -90,13 +99,21 @@ pub fn render_tokens_deep(
                 }));
             }
             BlockTokenType::JournalLink => {
-                inline_markdown_result_list.push(render_journal_link(&SimplePageName {
-                    name: token.payload.clone(),
-                }));
+                inline_markdown_result_list.push(render_journal_link(
+                    &SimplePageName {
+                        name: token.payload.clone(),
+                    },
+                    journal_title_calculator_metadata,
+                ));
             }
             BlockTokenType::Query => {
-                let render_result =
-                    render_query(token, render_context, asset_cache, graph_root_location);
+                let render_result = render_query(
+                    token,
+                    render_context,
+                    asset_cache,
+                    graph_root_location,
+                    journal_title_calculator_metadata,
+                );
                 has_dynamic_content = render_result.has_dynamic_content;
                 for reference in render_result.referenced_markdown {
                     references.push(reference);
@@ -127,6 +144,7 @@ mod tests {
     use crate::looksyk::parser::BlockProperties;
     use crate::looksyk::renderer::model::builder::create_empty_render_context;
     use crate::looksyk::renderer::renderer_deep::render_block;
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
     use crate::state::application_state::builder::empty_data_root_location;
 
     #[test]
@@ -138,6 +156,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "text");
@@ -164,6 +183,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
@@ -193,6 +213,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "before [[MyPage]] after");
@@ -218,6 +239,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "[[My Page]]");
@@ -247,6 +269,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "[[link1]] asdf [[link2]]");
@@ -285,6 +308,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert!(!result.has_dynamic_content);
@@ -309,6 +333,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert!(!result.has_dynamic_content);
@@ -334,6 +359,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert!(result.has_dynamic_content);
@@ -365,6 +391,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "[ ] Mein Todo");
@@ -396,6 +423,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "[x] Mein Todo");
@@ -409,6 +437,7 @@ mod tests {
             &create_empty_render_context().to_static(),
             &mut create_empty_asset_cache(),
             &empty_data_root_location(),
+            &world_journal_title_calculator_metadata(),
         );
 
         assert_eq!(result.content.original_text, "key:: value");

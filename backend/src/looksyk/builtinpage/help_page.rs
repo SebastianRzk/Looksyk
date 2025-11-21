@@ -3,13 +3,16 @@ use crate::looksyk::model::{PreparedMarkdownFile, RawMarkdownFile};
 use crate::looksyk::parser::parse_markdown_file;
 use crate::looksyk::reader::parse_lines;
 use crate::looksyk::renderer::renderer_basic_markdown::render_file_basic_markdown;
+use crate::looksyk::renderer::title::JournalTitleCalculatorMetadata;
 
-pub fn help_page() -> PreparedMarkdownFile {
+pub fn help_page(
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> PreparedMarkdownFile {
     let parsed_lines = parse_lines(help_page_on_disk().content.lines());
     let parsed_file = parse_markdown_file(RawMarkdownFile {
         blocks: parsed_lines,
     });
-    render_file_basic_markdown(&parsed_file)
+    render_file_basic_markdown(&parsed_file, journal_title_calculator_metadata)
 }
 
 fn help_page_on_disk() -> PageOnDisk {

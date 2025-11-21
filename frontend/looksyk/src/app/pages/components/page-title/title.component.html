@@ -1,0 +1,11 @@
+<h1>
+  @if (title) {
+    @for (segment of title.segments; track segment.url) {
+      <a class="title" [routerLink]="'/'+segment.url">
+        @if (!$first) {
+          /
+        }
+        {{ segment.title }}</a>
+    }
+  }
+</h1>

@@ -3,40 +3,64 @@ use crate::looksyk::model::{
     PageId, PageType, ParsedBlock, PreparedReferencedMarkdown, ReferencedMarkdown, SimplePageName,
 };
 use crate::looksyk::renderer::renderer_flat::render_block_content_flat;
+use crate::looksyk::renderer::title::{
+    calculate_journal_page_title, JournalTitleCalculatorMetadata,
+};
 use crate::state::block::BlockReference;
 use urlencoding::encode;
 
-pub fn render_link(destination: &PageId) -> String {
+pub fn render_link(
+    destination: &PageId,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> String {
     match destination.page_type {
         PageType::UserPage => render_user_link(&destination.name),
-        PageType::JournalPage => render_journal_link(&destination.name),
+        PageType::JournalPage => {
+            render_journal_link(&destination.name, journal_title_calculator_metadata)
+        }
     }
 }
 
 pub fn render_user_link(destination: &SimplePageName) -> String {
     markdown_link(
         &decode_destination(&destination.name),
-        &page_path(destination),
+        &user_page_path(destination),
     )
 }
-pub fn serialize_reference(referenced_markdown: &ReferencedMarkdown) -> PreparedReferencedMarkdown {
+pub fn serialize_reference(
+    referenced_markdown: &ReferencedMarkdown,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> PreparedReferencedMarkdown {
     PreparedReferencedMarkdown {
         reference: referenced_markdown
             .reference
             .page_id
             .block_reference(referenced_markdown.reference.block_number),
-        content: render_block_content_flat(&referenced_markdown.content),
+        content: render_block_content_flat(
+            &referenced_markdown.content,
+            journal_title_calculator_metadata,
+        ),
     }
 }
 
-pub fn render_journal_link(destination: &SimplePageName) -> String {
-    markdown_link(&decode_date(&destination.name), &journal_path(destination))
+pub fn render_journal_link(
+    destination: &SimplePageName,
+    journal_title_calculator_metadata: &JournalTitleCalculatorMetadata,
+) -> String {
+    markdown_link(
+        &calculate_journal_page_title(
+            &destination.as_journal_page(),
+            journal_title_calculator_metadata,
+        )
+        .title,
+        &journal_path(destination),
+    )
 }
 
 pub fn render_block_link(block_reference: &BlockReference) -> String {
     let name = &block_reference.page_id.name;
     let link = match block_reference.page_id.page_type {
-        PageType::UserPage => page_path(name),
+        PageType::UserPage => user_page_path(name),
         PageType::JournalPage => journal_path(name),
     };
 
@@ -50,27 +74,16 @@ pub fn render_block_link(block_reference: &BlockReference) -> String {
     )
 }
 
-fn journal_path(name: &SimplePageName) -> String {
+pub fn journal_path(name: &SimplePageName) -> String {
     format!("journal/{}", encode(&name.name))
 }
 
-fn page_path(name: &SimplePageName) -> String {
+pub fn user_page_path(name: &SimplePageName) -> String {
     format!("page/{}", encode(&name.name))
 }
 
 fn decode_destination(destination: &str) -> String {
     destination.replace("%2F", "/")
-}
-
-fn decode_date(destination: &str) -> String {
-    let splitted = destination.split('_').collect::<Vec<&str>>();
-    let mut date = String::new();
-    date.push_str(splitted[2]);
-    date.push('.');
-    date.push_str(splitted[1]);
-    date.push('.');
-    date.push_str(splitted[0]);
-    date
 }
 
 pub fn combine_text_content(block: &ParsedBlock) -> String {
@@ -87,6 +100,7 @@ mod tests {
     use super::*;
     use crate::looksyk::builder::test_builder::{journal_page_id, user_page_id};
     use crate::looksyk::model::PreparedBlockContent;
+    use crate::looksyk::renderer::title::builder::world_journal_title_calculator_metadata;
 
     #[test]
     fn test_render_link_with_user_page() {
@@ -96,7 +110,10 @@ mod tests {
             },
             page_type: PageType::UserPage,
         };
-        assert_eq!(render_link(&user_page), "[Test/Page](page/Test%2FPage)");
+        assert_eq!(
+            render_link(&user_page, &world_journal_title_calculator_metadata()),
+            "[Test/Page](page/Test%2FPage)"
+        );
     }
 
     #[test]
@@ -109,7 +126,7 @@ mod tests {
         };
 
         assert_eq!(
-            render_link(&journal_page),
+            render_link(&journal_page, &world_journal_title_calculator_metadata()),
             "[01.10.2023](journal/2023_10_01)"
         );
     }
@@ -124,7 +141,8 @@ mod tests {
             content: ParsedBlock::text_block_on_disk("Content"),
         };
 
-        let serialized = serialize_reference(&reference);
+        let serialized =
+            serialize_reference(&reference, &world_journal_title_calculator_metadata());
         assert_eq!(serialized.reference.block_number, 1);
         assert_eq!(serialized.reference.page_id.name.name, "Test/Page");
         assert_eq!(
@@ -159,11 +177,5 @@ mod tests {
     fn test_decode_destination() {
         assert_eq!(decode_destination("Test%2FPage"), "Test/Page");
         assert_eq!(decode_destination("Another%2FExample"), "Another/Example");
-    }
-
-    #[test]
-    fn test_decode_date() {
-        assert_eq!(decode_date("2023_10_01"), "01.10.2023");
-        assert_eq!(decode_date("2022_12_25"), "25.12.2022");
     }
 }
