@@ -41,6 +41,17 @@
         </ul>
     </description>
     <releases>
+        <release version="1.18.1" date="2025-11-25">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1181-2025-11-22</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Fix Kanban-Board rendering on drag-and-drop action</li>
+                    <li>Rename startup-script to prevent name clash on windows systems</li>
+                    <li>Add new navigation shortcut <kbd>Shift</kbd> + <kbd>Space</kbd> (because keyboard shortcut clash on GNOME and Electron >=38)</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.18.0" date="2025-11-22">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1180-2025-11-22</url>
             <description>

@@ -6,6 +6,13 @@ title: Changelog
 # Changelog
 
 
+### v1.18.1 (2025-11-25)
+
+Bugfixes:
+
+* Fix Kanban-Board rendering update on drag- and drop of cards between columns
+* Rename startup-script to prevent name clash on windows systems
+* Add new navigation shortcut <kbd>Shift</kbd> + <kbd>Space</kbd> (because keyboard shortcut clash on GNOME and Electron >=38)
 
 ### v1.18.0 (2025-11-22)
 
@@ -101,7 +108,7 @@ Enhancements:
 * Add AppImage build to CI
 * Update fav-icon for docker deployment
 
-Fixes:
+Bugfixes:
 
 * Frontend-State gets refreshed on rename-page aswell as delete-page
 * Fix Frontend-Caching in Electron Clients

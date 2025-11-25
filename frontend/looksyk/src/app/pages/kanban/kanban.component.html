@@ -24,7 +24,7 @@
               cdkDropListSortingDisabled
               id="{{list.title}}"
               (cdkDropListDropped)="drop($event)">
-              @for (item of list.items; track item.block.reference.fileId) {
+              @for (item of list.items; track (item.block.reference.fileId + item.block.reference.blockNumber)) {
                 <div cdkDrag>
                   <app-kanban-card
                     [markdown]="item.block"
