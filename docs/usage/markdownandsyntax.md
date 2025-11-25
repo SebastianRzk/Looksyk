@@ -10,7 +10,7 @@ title: Looksyk - Markdown and Syntax
   following space `:: `
 * <kbd>Ctrl</kbd>+<kbd>Enter</kbd> creates a new block
 * Insert emojis with `:emoji:` (all emojis from [openmoji](https://openmoji.org/) available)
-* <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>
+* <kbd>Ctrl</kbd>+<kbd>Space</kbd> (alternative 1: <kbd>Shift</kbd> + <kbd>Space</kbd>, alternative 2: <kbd>⌥ meta</kbd> + <kbd>Space</kbd>, alternative 3: <kbd>
   Ctrl</kbd> + <kbd>k</kbd>  e.g. for MacOS / Arch) opens the content assist
 	* With open markdown block -> "insert mode"
 	* With no open markdown block -> "navigation mode"

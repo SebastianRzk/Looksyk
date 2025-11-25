@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  inject,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { KanbanData, KanbanItem } from "../model";
 import { KanbanCardComponent } from "../components/kanban-card/kanban-card.component";
@@ -43,6 +51,8 @@ export class KanbanComponent {
   readonly initialFilter: WritableSignal<KanbanProperties> = signal(INITIAL_KANBAN_PROPERTIES);
 
   readonly filter: WritableSignal<KanbanProperties> = signal(INITIAL_KANBAN_PROPERTIES);
+
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
 
   constructor() {
@@ -97,6 +107,8 @@ export class KanbanComponent {
       event.previousIndex,
       event.currentIndex,
     );
+
+    this.changeDetectorRef.detectChanges();
   }
 }
 

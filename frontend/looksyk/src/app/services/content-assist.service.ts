@@ -124,7 +124,7 @@ export class ContentAssistService {
   }
 
   private isOpenContentAssist(event: KeyboardEvent): boolean {
-    return (event.key == ' ' && (event.ctrlKey || event.metaKey)) || (event.key == 'k' && event.ctrlKey);
+    return (event.key == ' ' && (event.ctrlKey || event.metaKey || event.shiftKey)) || (event.key == 'k' && event.ctrlKey);
   }
 
   private isOpenContentAssistForSearch(event: KeyboardEvent): boolean {
