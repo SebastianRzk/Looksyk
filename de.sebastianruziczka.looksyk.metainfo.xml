@@ -48,7 +48,7 @@
                 <ul>
                     <li>Fix Kanban-Board rendering on drag-and-drop action</li>
                     <li>Rename startup-script to prevent name clash on windows systems</li>
-                    <li>Add new navigation shortcut <kbd>Shift</kbd> + <kbd>Space</kbd> (because keyboard shortcut clash on GNOME and Electron >=38)</li>
+                    <li>Add new navigation shortcut Shift+Space (because keyboard shortcut clash on GNOME and Electron >=38)</li>
                 </ul>
             </description>
         </release>
