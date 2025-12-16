@@ -48,12 +48,9 @@ pub fn create_checkpoint(
         );
     } else if update_result == RemoteUpdateResult::UpdatePending {
         let pull_result = pull_updates_from_remote(git_config, graph_root_location);
-        if pull_result.is_err() {
+        if let Err(e) = pull_result {
             return GitActionResult::error(
-                format!(
-                    "Failed to pull updates from remote: {}",
-                    pull_result.unwrap_err()
-                ),
+                format!("Failed to pull updates from remote: {}", e),
                 changes_from_remote,
             );
         } else if let Some(app_state) = app_state {
@@ -93,12 +90,9 @@ pub fn push_existing_commits(
         );
     } else if changes_pulled_from_remote {
         let pull_result = pull_updates_from_remote(git_config, graph_root_location);
-        if pull_result.is_err() {
+        if let Err(e) = pull_result {
             return GitActionResult::error(
-                format!(
-                    "Failed to pull updates from remote: {}",
-                    pull_result.unwrap_err(),
-                ),
+                format!("Failed to pull updates from remote: {}", e,),
                 changes_pulled_from_remote,
             );
         }

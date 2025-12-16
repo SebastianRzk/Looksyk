@@ -115,8 +115,8 @@ async fn main() -> std::io::Result<()> {
 
     let changes_state = Data::new(GraphChangesState::default());
 
-    println!(
-        "Starting Looksyk on  http://{}:{}",
+    eprintln!(
+        "Starting Looksyk on address http://{}:{}",
         config.application_host, config.application_port
     );
 
