@@ -6,6 +6,13 @@ title: Changelog
 # Changelog
 
 
+### v1.18.2 (2025-12-16)
+
+Maintenance:
+
+* Update dependencies
+* Update log-output on startup
+
 ### v1.18.1 (2025-11-25)
 
 Bugfixes:
