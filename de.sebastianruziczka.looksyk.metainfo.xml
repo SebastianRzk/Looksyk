@@ -48,6 +48,7 @@
                 <p>Release description</p>
                 <ul>
                     <li>Fix error when assets folder contains subfolder (looksyk igores them now)</li>
+                    <li>Fix highlighting on focus-out event on firefox desktop.</li>
                 </ul>
             </description>
         </release>

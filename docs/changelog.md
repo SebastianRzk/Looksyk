@@ -11,7 +11,7 @@ title: Changelog
 Bugfixes:
 
 * Fix error when asset folder contains subfolders (not supported yet, but should not crash the app)
-
+* Fix highlighting on focus out of markdown block on firefox desktop.
 
 ### v1.18.2 (2025-12-16)
 
