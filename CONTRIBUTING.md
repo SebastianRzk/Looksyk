@@ -1,5 +1,7 @@
 # Development and Contribution
 
+Find the documentation at [sebastianrzk.github.io/Looksyk](https://sebastianrzk.github.io/Looksyk/)
+
 Thank you for your interest in this project! It's a private open-source hobby project that I maintain in my free time. Therefore, there are some simple but important rules for contributions:
 
 ## Project Goal
