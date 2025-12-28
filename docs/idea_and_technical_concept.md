@@ -11,7 +11,8 @@ Currently, the backend renders all content in Markdown, which is displayed with 
 frontend. This makes Looksyk relatively close to the Markdown standard. Code highlighting is done
 with [highlightjs](https://highlightjs.org/) and emojis with [openmoji](https://openmoji.org/). The application is
 wrapped in an electron app (with [electron forge](https://www.electronforge.io/)). If you want to synchronize your
-graph, you can use the integrated [Git](https://git-scm.com/) interface. Since the data is stored in Markdown files on disk, you can also use
+graph, you can use the integrated [Git](https://git-scm.com/) interface. Since the data is stored in Markdown files on
+disk, you can also use
 your own sync tool.
 
 Even if the project is currently a pure web project, I would not deploy it publicly because the project in its current
@@ -19,8 +20,7 @@ state has not paid much attention to security (for example Injection-Attacks or 
 
 Currently, the backend is very fast, my [Logseq](https://logseq.com/) graph (~900 pages and 900kb text) is
 scanned and indexed in under a second (~80ms on a 3-year-old Laptop). That's why Looksyk does not have a database,
-reading
-new data into RAM is fast enough.
+reading new data into RAM is fast enough.
 
 The frontend still has some challenges. Performance and design can be improved and sometimes scrolling on the journal
 page has issues.
@@ -58,3 +58,13 @@ I am happy about every contribution, but I cannot guarantee that I will implemen
 
 If you have any changes or suggestions, please send me a pull request.
 For feature requests and bugs, you can submit an issue (or a pull request if you can).
+
+## Thoughts about a mobile version / mobile app
+
+I understand that a native mobile version would be a significant advantage. Here are my thoughts on the matter:
+
+| subject                  | mobile app                                                                                                                                                          | mobile web app                                                                                                                                                  |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Development effort       | High: A native mobile app would require significant development effort, possibly in a different programming language or framework. I can't do that alone right now. | Low - Medium: The current project is already built with web technologies; it may only need CSS adjustments or the addition of extra controls.                   |
+| Performance              | A native app would have to load and process the data independently, which is time-consuming for larger graphs.``                                                    | All computationally intensive tasks are performed in the backend and are not processed on the end device, thus enabling smooth operation even on older devices. |
+| Offline use / Standalone | A native app could store data locally for offline use.                                                                                                              | Not possible, that is currently the only real disadvantage for me (in my opinion).                                                                              |
