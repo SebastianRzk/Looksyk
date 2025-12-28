@@ -16,7 +16,8 @@ The `graph` folder in the home directory contains all data.
     * `git-config.json` contains the configuration of the git integration (if enabled).
 	* `media.json` contains all the checksums of the media files. Is created automatically and should not be edited
 	  manually.
-	* `user-theme.css` contains the custom CSS. This file is empty by default.
+	* `user-theme.css` contains the custom CSS. This file is empty by default. The file will be loaded by the frontend
+	  automatically, so you can add your custom CSS to edit almost everything here.
 	* `version.txt` contains the version of the knowledge graph. This is used to migrate the graph to a new version.
 
 
