@@ -224,6 +224,7 @@ export class EditableMarkdownComponent implements OnChanges, OnDestroy {
     }
 
     this.componentMode.next(MarkdownComponentState.LOADING);
+    this.textareaRef.nativeElement.blur();
     this.markdown.content.originalText = this.textareaRef.nativeElement.innerText;
     this.validatorService.validate(this.textareaRef.nativeElement.innerText).subscribe(
       newBlockInfo => {

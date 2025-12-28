@@ -106,13 +106,34 @@ home-directory, and only insert assets from there.
 You can use the `create_desktop_shortcut.sh` script to create a shortcut with a different port and graph location. Or
 you can run the application with the arguments `--port` and `--graph-location` manually.
 
+--- 
+
+Are you having problems installing or setting up? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues)!
+
+Or would you like to improve the documentation or provide alternative installation methods? Make
+a [pull request]({{config.pathPrefix}}/development_and_contribution).
+
+--- 
+
+## FAQ / Troubleshooting
+
 ### Known issues with building the application-wrapper
 
 - [electron forge](https://www.electronforge.io/) is used to build the application-wrapper. Sometimes it has
   incompatibilities with the current up-to-date node version. If you encounter problems, try to downgrade your node to
   an older minor-version.
 
-Are you having problems installing or setting up? Create an [issue](https://github.com/SebastianRzk/Looksyk/issues)!
+### The application does not start / I get an error message
 
-Or would you like to improve the documentation or provide alternative installation methods? Make
-a [pull request]({{config.pathPrefix}}/development_and_contribution).
+If the error message says "Address is already in use," then it's highly likely that the port on the machine is already
+blocked by another application. This could be, for example, another instance of Looksyk running on that port, or any
+other application also using that port. Looksyk isn't dependent on a specific port; you can configure any port using a
+parameter.
+
+Please note that only one Looksyk instance can run on a graph at a time. Multiple Looksyk instances on the same graph
+can lead to inconsistencies and even data loss. It is possible, however, to run one backend and multiple frontends (for
+example, by opening them in a browser). Only multiple Rust backends should not run on the same graph simultaneously.
+
+### Priority has no effect on Kanban boards yet.
+
+Yes, that's correct. This feature is still under development.

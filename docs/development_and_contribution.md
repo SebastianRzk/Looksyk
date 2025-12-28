@@ -3,7 +3,47 @@ layout: base.njk
 title: Development and Contribution
 ---
 
-# Development Build
+# Development and Contribution
+
+Thank you for your interest in this project! It's a private open-source hobby project that I maintain in my free time. Therefore, there are some simple but important rules for contributions:
+
+## Project Goal
+This project is primarily intended to remain functional, stable, and easy to understand. It is available for free, but maintenance is provided without commercial support and for a limited time.
+
+## Contributions are welcome!
+Feel free to contribute, e.g. E.g., with:
+- Functional enhancements
+- Bug fixes
+- Documentation improvements
+- Suggestions that provide clear added value
+
+## What I don't want
+Please refrain from:
+- Discussions about purely stylistic issues (e.g., branch names, commit formats) if they don't solve functional problems
+- Criticism without concrete solutions or practical benefits
+- PRs or issues that restructure existing functionality without a clear benefit
+
+## Submitting suggestions
+If you have ideas or requests:
+1. Please describe specifically what you are suggesting.
+2. Why is it helpful?
+3. If possible, offer a solution or PR right away.
+
+
+## Writing PRs
+I value well-structured code. All code styles and best practices are automatically reviewed by various GitHub Actions.
+
+Please ensure that your changes do not violate the guidelines beforehand. To do so, run the file `bash run-ci-manual.sh` and check that the text "all done" is displayed and that no changes have been made automatically in the Git repository.
+
+
+I reserve the right to close issues or pull requests that don't fit the project framework or that require too much maintenance without providing any benefit.
+
+Thank you for your understanding and enjoy the project!
+
+
+--- 
+
+# Development Setup
 
 ## Build backend and frontend
 
@@ -24,7 +64,7 @@ backend will need to be restarted manually.
 1. Navigate to the backend directory: `cd backend`
 2. Run the tests: `cargo test`
 
-If there are changes at the high-efficiency parts of the codebase (e.g. the parser), it's recommended to run the 
+If there are changes at the high-efficiency parts of the codebase (e.g. the parser), it's recommended to run the
 benchmark tests as well:
 
 1. Navigate to the backend directory: `cd backend`
@@ -46,11 +86,13 @@ Contributions are welcome! Here are the steps to contribute:
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-branch`).
 3. Make your changes.
-4. Check if your changes pass the tests and checks. Run `bash run-ci-manual.sh` to run all tests and checks. If there are
+4. Check if your changes pass the tests and checks. Run `bash run-ci-manual.sh` to run all tests and checks. If there
+   are
    any issues, please fix them before proceeding.
 5. Commit your changes (`git commit -am 'Add new feature'`).
 6. Push to the branch (`git push origin feature-branch`).
-7. Create a new Pull Request into the `main` branch.
+7. Create a new Pull Request into the `main` branch. Here, all changes are collected, manually tested by me, and
+   combined into a single version. To release a version, the main branch is merged into the stable branch.~~~~
 
 ## Where should I target my pull request?
 

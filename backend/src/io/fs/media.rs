@@ -148,9 +148,14 @@ pub fn read_media_state(media_on_disk: &MediaOnDisk, location: &GraphRootLocatio
 pub fn read_all_media_files(data_root_location: &GraphRootLocation) -> Vec<MediaOnDisk> {
     let media_path = data_root_location.path.clone().join(REL_MEDIA_LOCATION);
     let mut result = vec![];
-    for file in media_path.read_dir().unwrap() {
-        let location = file.unwrap().file_name().to_str().unwrap().to_string();
-        result.push(MediaOnDisk { name: location });
+    for entry in media_path.read_dir().unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if path.is_file() {
+            // Only process files, skip directories
+            let location = entry.file_name().to_str().unwrap().to_string();
+            result.push(MediaOnDisk { name: location });
+        }
     }
     result
 }
