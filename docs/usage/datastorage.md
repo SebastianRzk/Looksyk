@@ -9,6 +9,7 @@ The `graph` folder in the home directory contains all data.
 * `pages` contains all pages
 * `journals` contains all journals
 * `assets` contains all media files (images, videos, audio files, text files, PDFs), deduplicated by checksum
+  * **Note**: Only files directly in the `assets` folder root are indexed and accessible. Subdirectories within `assets` are supported (they won't cause errors), but files within those subdirectories are not indexed. If you need to organize assets in subdirectories, be aware that only files in the root `assets` folder will be available in Looksyk.
 * `config` contains the configuration
 	* `config.json` contains the configuration: E.g. design, favourites and the title. All configurable in the settings
 	  tab.~
