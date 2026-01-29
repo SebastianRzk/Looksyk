@@ -1,20 +1,21 @@
-import { DOCUMENT, Inject, inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, distinctUntilChanged, lastValueFrom, map } from 'rxjs';
+import {DOCUMENT, inject, Injectable, OnDestroy} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, distinctUntilChanged, lastValueFrom, map} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppearanceService {
+export class AppearanceService implements OnDestroy {
   private httpClient: HttpClient = inject(HttpClient);
   private appearance = new BehaviorSubject<'light' | 'dark'>('dark');
   public appearance$ = this.appearance.pipe(distinctUntilChanged());
+  document: Document = inject(DOCUMENT);
+  appearance_ = this.appearance$.subscribe(appearance => {
+    this.document.documentElement.setAttribute('data-theme', appearance);
+  });
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
-    // Subscribe to appearance changes and update HTML data attribute
-    this.appearance$.subscribe(appearance => {
-      this.document.documentElement.setAttribute('data-theme', appearance);
-    });
+  ngOnDestroy(): void {
+    this.appearance_.unsubscribe();
   }
 
   public fetchAppearance(): void {

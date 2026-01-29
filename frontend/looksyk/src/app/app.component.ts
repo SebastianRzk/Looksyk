@@ -1,17 +1,17 @@
-import { Component, ElementRef, HostListener, inject, OnInit, ViewChild, Inject, DOCUMENT } from '@angular/core';
-import { UseractionService } from "./services/useraction.service";
-import { ContentAssistMode, ContentAssistService, KeypressResult } from "./services/content-assist.service";
-import { Title } from "@angular/platform-browser";
-import { TitleService } from "./services/title.service";
-import { AppearanceService } from "./services/appearance.service";
-import { Subscription } from "rxjs";
-import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
-import { ContentAssistPopupComponent } from "./pages/components/content-assist-popup/content-assist-popup.component";
-import { SidebarComponent } from "./pages/components/sidebar/sidebar.component";
-import { RouterModule } from "@angular/router";
-import { MatIconRegistry } from "@angular/material/icon";
-import { SidenavService } from "./services/sidenav.service";
-import { GitService } from "./services/git.service";
+import {Component, DOCUMENT, ElementRef, HostListener, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {UseractionService} from "./services/useraction.service";
+import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
+import {Title} from "@angular/platform-browser";
+import {TitleService} from "./services/title.service";
+import {AppearanceService} from "./services/appearance.service";
+import {Subscription} from "rxjs";
+import {MatSidenav, MatSidenavModule} from "@angular/material/sidenav";
+import {ContentAssistPopupComponent} from "./pages/components/content-assist-popup/content-assist-popup.component";
+import {SidebarComponent} from "./pages/components/sidebar/sidebar.component";
+import {RouterModule} from "@angular/router";
+import {MatIconRegistry} from "@angular/material/icon";
+import {SidenavService} from "./services/sidenav.service";
+import {GitService} from "./services/git.service";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +25,7 @@ import { GitService } from "./services/git.service";
 
   ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   userAction = inject(UseractionService);
   contentAssist = inject(ContentAssistService);
   title = inject(Title);
@@ -34,6 +34,8 @@ export class AppComponent implements OnInit {
   appearanceService = inject(AppearanceService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
   appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => this.loadHighlightTheme(x));
+  private document: Document = inject(DOCUMENT);
+  private iconRegistry: MatIconRegistry = inject(MatIconRegistry);
 
   @ViewChild('sidenav')
   sidenav!: MatSidenav;
@@ -57,8 +59,14 @@ export class AppComponent implements OnInit {
 
   private currentHighlightTheme: string | null = null;
 
-  constructor(iconRegistry: MatIconRegistry, @Inject(DOCUMENT) private document: Document) {
-    iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+  constructor() {
+    this.iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+  }
+
+  ngOnDestroy(): void {
+    this.title_.unsubscribe();
+    this.appearance_.unsubscribe();
+    this.sidenav_.unsubscribe();
   }
 
   @HostListener('window:keydown', ['$event'])

@@ -46,7 +46,11 @@ pub async fn index(state: Data<AppState>, req: HttpRequest) -> Result<HttpRespon
 }
 
 #[get("/{filename}.js")]
-pub async fn js(path: web::Path<String>, state: Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
+pub async fn js(
+    path: web::Path<String>,
+    state: Data<AppState>,
+    req: HttpRequest,
+) -> Result<HttpResponse, Error> {
     let static_file_name = format!("{}.js", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     let file = NamedFile::open(complete_path)?
@@ -59,7 +63,11 @@ pub async fn js(path: web::Path<String>, state: Data<AppState>, req: HttpRequest
 }
 
 #[get("/{filename}.css")]
-pub async fn css(path: web::Path<String>, state: Data<AppState>, req: HttpRequest) -> Result<HttpResponse, Error> {
+pub async fn css(
+    path: web::Path<String>,
+    state: Data<AppState>,
+    req: HttpRequest,
+) -> Result<HttpResponse, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
     let file = NamedFile::open(complete_path)?
@@ -72,7 +80,7 @@ pub async fn css(path: web::Path<String>, state: Data<AppState>, req: HttpReques
 }
 
 fn into_no_cache_response(req: &HttpRequest, file: NamedFile) -> Result<HttpResponse, Error> {
-    let mut response = file.into_response(&req);
+    let mut response = file.into_response(req);
     response.headers_mut().insert(
         header::CACHE_CONTROL,
         header::HeaderValue::from_static("no-cache, no-store, must-revalidate"),

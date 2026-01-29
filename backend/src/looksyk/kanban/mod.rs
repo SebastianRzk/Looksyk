@@ -44,7 +44,7 @@ pub fn get_kanban_from_tag(
             }
         }
 
-        items.sort_by(|x,y| x.priority.priority.cmp(&y.priority.priority));
+        items.sort_by(|x, y| x.priority.priority.cmp(&y.priority.priority));
 
         result
             .lists
@@ -269,7 +269,6 @@ mod tests {
         assert_eq!(result.lists[1].items.len(), 0);
     }
 
-
     #[test]
     fn test_get_kanban_from_tag_should_sort_findings_by_priority() {
         let result = get_kanban_from_tag(
@@ -279,16 +278,20 @@ mod tests {
             vec![block_property_value("ToDo"), block_property_value("Done")],
             &block_properties_index_with(
                 block_property_key("status"),
-                vec![block_property_occurance(
-                    "ToDo",
-                    page_name_str("page-1").as_user_page().block_reference(0),
-                ), block_property_occurance(
-                    "ToDo",
-                    page_name_str("page-1").as_user_page().block_reference(1),
-                ), block_property_occurance(
-                    "ToDo",
-                    page_name_str("page-1").as_user_page().block_reference(2),
-                )],
+                vec![
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(0),
+                    ),
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(1),
+                    ),
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(2),
+                    ),
+                ],
             ),
             &block_property_key("priority"),
             &empty_markdown_file_index(
@@ -303,19 +306,22 @@ mod tests {
                                     block_property("priority", "A"),
                                     block_property("status", "ToDo"),
                                 ],
-                            ),                             parsed_block_with(
+                            ),
+                            parsed_block_with(
                                 vec![link_token("tag")],
                                 vec![
                                     block_property("priority", "C"),
                                     block_property("status", "ToDo"),
                                 ],
-                            ),                            parsed_block_with(
+                            ),
+                            parsed_block_with(
                                 vec![link_token("tag")],
                                 vec![
                                     block_property("priority", "B"),
                                     block_property("status", "ToDo"),
                                 ],
-                            )],
+                            ),
+                        ],
                     },
                 ),
             ),
