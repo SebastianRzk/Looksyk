@@ -46,27 +46,52 @@ pub async fn index(state: Data<AppState>, req: HttpRequest) -> Result<HttpRespon
 }
 
 #[get("/{filename}.js")]
-pub async fn js(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn js(
+    path: web::Path<String>,
+    state: Data<AppState>,
+    req: HttpRequest,
+) -> Result<HttpResponse, Error> {
     let static_file_name = format!("{}.js", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
-    Ok(NamedFile::open(complete_path)?
+    let file = NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
             disposition: DispositionType::Inline,
             parameters: vec![],
-        }))
+        });
+    into_no_cache_response(&req, file)
 }
 
 #[get("/{filename}.css")]
-pub async fn css(path: web::Path<String>, state: Data<AppState>) -> Result<NamedFile, Error> {
+pub async fn css(
+    path: web::Path<String>,
+    state: Data<AppState>,
+    req: HttpRequest,
+) -> Result<HttpResponse, Error> {
     let static_file_name = format!("{}.css", path.into_inner());
     let complete_path = to_static_path(&state.static_path, static_file_name.as_str());
-    Ok(NamedFile::open(complete_path)?
+    let file = NamedFile::open(complete_path)?
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
             disposition: DispositionType::Inline,
             parameters: vec![],
-        }))
+        });
+    into_no_cache_response(&req, file)
+}
+
+fn into_no_cache_response(req: &HttpRequest, file: NamedFile) -> Result<HttpResponse, Error> {
+    let mut response = file.into_response(req);
+    response.headers_mut().insert(
+        header::CACHE_CONTROL,
+        header::HeaderValue::from_static("no-cache, no-store, must-revalidate"),
+    );
+    response
+        .headers_mut()
+        .insert(header::PRAGMA, header::HeaderValue::from_static("no-cache"));
+    response
+        .headers_mut()
+        .insert(header::EXPIRES, header::HeaderValue::from_static("0"));
+    Ok(response)
 }
 
 #[get("custom/user-theme.css")]

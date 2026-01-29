@@ -44,6 +44,8 @@ pub fn get_kanban_from_tag(
             }
         }
 
+        items.sort_by(|x, y| x.priority.priority.cmp(&y.priority.priority));
+
         result
             .lists
             .push(crate::looksyk::kanban::models::KanbanList {
@@ -265,6 +267,74 @@ mod tests {
         assert_eq!(result.lists[0].items[0].priority.priority, "high");
         assert_eq!(result.lists[1].title, kanban_list_title("Done"));
         assert_eq!(result.lists[1].items.len(), 0);
+    }
+
+    #[test]
+    fn test_get_kanban_from_tag_should_sort_findings_by_priority() {
+        let result = get_kanban_from_tag(
+            kanban_title("Test Kanban"),
+            page_name_str("tag"),
+            block_property_key("status"),
+            vec![block_property_value("ToDo"), block_property_value("Done")],
+            &block_properties_index_with(
+                block_property_key("status"),
+                vec![
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(0),
+                    ),
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(1),
+                    ),
+                    block_property_occurance(
+                        "ToDo",
+                        page_name_str("page-1").as_user_page().block_reference(2),
+                    ),
+                ],
+            ),
+            &block_property_key("priority"),
+            &empty_markdown_file_index(
+                &empty_journal_index(),
+                &user_page_index(
+                    "page-1",
+                    ParsedMarkdownFile {
+                        blocks: vec![
+                            parsed_block_with(
+                                vec![link_token("tag")],
+                                vec![
+                                    block_property("priority", "A"),
+                                    block_property("status", "ToDo"),
+                                ],
+                            ),
+                            parsed_block_with(
+                                vec![link_token("tag")],
+                                vec![
+                                    block_property("priority", "C"),
+                                    block_property("status", "ToDo"),
+                                ],
+                            ),
+                            parsed_block_with(
+                                vec![link_token("tag")],
+                                vec![
+                                    block_property("priority", "B"),
+                                    block_property("status", "ToDo"),
+                                ],
+                            ),
+                        ],
+                    },
+                ),
+            ),
+        );
+
+        assert_eq!(result.title, kanban_title("Test Kanban"));
+        assert_eq!(result.lists.len(), 2);
+        assert_eq!(result.lists[0].title, kanban_list_title("ToDo"));
+        let column_items = &result.lists[0].items;
+        assert_eq!(column_items.len(), 3);
+        assert_eq!(column_items[0].priority.priority, "A");
+        assert_eq!(column_items[1].priority.priority, "B");
+        assert_eq!(column_items[2].priority.priority, "C");
     }
 
     #[test]

@@ -42,6 +42,18 @@
         </ul>
     </description>
     <releases>
+        <release version="1.19.0" date="2026-01-29">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2026-01-29</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>The prioritization properties on cards of the Kanban board now have an effect on the sorting of the cards within the column.</li>
+                    <li>Update dependencies</li>
+                    <li>Trim Kanban column titles in configuration to make the configuration more robust</li>
+                    <li>Update static asset caching mechanism to fix style-caching problems in electron</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.18.3" date="2025-12-28">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2025-12-28</url>
             <description>

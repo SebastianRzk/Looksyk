@@ -5,6 +5,24 @@ title: Changelog
 
 # Changelog
 
+### v1.19.0 (2026-01-29)
+
+Enhancements:
+
+* The prioritization properties on cards of the Kanban board now have an effect on the sorting of the cards within the column.
+* Trim Kanban column titles in configuration to make the configuration more robust
+
+Bugfixes:
+
+* Update static asset caching mechanism to fix style-caching problems in electron
+
+Maintenance:
+
+* Update dependencies
+
+Other:
+
+* PKGBUILD: Run tests on release profile, to reduce build time
 
 ### v1.18.3 (2025-12-28)
 
