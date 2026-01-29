@@ -22,7 +22,7 @@ The following parameters can be used for configuration:
 * tag: All cards with a specific tag are considered for the board.
 * page property key: Key-value pair of a page property, used to assign a card to a column on the board. The page property (key-value pair) must be set correctly in the Markdown block for it to be assigned correctly on the board.
 * page proeprty values: Values used in combination with the key for mapping cards to columns. The value is a comma-separated list of column names.
-* priority: Key to a page property, used to sort cards within a column. Currently a work in progress.
+* priority: Key to a page property, used to sort cards within a column. The cards are sorted in descending order based on the value of the specified page property. The cards are sorted alphabetically by the value from low to high (`A->B->C`).
 
 As with all content in Looksyk, all values are case-sensitive. If a tag, property key, or value is entered differently within the block, the block will not be displayed as a card.
 

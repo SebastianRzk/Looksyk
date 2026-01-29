@@ -113,7 +113,7 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
 
   kanbanProperties_ = this.formGroup.valueChanges.subscribe(value => {
     const formData: KanbanProperties = {...value as KanbanProperties};
-    formData.columnValues = formData.columnValues.toString().split(",");
+    formData.columnValues = formData.columnValues.toString().split(",").map(x => x.trim());
     this.formChanged.emit(formData);
   });
 

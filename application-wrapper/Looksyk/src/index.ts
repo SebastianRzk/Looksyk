@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, shell } from 'electron';
+import { app, BrowserWindow, globalShortcut, shell, session } from 'electron';
 import { spawn } from 'child_process';
 import { BehaviorSubject, filter, firstValueFrom, identity } from "rxjs";
 import { ArgumentConfig, parse } from "ts-command-line-args";
