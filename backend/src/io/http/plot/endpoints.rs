@@ -28,11 +28,11 @@ pub async fn example_plot_png() -> Result<HttpResponse, Error> {
             .caption(caption, ("sans-serif", 20))
             .x_label_area_size(40)
             .y_label_area_size(40)
-            .build_cartesian_2d(RangedDate::new(start..end), 0..10)
+            .build_cartesian_2d(start..end, 0..10)
             .map_err(actix_web::error::ErrorInternalServerError)?;
 
         chart.configure_mesh()
-            .x_label_formatter(&|d| d.format("%Y-%m-%d").to_string())
+            .x_label_formatter(&|d: &NaiveDate| d.format("%Y-%m-%d").to_string())
             .light_line_style(&WHITE.mix(0.3))
             .draw()
             .map_err(actix_web::error::ErrorInternalServerError)?;
