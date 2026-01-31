@@ -187,6 +187,7 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::get_shutdown_status)
             .service(config::endpoints::get_journal_title_format)
             .service(config::endpoints::set_journal_title_format)
+            .service(crate::io::http::plot::endpoints::example_plot_png)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(
