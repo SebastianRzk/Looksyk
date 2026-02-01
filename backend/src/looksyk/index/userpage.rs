@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::io::fs::pages::PageOnDisk;
 use crate::looksyk::builder::page_name;
-use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
+use crate::looksyk::model::{ ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::parser::parse_markdown_file;
 use crate::looksyk::reader::read_file_contents;
 use crate::state::journal::JournalPageIndex;
@@ -15,9 +15,15 @@ pub fn create_user_page_index(all_files: &[PageOnDisk]) -> UserPageIndex {
 }
 
 pub fn create_journal_page_index(all_files: &[PageOnDisk]) -> JournalPageIndex {
-    JournalPageIndex {
-        entries: parse_files(all_files),
+    let mut index: JournalPageIndex = Default::default();
+
+    for file in all_files {
+        let raw_markdown_file = read_file_contents(&file.content);
+        let parsed_markdown_file = parse_markdown_file(raw_markdown_file);
+        index.insert(page_name(file.name.clone()), parsed_markdown_file);
     }
+
+    index
 }
 
 fn parse_files(all_files: &[PageOnDisk]) -> HashMap<SimplePageName, ParsedMarkdownFile> {
@@ -50,13 +56,14 @@ pub fn remove_file_from_journal_index(
 
 fn remove_from_index(
     current_index: &HashMap<SimplePageName, ParsedMarkdownFile>,
-    page_id: &SimplePageName,
+    page_name: &SimplePageName,
 ) -> HashMap<SimplePageName, ParsedMarkdownFile> {
     let mut result = HashMap::new();
     for key in current_index.keys() {
-        if key != page_id {
+        if key != page_name {
             result.insert(key.clone(), current_index.get(key).unwrap().clone());
         }
     }
     result
 }
+

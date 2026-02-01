@@ -103,7 +103,7 @@ async fn move_card(
 
     let resolved_page: &ParsedMarkdownFile = match page_id.page_type {
         PageType::UserPage => page_guard.entries.get(&page_id.name).unwrap(),
-        PageType::JournalPage => journal_guard.entries.get(&page_id.name).unwrap(),
+        PageType::JournalPage => journal_guard.find(&page_id.name).unwrap(),
     };
 
     let updated_page = move_kanban_card(

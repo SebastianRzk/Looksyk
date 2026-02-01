@@ -53,7 +53,7 @@ async fn get_journal(
     let mut asset_cache = data.e_asset_cache.lock().unwrap();
     let config_guard = data.g_config.lock().unwrap();
 
-    let page = journal_guard.entries.get(&simple_page_name);
+    let page = journal_guard.find(&simple_page_name);
 
     let fav = is_favourite(&simple_page_name, &config_guard);
     let journal_title_calculator_metadata = JournalTitleCalculatorMetadata {

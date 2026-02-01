@@ -23,9 +23,9 @@ env_logger = "0.11.8"
 dirs = "6.0.0"
 # Plotting library
 plotters = { version = "0.3.7", features = ["chrono"] }
-png = "0.17"
+png = "0.18"
 # CSS color parsing
-csscolorparser = "0.6"
+csscolorparser = "0.8"
 
 [dev-dependencies]
 criterion = "0.8"

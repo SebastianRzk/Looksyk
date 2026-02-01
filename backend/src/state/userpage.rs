@@ -6,6 +6,16 @@ pub struct UserPageIndex {
     pub entries: HashMap<SimplePageName, ParsedMarkdownFile>,
 }
 
+impl UserPageIndex {
+    pub fn find(&self, page_name: &SimplePageName) -> Option<&ParsedMarkdownFile> {
+        self.entries.get(page_name)
+    }
+
+    pub fn iter_entries(&self) -> impl Iterator<Item = (&SimplePageName, &ParsedMarkdownFile)> {
+        self.entries.iter()
+    }
+}
+
 #[cfg(test)]
 pub mod builder {
     use crate::looksyk::builder::page_name_str;

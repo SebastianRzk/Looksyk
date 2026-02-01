@@ -2,7 +2,6 @@ use crate::looksyk::model::{PageType, ParsedMarkdownFile, SimplePageName};
 use crate::state::block::BlockReference;
 use crate::state::journal::JournalPageIndex;
 use crate::state::userpage::UserPageIndex;
-use std::collections::HashMap;
 
 pub struct SearchTerm {
     pub as_string: String,
@@ -24,23 +23,30 @@ pub fn search(
     user_page_index: &UserPageIndex,
 ) -> SearchResult {
     SearchResult {
-        page: search_in_index(&search_term, PageType::UserPage, &user_page_index.entries),
+        page: search_in_index(
+            &search_term,
+            PageType::UserPage,
+            user_page_index.iter_entries(),
+        ),
         journal: search_in_index(
             &search_term,
             PageType::JournalPage,
-            &journal_page_index.entries,
+            journal_page_index.iter_entries(),
         ),
     }
 }
 
-fn search_in_index(
+fn search_in_index<'a, I>(
     search_term: &SearchTerm,
     page_type: PageType,
-    pages: &HashMap<SimplePageName, ParsedMarkdownFile>,
-) -> Vec<SearchFinding> {
+    pages: I,
+) -> Vec<SearchFinding>
+where
+    I: IntoIterator<Item = (&'a SimplePageName, &'a ParsedMarkdownFile)>,
+{
     let mut result = vec![];
 
-    for (simple_page_name, parsed_markdown_file) in pages.iter() {
+    for (simple_page_name, parsed_markdown_file) in pages {
         for (block_number, block) in parsed_markdown_file.blocks.iter().enumerate() {
             for block_content in &block.content {
                 if block_content.as_text.contains(&search_term.as_string) {
@@ -81,7 +87,7 @@ mod tests {
             page,
         );
 
-        let result = super::search_in_index(&search_term, PageType::UserPage, &pages);
+        let result = super::search_in_index(&search_term, PageType::UserPage, pages.iter());
 
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].text_line, "asf search alkj");

@@ -42,7 +42,6 @@ pub fn update_index_for_file(
         PageType::JournalPage => {
             new_page_associated_state
                 .journal_pages
-                .entries
                 .insert(page_id.name.clone(), update.clone());
             insert_journal_page_to_block_properties(
                 &mut block_properties_index,

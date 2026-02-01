@@ -100,11 +100,9 @@ fn rename_tag_across_all_files(
                     changed_files.insert(reference.clone());
                 }
                 PageType::JournalPage => {
-                    let file = new_journal_pages.entries.get(&reference.name).unwrap();
+                    let file = new_journal_pages.find(&reference.name).unwrap();
                     let new_file = rename_tag_in_file(old, new, file);
-                    new_journal_pages
-                        .entries
-                        .insert(reference.name.clone(), new_file);
+                    new_journal_pages.insert(reference.name.clone(), new_file);
                     changed_files.insert(reference.clone());
                 }
             }
@@ -250,7 +248,7 @@ mod tests {
             },
         );
 
-        let mut journal_pages: HashMap<SimplePageName, ParsedMarkdownFile> = HashMap::new();
+        let mut journal_pages: JournalPageIndex = Default::default();
         journal_pages.insert(
             referencing_page_name_journal.clone(),
             ParsedMarkdownFile {
@@ -277,9 +275,7 @@ mod tests {
                 user_pages: &UserPageIndex {
                     entries: user_pages,
                 },
-                journal_pages: &JournalPageIndex {
-                    entries: journal_pages,
-                },
+                journal_pages: &journal_pages,
             },
             &TagIndex {
                 entries: tags_index,

@@ -6,6 +6,14 @@ pub struct BlockPropertiesIndex {
     pub entries: HashMap<BlockPropertyKey, Vec<BlockPropertyOccurence>>,
 }
 
+impl Default for BlockPropertiesIndex {
+    fn default() -> Self {
+        BlockPropertiesIndex {
+            entries: HashMap::new(),
+        }
+    }
+}
+
 #[derive(Eq, PartialEq, Hash, Clone)]
 pub struct BlockPropertyKey {
     pub value: String,
@@ -50,6 +58,10 @@ impl BlockPropertiesIndex {
                 }],
             );
         }
+    }
+
+    pub fn find(&self, key: &BlockPropertyKey) -> Option<&Vec<BlockPropertyOccurence>> {
+        self.entries.get(key)
     }
 }
 
