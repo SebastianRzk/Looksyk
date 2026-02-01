@@ -11,11 +11,13 @@ title: Changelog
 Enhancements:
 
 * Add plot property query
-
+* Material theme is now adapted to light/dark mode
 
 Bugfixes:
 
 * Ligt/darkmode toggle does not throw internal error anymore
+* SVG-assets in journal-view are not desturbing the scrollbar anymore
+
 
 ### v1.19.0 (2026-01-29)
 

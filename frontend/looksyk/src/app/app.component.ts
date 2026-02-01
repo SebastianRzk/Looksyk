@@ -33,7 +33,9 @@ export class AppComponent implements OnInit, OnDestroy {
   gitService = inject(GitService);
   appearanceService = inject(AppearanceService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
-  appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => this.loadHighlightTheme(x));
+  appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => {
+    this.loadHighlightTheme(x);
+  });
   private iconRegistry: MatIconRegistry = inject(MatIconRegistry);
 
   @ViewChild('sidenav')
@@ -55,8 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('content')
   content!: ElementRef;
-
-  private currentHighlightTheme: string | null = null;
 
   constructor() {
     this.iconRegistry.setDefaultFontSetClass('material-symbols-rounded');
@@ -92,6 +92,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.gitService.update();
   }
 
+  private currentHighlightTheme: string | null = null;
+
   private loadHighlightTheme(appearance: 'light' | 'dark' = 'dark'): void {
     const themeFile = appearance === 'dark' ?
       '/assets/fonts/highlightjs.11.10.min.dark.css' :
@@ -116,6 +118,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.currentHighlightTheme = themeFile;
   }
+
 
   @HostListener('window:keyup', ['$event'])
   keyUpEvent(event: KeyboardEvent) {

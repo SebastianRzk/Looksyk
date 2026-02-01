@@ -32,7 +32,7 @@
             "scripts": [],
             "browser": "src/main.ts",
             "externalDependencies": [
-              "/assets/fonts/noto/regular.ttf",
+              "/assets/fonts/noto/regular.ttf"
             ]
           },
           "configurations": {
