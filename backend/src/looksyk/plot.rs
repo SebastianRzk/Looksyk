@@ -53,7 +53,7 @@ pub fn calculate_plot_data(
                 continue;
             }
 
-            let date = &NaiveDate::parse_from_str(&reference.block.page_id.name.name, "%Y-%m-%d");
+            let date = &NaiveDate::parse_from_str(&reference.block.page_id.name.name, "%Y_%m_%d");
 
             if date.is_err() {
                 continue;

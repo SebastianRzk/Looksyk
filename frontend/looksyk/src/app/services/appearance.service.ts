@@ -9,9 +9,8 @@ export class AppearanceService implements OnDestroy {
   private httpClient: HttpClient = inject(HttpClient);
   private appearance = new BehaviorSubject<'light' | 'dark'>('dark');
   public appearance$ = this.appearance.pipe(distinctUntilChanged());
-  document: Document = inject(DOCUMENT);
   appearance_ = this.appearance$.subscribe(appearance => {
-    this.document.documentElement.setAttribute('data-theme', appearance);
+    document.documentElement.setAttribute('data-theme', appearance);
   });
 
   ngOnDestroy(): void {

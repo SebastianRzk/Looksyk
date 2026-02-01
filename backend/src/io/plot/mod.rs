@@ -5,8 +5,8 @@ use chrono::NaiveDate;
 use plotters::backend::SVGBackend;
 use plotters::chart::ChartBuilder;
 use plotters::element::PathElement;
-use plotters::prelude::{Color, IntoDrawingArea, LineSeries, BLACK, RED, WHITE};
-use plotters::style::{RGBAColor, TextStyle, FontDesc, FontFamily, FontStyle};
+use plotters::prelude::{Color, IntoDrawingArea, IntoTextStyle, LineSeries, BLACK, RED, WHITE};
+use plotters::style::{RGBAColor, TextStyle};
 use crate::looksyk::data::config::runtime_graph_configuration::Design;
 use csscolorparser::Color as CssColor;
 
@@ -47,6 +47,8 @@ pub fn render_as_svg(plot: &PlotData, design: &Design) -> Result<String, Error> 
         crate::looksyk::data::config::runtime_graph_configuration::Appearance::Dark => WHITE.to_rgba(),
     });
 
+    let graph_color = css_to_plotters_rgba(&design.primary_color, RED.to_rgba());
+
     // SVG Backend mit String-Buffer
     let mut svg_buf: String = String::new();
 
@@ -55,7 +57,7 @@ pub fn render_as_svg(plot: &PlotData, design: &Design) -> Result<String, Error> 
         // Hintergrund transparent statt weiß
         root.fill(&RGBAColor(0, 0, 0, 0.0)).map_err(actix_web::error::ErrorInternalServerError)?;
 
-        let caption_style = TextStyle::from(("sans-serif", 20)).color(&label_color);
+        let caption_style = TextStyle::from(("sans-serif", 20)).with_color(&label_color);
 
         let mut chart = ChartBuilder::on(&root)
             .margin(20)
@@ -67,7 +69,7 @@ pub fn render_as_svg(plot: &PlotData, design: &Design) -> Result<String, Error> 
 
         chart.configure_mesh()
             .x_label_formatter(&|d: &NaiveDate| d.format("%Y-%m-%d").to_string())
-            .label_style(TextStyle::from(("sans-serif", 12)).color(&label_color))
+            .label_style(TextStyle::from(("sans-serif", 12)).with_color(&label_color))
             .axis_style(axis_color)
             .light_line_style(&grid_color)
             .draw()
@@ -76,18 +78,19 @@ pub fn render_as_svg(plot: &PlotData, design: &Design) -> Result<String, Error> 
         chart
             .draw_series(LineSeries::new(
                 plot.data.points.clone().into_iter().map(|p| (p.date, p.value)),
-                &RED,
+                &graph_color,
             ))
             .map_err(actix_web::error::ErrorInternalServerError)?
             .label(&plot.label)
-            .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], RED));
+            .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], graph_color));
 
         chart
             .configure_series_labels()
             // Legenden-Hintergrund ebenfalls transparent
             .background_style(&RGBAColor(0, 0, 0, 0.0))
             .border_style(&axis_color)
-            .label_font(FontDesc::new(FontFamily::SansSerif, 12.0, FontStyle::Normal))
+            // Farbe des Legendentextes auf label_color setzen
+            .label_font(TextStyle::from(("sans-serif", 12)).with_color(&label_color))
             .draw()
             .map_err(actix_web::error::ErrorInternalServerError)?;
 

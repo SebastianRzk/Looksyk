@@ -1,4 +1,4 @@
-import {Component, DOCUMENT, ElementRef, HostListener, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UseractionService} from "./services/useraction.service";
 import {ContentAssistMode, ContentAssistService, KeypressResult} from "./services/content-assist.service";
 import {Title} from "@angular/platform-browser";
@@ -34,7 +34,6 @@ export class AppComponent implements OnInit, OnDestroy {
   appearanceService = inject(AppearanceService);
   title_: Subscription = this.titleService.graphTitle$.subscribe(x => this.title.setTitle(`Looksyk - ${x}`));
   appearance_: Subscription = this.appearanceService.appearance$.subscribe(x => this.loadHighlightTheme(x));
-  private document: Document = inject(DOCUMENT);
   private iconRegistry: MatIconRegistry = inject(MatIconRegistry);
 
   @ViewChild('sidenav')
@@ -103,17 +102,17 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     // Remove existing highlight theme
-    const existingLink = this.document.getElementById('highlight-theme') as HTMLLinkElement;
+    const existingLink = document.getElementById('highlight-theme') as HTMLLinkElement;
     if (existingLink) {
       existingLink.remove();
     }
 
     // Add new theme
-    const link = this.document.createElement('link');
+    const link = document.createElement('link');
     link.id = 'highlight-theme';
     link.rel = 'stylesheet';
     link.href = themeFile;
-    this.document.head.appendChild(link);
+    document.head.appendChild(link);
 
     this.currentHighlightTheme = themeFile;
   }

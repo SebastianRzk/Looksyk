@@ -1,7 +1,9 @@
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PlotDataDto {
     pub label: String,
     pub caption: String,
-    pub  width: u32,
+    pub width: u32,
     pub height: u32,
     pub property_key: String,
     pub starting_at: String,

@@ -5,6 +5,18 @@ title: Changelog
 
 # Changelog
 
+
+### v1.20.0 (2026-02-??)
+
+Enhancements:
+
+* Add plot property query
+
+
+Bugfixes:
+
+* Ligt/darkmode toggle does not throw internal error anymore
+
 ### v1.19.0 (2026-01-29)
 
 Enhancements:

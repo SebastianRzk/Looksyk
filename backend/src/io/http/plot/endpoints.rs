@@ -3,20 +3,16 @@ use crate::io::plot::render_as_svg;
 use crate::looksyk::plot::{calculate_plot_data, PlotDataQuery, PlotMetadata};
 use crate::state::application_state::AppState;
 use crate::state::block_properties::BlockPropertyKey;
-use actix_web::web::Data;
+use actix_web::http::header;
+use actix_web::web::{Data, Query};
 use actix_web::{get, Error, HttpResponse};
 
-#[get("/plot/example.svg")]
-pub async fn example_plot_svg(data: Data<AppState>) -> Result<HttpResponse, Error> {
-    let plot = PlotDataDto {
-        label: "Value".to_string(),
-        caption: "An example plot with dates on the x-axis".to_string(),
-        width: 800,
-        height: 600,
-        starting_at: "2026-01-01".to_string(),
-        ending_at: "2026-01-10".to_string(),
-        property_key: "example_property".to_string(),
-    };
+#[get("/api/plot/")]
+pub async fn example_plot_svg(
+    data: Data<AppState>,
+    dto: Query<PlotDataDto>,
+) -> Result<HttpResponse, Error> {
+    let plot = dto.into_inner();
 
     let config_guard = data.g_config.lock().unwrap();
     let property_guard = data.h_block_properties.lock().unwrap();
@@ -38,11 +34,28 @@ pub async fn example_plot_svg(data: Data<AppState>) -> Result<HttpResponse, Erro
         },
     );
 
+    drop(property_guard);
+
     if plot_data.data.points.is_empty() {
         return Ok(HttpResponse::BadRequest().body("no data points"));
     }
     let svg_buf = render_as_svg(&plot_data, &config_guard.design)?;
-    Ok(HttpResponse::Ok()
+    drop(config_guard);
+
+    let mut response = HttpResponse::Ok()
         .content_type("image/svg+xml")
-        .body(svg_buf))
+        .body(svg_buf);
+
+    response.headers_mut().insert(
+        header::CACHE_CONTROL,
+        header::HeaderValue::from_static("no-cache, no-store, must-revalidate"),
+    );
+    response
+        .headers_mut()
+        .insert(header::PRAGMA, header::HeaderValue::from_static("no-cache"));
+    response
+        .headers_mut()
+        .insert(header::EXPIRES, header::HeaderValue::from_static("0"));
+
+    Ok(response)
 }
