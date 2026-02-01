@@ -24,6 +24,8 @@ dirs = "6.0.0"
 # Plotting library
 plotters = { version = "0.3.7", features = ["chrono"] }
 png = "0.17"
+# CSS color parsing
+csscolorparser = "0.6"
 
 [dev-dependencies]
 criterion = "0.8"
