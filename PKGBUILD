@@ -8,9 +8,9 @@ arch=("x86_64")
 url="https://sebastianrzk.github.io/Looksyk"
 license=('AGPL-3.0-or-later')
 groups=()
-depends=(electron glibc bash gcc-libs git)
-makedepends=(git nodejs-lts-jod npm cargo glibc bash gcc-libs fontconfig)
-checkdepends=(cargo glibc gcc-libs fontconfig)
+depends=(electron glibc bash gcc-libs git fontconfig curl openssl)
+makedepends=(git nodejs-lts-jod npm cargo glibc bash gcc-libs pkgconf gettext)
+checkdepends=(cargo glibc gcc-libs)
 provides=(looksyk looksyk-backend)
 changelog=
 source=("git+https://github.com/sebastianrzk/looksyk#tag=v$pkgver")

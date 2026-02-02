@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install development files
-        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext fontconfig
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo test --all-features
         working-directory: ./backend
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install development files
-        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext fontconfig
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: clippy
