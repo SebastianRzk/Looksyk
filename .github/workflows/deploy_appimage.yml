@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install development files
-        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev gettext fontconfig
       - name: Build project
         run: bash build.sh
 

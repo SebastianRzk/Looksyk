@@ -6,7 +6,6 @@
   { "path": "backend/Cargo.toml", "type": "cargo" },
   { "path": "backend/Cargo.lock", "type": "cargo-lock", "package": "looksyk" },
   { "path": "PKGBUILD", "type": "pkgbuild" },
-  { "path": "de.sebastianruziczka.looksyk.yml", "type": "yaml-source-url" },
   { "path": "de.sebastianruziczka.looksyk.metainfo.xml", "type": "metainfo-xml" }
 ]
 

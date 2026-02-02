@@ -9,8 +9,8 @@ url="https://sebastianrzk.github.io/Looksyk"
 license=('AGPL-3.0-or-later')
 groups=()
 depends=(electron glibc bash gcc-libs git)
-makedepends=(git nodejs-lts-jod npm cargo glibc bash gcc-libs)
-checkdepends=(cargo glibc gcc-libs)
+makedepends=(git nodejs-lts-jod npm cargo glibc bash gcc-libs fontconfig)
+checkdepends=(cargo glibc gcc-libs fontconfig)
 provides=(looksyk looksyk-backend)
 changelog=
 source=("git+https://github.com/sebastianrzk/looksyk#tag=v$pkgver")
