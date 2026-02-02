@@ -42,6 +42,19 @@
         </ul>
     </description>
     <releases>
+        <release version="1.20.0" date="2026-02-02">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2026-02-02</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Add plot property query</li>
+                    <li>Boards and board-configurations can now be stored in favourites</li>
+                    <li>Material theme is now adapted to light/dark mode</li>
+                    <li>Bugfix: Light/darkmode toggle does not throw internal error anymore</li>
+                    <li>Bugfix: SVG-assets in journal-view are not desturbing the scrollbar anymore</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.19.0" date="2026-01-29">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2026-01-29</url>
             <description>

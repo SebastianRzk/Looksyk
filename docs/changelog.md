@@ -16,7 +16,7 @@ Enhancements:
 
 Bugfixes:
 
-* Ligt/darkmode toggle does not throw internal error anymore
+* Light/darkmode toggle does not throw internal error anymore
 * SVG-assets in journal-view are not desturbing the scrollbar anymore
 
 Other:
