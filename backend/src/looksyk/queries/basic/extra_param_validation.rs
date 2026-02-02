@@ -17,14 +17,6 @@ impl ParamValidator {
         }
     }
 
-    pub fn validate_as_non_empty(mut self, param_value: &str, name: &str) -> Self {
-        if param_value.trim().is_empty() {
-            self.errors
-                .push(format!("Parameter '{}' should not be empty.", name));
-        }
-        self
-    }
-
     pub fn validate_as_date(mut self, param_value: &str, name: &str) -> Self {
         match chrono::NaiveDate::parse_from_str(param_value, "%Y-%m-%d") {
             Ok(_) => self,
