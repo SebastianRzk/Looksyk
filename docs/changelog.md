@@ -11,6 +11,7 @@ title: Changelog
 Enhancements:
 
 * Add plot property query
+* Boards and board-configurations can now be stored in favourites
 * Material theme is now adapted to light/dark mode
 
 Bugfixes:

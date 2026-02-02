@@ -89,14 +89,17 @@ li {
     color: #e6e6e6;
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 1rem;
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
 }
 
-.main-menu a:hover, .main-menu a:focus {
+.main-menu li:hover, .main-menu a:focus {
     background: #2c2f36;
     color: #fff;
+}
+
+.no-wrap {
+    white-space: nowrap;
 }
 
 .github-link {
@@ -111,6 +114,16 @@ li {
     text-decoration: none;
 }
 
+.menu-list>li, .advanced-menu>li {
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    align-content: center;
+}
+
+.advanced-menu>li {
+    height: 100%;
+}
+
 .menu-list > li > a {
     display: flex;
     flex-direction: row;
@@ -118,9 +131,8 @@ li {
 }
 
 .menu-list > li > a > img {
-    max-height: 4ex;
+    max-height: 3ex;
     margin: 0;
-    margin-right: 1ex;
 }
 
 
@@ -228,10 +240,8 @@ img {
     font-size: larger;
 }
 
-table {
-    border-collapse: separate;
-    border-spacing: 0.7rem 0.4rem;
-    width: 100%;
+.eu {
+    font-size: x-large;
 }
 
 th, td {
