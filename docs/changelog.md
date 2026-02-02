@@ -6,7 +6,7 @@ title: Changelog
 # Changelog
 
 
-### v1.20.0 (2026-02-??)
+### v1.20.0 (2026-02-02)
 
 Enhancements:
 
@@ -19,6 +19,10 @@ Bugfixes:
 * Ligt/darkmode toggle does not throw internal error anymore
 * SVG-assets in journal-view are not desturbing the scrollbar anymore
 
+Other:
+
+* Improve documentation
+* Make version-check via submodule
 
 ### v1.19.0 (2026-01-29)
 
