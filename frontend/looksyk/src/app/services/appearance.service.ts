@@ -1,4 +1,4 @@
-import {DOCUMENT, inject, Injectable, OnDestroy} from '@angular/core';
+import {inject, Injectable, OnDestroy} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, distinctUntilChanged, lastValueFrom, map} from 'rxjs';
 

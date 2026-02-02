@@ -203,7 +203,8 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
     if (indexOfModifiedFav === -1) {
       return;
     }
-    const {data, url} = this.calcKanbanData();
+
+    const {url} = this.calcKanbanData();
     allFavs[indexOfModifiedFav].url = url;
     this.favService.updateFavList(allFavs);
   }
