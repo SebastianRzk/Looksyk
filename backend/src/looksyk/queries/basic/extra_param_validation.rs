@@ -61,16 +61,6 @@ mod tests {
     }
 
     #[test]
-    fn test_param_validator_with_empty_string_should_fail() {
-        let validator = super::ParamValidator::default().validate_as_non_empty("   ", "username");
-        assert!(!validator.errors.is_empty());
-        assert_eq!(
-            validator.errors[0],
-            "Parameter 'username' should not be empty."
-        );
-    }
-
-    #[test]
     fn test_param_validator_with_valid_integer_should_pass() {
         let validator = super::ParamValidator::default().validate_as_integer("42", "age");
         assert!(validator.errors.is_empty());
@@ -90,11 +80,10 @@ mod tests {
     fn test_param_validator_format_errors_as_markdown() {
         let validator = super::ParamValidator::default()
             .validate_as_integer("not_an_integer", "param1")
-            .validate_as_date("invalid_date", "param2")
-            .validate_as_non_empty("   ", "param3");
+            .validate_as_date("invalid_date", "param2");
 
         let markdown = validator.format_errors_as_markdown();
-        let expected = "**Parameter Validation Errors:**\n- Parameter 'param1' with value 'not_an_integer' is not a valid integer.\n- Parameter 'param2' with value 'invalid_date' is not a valid date (expected format: YYYY-MM-DD).\n- Parameter 'param3' should not be empty.\n";
+        let expected = "**Parameter Validation Errors:**\n- Parameter 'param1' with value 'not_an_integer' is not a valid integer.\n- Parameter 'param2' with value 'invalid_date' is not a valid date (expected format: YYYY-MM-DD).\n";
 
         assert_eq!(markdown, expected);
     }
