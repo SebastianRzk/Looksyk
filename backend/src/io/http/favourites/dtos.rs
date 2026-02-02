@@ -8,11 +8,10 @@ pub struct FavListDto {
 #[derive(Serialize, Deserialize)]
 pub struct FavDto {
     pub name: String,
-    pub url: String
+    pub url: String,
 }
 
-
-#[derive( Deserialize)]
+#[derive(Deserialize)]
 pub struct FavUrlDto {
-    pub url: String
+    pub url: String,
 }

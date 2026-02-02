@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::io::fs::pages::PageOnDisk;
 use crate::looksyk::builder::page_name;
-use crate::looksyk::model::{ ParsedMarkdownFile, SimplePageName};
+use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
 use crate::looksyk::parser::parse_markdown_file;
 use crate::looksyk::reader::read_file_contents;
 use crate::state::journal::JournalPageIndex;
@@ -66,4 +66,3 @@ fn remove_from_index(
     }
     result
 }
-

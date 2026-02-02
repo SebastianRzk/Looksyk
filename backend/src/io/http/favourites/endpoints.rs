@@ -18,7 +18,6 @@ async fn insert_other_favourite(
     data: Data<AppState>,
     graph_changes: Data<GraphChangesState>,
 ) -> actix_web::Result<impl Responder> {
-
     let mut config_guard = data.g_config.lock().unwrap();
 
     let new_config = add_favourite(
@@ -38,8 +37,6 @@ async fn insert_other_favourite(
     );
     Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }
-
-
 
 #[delete("/api/favourites/other/{fav_name}")]
 async fn delete_other_favourite(
@@ -68,7 +65,6 @@ async fn delete_other_favourite(
 
     Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }
-
 
 #[post("/api/favourites/page/{fav_name}")]
 async fn insert_page_favourite(

@@ -1,5 +1,5 @@
-use crate::looksyk::model::{PageId, PageType, ParsedMarkdownFile};
 use crate::looksyk::model::PageType::JournalPage;
+use crate::looksyk::model::{PageId, PageType, ParsedMarkdownFile};
 use crate::state::journal::JournalPageIndex;
 use crate::state::userpage::UserPageIndex;
 
@@ -11,9 +11,7 @@ pub struct MarkdownFileIndex<'a> {
 impl MarkdownFileIndex<'_> {
     pub fn resolve(&self, id: &PageId) -> Option<&ParsedMarkdownFile> {
         match id.page_type {
-            JournalPage => {
-                self.journal_page_index.find(&id.name)
-            }
+            JournalPage => self.journal_page_index.find(&id.name),
             PageType::UserPage => self.user_page_index.find(&id.name),
         }
     }

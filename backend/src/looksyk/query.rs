@@ -13,7 +13,9 @@ use crate::looksyk::queries::kanban::{parse_query_board, render_board_query, QUE
 use crate::looksyk::queries::pagehierarchy::{
     parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY,
 };
-use crate::looksyk::queries::plot::{parse_query_plot_property, render_plot_property_query, QUERY_NAME_PLOT_PROPERTY};
+use crate::looksyk::queries::plot::{
+    parse_query_plot_property, render_plot_property_query, QUERY_NAME_PLOT_PROPERTY,
+};
 use crate::looksyk::queries::references_to::{
     parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO,
 };
@@ -147,7 +149,7 @@ pub enum QueryType {
     InsertFileContent,
     Board,
     Unknown,
-    PlotProperty
+    PlotProperty,
 }
 
 #[derive(PartialEq, Debug)]

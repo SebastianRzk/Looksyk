@@ -1,9 +1,9 @@
 use crate::io::fs::paths::REL_CONFIG_PATH;
 use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
+use crate::looksyk::model::SimplePageName;
 use crate::state::application_state::GraphRootLocation;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use crate::looksyk::model::SimplePageName;
 
 #[derive(Deserialize, Clone)]
 pub struct OldConfigOnDisk {

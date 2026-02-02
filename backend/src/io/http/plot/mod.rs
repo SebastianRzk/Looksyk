@@ -1,3 +1,2 @@
-pub mod endpoints;
 mod dtos;
-
+pub mod endpoints;

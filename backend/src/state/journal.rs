@@ -1,11 +1,10 @@
 use crate::looksyk::model::{ParsedMarkdownFile, SimplePageName};
 use std::collections::HashMap;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct JournalPageIndex {
     pub entries: HashMap<SimplePageName, ParsedMarkdownFile>,
 }
-
 
 impl JournalPageIndex {
     pub fn find(&self, page_name: &SimplePageName) -> Option<&ParsedMarkdownFile> {
@@ -18,14 +17,6 @@ impl JournalPageIndex {
 
     pub fn insert(&mut self, page_name: SimplePageName, entry: ParsedMarkdownFile) {
         self.entries.insert(page_name, entry);
-    }
-}
-
-impl Default for JournalPageIndex {
-    fn default() -> Self {
-        JournalPageIndex {
-            entries: HashMap::new(),
-        }
     }
 }
 

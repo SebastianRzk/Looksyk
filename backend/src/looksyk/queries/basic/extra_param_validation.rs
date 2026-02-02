@@ -1,11 +1,6 @@
+#[derive(Default)]
 pub struct ParamValidator {
     errors: Vec<String>,
-}
-
-impl Default for ParamValidator {
-    fn default() -> Self {
-        ParamValidator { errors: Vec::new() }
-    }
 }
 
 impl ParamValidator {

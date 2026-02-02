@@ -60,7 +60,7 @@ pub fn calculate_plot_data(
             }
 
             data_points.push(DataPoint {
-                date: date.unwrap().clone(),
+                date: date.unwrap(),
                 value: try_parse_value.unwrap(),
             })
         }

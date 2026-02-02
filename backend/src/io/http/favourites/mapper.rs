@@ -57,10 +57,7 @@ mod tests {
 
         assert_eq!(
             dto,
-            vec![
-                page_favourite_str("test1"),
-                page_favourite_str("test2")
-            ]
+            vec![page_favourite_str("test1"), page_favourite_str("test2")]
         );
     }
 }

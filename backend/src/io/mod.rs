@@ -7,5 +7,5 @@ mod hash;
 pub mod http;
 pub mod human;
 pub mod markdown;
-pub mod state;
 pub mod plot;
+pub mod state;

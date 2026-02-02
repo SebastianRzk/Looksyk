@@ -2,16 +2,9 @@ use crate::looksyk::parser::BlockProperty;
 use crate::state::block::BlockReference;
 use std::collections::HashMap;
 
+#[derive(Default)]
 pub struct BlockPropertiesIndex {
     pub entries: HashMap<BlockPropertyKey, Vec<BlockPropertyOccurence>>,
-}
-
-impl Default for BlockPropertiesIndex {
-    fn default() -> Self {
-        BlockPropertiesIndex {
-            entries: HashMap::new(),
-        }
-    }
 }
 
 #[derive(Eq, PartialEq, Hash, Clone)]
