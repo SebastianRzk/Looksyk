@@ -10,7 +10,7 @@ import {
   signal
 } from '@angular/core';
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NonNullableFormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
@@ -28,11 +28,13 @@ import { MetaInfoService } from "../../../services/meta-info.service";
 import { AsyncPipe } from "@angular/common";
 import { BlockPropertiesService } from "../../../services/block-properties.service";
 import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material/autocomplete";
-import { firstValueFrom, Subject } from "rxjs";
+import { combineLatest, firstValueFrom, map, Subject } from "rxjs";
+import { Fav, FavouriteService } from "../../../services/favourite.service";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-kanban-properties',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, MatOption, MatInput, MatExpansionPanel, MatAccordion, MatExpansionPanelTitle, MatExpansionPanelDescription, MatExpansionPanelHeader, AsyncPipe, MatAutocomplete, MatAutocompleteTrigger],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatCheckboxModule, MatOption, MatInput, MatExpansionPanel, MatAccordion, MatExpansionPanelTitle, MatExpansionPanelDescription, MatExpansionPanelHeader, AsyncPipe, MatAutocomplete, MatAutocompleteTrigger, FormsModule],
   templateUrl: './kanban-properties.component.html',
   styleUrls: ['./kanban-properties.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +42,8 @@ import { firstValueFrom, Subject } from "rxjs";
 export class KanbanPropertiesComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
-    firstValueFrom(this.metaInfoService.currentmetaInfo$).then(data => this.tags.next(data.tags))
+    firstValueFrom(this.metaInfoService.currentmetaInfo$).then(data => this.tags.next(data.tags));
+    this.title.set(this.formGroup.get("title")?.value || "My first kanban board");
   }
 
   private metaInfoService = inject(MetaInfoService);
@@ -51,9 +54,10 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
 
   readonly panelOpenState = signal(false);
 
-  formBuilder = inject(NonNullableFormBuilder);
+  private favService = inject(FavouriteService);
 
-  allProperties= inject(BlockPropertiesService).load_block_properties();
+  formBuilder = inject(NonNullableFormBuilder);
+  allProperties = inject(BlockPropertiesService).load_block_properties();
   blockPropertiesForKey = new Subject<string[]>();
   blockPropertiesForKey$ = this.blockPropertiesForKey.asObservable();
   blockPropertiesForPrio = new Subject<string[]>();
@@ -66,6 +70,44 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
     columnValues: this.formBuilder.control(["TODO", "DOING", "DONE"]),
     priorityKey: this.formBuilder.control('priority'),
   });
+  private title = signal<string>("My first kanban board");
+
+  title_ = this.formGroup.get("title")?.valueChanges.subscribe(
+    changes => {
+      this.title.set(changes);
+    }
+  )
+
+
+  fav = combineLatest(
+    {
+      favs: this.favService.favourites$,
+      title: toObservable(this.title)
+    }
+  ).pipe(
+    map((data: {
+      favs: Fav[],
+      title: string
+    }) => {
+      return data.favs.some(fav => (fav.name === data.title && fav.url.startsWith('/special-page/kanban')));
+    })
+  )
+
+  changed = combineLatest(
+    {
+      favs: this.favService.favourites$,
+      title: toObservable(this.title),
+      data: this.formGroup.valueChanges
+    }
+  ).pipe(
+    map((data: {
+      favs: Fav[],
+      title: string
+    }) => {
+      return data.favs.some(fav => (fav.name === data.title && fav.url.startsWith('/special-page/kanban') &&
+        fav.url !== this.calcKanbanData().url));
+    })
+  )
 
   changesTagFilter_ = this.formGroup.get("tag")?.valueChanges.subscribe(
     async changes => {
@@ -104,7 +146,7 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
       columnKey: value.columnKey,
       columnValues: value.columnValues,
       priorityKey: value.priorityKey,
-    });
+    }, {emitEvent: false});
   }
 
 
@@ -122,8 +164,49 @@ export class KanbanPropertiesComponent implements OnDestroy, OnInit {
     this.changesTagFilter_?.unsubscribe();
     this.changesKeyFilter_?.unsubscribe();
     this.changesPrioFilter_?.unsubscribe();
+    this.title_?.unsubscribe();
   }
 
+  protected async removeFromFavs() {
+    const favs = await firstValueFrom(this.favService.favourites);
+    const matchingFavs: Fav[] = favs.filter(fav => (fav.name === (this.formGroup.get('title')?.value || '')
+      && fav.url.startsWith('/special-page/kanban')));
+    if (matchingFavs.length === 0) {
+      return;
+    }
+    this.favService.unstar(matchingFavs[0].name, matchingFavs[0].url);
+  }
+
+  protected addToFavs() {
+    const {data, url} = this.calcKanbanData();
+    this.favService.star(data.title, url);
+  }
+
+  private calcKanbanData() {
+    const data: KanbanProperties = {
+      title: this.formGroup.get("title")?.value || '',
+      tag: this.formGroup.get("tag")?.value || '',
+      columnKey: this.formGroup.get("columnKey")?.value || '',
+      columnValues: (this.formGroup.get("columnValues")?.value || []).toString().split(",").map(x => x.trim()),
+      priorityKey: this.formGroup.get("priorityKey")?.value || '',
+    }
+    const asString = JSON.stringify(data);
+    const encodedData = encodeURIComponent(asString);
+    const url = `/special-page/kanban?data=${encodedData}`;
+    return {data, url};
+  }
+
+  protected async updateFav() {
+    const allFavs = await firstValueFrom(this.favService.favourites);
+    const indexOfModifiedFav = allFavs.findIndex(fav => (fav.name === (this.formGroup.get('title')?.value || '')
+      && fav.url.startsWith('/special-page/kanban')));
+    if (indexOfModifiedFav === -1) {
+      return;
+    }
+    const {data, url} = this.calcKanbanData();
+    allFavs[indexOfModifiedFav].url = url;
+    this.favService.updateFavList(allFavs);
+  }
 }
 
 export interface KanbanProperties {

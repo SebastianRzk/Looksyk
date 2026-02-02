@@ -39,12 +39,12 @@ export class FavStarComponent implements OnChanges {
   }
 
   onStar(){
-    this.favouriteService.star(this.pageName);
+    this.favouriteService.starPage(this.pageName);
     this.isFav.next({isFav: true})
   }
 
   onUnStar()  {
-    this.favouriteService.unstar(this.pageName);
+    this.favouriteService.unstarPage(this.pageName);
     this.isFav.next({isFav: false})
   }
 }

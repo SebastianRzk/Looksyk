@@ -19,7 +19,7 @@
         </div>
         <mat-form-field>
           <mat-label>Tag</mat-label>
-          <input matInput formControlName="tag" [matAutocomplete]="tagAuto" />
+          <input matInput formControlName="tag" [matAutocomplete]="tagAuto"/>
           <mat-autocomplete #tagAuto="matAutocomplete">
             @if (tags$ | async; as tags) {
               @for (tag of tags; track tag) {
@@ -36,7 +36,7 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <input matInput formControlName="columnKey" [matAutocomplete]="propertyKeyAuto" />
+          <input matInput formControlName="columnKey" [matAutocomplete]="propertyKeyAuto"/>
           <mat-autocomplete #propertyKeyAuto="matAutocomplete">
             @for (col of (blockPropertiesForKey$ | async); track col) {
               <mat-option [value]="col">{{ col }}</mat-option>
@@ -59,7 +59,7 @@
         </div>
         <mat-form-field>
           <mat-label>Page property key</mat-label>
-          <input matInput formControlName="priorityKey" [matAutocomplete]="propertyKeyPrioAuto" />
+          <input matInput formControlName="priorityKey" [matAutocomplete]="propertyKeyPrioAuto"/>
           <mat-autocomplete #propertyKeyPrioAuto="matAutocomplete">
             @for (prio of (blockPropertiesForPrio$| async); track prio) {
               <mat-option [value]="prio">{{ prio }}</mat-option>
@@ -87,6 +87,25 @@
       optional
       <code>{{ formGroup.get("priorityKey")?.value }}:: </code>) accordingly.
     </div>
+
+    <h2>Store board in favourites</h2>
+    <p>
+      The favourite is identified by its title and will store the current configuration of the board.
+    </p>
+    <p>
+      If the favourite already exists, you can update it to the current configuration.
+    </p>
+    <p>
+      If the title is changed, a new favourite will be created.
+    </p>
+    @if (fav | async) {
+      <button mat-raised-button color="warn" (click)="removeFromFavs()">Remove from favourites</button>
+      @if (changed| async) {
+        <button mat-raised-button (click)="updateFav()">Update favourite in sidebar to current configuration</button>
+      }
+    } @else {
+      <button mat-raised-button color="primary" (click)="addToFavs()">Add to favourites</button>
+    }
 
   </mat-expansion-panel>
 </mat-accordion>

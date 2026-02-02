@@ -28,9 +28,9 @@
     <div class="menu-button-list menu-element" cdkDropList (cdkDropListDropped)="drop($event)">
       <p class="menu-header">Favorites</p>
       @for (fav of favs; track fav) {
-        <button mat-button [routerLink]="'/page/'+encodeURIComponent(fav)" class="nav-fav" cdkDrag>
+        <button mat-button (click)="navigate(fav)" class="nav-fav" cdkDrag>
           <mat-icon class="material-symbols-rounded-filled">star</mat-icon>
-          <app-sidebar-text [text]="fav"></app-sidebar-text>
+          <app-sidebar-text [text]="fav.name"></app-sidebar-text>
         </button>
       }
     </div>

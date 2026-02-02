@@ -1,10 +1,10 @@
-use crate::io::http::link_encoding::encode_link_component;
 use crate::io::http::page::dtos::{
     MarkdownReferenceDto, PageTitleDto, PageTitleSegmentDto, PreparedBlockContentDto,
     PreparedBlockDto, PreparedMarkdownFileDto, PreparedReferencedMarkdownDto,
     UpdateBlockContentDto, UpdateMarkdownFileDto,
 };
 use crate::io::http::page_type::page_id_to_external_string;
+use crate::io::http::routes::{to_journal_page_url, to_wiki_page_url};
 use crate::looksyk::model::{
     PageTitle, PageType, PreparedBlock, PreparedMarkdownFile, PreparedReferencedMarkdown, RawBlock,
     UpdateBlock, UpdateMarkdownFile,
@@ -65,15 +65,8 @@ pub fn map_markdown_reference_to_dto(reference: &BlockReference) -> MarkdownRefe
 
 pub fn from_markdown_reference_to_link(markdown_reference: &BlockReference) -> String {
     match markdown_reference.page_id.page_type {
-        PageType::UserPage => {
-            format!(
-                "/page/{}",
-                encode_link_component(&markdown_reference.page_id.name.name)
-            )
-        }
-        PageType::JournalPage => {
-            format!("/journal/{}", markdown_reference.page_id.name.name)
-        }
+        PageType::UserPage => to_wiki_page_url(&markdown_reference.page_id.name),
+        PageType::JournalPage => to_journal_page_url(&markdown_reference.page_id.name),
     }
 }
 

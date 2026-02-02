@@ -4,6 +4,7 @@ import {
   Component,
   effect,
   inject,
+  OnDestroy,
   signal,
   WritableSignal
 } from '@angular/core';
@@ -38,7 +39,7 @@ import { MatDivider } from "@angular/material/divider";
   styleUrls: ['./kanban.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KanbanComponent {
+export class KanbanComponent implements OnDestroy {
 
   private kanbanService: KanbanService = inject(KanbanService);
 
@@ -54,19 +55,22 @@ export class KanbanComponent {
 
   private changeDetectorRef = inject(ChangeDetectorRef);
 
-
-  constructor() {
-    if (this.activateRoute.snapshot.queryParamMap.get('data')) {
-      const urlData = this.activateRoute.snapshot.queryParamMap.get('data') || '';
-      try {
-        const decodedData = decodeURIComponent(urlData);
-        const parsedData: KanbanProperties = JSON.parse(decodedData);
-        this.initialFilter.set(parsedData);
-        this.filter.set(parsedData);
-      } catch (e) {
-        console.error('Error parsing kanban properties from URL:', e);
+  private routeChange_ = this.activateRoute.queryParamMap.subscribe(() => {
+      if (this.activateRoute.snapshot.queryParamMap.get('data')) {
+        const urlData = this.activateRoute.snapshot.queryParamMap.get('data') || '';
+        try {
+          const decodedData = decodeURIComponent(urlData);
+          const parsedData: KanbanProperties = JSON.parse(decodedData);
+          this.initialFilter.set(parsedData);
+          this.filter.set(parsedData);
+        } catch (e) {
+          console.error('Error parsing kanban properties from URL:', e);
+        }
       }
     }
+  );
+
+  constructor() {
 
 
     effect(() => {
@@ -83,6 +87,10 @@ export class KanbanComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.routeChange_.unsubscribe();
+  }
+
 
   async drop(event: CdkDragDrop<KanbanItem[]>) {
 
@@ -93,7 +101,7 @@ export class KanbanComponent {
     const containerNameFrom = event.previousContainer.id;
     const containerNameTo = event.container.id;
 
-    const kanbanItem : KanbanItem= event.previousContainer.data[event.previousIndex];
+    const kanbanItem: KanbanItem = event.previousContainer.data[event.previousIndex];
     kanbanItem.block = await this.kanbanService.moveKanbanItem(
       kanbanItem.block.reference,
       this.filter().columnKey,
@@ -111,5 +119,3 @@ export class KanbanComponent {
     this.changeDetectorRef.detectChanges();
   }
 }
-
-

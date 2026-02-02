@@ -10,31 +10,44 @@ export class FavouriteService {
   httpClient = inject(HttpClient);
 
 
-  favourites: Subject<string[]> = new BehaviorSubject<string[]>([]);
+  favourites: Subject<Fav[]> = new BehaviorSubject<Fav[]>([]);
 
   favourites$ = this.favourites.asObservable();
 
-  updateFavourites(){
+  updateFavourites() {
     this.httpClient.get<FavListDto>("/api/favourites").subscribe(
       value => this.favourites.next(value.list)
     )
   }
 
 
-  star(pageName: string) {
-    this.httpClient.post<FavListDto>("/api/favourites/" + encodeURIComponent(pageName), {}).subscribe(
+  starPage(pageName: string) {
+    this.httpClient.post<FavListDto>("/api/favourites/page/" + encodeURIComponent(pageName), {}).subscribe(
       favs => this.favourites.next(favs.list)
     );
   }
 
-  unstar(pageName: string) {
-    this.httpClient.delete<FavListDto>("/api/favourites/" + encodeURIComponent(pageName)).subscribe(
+  unstarPage(pageName: string) {
+    this.httpClient.delete<FavListDto>("/api/favourites/page/" + encodeURIComponent(pageName)).subscribe(
       favs => this.favourites.next(favs.list)
     );
   }
 
-  updateFavList(new_fav_list: string[]){
-    this.httpClient.post<FavListDto>("/api/favourites/", { list: new_fav_list} ).subscribe(
+  star(pageName: string, url: string) {
+    this.httpClient.post<FavListDto>("/api/favourites/other/" + encodeURIComponent(pageName) + "?url=" + encodeURIComponent(url), {}).subscribe(
+      favs => this.favourites.next(favs.list)
+    );
+  }
+
+  unstar(pageName: string, url: string) {
+    this.httpClient.delete<FavListDto>("/api/favourites/other/" + encodeURIComponent(pageName) + "?url=" + encodeURIComponent(url)).subscribe(
+      favs => this.favourites.next(favs.list)
+    );
+  }
+
+
+  updateFavList(new_fav_list: Fav[]) {
+    this.httpClient.post<FavListDto>("/api/favourites/", {list: new_fav_list}).subscribe(
       favs => this.favourites.next(favs.list)
     );
   }
@@ -43,5 +56,10 @@ export class FavouriteService {
 
 
 interface FavListDto {
-  list: string[]
+  list: Fav[]
+}
+
+export interface Fav {
+  name: string;
+  url: string;
 }

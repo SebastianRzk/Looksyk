@@ -1,4 +1,3 @@
-use crate::looksyk::model::SimplePageName;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::str::FromStr;
@@ -114,35 +113,40 @@ impl FromStr for Appearance {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Debug)]
 pub struct Favourite {
-    pub name: SimplePageName,
+    pub name: String,
+    pub url: String,
 }
 
 impl Favourite {
-    pub fn equals_simple_name(&self, name: &SimplePageName) -> bool {
-        self.name.name == name.name
+    pub fn equals(&self, fav: &Favourite) -> bool {
+        self.name == fav.name && self.url == fav.url
     }
 }
 
 #[cfg(test)]
 pub mod builder {
-    use crate::looksyk::builder::page_name_str;
+    use crate::io::http::routes::to_wiki_page_url;
     use crate::looksyk::data::config::init::graph::default_journal_configuration;
     use crate::looksyk::data::config::runtime_graph_configuration::{
         Appearance, Config, Design, Favourite,
     };
+    use crate::looksyk::model::SimplePageName;
 
-    pub fn favourite_str(name: &str) -> Favourite {
+    pub fn page_favourite_str(name: &str) -> Favourite {
         Favourite {
-            name: page_name_str(name),
+            name: name.to_string(),
+            url: to_wiki_page_url(&SimplePageName {
+                name: name.to_string(),
+            }),
         }
     }
 
     pub fn config_with_fav(fav: &str) -> Config {
         Config {
             design: empty_design(),
-            favourites: vec![favourite_str(fav)],
+            favourites: vec![page_favourite_str(fav)],
             title: None,
             journal_configuration: default_journal_configuration(),
         }

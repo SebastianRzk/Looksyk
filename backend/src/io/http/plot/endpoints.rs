@@ -27,8 +27,8 @@ pub async fn example_plot_svg(
             },
         },
         PlotMetadata {
-            label: plot.label.clone(),
-            caption: plot.caption.clone(),
+            label: plot.property_key.clone(),
+            title: plot.title.clone(),
             width: plot.width,
             height: plot.height,
         },

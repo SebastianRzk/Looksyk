@@ -27,7 +27,7 @@ pub struct PlotDataQuery {
 
 pub struct PlotMetadata {
     pub label: String,
-    pub caption: String,
+    pub title: String,
     pub width: u32,
     pub height: u32,
 }
@@ -70,7 +70,7 @@ pub fn calculate_plot_data(
 
     PlotData {
         label: plot_metadata.label,
-        caption: plot_metadata.caption,
+        caption: plot_metadata.title,
         width: plot_metadata.width,
         height: plot_metadata.height,
         data: DataPoints {
@@ -115,8 +115,8 @@ mod tests {
         properties_index.entries.insert(
             block_property_key.clone(),
             vec![
-                block_property_occurance("42", journal_page_id("2023-12-31").block_reference(0)),
-                block_property_occurance("42", journal_page_id("2025-12-31").block_reference(0)),
+                block_property_occurance("42", journal_page_id("2023_12_31").block_reference(0)),
+                block_property_occurance("42", journal_page_id("2025_12_31").block_reference(0)),
             ],
         );
 
@@ -140,9 +140,9 @@ mod tests {
         properties_index.entries.insert(
             block_property_key.clone(),
             vec![
-                block_property_occurance("12", journal_page_id("2023-12-31").block_reference(0)),
-                block_property_occurance("22", journal_page_id("2025-12-31").block_reference(0)),
-                block_property_occurance("32", journal_page_id("2024-12-31").block_reference(0)),
+                block_property_occurance("12", journal_page_id("2023_12_31").block_reference(0)),
+                block_property_occurance("22", journal_page_id("2025_12_31").block_reference(0)),
+                block_property_occurance("32", journal_page_id("2024_12_31").block_reference(0)),
             ],
         );
 
@@ -185,8 +185,8 @@ mod tests {
                     "42-234",
                     journal_page_id("2023-12-31").block_reference(0),
                 ),
-                block_property_occurance("asdf", journal_page_id("2025-12-31").block_reference(0)),
-                block_property_occurance("31.22", journal_page_id("2024-12-31").block_reference(0)),
+                block_property_occurance("asdf", journal_page_id("2025_12_31").block_reference(0)),
+                block_property_occurance("31.22", journal_page_id("2024_12_31").block_reference(0)),
             ],
         );
 
@@ -206,7 +206,7 @@ mod tests {
     fn demo_metadata() -> PlotMetadata {
         PlotMetadata {
             label: "Test".to_string(),
-            caption: "Test Caption".to_string(),
+            title: "Test Caption".to_string(),
             width: 800,
             height: 600,
         }

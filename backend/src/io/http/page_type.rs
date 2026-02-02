@@ -1,4 +1,4 @@
-use crate::io::http::link_encoding::{decode_link_component, encode_link_component};
+use crate::io::http::link::{decode_link_component, encode_link_component};
 use crate::looksyk::model::{PageId, PageType, SimplePageName};
 
 pub const USER_PAGE_PREFIX: &str = "%%user-page/";
