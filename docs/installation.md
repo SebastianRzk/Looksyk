@@ -133,7 +133,3 @@ parameter.
 Please note that only one Looksyk instance can run on a graph at a time. Multiple Looksyk instances on the same graph
 can lead to inconsistencies and even data loss. It is possible, however, to run one backend and multiple frontends (for
 example, by opening them in a browser). Only multiple Rust backends should not run on the same graph simultaneously.
-
-### Priority has no effect on Kanban boards yet.
-
-Yes, that's correct. This feature is still under development.
