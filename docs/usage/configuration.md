@@ -34,9 +34,3 @@ The command `looksyk` accepts the following command line arguments:
 * `--window-width` to specify the width of the window (default: `1200`)
 * `--window-height` to specify the height of the window (default: `800`)
 * `--window-zoom` to specify the zoom level of the window (default: `-0.6`)
-
-## Flatpak Restrictions
-
-Note for Flatpak from FlatHub users (this does not apply to the manual flatpak-build or the download from github):
-Changing the graph location is only possible, if the Flatpak is run with the `--filesystem=home` option, otherwise the
-graph location is fixed to `~/graph`.
