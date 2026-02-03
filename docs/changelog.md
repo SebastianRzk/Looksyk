@@ -6,6 +6,13 @@ title: Changelog
 # Changelog
 
 
+### v1.20.1 (2026-02-03)
+
+Maintenance:
+
+* Update dependencies
+
+
 ### v1.20.0 (2026-02-02)
 
 Enhancements:
