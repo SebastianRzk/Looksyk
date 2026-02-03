@@ -16,13 +16,13 @@ pub fn create_tag_index(
     let mut result: HashMap<PageId, HashSet<PageId>> = HashMap::new();
 
     for simple_page_name in user_page_index.entries.keys() {
-        let page = user_page_index.entries.get(simple_page_name).unwrap();
+        let page = user_page_index.find(simple_page_name).unwrap();
         let id = simple_page_name.as_user_page();
         create_tag_index_file(&mut result, &id, page);
     }
 
     for simple_page_name in journal_page_index.entries.keys() {
-        let page = journal_page_index.entries.get(simple_page_name).unwrap();
+        let page = journal_page_index.find(simple_page_name).unwrap();
         let id = simple_page_name.as_journal_page();
         create_tag_index_file(&mut result, &id, page);
     }

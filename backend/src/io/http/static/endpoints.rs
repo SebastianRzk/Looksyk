@@ -79,7 +79,7 @@ pub async fn css(
     into_no_cache_response(&req, file)
 }
 
-fn into_no_cache_response(req: &HttpRequest, file: NamedFile) -> Result<HttpResponse, Error> {
+pub fn into_no_cache_response(req: &HttpRequest, file: NamedFile) -> Result<HttpResponse, Error> {
     let mut response = file.into_response(req);
     response.headers_mut().insert(
         header::CACHE_CONTROL,

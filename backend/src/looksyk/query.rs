@@ -13,6 +13,9 @@ use crate::looksyk::queries::kanban::{parse_query_board, render_board_query, QUE
 use crate::looksyk::queries::pagehierarchy::{
     parse_query_page_hierarchy, render_page_hierarchy, QUERY_NAME_PAGE_HIERARCHY,
 };
+use crate::looksyk::queries::plot::{
+    parse_query_plot_property, render_plot_property_query, QUERY_NAME_PLOT_PROPERTY,
+};
 use crate::looksyk::queries::references_to::{
     parse_query_references_to, render_references_of_query, QUERY_NAME_REFERENCES_TO,
 };
@@ -67,6 +70,8 @@ pub fn parse_query(payload: &str) -> Result<Query, Error> {
         return parse_query_todo_progress(query_str);
     } else if query_str.starts_with(QUERY_NAME_BOARD) {
         return parse_query_board(query_str);
+    } else if query_str.starts_with(QUERY_NAME_PLOT_PROPERTY) {
+        return parse_query_plot_property(query_str);
     }
     Ok(Query::unknown())
 }
@@ -100,6 +105,7 @@ pub fn render_parsed_query(
             render_context.journal_pages,
             journal_title_calculator_metadata,
         ),
+        QueryType::PlotProperty => render_plot_property_query(query),
         QueryType::TodoProgress => render_todo_query_progress(query, render_context.todo_index),
         QueryType::Board => render_board_query(query),
         QueryType::Unknown => QueryRenderResult {
@@ -127,6 +133,10 @@ impl Query {
             query_type: QueryType::Unknown,
         }
     }
+
+    pub fn get_arg(&self, key: &str) -> Option<&String> {
+        self.args.get(key)
+    }
 }
 
 #[derive(PartialEq, Debug)]
@@ -139,6 +149,7 @@ pub enum QueryType {
     InsertFileContent,
     Board,
     Unknown,
+    PlotProperty,
 }
 
 #[derive(PartialEq, Debug)]
@@ -153,6 +164,7 @@ pub enum QueryDisplayType {
     Link,
     Audio,
     Count,
+    Linechart,
     Unknown,
 }
 
@@ -170,6 +182,7 @@ impl Display for QueryDisplayType {
             QueryDisplayType::Video => write!(f, "video"),
             QueryDisplayType::Audio => write!(f, "audio"),
             QueryDisplayType::Cards => write!(f, "cards"),
+            QueryDisplayType::Linechart => write!(f, "linechart"),
         }
     }
 }

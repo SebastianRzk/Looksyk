@@ -220,6 +220,8 @@ export class ContentAssistPopupComponent implements OnDestroy, OnInit {
         text_to_insert = "{query: todo-progress tag:\"myTag\" }"
       }else if (item.name == ADD_QUERY_BOARD) {
         text_to_insert = "{query: board title:\"My first Kanban\" tag:\"kanban\" columnKey:\"state\" columnValues:\"TODO,DOING,DONE\" priorityKey:\"priority\" display:\"link\" } "
+      } else if (item.name == ADD_QUERY_PLOT_PROPERTY) {
+        text_to_insert = "{query: plot-property propertyKey:\"myPropertyKey\" title:\"This is my plot\" width:\"1200\" height:\"400\" startingAt:\"1999-01-01\" endingAt:\"2050-12-31\" display:\"linechart\" }"
       }
     } else if (group.title == ADD_SUGGESTED_MEDIA) {
       for (const value of this.currentSuggestions.suggestions) {
@@ -601,6 +603,8 @@ const ADD_QUERY_TODO_PROGRESS = "query progress of todos";
 
 const ADD_QUERY_BOARD = "query create a kanban board";
 
+const ADD_QUERY_PLOT_PROPERTY = "query plot property over time";
+
 const ADD_QUERY_BLOCKS = "query blocks";
 
 const ADD_QUERY_INLINE_FILE_CONTENT = "query inline file content";
@@ -635,6 +639,10 @@ function CONTENT_ASSIST_QUERIES(): ContentAssistSection {
       },
       {
         name: ADD_QUERY_BOARD,
+        highlight: false
+      },
+      {
+        name: ADD_QUERY_PLOT_PROPERTY,
         highlight: false
       }
     ]

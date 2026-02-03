@@ -39,10 +39,10 @@ async fn update_block(
     let mut block_properties_guard = data.h_block_properties.lock().unwrap();
 
     let selected_page = match page_id.page_type {
-        PageType::JournalPage => journal_guard.entries.get(&page_id.name).unwrap().clone(),
+        PageType::JournalPage => journal_guard.find(&page_id.name).unwrap().clone(),
         PageType::UserPage => {
             println!("Simple page {page_id:?}");
-            page_guard.entries.get(&page_id.name).unwrap().clone()
+            page_guard.find(&page_id.name).unwrap().clone()
         }
     };
 

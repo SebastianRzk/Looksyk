@@ -25,6 +25,7 @@ html {
   font-family: Noto, sans-serif;
 }
 
+
 :root {
   --mat-sidenav-content-text-color: var(--foreground-color);
   --mat-button-text-label-text-color: var(--foreground-color);
@@ -117,8 +118,6 @@ h2, h3, h4, h5, h6 {
 
 [contenteditable] {
   white-space: pre-wrap; /* css-3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
@@ -216,4 +215,58 @@ progress {
   font-size: smaller;
   margin-left: 1ex;
   margin-right: 1ex;
+}
+
+/* Material Tab header text color should follow foreground color in both modes */
+[data-theme="light"] .mat-mdc-tab .mdc-tab__text-label,
+[data-theme="dark"] .mat-mdc-tab .mdc-tab__text-label {
+  color: var(--foreground-color) !important;
+}
+
+.mdc-checkbox__background {
+  background-color: var(--background-color) !important;
+  border-color: var(--foreground-color) !important;
+}
+
+/* Active tab indicator and label can optionally use primary color */
+[data-theme="light"] .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label,
+[data-theme="dark"] .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--primary-color) !important;
+}
+[data-theme="light"] .mat-mdc-tab-group .mdc-tab-indicator .mdc-tab-indicator__content,
+[data-theme="dark"] .mat-mdc-tab-group .mdc-tab-indicator .mdc-tab-indicator__content {
+  background-color: var(--primary-color) !important;
+}
+
+/* Checkbox colors bound to primary color via MDC variables */
+:root,
+[data-theme="light"],
+[data-theme="dark"] {
+  /* Checked state icon and container use primary color */
+  --mdc-checkbox-selected-icon-color: var(--primary-color);
+  --mdc-checkbox-selected-focus-icon-color: var(--primary-color);
+  --mdc-checkbox-selected-hover-icon-color: var(--primary-color);
+  --mdc-checkbox-selected-pressed-icon-color: var(--primary-color);
+  --mdc-checkbox-selected-focus-state-layer-color: var(--primary-color);
+  --mdc-checkbox-selected-hover-state-layer-color: var(--primary-color);
+  --mdc-checkbox-selected-pressed-state-layer-color: var(--primary-color);
+  /* Border color when checked */
+  --mdc-checkbox-selected-checkmark-color: var(--foreground-color);
+}
+
+/* Ensure unchecked states remain visible with your foreground color */
+[data-theme="light"] .mat-mdc-checkbox .mdc-checkbox__ripple,
+[data-theme="dark"] .mat-mdc-checkbox .mdc-checkbox__ripple {
+  color: var(--foreground-color);
+}
+
+/* Box/border color for checked state */
+.mat-mdc-checkbox .mdc-checkbox--selected .mdc-checkbox__background {
+  border-color: var(--primary-color) !important;
+}
+
+/* Improve contrast for tab labels on hover */
+[data-theme="light"] .mat-mdc-tab:hover .mdc-tab__text-label,
+[data-theme="dark"] .mat-mdc-tab:hover .mdc-tab__text-label {
+  color: var(--primary-color) !important;
 }

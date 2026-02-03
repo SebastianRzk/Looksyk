@@ -1,20 +1,22 @@
+use crate::io::http::routes::to_wiki_page_url;
 use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
 use crate::looksyk::model::SimplePageName;
 
 pub fn is_favourite(name: &SimplePageName, config: &Config) -> bool {
     for favourite in &config.favourites {
-        if favourite.equals_simple_name(name) {
+        if favourite.equals(&Favourite {
+            name: name.name.clone(),
+            url: to_wiki_page_url(name),
+        }) {
             return true;
         }
     }
     false
 }
 
-pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Config {
+pub fn add_favourite(new_fav: Favourite, config: &Config) -> Config {
     let mut new_favourites = config.favourites.clone();
-    new_favourites.push(Favourite {
-        name: simple_page_name,
-    });
+    new_favourites.push(new_fav);
 
     Config {
         favourites: new_favourites,
@@ -24,28 +26,20 @@ pub fn add_favourite(simple_page_name: SimplePageName, config: &Config) -> Confi
     }
 }
 
-pub fn set_favourites(new_favourites: Vec<SimplePageName>, config: &Config) -> Config {
-    let mut result = vec![];
-
-    for f in new_favourites {
-        result.push(Favourite { name: f })
-    }
-
+pub fn set_favourites(new_favourites: Vec<Favourite>, config: &Config) -> Config {
     Config {
-        favourites: result,
+        favourites: new_favourites,
         design: config.design.clone(),
         title: config.title.clone(),
         journal_configuration: config.journal_configuration.clone(),
     }
 }
 
-pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Config {
+pub fn remove_favourite(fav_to_remove: Favourite, config: &Config) -> Config {
     let mut new_favourites: Vec<Favourite> = vec![];
     for favourite in &config.favourites {
-        if !favourite.equals_simple_name(&simple_page_name) {
-            new_favourites.push(Favourite {
-                name: favourite.name.clone(),
-            });
+        if !favourite.equals(&fav_to_remove) {
+            new_favourites.push(favourite.clone());
         }
     }
 
@@ -59,11 +53,12 @@ pub fn remove_favourite(simple_page_name: SimplePageName, config: &Config) -> Co
 
 #[cfg(test)]
 mod tests {
+    use crate::io::http::routes::to_wiki_page_url;
     use crate::looksyk::data::config::init::graph::default_journal_configuration;
     use crate::looksyk::data::config::runtime_graph_configuration::builder::{
-        config_with_fav, empty_config, empty_design,
+        config_with_fav, empty_config, empty_design, page_favourite_str,
     };
-    use crate::looksyk::data::config::runtime_graph_configuration::{Config, Favourite};
+    use crate::looksyk::data::config::runtime_graph_configuration::Config;
     use crate::looksyk::favourite::{
         add_favourite, is_favourite, remove_favourite, set_favourites,
     };
@@ -99,59 +94,39 @@ mod tests {
     fn test_add_favourite() {
         let config: Config = config_with_fav("MySite");
 
-        let result = add_favourite(
-            SimplePageName {
-                name: "MySite2".to_string(),
-            },
-            &config,
-        );
+        let result = add_favourite(page_favourite_str("MySite2"), &config);
 
         assert_eq!(result.favourites.len(), 2);
-        assert_eq!(result.favourites.get(1).unwrap().name.name, "MySite2");
+        assert_eq!(result.favourites.get(1).unwrap().name, "MySite2");
+        assert_eq!(
+            result.favourites.get(1).unwrap().url,
+            to_wiki_page_url(&SimplePageName {
+                name: "MySite2".to_string(),
+            })
+        );
     }
 
     #[test]
     fn test_delete_favourite() {
         let config: Config = Config {
-            favourites: vec![
-                Favourite {
-                    name: SimplePageName {
-                        name: "MySite".to_string(),
-                    },
-                },
-                Favourite {
-                    name: SimplePageName {
-                        name: "MySite2".to_string(),
-                    },
-                },
-            ],
+            favourites: vec![page_favourite_str("MySite"), page_favourite_str("MySite2")],
             design: empty_design(),
             title: None,
             journal_configuration: default_journal_configuration(),
         };
 
-        let result = remove_favourite(
-            SimplePageName {
-                name: "MySite".to_string(),
-            },
-            &config,
-        );
+        let result = remove_favourite(page_favourite_str("MySite"), &config);
 
         assert_eq!(result.favourites.len(), 1);
-        assert_eq!(result.favourites.first().unwrap().name.name, "MySite2");
+        assert_eq!(result.favourites.first().unwrap().name, "MySite2");
     }
 
     #[test]
     fn test_set_favourites_should_set_favourites() {
         let old_config = config_with_fav("MyOldSite");
-        let result = set_favourites(
-            vec![SimplePageName {
-                name: "MyNewSite".to_string(),
-            }],
-            &old_config,
-        );
+        let result = set_favourites(vec![page_favourite_str("MyNewSite")], &old_config);
 
         assert_eq!(result.favourites.len(), 1);
-        assert_eq!(result.favourites.first().unwrap().name.name, "MyNewSite");
+        assert_eq!(result.favourites.first().unwrap().name, "MyNewSite");
     }
 }

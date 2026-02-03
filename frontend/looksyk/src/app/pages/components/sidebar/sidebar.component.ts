@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
-import { FavouriteService } from "../../../services/favourite.service";
+import { Fav, FavouriteService } from "../../../services/favourite.service";
 import { MatIconModule } from "@angular/material/icon";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { firstValueFrom, map, Observable } from "rxjs";
@@ -27,13 +27,11 @@ export class SidebarComponent implements OnInit {
   favs$ = this.favoriteService.favourites$;
   state = inject(StateService);
   gitService = inject(GitService);
+  router = inject(Router);
 
   private history: HistoryService = inject(HistoryService);
   public history$ = this.history.history$.pipe(map(x => [...x].reverse()));
   public historyEmpty$: Observable<boolean> = this.history.history$.pipe(map(x => x.length === 0));
-
-
-  router = inject(Router);
 
   onDelete() {
     this.history.deleteAll();
@@ -53,13 +51,25 @@ export class SidebarComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<string[]>) {
-    const favList: string[] = await firstValueFrom(this.favs$);
+    const favList: Fav[] = await firstValueFrom(this.favs$);
     moveItemInArray(favList, event.previousIndex, event.currentIndex);
     this.favoriteService.updateFavList(favList);
   }
 
   reload() {
     this.state.invalidateAndReload();
+  }
+
+  async navigate(fav: Fav) {
+    const url = new URL(fav.url, 'http://localhost');
+    const commands = url.pathname.split('/').filter(Boolean);
+    commands.unshift('/');
+    const queryParams = Object.fromEntries(url.searchParams.entries());
+    await this.router.navigate(commands, {
+      queryParams: queryParams,
+      onSameUrlNavigation: "reload",
+      queryParamsHandling: "replace"
+    });
   }
 
   protected readonly encodeURIComponent = encodeURIComponent;

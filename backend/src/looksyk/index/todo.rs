@@ -10,15 +10,11 @@ pub fn create_todo_index(
 ) -> TodoIndex {
     let mut result = vec![];
 
-    for simple_page_name in user_page_index.entries.keys() {
-        if let Some(file) = user_page_index.entries.get(simple_page_name) {
-            create_todo_index_file(&mut result, &simple_page_name.as_user_page(), file);
-        }
+    for (simple_page_name, file) in user_page_index.iter_entries() {
+        create_todo_index_file(&mut result, &simple_page_name.as_user_page(), file);
     }
-    for simple_page_name in journal_state.entries.keys() {
-        if let Some(file) = &journal_state.entries.get(simple_page_name) {
-            create_todo_index_file(&mut result, &simple_page_name.as_journal_page(), file);
-        }
+    for (simple_page_name, file) in journal_state.iter_entries() {
+        create_todo_index_file(&mut result, &simple_page_name.as_journal_page(), file);
     }
 
     TodoIndex { entries: result }

@@ -11,11 +11,11 @@ pub fn create_block_properties_index(
     let mut index = BlockPropertiesIndex {
         entries: HashMap::new(),
     };
-    for (journal_page_name, journal_page) in journal_pages.entries.iter() {
+    for (journal_page_name, journal_page) in journal_pages.iter_entries() {
         insert_journal_page_to_block_properties(&mut index, journal_page_name, journal_page);
     }
 
-    for (user_page_name, user_page) in user_pages.entries.iter() {
+    for (user_page_name, user_page) in user_pages.iter_entries() {
         insert_user_page_to_block_properties(&mut index, user_page_name, user_page);
     }
     index

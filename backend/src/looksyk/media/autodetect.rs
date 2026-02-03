@@ -6,7 +6,7 @@ use crate::looksyk::queries::insert_file_content::{
     query_insert_file_content_as_audio, query_insert_file_content_as_code,
     query_insert_file_content_as_text, query_insert_file_content_as_video,
 };
-use crate::looksyk::syntax::markdown::{render_as_image, render_asset_as_link};
+use crate::looksyk::syntax::markdown::{render_asset_as_image, render_asset_as_link};
 
 pub fn inver_markdown_media_link(index_filename: &String) -> String {
     let filename = PathBuf::from(index_filename)
@@ -26,7 +26,7 @@ pub fn inver_markdown_media_link(index_filename: &String) -> String {
         MediaType::Audio => query_insert_file_content_as_audio(&asset_descriptor),
         MediaType::Code => query_insert_file_content_as_code(&asset_descriptor),
         MediaType::Text => query_insert_file_content_as_text(&asset_descriptor),
-        MediaType::Image => render_as_image(&asset_descriptor),
+        MediaType::Image => render_asset_as_image(&asset_descriptor),
     }
 }
 

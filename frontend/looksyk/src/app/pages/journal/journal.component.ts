@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-experimental/scrolling';
 import { JournalEntryComponent } from "../components/journal-entry/journal-entry.component";
@@ -12,6 +12,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { TitleService } from "../../services/title.service";
 import { MatDivider } from "@angular/material/divider";
 import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-toggle.component";
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'app-journal',
@@ -20,15 +21,45 @@ import { SidebarToggleComponent } from "../components/sidebar-toggle/sidebar-tog
     styleUrls: ['./journal.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JournalComponent {
+export class JournalComponent implements AfterViewInit, OnDestroy {
   pageService = inject(PageService);
   items = new MyDataSource(this.pageService)
   title = inject(TitleService);
+
+  @ViewChild(CdkVirtualScrollViewport) viewport?: CdkVirtualScrollViewport;
+  private resizeObserver?: ResizeObserver;
+  private mutationObserver?: MutationObserver;
 
   constructor() {
     this.title.pushCurrentPageTitle("Journal");
   }
 
+  ngAfterViewInit(): void {
+    const vp = this.viewport;
+    if (!vp) return;
+
+    vp.checkViewportSize();
+
+    this.resizeObserver = new ResizeObserver(() => {
+      vp.checkViewportSize();
+    });
+
+    const contentEl = vp.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper') as HTMLElement | null;
+    if (contentEl) {
+      this.resizeObserver.observe(contentEl);
+    }
+
+    this.mutationObserver = new MutationObserver(() => {
+      vp.checkViewportSize();
+    });
+    const hostEl = vp.elementRef.nativeElement as HTMLElement;
+    this.mutationObserver.observe(hostEl, { childList: true, subtree: true });
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+    this.mutationObserver?.disconnect();
+  }
 }
 
 export const todayDate = new Date().getDate();

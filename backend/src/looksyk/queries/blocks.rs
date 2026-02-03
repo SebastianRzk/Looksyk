@@ -100,12 +100,12 @@ fn resolve_blocks(
             PageType::UserPage => resolve_blocks_in_page(
                 target,
                 page_id,
-                user_page_index.entries.get(&page_id.name).unwrap(),
+                user_page_index.find(&page_id.name).unwrap(),
             ),
             PageType::JournalPage => resolve_blocks_in_page(
                 target,
                 page_id,
-                journal_page_index.entries.get(&page_id.name).unwrap(),
+                journal_page_index.find(&page_id.name).unwrap(),
             ),
         };
         result.extend(blocks);

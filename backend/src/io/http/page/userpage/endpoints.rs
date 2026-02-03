@@ -376,8 +376,8 @@ async fn rename_page(
 
     for file_to_save in rename_tag_result.file_changes.changed_files {
         let page = match file_to_save.page_type {
-            PageType::UserPage => page_guard.entries.get(&file_to_save.name).unwrap(),
-            PageType::JournalPage => journal_guard.entries.get(&file_to_save.name).unwrap(),
+            PageType::UserPage => page_guard.find(&file_to_save.name).unwrap(),
+            PageType::JournalPage => journal_guard.find(&file_to_save.name).unwrap(),
         };
 
         let current_page_associated_state = CurrentPageAssociatedState {

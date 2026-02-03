@@ -2,6 +2,7 @@ use crate::looksyk::parser::BlockProperty;
 use crate::state::block::BlockReference;
 use std::collections::HashMap;
 
+#[derive(Default)]
 pub struct BlockPropertiesIndex {
     pub entries: HashMap<BlockPropertyKey, Vec<BlockPropertyOccurence>>,
 }
@@ -50,6 +51,10 @@ impl BlockPropertiesIndex {
                 }],
             );
         }
+    }
+
+    pub fn find(&self, key: &BlockPropertyKey) -> Option<&Vec<BlockPropertyOccurence>> {
+        self.entries.get(key)
     }
 }
 

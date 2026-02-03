@@ -11,12 +11,15 @@ pub fn render_asset_as_link(asset_descriptor: &AssetDescriptor) -> String {
     )
 }
 
-pub fn render_as_image(asset_descriptor: &AssetDescriptor) -> String {
-    format!(
-        "![{}]({})",
-        asset_descriptor.get_display_name(),
-        asset_descriptor.get_qualified_path()
+pub fn render_asset_as_image(asset_descriptor: &AssetDescriptor) -> String {
+    render_as_image(
+        &asset_descriptor.get_display_name(),
+        &asset_descriptor.get_qualified_path(),
     )
+}
+
+pub fn render_as_image(name: &str, link: &str) -> String {
+    format!("![{}]({})", name, link)
 }
 
 pub fn render_as_video(asset_descriptor: &AssetDescriptor) -> String {

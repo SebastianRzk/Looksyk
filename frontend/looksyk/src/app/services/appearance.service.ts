@@ -1,4 +1,4 @@
-import {DOCUMENT, inject, Injectable, OnDestroy} from '@angular/core';
+import {inject, Injectable, OnDestroy} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, distinctUntilChanged, lastValueFrom, map} from 'rxjs';
 
@@ -9,9 +9,8 @@ export class AppearanceService implements OnDestroy {
   private httpClient: HttpClient = inject(HttpClient);
   private appearance = new BehaviorSubject<'light' | 'dark'>('dark');
   public appearance$ = this.appearance.pipe(distinctUntilChanged());
-  document: Document = inject(DOCUMENT);
   appearance_ = this.appearance$.subscribe(appearance => {
-    this.document.documentElement.setAttribute('data-theme', appearance);
+    document.documentElement.setAttribute('data-theme', appearance);
   });
 
   ngOnDestroy(): void {

@@ -44,7 +44,7 @@ async fn insert_template_into_page(
     let page_id = get_page_id_from_external_string(&insert_template_dto.page_id);
     let page_to_update = match page_id.page_type {
         PageType::UserPage => page_guard.entries.get(&page_id.name),
-        PageType::JournalPage => journal_guard.entries.get(&page_id.name),
+        PageType::JournalPage => journal_guard.find(&page_id.name),
     };
     let template = page_guard.entries.get(&template_id.into());
     let empty = ParsedMarkdownFile::empty();

@@ -9,7 +9,6 @@ use crate::io::fs::env;
 use crate::io::fs::env::keys::LOOKSYK_CONFIG_PATH;
 use crate::io::fs::root_path::{get_current_active_data_root_location, InitialConfigLocation};
 use crate::io::http;
-use crate::io::http::block_properties;
 use crate::io::http::config;
 use crate::io::http::favourites;
 use crate::io::http::help;
@@ -21,6 +20,7 @@ use crate::io::http::page::search;
 use crate::io::http::page::userpage;
 use crate::io::http::page::{journalpage, templates};
 use crate::io::http::r#static;
+use crate::io::http::{block_properties, plot};
 use crate::io::http::{design, kanban};
 use crate::io::state::convert_to_app_state;
 use crate::looksyk::data::graph::load_graph_data;
@@ -140,10 +140,6 @@ async fn main() -> std::io::Result<()> {
             .service(userpage::endpoints::delete_page)
             .service(userpage::endpoints::rename_page)
             .service(userpage::endpoints::append_page)
-            .service(favourites::endpoints::insert_favourite)
-            .service(favourites::endpoints::delete_favourite)
-            .service(favourites::endpoints::get_favourites)
-            .service(favourites::endpoints::update_favourites)
             .service(media::endpoints::upload_file)
             .service(media::endpoints::compute_asset_suggestion)
             .service(design::endpoints::get_css_theme)
@@ -187,6 +183,13 @@ async fn main() -> std::io::Result<()> {
             .service(sync::git::io::git_controller::get_shutdown_status)
             .service(config::endpoints::get_journal_title_format)
             .service(config::endpoints::set_journal_title_format)
+            .service(plot::endpoints::example_plot_svg)
+            .service(favourites::endpoints::insert_page_favourite)
+            .service(favourites::endpoints::delete_favourite_page)
+            .service(favourites::endpoints::insert_other_favourite)
+            .service(favourites::endpoints::delete_other_favourite)
+            .service(favourites::endpoints::get_favourites)
+            .service(favourites::endpoints::update_favourites)
             .default_service(web::get().to(r#static::endpoints::index))
     })
     .bind(SocketAddr::new(

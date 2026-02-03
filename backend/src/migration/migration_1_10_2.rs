@@ -1,15 +1,20 @@
-use crate::io::fs::config::DesignOnDisk;
 use crate::io::fs::paths::REL_CONFIG_PATH;
-use crate::looksyk::data::config::runtime_graph_configuration::{Appearance, Favourite};
+use crate::looksyk::data::config::runtime_graph_configuration::Appearance;
+use crate::looksyk::model::SimplePageName;
 use crate::state::application_state::GraphRootLocation;
 use serde::{Deserialize, Serialize};
 use std::fs;
 
 #[derive(Deserialize, Clone)]
 pub struct OldConfigOnDisk {
-    pub favourites: Vec<Favourite>,
+    pub favourites: Vec<FavouriteV1_10_0>,
     pub design: OldDesignOnDisk,
     pub title: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Debug)]
+pub struct FavouriteV1_10_0 {
+    pub name: SimplePageName,
 }
 
 #[derive(Deserialize, Clone)]
@@ -23,9 +28,19 @@ pub struct OldDesignOnDisk {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ConfigOnDiskV1_10_2 {
-    pub favourites: Vec<Favourite>,
-    pub design: DesignOnDisk,
+    pub favourites: Vec<FavouriteV1_10_0>,
+    pub design: DesignOnDiskV1_10_2,
     pub title: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct DesignOnDiskV1_10_2 {
+    pub primary_color: String,
+    pub background_color: String,
+    pub foreground_color: String,
+    pub primary_shading: String,
+    pub appearance: String,
 }
 
 pub fn migriere_1_10_2(user_application_directory: &GraphRootLocation) {
@@ -42,7 +57,7 @@ pub fn migriere_1_10_2(user_application_directory: &GraphRootLocation) {
         // Convert to new format
         let new_config = ConfigOnDiskV1_10_2 {
             favourites: old_config.favourites,
-            design: DesignOnDisk {
+            design: DesignOnDiskV1_10_2 {
                 primary_color: old_config.design.primary_color,
                 background_color: old_config.design.background_color,
                 foreground_color: old_config.design.foreground_color,

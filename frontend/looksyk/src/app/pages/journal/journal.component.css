@@ -5,6 +5,14 @@
   height: 100%;
 }
 
+/* Neu: der Inhaltscontainer soll den verbleibenden Platz sicher einnehmen */
+.global-content-internal-scrollbar {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0; /* wichtig in Flex-Containern, damit der Inhalt schrumpfen darf */
+}
+
 .journal-viewport {
   height: 100%;
   width: 100%;
@@ -36,6 +44,8 @@
 }
 
 cdk-virtual-scroll-viewport {
+  /* Neu: Viewport soll mitwachsen */
+  flex: 1 1 auto;
   height: 100%;
   width: 100%;
 

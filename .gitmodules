@@ -1,0 +1,3 @@
+[submodule "deploy/version-checker"]
+	path = deploy/version-checker
+	url = https://codeberg.org/SebastianRzk/version-checker

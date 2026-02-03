@@ -1,16 +1,73 @@
-use actix_web::web::{Data, Path};
+use actix_web::web::{Data, Path, Query};
 use actix_web::{delete, get, post, web, Responder};
 
 use crate::io::fs::config::save_config_to_file;
-use crate::io::http::favourites::dtos::FavListDto;
+use crate::io::http::favourites::dtos::{FavListDto, FavUrlDto};
 use crate::io::http::favourites::mapper::{map_from_dto, map_to_dto};
+use crate::io::http::routes::to_wiki_page_url;
 use crate::looksyk::builder::page_name;
+use crate::looksyk::data::config::runtime_graph_configuration::Favourite;
 use crate::looksyk::favourite::{add_favourite, remove_favourite, set_favourites};
 use crate::state::application_state::AppState;
 use crate::sync::io::sync_application_port::{document_change, GraphChange, GraphChangesState};
 
-#[post("/api/favourites/{fav_name}")]
-async fn insert_favourite(
+#[post("/api/favourites/other/{fav_name}")]
+async fn insert_other_favourite(
+    path: Path<String>,
+    query: Query<FavUrlDto>,
+    data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
+) -> actix_web::Result<impl Responder> {
+    let mut config_guard = data.g_config.lock().unwrap();
+
+    let new_config = add_favourite(
+        Favourite {
+            name: path.into_inner(),
+            url: query.url.clone(),
+        },
+        &config_guard,
+    );
+    save_config_to_file(&data.data_path, &new_config);
+
+    *config_guard = new_config;
+
+    document_change(
+        graph_changes,
+        GraphChange::configuration_changed(format!("favourite added: {}", query.url)),
+    );
+    Ok(web::Json(map_to_dto(&config_guard.favourites)))
+}
+
+#[delete("/api/favourites/other/{fav_name}")]
+async fn delete_other_favourite(
+    path: Path<String>,
+    query: Query<FavUrlDto>,
+    data: Data<AppState>,
+    graph_changes: Data<GraphChangesState>,
+) -> actix_web::Result<impl Responder> {
+    let mut config_guard = data.g_config.lock().unwrap();
+
+    let new_config = remove_favourite(
+        Favourite {
+            name: path.into_inner(),
+            url: query.url.clone(),
+        },
+        &config_guard,
+    );
+    save_config_to_file(&data.data_path, &new_config);
+
+    *config_guard = new_config;
+
+    document_change(
+        graph_changes,
+        GraphChange::configuration_changed(format!("favourite removed: {}", query.url)),
+    );
+
+    Ok(web::Json(map_to_dto(&config_guard.favourites)))
+}
+
+#[post("/api/favourites/page/{fav_name}")]
+async fn insert_page_favourite(
     path: Path<String>,
     data: Data<AppState>,
     graph_changes: Data<GraphChangesState>,
@@ -19,7 +76,13 @@ async fn insert_favourite(
 
     let mut config_guard = data.g_config.lock().unwrap();
 
-    let new_config = add_favourite(page_name.clone(), &config_guard);
+    let new_config = add_favourite(
+        Favourite {
+            name: page_name.name.clone(),
+            url: to_wiki_page_url(&page_name),
+        },
+        &config_guard,
+    );
     save_config_to_file(&data.data_path, &new_config);
 
     *config_guard = new_config;
@@ -32,8 +95,8 @@ async fn insert_favourite(
     Ok(web::Json(map_to_dto(&config_guard.favourites)))
 }
 
-#[delete("/api/favourites/{fav_name}")]
-async fn delete_favourite(
+#[delete("/api/favourites/page/{fav_name}")]
+async fn delete_favourite_page(
     path: Path<String>,
     data: Data<AppState>,
     graph_changes: Data<GraphChangesState>,
@@ -42,7 +105,13 @@ async fn delete_favourite(
 
     let mut config_guard = data.g_config.lock().unwrap();
 
-    let new_config = remove_favourite(page_name.clone(), &config_guard);
+    let new_config = remove_favourite(
+        Favourite {
+            name: page_name.name.clone(),
+            url: to_wiki_page_url(&page_name),
+        },
+        &config_guard,
+    );
     save_config_to_file(&data.data_path, &new_config);
 
     *config_guard = new_config;

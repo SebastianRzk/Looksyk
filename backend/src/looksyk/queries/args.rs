@@ -14,6 +14,7 @@ pub const PARAM_DISPLAY_VIDEO: &str = "video";
 pub const PARAM_DISPLAY_AUDIO: &str = "audio";
 pub const PARAM_DISPLAY_LINK: &str = "link";
 pub const PARAM_DISPLAY_CARDS: &str = "cards";
+pub const PARAM_DISPLAY_LINECHART: &str = "linechart";
 
 pub const PARAM_TARGET_FILE: &str = "target-file";
 pub const PARAM_TARGET: &str = "target";
@@ -63,6 +64,7 @@ pub fn parse_display_type(input_string: String) -> Result<QueryDisplayType, Erro
         PARAM_DISPLAY_AUDIO => Ok(QueryDisplayType::Audio),
         PARAM_DISPLAY_LINK => Ok(QueryDisplayType::Link),
         PARAM_DISPLAY_CARDS => Ok(QueryDisplayType::Cards),
+        PARAM_DISPLAY_LINECHART => Ok(QueryDisplayType::Linechart),
         _ => Ok(QueryDisplayType::Unknown),
     }
 }

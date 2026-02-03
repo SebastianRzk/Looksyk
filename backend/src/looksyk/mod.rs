@@ -8,6 +8,7 @@ pub mod kanban;
 pub mod media;
 pub mod model;
 pub mod parser;
+pub mod plot;
 mod queries;
 mod query;
 pub mod reader;

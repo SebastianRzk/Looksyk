@@ -5,6 +5,25 @@ title: Changelog
 
 # Changelog
 
+
+### v1.20.0 (2026-02-02)
+
+Enhancements:
+
+* Add plot property query
+* Boards and board-configurations can now be stored in favourites
+* Material theme is now adapted to light/dark mode
+
+Bugfixes:
+
+* Light/darkmode toggle does not throw internal error anymore
+* SVG-assets in journal-view are not desturbing the scrollbar anymore
+
+Other:
+
+* Improve documentation
+* Make version-check via submodule
+
 ### v1.19.0 (2026-01-29)
 
 Enhancements:
