@@ -42,6 +42,15 @@
         </ul>
     </description>
     <releases>
+        <release version="1.20.1" date="2026-02-03">
+            <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2026-02-02</url>
+            <description>
+                <p>Release description</p>
+                <ul>
+                    <li>Update backend dependencies</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.20.0" date="2026-02-02">
             <url type="details">https://sebastianrzk.github.io/Looksyk/changelog.html#v1183-2026-02-02</url>
             <description>
