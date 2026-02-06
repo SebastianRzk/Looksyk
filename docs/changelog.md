@@ -5,6 +5,12 @@ title: Changelog
 
 # Changelog
 
+### v1.20.2 (2026-02-07)
+
+Maintenance:
+
+* Update dependencies
+
 
 ### v1.20.1 (2026-02-03)
 
