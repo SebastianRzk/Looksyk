@@ -11,3 +11,4 @@ repo
 **/cargo-cache
 **/electron-cache
 git
+graph
