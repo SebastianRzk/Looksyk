@@ -1,0 +1,104 @@
+# Docker Multi-Arch Image Build & Push mit nativen Runnern
+---
+kind: pipeline
+type: docker
+name: docker_push_amd64
+when:
+  event: [ push, tag ]
+  branch: [ test-image-push ]
+  ref:
+    include: [ 'refs/tags/v*.*.*', 'refs/tags/v*.*.*-*' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: login
+    image: docker:27
+    environment:
+      DOCKER_USERNAME: $$DOCKER_USERNAME
+      DOCKER_PASSWORD: $$DOCKER_PASSWORD
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - name: build-and-push-amd64
+    image: docker:27
+    commands:
+      - docker buildx create --use --name looksyk-amd64 || docker buildx use looksyk-amd64
+      - docker buildx inspect --bootstrap
+      - docker buildx build --platform linux/amd64 -t "$DOCKER_USERNAME"/looksyk:amd64 -f Dockerfile --push .
+
+---
+kind: pipeline
+type: docker
+name: docker_push_arm64
+when:
+  event: [ push, tag ]
+  branch: [ test-image-push ]
+  ref:
+    include: [ 'refs/tags/v*.*.*', 'refs/tags/v*.*.*-*' ]
+platform:
+  os: linux
+  arch: arm64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: login
+    image: docker:27
+    environment:
+      DOCKER_USERNAME: $$DOCKER_USERNAME
+      DOCKER_PASSWORD: $$DOCKER_PASSWORD
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - name: build-and-push-arm64
+    image: docker:27
+    commands:
+      - docker buildx create --use --name looksyk-arm64 || docker buildx use looksyk-arm64
+      - docker buildx inspect --bootstrap
+      - docker buildx build --platform linux/arm64 -t "$DOCKER_USERNAME"/looksyk:arm64 -f Dockerfile --push .
+
+---
+kind: pipeline
+type: docker
+name: docker_manifest
+when:
+  event: [ push, tag ]
+  branch: [ test-image-push ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: login
+    image: docker:27
+    environment:
+      DOCKER_USERNAME: $$DOCKER_USERNAME
+      DOCKER_PASSWORD: $$DOCKER_PASSWORD
+    commands:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - name: wait-for-images
+    image: docker:27
+    environment:
+      DOCKER_USERNAME: $$DOCKER_USERNAME
+    commands:
+      - |
+        set -e
+        for i in 1 2 3 4 5; do
+          if docker buildx imagetools inspect "$DOCKER_USERNAME"/looksyk:amd64 >/dev/null 2>&1 && \
+             docker buildx imagetools inspect "$DOCKER_USERNAME"/looksyk:arm64 >/dev/null 2>&1; then
+            echo "Beide Images vorhanden"
+            exit 0
+          fi
+          echo "Warte auf Images (Versuch $i/5)" && sleep 10
+        done
+        echo "Images nicht rechtzeitig verfügbar" && exit 1
+  - name: create-manifest
+    image: docker:27
+    environment:
+      DOCKER_USERNAME: $$DOCKER_USERNAME
+    commands:
+      - docker buildx create --use --name looksyk-manifest || docker buildx use looksyk-manifest
+      - docker buildx imagetools create -t "$DOCKER_USERNAME"/looksyk:latest "$DOCKER_USERNAME"/looksyk:amd64 "$DOCKER_USERNAME"/looksyk:arm64

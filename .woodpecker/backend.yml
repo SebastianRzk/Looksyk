@@ -1,0 +1,74 @@
+# Backend: Tests, Format, Clippy
+---
+kind: pipeline
+type: docker
+name: backend_test
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init
+      - git remote add origin "$CI_REPO_CLONE_URL"
+      - git fetch --depth=50 origin "$CI_COMMIT_REF"
+      - git checkout "$CI_COMMIT_SHA"
+  - name: deps
+    image: debian
+    commands:
+      - apt-get update && apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config curl ca-certificates
+  - name: rust
+    image: rust
+    commands:
+      - cargo test --all-features --manifest-path backend/Cargo.toml
+
+---
+kind: pipeline
+type: docker
+name: backend_fmt
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: rustfmt
+    image: rust
+    commands:
+      - rustup component add rustfmt || true
+      - cd backend && cargo fmt --all -- --check
+
+---
+kind: pipeline
+type: docker
+name: backend_clippy
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: deps
+    image: debian
+    commands:
+      - apt-get update && apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config
+  - name: clippy
+    image: rust
+    commands:
+      - rustup component add clippy || true
+      - cd backend && cargo clippy --all-features -- -D warnings
+

@@ -1,0 +1,45 @@
+---
+kind: pipeline
+type: docker
+name: frontend_build
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+  path: [ 'frontend/**' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: node
+    image: node:alpine
+    commands:
+      - cd frontend/looksyk
+      - npm i
+      - npm run build --configuration=production
+
+---
+kind: pipeline
+type: docker
+name: frontend_lint
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+  path: [ 'frontend/**' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: node
+    image: node:alpine
+    commands:
+      - cd frontend/looksyk
+      - npm i
+      - npm run lint

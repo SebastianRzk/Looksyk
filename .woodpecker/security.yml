@@ -1,0 +1,66 @@
+---
+kind: pipeline
+type: docker
+name: security_backend
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: rust_audit
+    image: rust:1.75
+    commands:
+      - cargo install cargo-audit --locked
+      - cd backend
+      - cargo audit
+
+---
+kind: pipeline
+type: docker
+name: security_frontend
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: npm_audit
+    image: node:alpine
+    commands:
+      - cd frontend/looksyk
+      - npm i
+      - npm audit --audit-level=high
+
+---
+kind: pipeline
+type: docker
+name: security_wrapper
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: npm_audit
+    image: node:alpine
+    commands:
+      - cd application-wrapper/Looksyk
+      - npm i
+      - npm audit --audit-level=high
+

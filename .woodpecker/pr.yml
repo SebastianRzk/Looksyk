@@ -1,0 +1,49 @@
+---
+kind: pipeline
+type: docker
+name: version_check
+when:
+  event: [ pull_request ]
+  branch: [ stable ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+      - git submodule update --init --recursive
+  - name: rust
+    image: rust:1.75
+    commands:
+      - cd deploy/version-checker && cargo run -- --version-path ../../.version.check.json --changelog-path ../../docs/changelog.md
+
+---
+kind: pipeline
+type: docker
+name: appimage_test_pr
+when:
+  event: [ pull_request ]
+  branch: [ main, stable, dev ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: deps
+    image: debian
+    commands:
+      - apt-get update && apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config
+  - name: build
+    image: debian
+    commands:
+      - bash build.sh
+  - name: appimage
+    image: debian
+    commands:
+      - bash build-appimage.sh
+
