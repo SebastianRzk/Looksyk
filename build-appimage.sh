@@ -1,6 +1,25 @@
 #!/bin/bash
 set -ue
 
+# Arch erkennen und passenden linuxdeploy wählen
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64)
+    LINUXDEPLOY_URL="https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+    LINUXDEPLOY_BIN="linuxdeploy-x86_64.AppImage"
+    OUT_ARCH="x86_64"
+    ;;
+  aarch64|arm64)
+    LINUXDEPLOY_URL="https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage"
+    LINUXDEPLOY_BIN="linuxdeploy-aarch64.AppImage"
+    OUT_ARCH="aarch64"
+    ;;
+  *)
+    echo "Unsupported architecture: $ARCH" >&2
+    exit 1
+    ;;
+ esac
+
 # AppDir Struktur anlegen
 APPDIR="AppDir"
 rm -rf "$APPDIR"
@@ -38,11 +57,17 @@ fi
 cp git/git "$APPDIR/usr/bin/git"
 
 # AppImage bauen
-if [ ! -f linuxdeploy ]; then
-  wget -O linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-  chmod +x linuxdeploy
+if [ ! -f "$LINUXDEPLOY_BIN" ]; then
+  wget -O "$LINUXDEPLOY_BIN" "$LINUXDEPLOY_URL"
+  chmod +x "$LINUXDEPLOY_BIN"
 fi
 
-./linuxdeploy --appdir "$APPDIR" -d "$APPDIR/de.sebastianruziczka.looksyk.desktop" -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png" --output appimage
+./"$LINUXDEPLOY_BIN" --appdir "$APPDIR" -d "$APPDIR/de.sebastianruziczka.looksyk.desktop" -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/de.sebastianruziczka.looksyk.png" --output appimage
 
-echo "AppImage gebaut: $(ls *.AppImage)"
+# Ergebnisdatei ermitteln und mit Architektur suffixen
+APPIMG=$(ls -1 *.AppImage | head -n1)
+if [ -n "$APPIMG" ] && [ ! -f "Looksyk-$OUT_ARCH.AppImage" ]; then
+  mv "$APPIMG" "Looksyk-$OUT_ARCH.AppImage"
+fi
+
+echo "AppImage gebaut: $(ls Looksyk-*.AppImage 2>/dev/null || true)"
