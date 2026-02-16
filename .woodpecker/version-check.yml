@@ -1,0 +1,20 @@
+---
+kind: pipeline
+type: docker
+name: version_check
+when:
+  event: [ pull_request, push ]
+  branch: [ stable ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=100 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+      - git submodule update --init --recursive
+  - name: rust
+    image: rust
+    commands:
+      - cd deploy/version-checker && cargo run -- --version-path ../../.version.check.json --changelog-path ../../docs/changelog.md

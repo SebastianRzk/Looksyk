@@ -1,0 +1,51 @@
+---
+kind: pipeline
+type: docker
+name: docs_build
+when:
+  event: [ push, pull_request ]
+  branch: [ main, stable, dev ]
+  path: [ 'docs/**' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: node
+    image: node:alpine
+    commands:
+      - cd docs
+      - npm ci || npm i
+      - npm run build
+
+---
+kind: pipeline
+type: docker
+name: docs_deploy_stable
+when:
+  event: [ push ]
+  branch: [ stable ]
+  path: [ 'docs/**' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --depth=50 origin "$CI_COMMIT_REF" && git checkout "$CI_COMMIT_SHA"
+  - name: node
+    image: node:alpine
+    commands:
+      - cd docs
+      - npm ci || npm i
+      - npm run build
+  - name: Deploy website
+    uses: actions/git-pages@v2
+    with:
+      site: https://sebastianrzk.codeberg.page/Looksyk
+      source: docs/_site/
+      password: ${{ secrets.PASSWORD }}

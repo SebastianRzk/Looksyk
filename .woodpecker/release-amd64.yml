@@ -1,0 +1,60 @@
+---
+kind: pipeline
+type: docker
+name: release_amd64
+when:
+  event: [ tag ]
+  ref:
+    include: [ 'refs/tags/v*.*.*', 'refs/tags/v*.*.*-*' ]
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: checkout
+    image: alpine/git
+    commands:
+      - git init && git remote add origin "$CI_REPO_CLONE_URL" && git fetch --tags --depth=100 origin
+      - git checkout "$CI_COMMIT_TAG"
+  - name: deps
+    image: debian
+    commands:
+      - apt-get update && apt-get install -y libcurl4-openssl-dev gettext libfontconfig1-dev pkg-config gnupg curl jq
+  - name: build_release
+    image: debian
+    commands:
+      - bash build.sh
+  - name: appimage
+    image: debian
+    commands:
+      - bash build-appimage.sh
+  - name: checksum_sign
+    image: debian
+    environment:
+      GPG_PRIVATE_KEY: $$GPG_PRIVATE_KEY
+      GPG_PASSPHRASE: $$GPG_PASSPHRASE
+    commands:
+      - sha256sum Looksyk-*.AppImage > SHA256SUMS
+      - |
+        if [ -n "${GPG_PRIVATE_KEY:-}" ]; then
+          mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign --output SHA256SUMS.asc SHA256SUMS
+        else
+          echo "GPG_PRIVATE_KEY nicht gesetzt – Signatur wird übersprungen"
+        fi
+  - name: release_to_codeberg
+    image: plugins/gitea-release
+    settings:
+      api_url: $$FORGEJO_BASE_URL
+      owner: $$FORGEJO_OWNER
+      repo: $$FORGEJO_REPO
+      token: $$FORGEJO_TOKEN
+      tag_name: ${CI_COMMIT_TAG}
+      name: ${CI_COMMIT_TAG}
+      draft: false
+      prerelease: false
+      files:
+        - Looksyk-*.AppImage
+        - SHA256SUMS
+        - SHA256SUMS.asc
