@@ -1,15 +1,13 @@
 # Looksyk
 
-![banner](docs/banner.png)
+# Looksyk has moved to Codeberg.
 
-![GithubCI](https://github.com/SebastianRzk/Looksyk/actions/workflows/build.yml/badge.svg?branch=stable)
+# The new repository is located at: [https://codeberg.org/sebastianrzk/looksyk](https://codeberg.org/sebastianrzk/looksyk)
 
-A simple personal knowledge platform with a focus on clean markdown files, simple queries and a journal.
+You can find the latest updates, source code, and documentation there. Please update your bookmarks and follow the new repository for future developments.
 
-## Find the documentation at [sebastianrzk.github.io/Looksyk](https://sebastianrzk.github.io/Looksyk/)
+You can still find the old repository on GitHub, but it will no longer receive updates or support. For the best experience and to stay up-to-date with Looksyk, please visit the new Codeberg repository.
 
-![intro animation](docs/intro_animation.gif)
+Thank you for your understanding and continued support!
 
-## License
-
-This project is licensed under the AGPL3 License - see the `LICENSE` file for details.
+Issues and discussions will continue to be accepted on GitHub for a while longer. However, please note that the main development takes place on Codeberg, and meaningful pull requests can only be submitted there.
