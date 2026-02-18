@@ -1,3 +1,5 @@
+
+
 body {
     background: #131519;
     color: #e6e6e6;
@@ -470,4 +472,21 @@ table {
         width: 100%;
         max-width: 100%;
     }
+}
+.migration-note {
+    background: #222;
+    border-left: 8px solid #aa0000;
+    padding: 1ex 2ex;
+    margin: 3ex;
+    font-size: larger;
+    color: var(--secondary-color)!important;
+    border-radius: 1ex;
+}
+
+.migration-note:hover {
+    background: #333;
+    border-left: 8px solid #00c853;
+    padding: 1ex 2ex;
+    font-size: larger;
+    color: var(--secondary-color)!important;
 }

@@ -10,6 +10,7 @@
 </head>
 <body>
   {% include "menu.njk" %}
+  {% include "migration.njk" %}
   <header>
   <img src="{{config.pathPrefix}}fav_512.png" alt="Looksyk Logo" class="logo">
   <div class="header-title">
@@ -21,10 +22,10 @@
   </h2>
   </div>
   </header>
+  {% include "migration.njk" %}
   <main
     class="{% if landing %}landing-page{% endif %}"
   >
-    {{ content | safe }}
   </main>
   <footer>
       <p>Does the documentation contain errors, is inaccurate, or missing topics? - Help improve it!</p>
